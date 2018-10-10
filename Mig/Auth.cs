@@ -54,23 +54,23 @@ namespace Mig
         public void Auth()
         {
 
-            try
-            {               
-                    LoadXMLPreference();
-                    pref.CONSTR = String.Format("Server={0};Port={1};User Id={2};Password={3};Database={4};", pref.HOST, pref.PORT, pref.USER, pref.PASS, pref.DBNAME);
-                    DB.SqlResult res = DB.GetTableValue(pref.CONSTR, "select 1 from cmodb.pos where username=:param1",new List<object> { pref.USER }, "int");
 
-                    if (res.HasError)
-                    {
-                        MessageBox.Show(res.ErrorText, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return;
-                    }
-                    
-                  //  pref.POSITION = DB.GetTableValue("select pos from cmodb.pos where username=:param1;", new List<object> { pref.USER });
-                   // pref.SUBPROGRAM = "migr";
-                    pref.AUTH = true;
-                    Logger.Log.Info("Пользователь: " + pref.USER);
-                    Logger.Log.Info("Позиция: " + pref.POSITION);
+            // pref.CONSTR = String.Format("Server={0};Port={1};User Id={2};Password={3};Database={4};", pref.HOST, pref.PORT, pref.USER, pref.PASS, pref.DBNAME);
+            try
+            {
+                LoadXMLPreference();
+                string res = DB.Open(pref.USER, pref.PASS, pref.HOST, pref.PORT, pref.DBNAME);
+                if (res != "")
+                {
+                    MessageBox.Show(res, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                pref.POSITION = DB.GetTableValue("select pos from cmodb.pos where username=:param1;", new List<object> { pref.USER });
+                pref.SUBPROGRAM = "migr";
+                pref.AUTH = true;
+                Logger.Log.Info("Пользователь: " + pref.USER);
+                Logger.Log.Info("Позиция: " + pref.POSITION);
 
                 MessageBox.Show("Успешное подключение", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 this.DialogResult = DialogResult.OK;

@@ -711,15 +711,12 @@ namespace Mig
             if (cmbSpec.SelectedValue == null)
                 tSpecCode.Text = "";
             else
-            {
-                DB.SqlResult res = new DB.SqlResult();
-                res = DB.GetTableValue(pref.CONSTR, "select code from cmodb.speciality where spec_code=:param1;", new List<object> { Convert.ToInt32(cmbSpec.SelectedValue) }, "string");
-                if (res.HasError)
-                    MessageBox.Show(res.ErrorText, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                else
-                    tSpecCode.Text = res.ResultData;
+            {               
+                
+                    tSpecCode.Text = DB.GetTableValue("select code from cmodb.speciality where spec_code=:param1;", new List<object> { Convert.ToInt32(cmbSpec.SelectedValue) });
+
             }
-           // tSpecCode.Text = cmbSpec.SelectedValue == null ? "" : DB.GetTableValue("select code from cmodb.speciality where spec_code=:param1;", new List<object> { Convert.ToInt32(cmbSpec.SelectedValue) });
+            // tSpecCode.Text = cmbSpec.SelectedValue == null ? "" : DB.GetTableValue("select code from cmodb.speciality where spec_code=:param1;", new List<object> { Convert.ToInt32(cmbSpec.SelectedValue) });
         }
 
         private void btnAddrClear_Click(object sender, EventArgs e)

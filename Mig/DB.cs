@@ -13,34 +13,23 @@ using Npgsql.Logging;
 namespace Mig
 {
     static class DB
-    {      
-        
-        public class SqlResultDS
+    {
+        static public NpgsqlConnection conn;
+       
+        static public DataTable QueryTableMultipleParams(string comm, List<object> param)
         {
-            public DataTable ResultData;
-            public string ErrorText="";               
-            public bool HasError=false;
-        }
-        public class SqlResult
-        {
-            public dynamic ResultData;
-            public string ErrorText = "";
-            public bool HasError = false;
-        }
-
-        static public SqlResultDS QueryTableMultipleParams(string constr, string comm, List<object> param)
-        {
-            NpgsqlConnection conn = new NpgsqlConnection(constr);
-            SqlResultDS result = new SqlResultDS();
             DataSet ds = new DataSet();
-            NpgsqlCommand cmd = new NpgsqlCommand(comm, conn);
-            try {
-                    conn.Open();
+            DataTable dt = new DataTable();
+            NpgsqlCommand cmd;            
+               // try
+               // {
+
+                    cmd = new NpgsqlCommand(comm, DB.conn);
                     cmd.Parameters.Clear();
                     if (param != null)
                     {
                         int i = 1;
-
+                        
                         foreach (object prm in param)
                         {
                             cmd.Parameters.AddWithValue("param" + i.ToString(), prm);
@@ -50,109 +39,131 @@ namespace Mig
                     ds.Reset();
                     NpgsqlDataAdapter da = new NpgsqlDataAdapter();
                     da.SelectCommand = cmd;
+                    ds.Reset();
                     da.Fill(ds);
-                    result.ResultData = ds.Tables[0];
-            }
-            catch(Exception ex)
-            {
-                result.ErrorText = ex.Message;
-                result.HasError = true;
-            }
-            finally
-            {
-                conn.Close();
-            }
-
-            return result;   
+                    dt = ds.Tables[0];
+                // }
+                // catch (Exception msg)
+                //{
+                //    MessageBox.Show(msg.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                //    Console.WriteLine(msg.ToString());
+                //}
+            
+            return dt;
 
         }
         
-        static public SqlResult GetTableValue(string constr,string comm, List<object> param,string type)
+        static public string GetTableValue(string comm, List<object> param)
         {
-            SqlResult result = new SqlResult();
-            NpgsqlConnection conn = new NpgsqlConnection(constr);
-            NpgsqlCommand cmd = new NpgsqlCommand(comm, conn);
-            try {
-                conn.Open();
-                cmd.Parameters.Clear();
-                if (param != null)
-                {
-                    int i = 1;
-
-                    foreach (object prm in param)
-                    {
-                        cmd.Parameters.AddWithValue("param" + i.ToString(), prm);
-                        i++;
-                    }
-                }
-
-                switch (type)
-                {
-                    case "string":
-                        result.ResultData = Convert.ToString(cmd.ExecuteScalar());
-                        break;
-                    case "int":
-                        result.ResultData = Convert.ToInt32(cmd.ExecuteScalar());
-                        break;
-                    case "DateTime?":
-                        string str = cmd.ExecuteScalar().ToString();
-                        if (str != "")
-                            result.ResultData = Convert.ToDateTime(str);                        
-                        break;
-                       
-                }
-
-            }
-            catch (Exception ex)
+            string StrRes="";
+            DataSet ds = new DataSet();
+            DataTable dt = new DataTable();
+            NpgsqlCommand cmd;            
+           
+            cmd = new NpgsqlCommand(comm, DB.conn);
+            cmd.Parameters.Clear();
+            if (param != null)
             {
-                result.ErrorText = ex.Message;
-                result.HasError = true;
+                int i = 1;
+
+                foreach (object prm in param)
+                {
+                    cmd.Parameters.AddWithValue("param" + i.ToString(), prm);
+                    i++;
+                }
             }
-            finally
-            {
-                conn.Close();
-            }
-            return result;
+
+            StrRes = Convert.ToString( cmd.ExecuteScalar());
+           
+            
+            return StrRes;
 
         }
-        static public SqlResult SqlNoneQuery(string constr, string comm, List<object> param)
+        static public int GetTableValueInt(string comm, List<object> param)
         {
-            SqlResult result = new SqlResult();
-            NpgsqlConnection conn = new NpgsqlConnection(constr);
-            NpgsqlCommand cmd = new NpgsqlCommand(comm, conn);
+            int StrRes ;
+            DataSet ds = new DataSet();
+            DataTable dt = new DataTable();
+            NpgsqlCommand cmd;
+
+            cmd = new NpgsqlCommand(comm, DB.conn);
+            cmd.Parameters.Clear();
+            if (param != null)
+            {
+                int i = 1;
+
+                foreach (object prm in param)
+                {
+                    cmd.Parameters.AddWithValue("param" + i.ToString(), prm);
+                    i++;
+                }
+            }
+
+            StrRes = Convert.ToInt32(cmd.ExecuteScalar());
+
+
+            return StrRes;
+
+        }
+        static public DateTime? GetTableValueDt(string comm, List<object> param)
+        {
+            DateTime? StrRes=null;
+            DataSet ds = new DataSet();
+            DataTable dt = new DataTable();
+            NpgsqlCommand cmd;
+
+            cmd = new NpgsqlCommand(comm, DB.conn);
+            cmd.Parameters.Clear();
+            if (param != null)
+            {
+                int i = 1;
+
+                foreach (object prm in param)
+                {
+                    cmd.Parameters.AddWithValue("param" + i.ToString(), prm);
+                    i++;
+                }
+            }
+
+            string str = cmd.ExecuteScalar().ToString();
+            if(str!="")
+                StrRes =  Convert.ToDateTime(str);
+
+
+            return StrRes;
+
+        }
+
+        static public string Open(string pUser,string pPassword,string pHost, string pPort,string pDatabase)
+        {
+            string ErrMsg="";
             try
             {
+               
+                string connstring = String.Format("Server={0};Port={1};User Id={2};Password={3};Database={4};",pHost, pPort, pUser, pPassword, pDatabase);
+                conn = new NpgsqlConnection(connstring);
                 conn.Open();
-                cmd.Parameters.Clear();
-                if (param != null)
-                {
-                    int i = 1;
-
-                    foreach (object prm in param)
-                    {
-                        cmd.Parameters.AddWithValue("param" + i.ToString(), prm);
-                        i++;
-                    }
-                }
-
-                cmd.ExecuteNonQuery();
-
             }
-            catch (Exception ex)
+            catch (Exception exp)
             {
-                result.ErrorText = ex.Message;
-                result.HasError = true;
+                ErrMsg = exp.Message;
             }
-            finally
-            {
+
+            return ErrMsg;
+        }
+        static public string Close()
+        {
+            string ErrMsg = "";
+            try
+            {                
                 conn.Close();
             }
-            return result;
+            catch (Exception exp)
+            {
+                ErrMsg = exp.Message;
+            }
 
+            return ErrMsg;
         }
-
-
-
-
     }
 }

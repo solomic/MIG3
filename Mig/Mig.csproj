@@ -168,6 +168,7 @@
     <Compile Include="ChildAddEdit.Designer.cs">
       <DependentUpon>ChildAddEdit.cs</DependentUpon>
     </Compile>
+    <Compile Include="DB.cs" />
     <Compile Include="DBUtils.cs" />
     <Compile Include="DULAddEdit.cs">
       <SubType>Form</SubType>
@@ -193,7 +194,6 @@
     <Compile Include="datetimepicker\myDatePicker.Designer.cs">
       <DependentUpon>myDatePicker.cs</DependentUpon>
     </Compile>
-    <Compile Include="DB.cs" />
     <Compile Include="DocAddEdit.cs">
       <SubType>Form</SubType>
     </Compile>
