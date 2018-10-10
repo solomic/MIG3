@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?> 
+<head>
+<Connection>
+  <DBNAME>CMO 2017</DBNAME>
+  <DBPORT>5432</DBPORT>
+  <HOST>localhost</HOST>
+  <MIGDATA>C:\MIG DATA\</MIGDATA>
+  <REPORTFOLDER>ДОКУМЕНТЫ\</REPORTFOLDER>
+  <NOTIFYTEMPLATE>xls</NOTIFYTEMPLATE>
+</Connection>
+</head>
