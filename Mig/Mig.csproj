@@ -209,6 +209,7 @@
       <DependentUpon>DocMigrHistPopup.cs</DependentUpon>
     </Compile>
     <Compile Include="Entity\Address.cs" />
+    <Compile Include="Entity\Contact.cs" />
     <Compile Include="Entity\ListAddress.cs" />
     <Compile Include="EntryAdd.cs">
       <SubType>Form</SubType>
@@ -305,6 +306,7 @@
     <Compile Include="Stage.Designer.cs">
       <DependentUpon>Stage.cs</DependentUpon>
     </Compile>
+    <Compile Include="Tables\AllTables.cs" />
     <Compile Include="TeachAddEdit.cs">
       <SubType>Form</SubType>
     </Compile>

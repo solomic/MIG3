@@ -36,6 +36,11 @@ namespace Mig.Entity
         bool        _Valid;
         bool        _Change;
         /*----------------------------------------------------*/
+        DataRow rw;
+        /*----------------------------------------------------*/
+
+        DataColumn cl;
+
         public int Id  {
             get
             {
@@ -56,7 +61,11 @@ namespace Mig.Entity
         /*----------------------------------------------------*/
         public Address()
         {
-
+            
+            rw = new DataTable().NewRow();
+            
+            //cl.DataType = System.Type.GetType("System.Int32");
+            //cl.ColumnName = "id";
         }
         /*----------------------------------------------------*/
         public string Read()
