@@ -1,10 +1,13 @@
 ﻿using Mig.Tables;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Mig.DBFunc;
+using Mig.Func;
 
 namespace Mig.Entity
 {
@@ -26,10 +29,7 @@ namespace Mig.Entity
             {
                 return _id;
             }
-            set
-            {
-                _id = value;
-            }
+            
         }
         public string lastname
         {
@@ -65,10 +65,13 @@ namespace Mig.Entity
         }
         public string ReadFromDB(int ContactId)
         {
-
+            
+            string sql = "SELECT id,last_name FROM cmo.contact"; 
+            DBFunc.MyResultRow rw = new DBFunc.MyResultRow();
+            rw = DBFunc.GetRow(sql,new List<object> { ContactId });
             return "";
         }
-        public DataRow GetContactData()
+        public DataRow GetContactDataRow()
         {
             RefreshDS();
             return rw;
