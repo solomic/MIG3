@@ -343,24 +343,7 @@ namespace Mig
                 }
                 tabParamNull.Parent = tabParam;
 
-                if (pref.POSITION == "ALL")
-                {
-                    // tabConInfo.Parent = null;
-                    // tabDocMigr.Parent = null;
-                    //tabMigrPf.Parent = null;
-                    //tabTeachAgree.Parent = null;
-                    //tabDelChild.Parent = null;
-
-                }
-                if (pref.POSITION == "AGREE")
-                {
-                    // tabConInfo.Parent = null;
-                    // tabDocMigr.Parent = null;
-                    tabControl1.TabPages.Remove(tabMigrPf);
-                    //   tabMigrPf.Hide();
-                    // tabTeachAgree.Parent = null;
-                    // tabDelChild.Parent = null;
-                }
+                
 
                 /*поле действие с визой*/
               /*  if (this.dDulValidity.SelectedDate != "")

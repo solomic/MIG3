@@ -43,8 +43,8 @@ namespace Mig
             }
             catch (Exception e)
             {
-                Logger.Log.Error(ClassName + "Function:LoadXMLPreference\n Error:" + e);
-                MessageBox.Show("Не могу загрузить файл настроек!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Logger.Log.Error(ClassName + "Function:LoadXMLPreference\n Error:" + e);                
+                throw new Exception("Не могу загрузить файл настроек prefDB.xml!");
             }
             finally
             {
@@ -53,44 +53,28 @@ namespace Mig
         }
         public void Auth()
         {
-
-
+            pref.AUTH = false;
             // pref.CONSTR = String.Format("Server={0};Port={1};User Id={2};Password={3};Database={4};", pref.HOST, pref.PORT, pref.USER, pref.PASS, pref.DBNAME);
-            try
-            {
-                LoadXMLPreference();
-                string res = DB.Open(pref.USER, pref.PASS, pref.HOST, pref.PORT, pref.DBNAME);
-                if (res != "")
-                {
-                    MessageBox.Show(res, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-
-                pref.POSITION = DB.GetTableValue("select pos from cmodb.pos where username=:param1;", new List<object> { pref.USER });
-                pref.SUBPROGRAM = "migr";
-                pref.AUTH = true;
-                Logger.Log.Info("Пользователь: " + pref.USER);
-                Logger.Log.Info("Позиция: " + pref.POSITION);
-
-                MessageBox.Show("Успешное подключение", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                this.DialogResult = DialogResult.OK;
-            }
-            catch (Exception msg)
-            {
-                pref.AUTH = false;
-                MessageBox.Show(msg.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-            }
-
-
+            LoadXMLPreference();
+            DB.Open(pref.USER, pref.PASS, pref.HOST, pref.PORT, pref.DBNAME);              
+            pref.AUTH = true;
+            Logger.Log.Info("Пользователь: " + pref.USER);    
+            MessageBox.Show("Успешное подключение", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            this.DialogResult = DialogResult.OK;
         }
 
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
-            pref.USER = comboBox1.Text;           
-            Auth();
-
+            try
+            {
+                pref.USER = comboBox1.Text;
+                Auth();
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
 
         }
 

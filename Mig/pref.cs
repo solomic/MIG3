@@ -24,7 +24,7 @@ namespace Pref
         public static string CONNAT = "";
         public static string FULLREPORTPATCH = "";
         public static string SUBPROGRAM = "";
-        public static string POSITION = "";
+        //public static string POSITION = "";
         public static string NOTIFYTEMPLATE = "";
         public static string CONSTR = "";
 

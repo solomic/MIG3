@@ -21,33 +21,26 @@ namespace Mig
             DataSet ds = new DataSet();
             DataTable dt = new DataTable();
             NpgsqlCommand cmd;            
-               // try
-               // {
-
-                    cmd = new NpgsqlCommand(comm, DB.conn);
-                    cmd.Parameters.Clear();
-                    if (param != null)
-                    {
-                        int i = 1;
+              
+            cmd = new NpgsqlCommand(comm, DB.conn);
+            cmd.Parameters.Clear();
+            if (param != null)
+            {
+                int i = 1;
                         
-                        foreach (object prm in param)
-                        {
-                            cmd.Parameters.AddWithValue("param" + i.ToString(), prm);
-                            i++;
-                        }
-                    }
-                    ds.Reset();
-                    NpgsqlDataAdapter da = new NpgsqlDataAdapter();
-                    da.SelectCommand = cmd;
-                    ds.Reset();
-                    da.Fill(ds);
-                    dt = ds.Tables[0];
-                // }
-                // catch (Exception msg)
-                //{
-                //    MessageBox.Show(msg.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                //    Console.WriteLine(msg.ToString());
-                //}
+                foreach (object prm in param)
+                {
+                    cmd.Parameters.AddWithValue("param" + i.ToString(), prm);
+                    i++;
+                }
+            }
+            ds.Reset();
+            NpgsqlDataAdapter da = new NpgsqlDataAdapter();
+            da.SelectCommand = cmd;
+            ds.Reset();
+            da.Fill(ds);
+            dt = ds.Tables[0];
+             
             
             return dt;
 
@@ -134,36 +127,30 @@ namespace Mig
 
         }
 
-        static public string Open(string pUser,string pPassword,string pHost, string pPort,string pDatabase)
+        static public void Open(string pUser,string pPassword,string pHost, string pPort,string pDatabase)
         {
-            string ErrMsg="";
-            try
-            {
-               
-                string connstring = String.Format("Server={0};Port={1};User Id={2};Password={3};Database={4};",pHost, pPort, pUser, pPassword, pDatabase);
-                conn = new NpgsqlConnection(connstring);
-                conn.Open();
-            }
-            catch (Exception exp)
-            {
-                ErrMsg = exp.Message;
-            }
-
-            return ErrMsg;
+            string connstring = String.Format("Server={0};Port={1};User Id={2};Password={3};Database={4};",pHost, pPort, pUser, pPassword, pDatabase);
+            conn = new NpgsqlConnection(connstring);
+            conn.Open();
+           
         }
-        static public string Close()
+        static public void Close()
         {
-            string ErrMsg = "";
             try
-            {                
+            {
                 conn.Close();
             }
-            catch (Exception exp)
+            catch (Exception ex)
             {
-                ErrMsg = exp.Message;
+                try
+                {
+                    conn.Close();
+                }
+                catch (Exception ex2)
+                {
+                    throw new Exception(ex2.Message);
+                }
             }
-
-            return ErrMsg;
         }
     }
 }
