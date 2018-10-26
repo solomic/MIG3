@@ -82,6 +82,7 @@ namespace Mig
             catch (Exception err)
             {
                 Logger.Log.Error(ClassName + "Function:SetColumnOrder\n Error:" + err);
+                throw new Exception("Ошибка при сортировке колонок:\n\n"+err.Message);
             }
 
         }
@@ -99,26 +100,33 @@ namespace Mig
         }
         private void SaveColumnOrder()
         {
-            if (dataGridView1.AllowUserToResizeColumns)
+            try
             {
-                List<ColumnOrderItem> columnOrder = new List<ColumnOrderItem>();
-                DataGridViewColumnCollection columns = dataGridView1.Columns;
-                for (int i = 0; i < columns.Count; i++)
+                if (dataGridView1.AllowUserToResizeColumns)
                 {
-                    columnOrder.Add(new ColumnOrderItem
+                    List<ColumnOrderItem> columnOrder = new List<ColumnOrderItem>();
+                    DataGridViewColumnCollection columns = dataGridView1.Columns;
+                    for (int i = 0; i < columns.Count; i++)
                     {
-                        ColumnIndex = i,
-                        DisplayIndex = columns[i].DisplayIndex,
-                        Visible = columns[i].Visible,
-                        Width = columns[i].Width,
-                        ColumnName = columns[i].Name
-                    });
+                        columnOrder.Add(new ColumnOrderItem
+                        {
+                            ColumnIndex = i,
+                            DisplayIndex = columns[i].DisplayIndex,
+                            Visible = columns[i].Visible,
+                            Width = columns[i].Width,
+                            ColumnName = columns[i].Name
+                        });
+                    }
+
+                    gfDataGridViewSetting.Default.ColumnOrder[pref.USER + " " + cmbFilter.Text] = columnOrder;
+                    gfDataGridViewSetting.Default.Save();
+
+
                 }
-
-                gfDataGridViewSetting.Default.ColumnOrder[pref.USER + " " + cmbFilter.Text] = columnOrder;
-                gfDataGridViewSetting.Default.Save();
-
-
+            }
+            catch(Exception ex)
+            {
+                throw new Exception("Ошибка сохранения положения колонок:\n\n"+ ex.Message);
             }
         }
 
@@ -143,8 +151,14 @@ namespace Mig
 
         private void fMigr_Load(object sender, EventArgs e)
         {
-            DirectMenu(false);
-           
+            try
+            { 
+                DirectMenu(false);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void FilterLoad()
@@ -157,42 +171,30 @@ namespace Mig
             }
             catch (Exception err)
             {
-
                 Logger.Log.Error(ClassName + "Function:fMigr_Load\n Error:" + err);
+                throw new Exception("Ошибка при загрузке фильтров:\n\n"+err.Message);                
             }
         }
 
         private void comboBox1_SelectedValueChanged(object sender, EventArgs e)
         {
-            /*выбрали другой фильтр*/
-            /*
-            DataTable changedData = dt.GetChanges();
-            da.update(changedData);
-            */
+            /*выбрали другой фильтр*/           
             tsFilterLoad.Text = "Загрузка данных...";
             try
-            {
-                Logger.Log.Debug("Выбираем фильтр");
+            {                
                 bindingSource1.Filter = "";
                 dataGridView1.DataSource = null;
                 lFilter.ResetText();
 
-                int filter_code = DB.GetTableValueInt("SELECT code FROM cmodb.filters where filtername=:param1;", new List<object> { cmbFilter.Text });
-                Logger.Log.Debug("Получили код фильтра" );
+                int filter_code = DB.GetTableValueInt("SELECT code FROM cmodb.filters where filtername=:param1;", new List<object> { cmbFilter.Text });               
                 String sql_text = DB.GetTableValue("SELECT filter_expr FROM cmodb.user_filter where filter_id=:param1 AND user_name=:param2;", new List<object> { filter_code, pref.USER });
-                Logger.Log.Debug("Получили основной select");
-                bindingSource1.DataSource = DB.QueryTableMultipleParams(sql_text, null)/*dt*/;
-                Logger.Log.Debug("Загрузили в bind" );
-                dataGridView1.DataSource = bindingSource1;
                 
-                Logger.Log.Debug("Загрузили в таблицу" );
-
+                bindingSource1.DataSource = DB.QueryTableMultipleParams(sql_text, null);              
+                dataGridView1.DataSource = bindingSource1;                
                 stCnt.Text = "Количество записей: " + bindingSource1.Count;
 
-
                 /*применяем фильтр*/
-                textBox1_TextChanged(this, null);
-                Logger.Log.Debug("Применяем выбранный фильтр" );
+                textBox1_TextChanged(this, null);               
 
                 //  dataGridView1.Columns[0].Width = 50;
                 dataGridView1.Columns["warning"].HeaderText = "Предупреждения";
@@ -208,17 +210,14 @@ namespace Mig
                 dataGridView1.Columns["rs_ten"].Visible = false;
                 dataGridView1.Columns["rs_ent"].Visible = false;
                 if (dataGridView1.Columns.Contains("pass_expire"))
-                    dataGridView1.Columns["pass_expire"].Visible = false;
-                
-                Logger.Log.Debug("Скрыли лишние столбцы" );
+                    dataGridView1.Columns["pass_expire"].Visible = false;  
 
                 SetColumnOrder();
-                Logger.Log.Debug("Установили порядок столбцов" );
             }
             catch (Exception err)
             {
                 Logger.Log.Error(ClassName + "Function:comboBox1_SelectedValueChanged\n Error:" + err);
-                MessageBox.Show("Ошибка фильтра", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Ошибка фильтра:\n\n"+err.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
             }
             finally
@@ -868,8 +867,7 @@ namespace Mig
 
         private void dataGridView1_FilterStringChanged(object sender, EventArgs e)
         {
-            bindingSource1.Filter = dataGridView1.FilterString;
-           // lFilter.Text = dataGridView1.FilterString;
+            bindingSource1.Filter = dataGridView1.FilterString;  
         }
 
         private void bindingSource1_ListChanged(object sender, ListChangedEventArgs e)
@@ -879,25 +877,23 @@ namespace Mig
 
         private void dataGridView1_ColumnWidthChanged(object sender, DataGridViewColumnEventArgs e)
         {
-            SaveColumnOrder();
+            try
+            {
+                SaveColumnOrder();
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void dataGridView1_ColumnDisplayIndexChanged(object sender, DataGridViewColumnEventArgs e)
         {
-            // SaveColumnOrder();
+           
         }
 
        
 
-        private void добавитьСтудентаToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            
-        }
-
-        private void bConnPref_Click(object sender, EventArgs e)
-        {
-
-        }
 
         private void allViewToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -957,18 +953,22 @@ namespace Mig
             fAddressAllForm.ShowDialog(this);
         }
 
-        private void Pmigr_Click(object sender, EventArgs e)
-        {
-
-        }
+     
 
         private void btnConnectDB_Click(object sender, EventArgs e)
         {
             fAuth fAuthForm = new fAuth();
-            if (fAuthForm.ShowDialog(this) == DialogResult.OK)
+            try
+            { 
+                if (fAuthForm.ShowDialog(this) == DialogResult.OK)
+                {
+                    DirectMenu(true);
+                    FilterLoad();
+                }
+            }
+            catch (Exception ex)
             {
-                DirectMenu(true);
-                FilterLoad();
+                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
