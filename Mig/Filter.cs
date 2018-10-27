@@ -166,7 +166,7 @@ namespace Mig
             try
             {
                 cmbFilter.Items.Clear();
-                foreach (DataRow row in DB.QueryTableMultipleParams("SELECT filtername FROM cmodb.filters where type=:param1 order by filter_order ASC;", new List<Object> { pref.SUBPROGRAM }).Rows)
+                foreach (DataRow row in DB.QueryTableMultipleParams("SELECT filtername FROM cmodb.filters order by filter_order ASC;", null).Rows)
                     cmbFilter.Items.Add(row.ItemArray[0].ToString());
             }
             catch (Exception err)
