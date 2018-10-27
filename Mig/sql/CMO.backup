@@ -1,0 +1,4664 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 9.4.11
+-- Dumped by pg_dump version 9.4.11
+-- Started on 2018-10-27 20:43:55
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+
+--
+-- TOC entry 10 (class 2615 OID 17252)
+-- Name: cmodb; Type: SCHEMA; Schema: -; Owner: AdminCMO
+--
+
+CREATE SCHEMA "cmodb";
+
+
+ALTER SCHEMA "cmodb" OWNER TO "AdminCMO";
+
+SET search_path = "cmodb", pg_catalog;
+
+--
+-- TOC entry 313 (class 1255 OID 73735)
+-- Name: GenerateUserFilter(character varying, integer); Type: FUNCTION; Schema: cmodb; Owner: AdminCMO
+--
+
+CREATE FUNCTION "GenerateUserFilter"("USERNAME" character varying, "FILTERID" integer, OUT "RESULT" integer) RETURNS integer
+    LANGUAGE "sql"
+    AS '
+DELETE FROM "cmodb"."user_filter" WHERE "user_name"=$1 AND "filter_id"=$2;
+INSERT INTO "cmodb"."user_filter"(
+            "filter_id", "user_name", "filter_expr")
+    VALUES ($2, $1, (
+
+
+with a as (
+	SELECT f."name_expr", f."link", f."req", u."column_ord",u."filter_id"
+		FROM "cmodb"."user_filter_column" u
+		join "cmodb"."mflt" f ON u."column_id"=f."id"	
+		where u."filter_id"=$2 and u."user_name"=$1
+	union
+	SELECT f."name_expr", f."link", f."req", 999,$2
+		FROM "cmodb"."mflt" f 
+		where f."req"=''Y''
+),
+b as (
+	select mt."Expr" from "cmodb"."mtbl" mt where mt."id" in (select distinct(a."link") from "a" UNION SELECT "req_join" FROM "cmodb"."freqjoin" where "filter_id"=$2) order by mt."id"
+),
+c as (
+	select fv."column_order",fv."expr" from "cmodb".filters fv where fv."code" in (select distinct(a."filter_id") from "a")
+),
+d as (
+	select 1 as "ord", ''SELECT '' as "expr"
+	union
+	select 2, STRING_AGG(a."name_expr", '','' ORDER BY a."column_ord")||'' '' from a
+	union
+	select 3, '' FROM ''
+	union
+	select 4, STRING_AGG(b."Expr", '' '' ORDER BY b."Expr") from b
+	union
+	select 6, c."expr" from "c"
+	union
+	select 7, c."column_order" from "c"
+	order by 1
+)
+	select STRING_AGG(d."expr", '' '' ORDER BY d."ord") from "d"
+
+
+)
+) RETURNING 0 as "Result";';
+
+
+ALTER FUNCTION "cmodb"."GenerateUserFilter"("USERNAME" character varying, "FILTERID" integer, OUT "RESULT" integer) OWNER TO "AdminCMO";
+
+--
+-- TOC entry 316 (class 1255 OID 17259)
+-- Name: Resident(integer); Type: FUNCTION; Schema: cmodb; Owner: postgres
+--
+
+CREATE FUNCTION "Resident"(integer) RETURNS TABLE("f1" "text", "f2" "text", "f3" integer)
+    LANGUAGE "sql"
+    AS ' 
+ SELECT 
+	to_char(cast(cb.date_of_entry as date),''dd.mm.yyyy'') as "Въезд",	
+	to_char(cast(cb.viezdpomigr as date),''dd.mm.yyyy'') as "Выезд",	
+	date_part(''days''::text, (cb.viezdpomigr - cb.date_of_entry))::int AS "Дней"
+	
+	FROM ( SELECT fr."ID",
+	    /*fr."LAST_NAME",
+	    fr."FIRST_NAME",*/
+		CASE
+		    WHEN (now() - ''1 year''::interval) > fr.date_of_entry THEN now() - ''1 year''::interval
+		    ELSE fr.date_of_entry::timestamp with time zone
+		END AS date_of_entry,
+		CASE
+		    WHEN now() < fr.viezdpomigr THEN now()
+		    ELSE fr.viezdpomigr::timestamp with time zone
+		END AS viezdpomigr
+	   FROM ( SELECT cv."ID",
+		    /*cv."LAST_NAME",
+		    cv."FIRST_NAME",*/
+		    cv.date_of_entry,
+		    COALESCE(cv.viezd, cv.tenure) AS viezdpomigr
+		   FROM ( SELECT v."ID",
+	/*v."LAST_NAME",
+	v."FIRST_NAME",*/
+	v.date_of_entry,
+	v.tenure,
+	( SELECT min(x.leav) AS min
+	FROM "CMO"."ENT" x
+	WHERE x."TYPE"::text = ''зарубеж''::text AND x.con_id = v."ID" AND x.leav >= v.date_of_entry AND x.leav <= v.tenure) AS viezd
+	FROM ( SELECT DISTINCT c.contact_id AS "ID",
+      m.entry_dt AS date_of_entry,
+      max(m.tenure_to_dt) AS tenure
+     FROM ( SELECT contact.contact_id
+       FROM cmodb.contact) c
+       LEFT JOIN cmodb.migr_card m ON c.contact_id = m.contact_id
+       LEFT JOIN cmodb.teach_info t ON c.contact_id = t.contact_id
+    WHERE m.entry_dt IS NOT NULL AND m.tenure_to_dt IS NOT NULL AND t.form_teach_code::text = ''fulltime''::text
+    GROUP BY c.contact_id, m.entry_dt) v
+	ORDER BY v."ID", v.date_of_entry) cv) fr
+	  WHERE fr.viezdpomigr >= (now() - ''1 year''::interval)) cb
+	WHERE cb."ID"=$1
+  ORDER BY cb.date_of_entry
+     ';
+
+
+ALTER FUNCTION "cmodb"."Resident"(integer) OWNER TO "postgres";
+
+--
+-- TOC entry 322 (class 1255 OID 90399)
+-- Name: addaddress("text", "text", "text", "text", "text", "text"); Type: FUNCTION; Schema: cmodb; Owner: postgres
+--
+
+CREATE FUNCTION "addaddress"("kladr_code" "text", "dom" "text", "korp" "text", "stroenie" "text", "flat" "text", "fulladdr" "text") RETURNS integer
+    LANGUAGE "plpgsql"
+    AS '
+declare val integer;
+declare sregion varchar;
+declare sregion_type varchar;
+declare region_code varchar;
+declare srayon varchar;
+declare srayon_type varchar;
+declare rayon_code varchar;
+declare stown varchar;
+declare stown_type varchar;
+declare stownvillage varchar;
+declare svillage varchar;
+declare town_code varchar;
+declare village_code varchar;
+declare village_type varchar;
+declare sstreet varchar;
+declare street_type varchar;
+declare street_code varchar;
+begin
+	val:=0;
+	sregion:='''';
+	sregion_type:='''';
+	srayon:='''';
+	srayon_type:='''';
+	stown:='''';
+	stown_type:='''';
+	svillage:='''';
+	sstreet:='''';
+	stownvillage:='''';
+	village_type:='''';
+	street_type:='''';
+
+	region_code:=RPAD(substr(kladr_code,1,2),13,''0'');
+	rayon_code:=substr(kladr_code,3,3);
+	village_code:=substr(kladr_code,9,3);
+	town_code:=substr(kladr_code,6,3);
+	street_code:=substr(kladr_code,12,4);
+	
+	
+	RAISE NOTICE ''Регион(%)'', region_code;
+	RAISE NOTICE ''Район(%)'', rayon_code;
+	RAISE NOTICE ''Город(%)'', town_code;
+	RAISE NOTICE ''Населенный пункт(%)'', village_code;
+	RAISE NOTICE ''Улица(%)'', street_code;
+	
+	/*Регион*/
+	select name,socr into sregion ,sregion_type
+	from "kladr".kladr
+	where code = region_code;
+	
+	RAISE NOTICE ''Регион(%)'', sregion;
+	RAISE NOTICE ''Регион(%)'', sregion_type;
+	
+
+	
+	
+	
+	/*Населенный пункт*/
+	IF(village_code <> ''000'') THEN
+		select name,socr		
+		into svillage ,village_type
+		from "kladr".kladr
+		where code = RPAD(substr(kladr_code,1,11),13,''0'');	
+		
+	END IF;
+	RAISE NOTICE ''Населенный пункт(%)'', svillage;
+	RAISE NOTICE ''Населенный пункт(%)'', village_type;
+	
+	/*Город*/
+	IF(town_code <>''000'' OR village_type = ''мкр'') THEN
+		select socr,name into stown_type,stown 
+		from "kladr".kladr
+		where code = RPAD(substr(kladr_code,1,8),13,''0'');	
+
+	END IF;
+	RAISE NOTICE ''Город(%)'', stown;
+	RAISE NOTICE ''Город(%)'', stown_type;
+
+	/*Улица*/
+	IF(street_code <> ''0000'') THEN
+		select name,socr into sstreet ,street_type
+		from "kladr".street
+		where code = kladr_code;		
+
+	END IF;
+	RAISE NOTICE ''Улица(%)'', sstreet;
+	RAISE NOTICE ''Улица(%)'', street_type;
+
+	/*Район*/
+	IF(rayon_code <> ''000'') THEN
+		select name,socr into srayon ,srayon_type
+		from "kladr".kladr
+		where code = RPAD(substr(kladr_code,1,5),13,''0'');	
+
+	END IF;
+	IF(village_type = ''мкр'') THEN
+		 srayon:=svillage;
+		 srayon_type:=''мкр'';
+		
+
+	END IF;
+	RAISE NOTICE ''Район(%)'', srayon;
+	RAISE NOTICE ''Район(%)'', srayon_type;
+	
+	IF  (stown_type=''г'' OR stown_type=''c'' OR stown_type=''д'' OR stown_type=''п'') THEN
+		stown_type:=concat(stown_type,''.'');
+	END IF;
+	
+	IF  (srayon_type=''мкр'' ) THEN
+		srayon_type:=concat(srayon_type,''.'');
+	END IF;
+	
+	IF  (street_type=''ул'' OR street_type=''пер'') THEN
+		street_type:=concat(street_type,''.'');
+	END IF;
+
+	IF  (sregion_type=''обл'' ) THEN
+		sregion_type:=concat(sregion_type,''.'');
+	END IF;
+
+	BEGIN
+            INSERT INTO cmodb.address(obl, rayon, town, street, 
+            house, corp, stroenie, flat, socr_obl, socr_rayon, socr_town, 
+            socr_street, full_address, code, kladr_code) 
+            VALUES (sregion,srayon,stown,sstreet,dom,korp,stroenie,flat,sregion_type,srayon_type,stown_type,street_type,fulladdr,(select MAX(code)+1 from cmodb.address),kladr_code) 
+            returning code INTO val;
+            
+        EXCEPTION WHEN others  THEN
+		RAISE NOTICE ''SQLERRM: %'', SQLERRM;
+             val:=-1;
+        END;
+
+
+	return val;
+end;
+';
+
+
+ALTER FUNCTION "cmodb"."addaddress"("kladr_code" "text", "dom" "text", "korp" "text", "stroenie" "text", "flat" "text", "fulladdr" "text") OWNER TO "postgres";
+
+--
+-- TOC entry 327 (class 1255 OID 93564)
+-- Name: checkfield(integer, "text", "text", "text", "text", "text"); Type: FUNCTION; Schema: cmodb; Owner: AdminCMO
+--
+
+CREATE FUNCTION "checkfield"("contact_id_in" integer, "table_name_in" "text", "field_name_in" "text", "old_value" "text", "new_value" "text", "act" "text") RETURNS "void"
+    LANGUAGE "plpgsql"
+    AS '
+declare _new_value varchar;
+declare _old_value varchar;
+BEGIN
+RAISE NOTICE ''new_value(%)'', new_value;
+RAISE NOTICE ''old_value(%)'', old_value;
+_new_value:=COALESCE(new_value,'''');
+_old_value:=COALESCE(old_value,'''');
+IF (_new_value<>_old_value) THEN
+RAISE NOTICE ''Данные изменены'';
+INSERT INTO "cmodb"."audit"(contact_id,table_name,field_name,old_value,new_value,action) VALUES(contact_id_in,table_name_in,field_name_in,old_value,new_value,act);
+END IF;
+
+END;
+';
+
+
+ALTER FUNCTION "cmodb"."checkfield"("contact_id_in" integer, "table_name_in" "text", "field_name_in" "text", "old_value" "text", "new_value" "text", "act" "text") OWNER TO "AdminCMO";
+
+--
+-- TOC entry 304 (class 1255 OID 17260)
+-- Name: checkworkday("date"); Type: FUNCTION; Schema: cmodb; Owner: AdminCMO
+--
+
+CREATE FUNCTION "checkworkday"("datefirst" "date") RETURNS boolean
+    LANGUAGE "plpgsql"
+    AS '
+declare exceptday varchar;
+declare holiday varchar;
+declare dayweek int;
+declare dayweekstr varchar;
+declare res boolean;
+begin	
+	if datefirst IS NULL THEN
+		return NULL;
+	END IF;
+		
+	SELECT  ''1'' INTO exceptday
+	FROM    "cmodb"."holliday"
+	WHERE   "type"=''EXCEPT'' AND "dt"=DateFirst;
+	IF exceptday IS NULL THEN
+		exceptday:=''0'';
+	END IF;
+	
+	SELECT  extract(dow from DateFirst) INTO dayweek;
+	
+	
+	SELECT  ''1'' INTO holiday
+	FROM    "cmodb"."holliday"
+	WHERE   "type"=''HOLYDAY'' AND "dt"=DateFirst;
+	IF holiday IS NULL THEN
+		holiday:=''0'';
+	END IF;
+
+	SELECT CASE WHEN dayweek IN (1,2,3,4,5) THEN ''1'' else ''0'' END INTO dayweekstr;
+
+	if ((exceptday=''1'') OR (dayweekstr=''1'')) and (holiday=''0'') then		
+		res:=TRUE;
+	else
+		res:=FALSE;
+	end if;
+
+		
+
+	return (res);
+end;
+';
+
+
+ALTER FUNCTION "cmodb"."checkworkday"("datefirst" "date") OWNER TO "AdminCMO";
+
+--
+-- TOC entry 305 (class 1255 OID 17261)
+-- Name: contact_change_trg(); Type: FUNCTION; Schema: cmodb; Owner: AdminCMO
+--
+
+CREATE FUNCTION "contact_change_trg"() RETURNS "trigger"
+    LANGUAGE "plpgsql"
+    AS 'BEGIN
+
+execute cmodb.checkfield(NEW.contact_id,''contact'',''Фамилия'',OLD.last_name,NEW.last_name,''U'');
+execute cmodb.checkfield(NEW.contact_id,''contact'',''Отчество'',OLD.second_name,NEW.second_name,''U'');
+execute cmodb.checkfield(NEW.contact_id,''contact'',''Дата рождения'',to_char(OLD.birthday,''DD.MM.YYYY''),to_char(NEW.birthday,''DD.MM.YYYY''),''U'');
+execute cmodb.checkfield(NEW.contact_id,''contact'',''Место рождения'',OLD.birth_town,NEW.birth_town,''U'');
+execute cmodb.checkfield(NEW.contact_id,''contact'',''Пол'',OLD.sex,NEW.sex,''U'');
+execute cmodb.checkfield(NEW.contact_id,''contact'',''Имя'',OLD.first_name,NEW.first_name,''U'');
+execute cmodb.checkfield(NEW.contact_id,''contact'',''Комментарий'',OLD.comments,NEW.comments,''U'');
+execute cmodb.checkfield(NEW.contact_id,''contact'',''Дата готовновности визы'',to_char(OLD.date_entry_future,''DD.MM.YYYY''),to_char(NEW.date_entry_future,''DD.MM.YYYY''),''U'');
+execute cmodb.checkfield(NEW.contact_id,''contact'',''Паспорт РФ'',OLD.rf,NEW.rf,''U'');
+--execute cmodb.checkfield(NEW.contact_id,''contact'',''Документы на визу'',to_char(OLD.doc_state,''9''),to_char(NEW.doc_state,''9''),''U'');
+execute cmodb.checkfield(NEW.contact_id,''contact'',''Фамилия enu'',OLD.last_enu,NEW.last_enu,''U'');
+execute cmodb.checkfield(NEW.contact_id,''contact'',''Имя enu'',OLD.first_enu,NEW.first_enu,''U'');
+execute cmodb.checkfield(NEW.contact_id,''contact'',''Маршрут'',OLD.route,NEW.route,''U'');
+execute cmodb.checkfield(NEW.contact_id,''contact'',''Адрес в стране проживания'',OLD.address_home,NEW.address_home,''U'');
+--execute cmodb.checkfield(NEW.contact_id,''contact'',''Должность код'',OLD.position_code,NEW.position_code,''U'');
+execute cmodb.checkfield(NEW.contact_id,''contact'',''Родственники'',OLD.relatives,NEW.relatives,''U'');
+execute cmodb.checkfield(NEW.contact_id,''contact'',''Страховка'',OLD.med,NEW.med,''U'');
+execute cmodb.checkfield(NEW.contact_id,''contact'',''Отчество enu'',OLD.second_enu,NEW.second_enu,''U'');
+execute cmodb.checkfield(NEW.contact_id,''contact'',''На отчисление'',OLD.deduct,NEW.deduct,''U'');
+execute cmodb.checkfield(NEW.contact_id,''contact'',''Дата сдачи документов по визе'',to_char(OLD.delivery_dt,''DD.MM.YYYY''),to_char(NEW.delivery_dt,''DD.MM.YYYY''),''U'');
+execute cmodb.checkfield(NEW.contact_id,''contact'',''Телефон'',OLD.phone,NEW.phone,''U'');
+execute cmodb.checkfield(NEW.contact_id,''contact'',''Статус'',OLD.type,NEW.type,''U'');
+execute cmodb.checkfield(NEW.contact_id,''contact'',''Страна рождения'',OLD.birth_country,NEW.birth_country,''U'');
+execute cmodb.checkfield(NEW.contact_id,''contact'',''Гражданство'',OLD.nationality,NEW.nationality,''U'');
+RETURN NEW;
+END;';
+
+
+ALTER FUNCTION "cmodb"."contact_change_trg"() OWNER TO "AdminCMO";
+
+--
+-- TOC entry 329 (class 1255 OID 94645)
+-- Name: doc_validity_change(); Type: FUNCTION; Schema: cmodb; Owner: AdminCMO
+--
+
+CREATE FUNCTION "doc_validity_change"() RETURNS "trigger"
+    LANGUAGE "plpgsql"
+    AS 'BEGIN
+	IF (NEW.validity_to_dt IS NOT NULL) THEN	
+		NEW.validity_to_ext_dt:="cmodb".getworkday(NEW.validity_to_dt ,(-20));	
+		NEW.workday_expire:="cmodb".getwork(''now'', NEW.validity_to_dt );
+	END IF;
+	IF (NEW.validity_to_dt IS NULL) THEN
+		NEW.validity_to_ext_dt:=NULL;
+		NEW.workday_expire:=NULL;
+	END IF;
+
+--"cmodb".getwork(''now'', doc.validity_to_dt )
+--workday_expire
+	
+RETURN NEW;
+END;';
+
+
+ALTER FUNCTION "cmodb"."doc_validity_change"() OWNER TO "AdminCMO";
+
+--
+-- TOC entry 303 (class 1255 OID 17262)
+-- Name: fio_trg(); Type: FUNCTION; Schema: cmodb; Owner: postgres
+--
+
+CREATE FUNCTION "fio_trg"() RETURNS "trigger"
+    LANGUAGE "plpgsql"
+    AS 'BEGIN
+--IF TG_OP = ''INSERT'' THEN
+	NEW."FIO":=TRIM(NEW."LAST_NAME"||'' ''||TRIM(COALESCE(NEW."FIRST_NAME",'''')||'' ''||COALESCE(NEW."SECOND_NAME",'''')));
+--ELSEIF (NEW."LAST_NAME"<>OLD."LAST_NAME" OR NEW."FIRST_NAME"<>OLD."FIRST_NAME" OR COALESCE(NEW."SECOND_NAME",'''')<>coalesce(OLD."SECOND_NAME",'''')) THEN
+	--NEW."FIO":=TRIM(NEW."LAST_NAME"||'' ''||NEW."FIRST_NAME"||'' ''||COALESCE(NEW."SECOND_NAME",''''));
+--END IF;
+RETURN NEW;
+END;';
+
+
+ALTER FUNCTION "cmodb"."fio_trg"() OWNER TO "postgres";
+
+--
+-- TOC entry 306 (class 1255 OID 17263)
+-- Name: fulladdress_trg(); Type: FUNCTION; Schema: cmodb; Owner: postgres
+--
+
+CREATE FUNCTION "fulladdress_trg"() RETURNS "trigger"
+    LANGUAGE "plpgsql"
+    AS 'BEGIN
+	NEW."full_address":="CMO".GetFullAddress(NEW."obl",NEW."socr_obl",NEW."rayon",NEW."socr_rayon",NEW."town",NEW."socr_town",NEW."street",NEW."socr_street",NEW."house",NEW."corp",NEW."stroenie",NEW."flat");
+	
+	RETURN NEW;
+END;';
+
+
+ALTER FUNCTION "cmodb"."fulladdress_trg"() OWNER TO "postgres";
+
+--
+-- TOC entry 309 (class 1255 OID 49197)
+-- Name: getcountry(integer); Type: FUNCTION; Schema: cmodb; Owner: AdminCMO
+--
+
+CREATE FUNCTION "getcountry"("pcode" integer) RETURNS character varying
+    LANGUAGE "plpgsql"
+    AS '
+declare res varchar;
+begin
+	res:='''';
+	IF (pcode IS NULL ) THEN
+		RETURN res;
+	END IF;
+	
+		SELECT  "name" INTO res
+		FROM    "cmodb"."country"
+		WHERE   "code"=pcode ;
+		
+	return res;
+end;
+';
+
+
+ALTER FUNCTION "cmodb"."getcountry"("pcode" integer) OWNER TO "AdminCMO";
+
+--
+-- TOC entry 314 (class 1255 OID 90133)
+-- Name: getfulladdress("text"); Type: FUNCTION; Schema: cmodb; Owner: postgres
+--
+
+CREATE FUNCTION "getfulladdress"("kladr_code" "text") RETURNS character varying
+    LANGUAGE "plpgsql"
+    AS '
+declare val varchar;
+declare sregion varchar;
+declare region_code varchar;
+declare srayon varchar;
+declare rayon_code varchar;
+declare stown varchar;
+declare stownvillage varchar;
+declare svillage varchar;
+declare town_code varchar;
+declare village_code varchar;
+declare village_type varchar;
+declare sstreet varchar;
+declare street_type varchar;
+declare street_code varchar;
+begin
+	val:='''';
+	sregion:='''';
+	srayon:='''';
+	stown:='''';
+	svillage:='''';
+	sstreet:='''';
+	stownvillage:='''';
+	village_type:='''';
+	street_type:='''';
+
+	region_code:=RPAD(substr(kladr_code,1,2),13,''0'');
+	rayon_code:=substr(kladr_code,3,3);
+	village_code:=substr(kladr_code,9,3);
+	town_code:=substr(kladr_code,6,3);
+	street_code:=substr(kladr_code,12,4);
+	
+	
+	RAISE NOTICE ''Регион(%)'', region_code;
+	RAISE NOTICE ''Район(%)'', rayon_code;
+	RAISE NOTICE ''Город(%)'', town_code;
+	RAISE NOTICE ''Населенный пункт(%)'', village_code;
+	RAISE NOTICE ''Улица(%)'', street_code;
+	
+	/*Регион*/
+	select name||'' ''||socr||''.'' into sregion 
+	from "kladr".kladr
+	where code = region_code;
+	
+	RAISE NOTICE ''Регион(%)'', sregion;
+	
+	/*Район*/
+	IF(rayon_code <> ''000'') THEN
+		select name||'' ''||socr||''.'' into srayon 
+		from "kladr".kladr
+		where code = RPAD(substr(kladr_code,1,5),13,''0'');	
+
+	END IF;
+	RAISE NOTICE ''Район(%)'', srayon;
+	
+	/*Город*/
+	IF(town_code <>''000'' AND village_code = ''000'') THEN
+		select socr||''. ''||name into stown 
+		from "kladr".kladr
+		where code = RPAD(substr(kladr_code,1,8),13,''0'');	
+
+	END IF;
+	RAISE NOTICE ''Город(%)'', stown;
+	
+	/*Населенный пункт*/
+	IF(village_code <> ''000'') THEN
+		select socr||''. ''||name		
+		into svillage 
+		from "kladr".kladr
+		where code = RPAD(substr(kladr_code,1,11),13,''0'');	
+		
+		select socr
+		into village_type
+		from "kladr".kladr
+		where code = RPAD(substr(kladr_code,1,11),13,''0'');
+		
+		/*если мкр, то добавляем город*/
+		select socr||''. ''||name into stownvillage 
+		from "kladr".kladr
+		where code = RPAD(substr(kladr_code,1,8),13,''0'');
+		
+		if (village_type = ''мкр'') THEN
+			svillage:=stownvillage||'', ''||svillage;
+		END IF;
+
+
+	END IF;
+	RAISE NOTICE ''Населенный пункт(%)'', svillage;
+
+	
+	/*Улица*/
+	IF(street_code <> ''0000'') THEN
+		select socr||''. ''||name into sstreet 
+		from "kladr".street
+		where code = kladr_code;	
+		
+		select socr into street_type 
+		from "kladr".street
+		where code = kladr_code;
+		
+		if (street_type = ''пр-кт'') THEN
+			sstreet:= sstreet||'' ''||street_type||''.'';
+		END IF;
+
+	END IF;
+	RAISE NOTICE ''Улица(%)'', sstreet;
+	
+	val:=sregion;
+	IF (srayon <>'''') THEN
+		val:=val||'', ''||srayon;
+	END IF;
+	IF (stown <>'''') THEN
+		val:=val||'', ''||stown;
+	END IF;
+	IF (svillage <>'''') THEN
+		val:=val||'', ''||svillage;
+	END IF;
+	IF (sstreet <>'''') THEN
+		val:=val||'', ''||sstreet;
+	END IF;
+	RAISE NOTICE ''Полный адрес(%)'', val;
+	return val;
+end;
+';
+
+
+ALTER FUNCTION "cmodb"."getfulladdress"("kladr_code" "text") OWNER TO "postgres";
+
+--
+-- TOC entry 315 (class 1255 OID 90394)
+-- Name: getfulladdress("text", "text", "text", "text", "text"); Type: FUNCTION; Schema: cmodb; Owner: postgres
+--
+
+CREATE FUNCTION "getfulladdress"("kladr_code" "text", "dom" "text", "korp" "text", "stroenie" "text", "flat" "text") RETURNS character varying
+    LANGUAGE "plpgsql"
+    AS '
+declare val varchar;
+declare sregion varchar;
+declare region_code varchar;
+declare srayon varchar;
+declare rayon_code varchar;
+declare stown varchar;
+declare stownvillage varchar;
+declare svillage varchar;
+declare town_code varchar;
+declare village_code varchar;
+declare village_type varchar;
+declare sstreet varchar;
+declare street_type varchar;
+declare street_code varchar;
+begin
+	val:='''';
+	sregion:='''';
+	srayon:='''';
+	stown:='''';
+	svillage:='''';
+	sstreet:='''';
+	stownvillage:='''';
+	village_type:='''';
+	street_type:='''';
+
+	region_code:=RPAD(substr(kladr_code,1,2),13,''0'');
+	rayon_code:=substr(kladr_code,3,3);
+	village_code:=substr(kladr_code,9,3);
+	town_code:=substr(kladr_code,6,3);
+	street_code:=substr(kladr_code,12,4);
+	
+	
+	RAISE NOTICE ''Регион(%)'', region_code;
+	RAISE NOTICE ''Район(%)'', rayon_code;
+	RAISE NOTICE ''Город(%)'', town_code;
+	RAISE NOTICE ''Населенный пункт(%)'', village_code;
+	RAISE NOTICE ''Улица(%)'', street_code;
+	
+	/*Регион*/
+	select name||'' ''||socr||''.'' into sregion 
+	from "kladr".kladr
+	where code = region_code;
+	
+	RAISE NOTICE ''Регион(%)'', sregion;
+	
+	/*Район*/
+	IF(rayon_code <> ''000'') THEN
+		select name||'' ''||socr||''.'' into srayon 
+		from "kladr".kladr
+		where code = RPAD(substr(kladr_code,1,5),13,''0'');	
+
+	END IF;
+	RAISE NOTICE ''Район(%)'', srayon;
+	
+	/*Город*/
+	IF(town_code <>''000'' AND village_code = ''000'') THEN
+		select socr||''. ''||name into stown 
+		from "kladr".kladr
+		where code = RPAD(substr(kladr_code,1,8),13,''0'');	
+
+	END IF;
+	RAISE NOTICE ''Город(%)'', stown;
+	
+	/*Населенный пункт*/
+	IF(village_code <> ''000'') THEN
+		select CASE WHEN socr=''мкр'' THEN socr||''. ''||name
+		ELSE
+		name||'' ''||socr||''.'' 
+		END
+		into svillage 
+		from "kladr".kladr
+		where code = RPAD(substr(kladr_code,1,11),13,''0'');	
+		
+		select socr
+		into village_type
+		from "kladr".kladr
+		where code = RPAD(substr(kladr_code,1,11),13,''0'');
+		
+		select socr||''. ''||name into stownvillage 
+		from "kladr".kladr
+		where code = RPAD(substr(kladr_code,1,8),13,''0'');
+		
+		if (village_type = ''мкр'') THEN
+			svillage:=stownvillage||'', ''||svillage;
+		END IF;
+
+
+	END IF;
+	RAISE NOTICE ''Населенный пункт(%)'', svillage;
+
+	
+	/*Улица*/
+	IF(street_code <> ''0000'') THEN
+		select socr||''. ''||name into sstreet 
+		from "kladr".street
+		where code = kladr_code;	
+		
+		select socr into street_type 
+		from "kladr".street
+		where code = kladr_code;
+		
+		if (street_type = ''пр-кт'') THEN
+			sstreet:= sstreet||'' ''||street_type||''.'';
+		END IF;
+
+	END IF;
+	RAISE NOTICE ''Улица(%)'', sstreet;
+	
+	val:=sregion;
+	IF (srayon <>'''') THEN
+		val:=val||'', ''||srayon;
+	END IF;
+	IF (stown <>'''') THEN
+		val:=val||'', ''||stown;
+	END IF;
+	IF (svillage <>'''') THEN
+		val:=val||'', ''||svillage;
+	END IF;
+	IF (sstreet <>'''') THEN
+		val:=val||'', ''||sstreet;
+	END IF;
+
+	IF (dom <>'''') THEN
+		val:=val||'', д.''||dom;
+	END IF;
+	IF (korp <>'''') THEN
+		val:=val||'', корп.''||korp;
+	END IF;
+	IF (stroenie <>'''') THEN
+		val:=val||'', стр.''||stroenie;
+	END IF;
+
+	IF (flat <>'''') THEN
+		val:=val||'', кв.''||flat;
+	END IF;
+	RAISE NOTICE ''Полный адрес(%)'', val;
+	return val;
+end;
+';
+
+
+ALTER FUNCTION "cmodb"."getfulladdress"("kladr_code" "text", "dom" "text", "korp" "text", "stroenie" "text", "flat" "text") OWNER TO "postgres";
+
+--
+-- TOC entry 310 (class 1255 OID 49196)
+-- Name: getnationality(integer); Type: FUNCTION; Schema: cmodb; Owner: AdminCMO
+--
+
+CREATE FUNCTION "getnationality"("pcode" integer) RETURNS character varying
+    LANGUAGE "plpgsql"
+    AS '
+declare res varchar;
+begin
+	res:='''';
+	IF (pcode IS NULL ) THEN
+		RETURN res;
+	END IF;
+	
+		SELECT  "name" INTO res
+		FROM    "cmodb"."nationality"
+		WHERE   "code"=pcode ;
+		
+	return res;
+end;
+';
+
+
+ALTER FUNCTION "cmodb"."getnationality"("pcode" integer) OWNER TO "AdminCMO";
+
+--
+-- TOC entry 328 (class 1255 OID 17265)
+-- Name: getwork("date", "date"); Type: FUNCTION; Schema: cmodb; Owner: AdminCMO
+--
+
+CREATE FUNCTION "getwork"("datefirst" "date", "datelast" "date") RETURNS integer
+    LANGUAGE "plpgsql"
+    AS '
+declare i int;
+declare cnt int;
+declare Days date;
+declare exceptday varchar;
+declare holiday varchar;
+declare dayweek int;
+declare dayweekstr varchar;
+begin
+	IF (datelast IS NULL) THEN
+		RETURN 999;
+	END IF;
+	i:=0;
+	cnt:=0;
+	Days:= DateFirst;
+	
+	WHILE ((Days+i)<>datelast) LOOP
+		IF (cnt > 50) THEN
+			RETURN 999;
+		END IF;
+		
+		SELECT  ''1'' INTO exceptday
+		FROM    "cmodb"."holliday"
+		WHERE   "type"=''EXCEPT'' AND "dt"=(Days+i);
+		IF exceptday IS NULL THEN
+			exceptday:=''0'';
+		END IF;
+		
+		SELECT  extract(dow from (Days+i)) INTO dayweek;
+		
+		
+		SELECT  ''1'' INTO holiday
+		FROM    "cmodb"."holliday"
+		WHERE   "type"=''HOLYDAY'' AND "dt"=(Days+i);
+		IF holiday IS NULL THEN
+			holiday:=''0'';
+		END IF;
+
+		SELECT CASE WHEN dayweek IN (1,2,3,4,5) THEN ''1'' else ''0'' END INTO dayweekstr;
+
+		if ((exceptday=''1'') OR (dayweekstr=''1'')) and (holiday=''0'') then		
+			cnt:=cnt+1;
+		end if;
+
+		i:=i+1;
+
+	END LOOP;
+	return cnt;
+end;
+';
+
+
+ALTER FUNCTION "cmodb"."getwork"("datefirst" "date", "datelast" "date") OWNER TO "AdminCMO";
+
+--
+-- TOC entry 308 (class 1255 OID 17266)
+-- Name: getworkday("date", integer); Type: FUNCTION; Schema: cmodb; Owner: AdminCMO
+--
+
+CREATE FUNCTION "getworkday"("datefirst" "date", "cnt" integer) RETURNS "date"
+    LANGUAGE "plpgsql"
+    AS '
+declare i int;
+declare di int;
+declare Days date;
+
+begin
+	--RAISE NOTICE ''Вызов функции getworkday'';
+	if datefirst IS NULL then
+		return NULL;
+	END IF;
+	i:=0;
+	IF cnt>0 THEN
+		di:=1;
+	ELSE
+		di:=-1;
+	END IF;
+	Days:= DateFirst;
+	--RAISE NOTICE ''Days=%'',Days;
+	WHILE (cnt<>0) LOOP
+		--RAISE NOTICE ''LOOP START, cnt=%'',cnt;
+		--RAISE NOTICE ''Days=%'',Days+i;
+		if ("cmodb".checkworkday(Days+i)) then		
+			cnt:=cnt-di;
+		end if;
+		if cnt=0 AND NOT("cmodb".checkworkday(Days+i)) then
+		    cnt:=cnt-1;
+		end if;
+		i:=i+di;
+		
+		--RAISE NOTICE ''i=%'',i;
+		--RAISE NOTICE ''LOOP END, cnt=%'',cnt;
+	END LOOP;
+	return (Days+i-di);
+end;
+';
+
+
+ALTER FUNCTION "cmodb"."getworkday"("datefirst" "date", "cnt" integer) OWNER TO "AdminCMO";
+
+--
+-- TOC entry 311 (class 1255 OID 49193)
+-- Name: lookupname(character varying, character varying); Type: FUNCTION; Schema: cmodb; Owner: AdminCMO
+--
+
+CREATE FUNCTION "lookupname"("ptype" character varying, "pvalue" character varying) RETURNS character varying
+    LANGUAGE "plpgsql"
+    AS '
+declare res varchar;
+begin
+	res:='''';
+	IF (TRIM(pTYPE) IS NULL or TRIM(pVALUE) IS NULL) THEN
+		RETURN res;
+	END IF;
+	
+		SELECT  "code" INTO res
+		FROM    "cmodb"."lov"
+		WHERE   "type"=pTYPE AND "value"=pVALUE;
+		
+	return res;
+end;
+';
+
+
+ALTER FUNCTION "cmodb"."lookupname"("ptype" character varying, "pvalue" character varying) OWNER TO "AdminCMO";
+
+--
+-- TOC entry 312 (class 1255 OID 49192)
+-- Name: lookupvalue(character varying, character varying); Type: FUNCTION; Schema: cmodb; Owner: AdminCMO
+--
+
+CREATE FUNCTION "lookupvalue"("ptype" character varying, "pvalue" character varying) RETURNS character varying
+    LANGUAGE "plpgsql"
+    AS '
+declare res varchar;
+begin
+	res:=NULL;
+	IF (TRIM(pTYPE) IS NULL or TRIM(pVALUE) IS NULL) THEN
+		RETURN res;
+	END IF;
+	
+		SELECT  "value" INTO res
+		FROM    "cmodb"."lov"
+		WHERE   "type"=pTYPE AND "code"=pVALUE;
+		
+	return res;
+end;
+';
+
+
+ALTER FUNCTION "cmodb"."lookupvalue"("ptype" character varying, "pvalue" character varying) OWNER TO "AdminCMO";
+
+--
+-- TOC entry 326 (class 1255 OID 91666)
+-- Name: migration(); Type: FUNCTION; Schema: cmodb; Owner: AdminCMO
+--
+
+CREATE FUNCTION "migration"() RETURNS "void"
+    LANGUAGE "sql" SECURITY DEFINER
+    AS '
+/*=========================================*/
+/*загружаем Страны*/
+UPDATE "CMO"."CONTACT"
+set "BIRTH_COUNTRY" =   ''ТУРКМЕНИСТАН''
+where "BIRTH_COUNTRY" = ''ТУРКМЕНИНСТАН'';
+
+/*загружаем ДУЛ*/
+truncate table cmodb.dul;
+
+INSERT INTO cmodb.dul(contact_id,type, ser, num, issue, validity, status)  
+SELECT "ID",(SELECT code  FROM cmodb.lov where type=''DUL'' and value="PER_VIEW") per_view, trim(both '''''''' from "PER_SER") SER, TRIM("PER_NUM"), "PER_DATE_ISSUE", 
+       "PER_DATE_VALIDITY", ''Y''
+  FROM "CMO"."CONTACT";
+/*======================================================================================================*/
+
+truncate table cmodb.contact;
+
+INSERT INTO cmodb.contact(
+            last_name, second_name, birthday, birth_town, 
+            updated, updated_by, sex, first_name, comments, 
+            date_entry_future, rf, doc_state, fio, last_enu, first_enu, route, 
+            address_home, relatives, med, second_enu, deduct, 
+            delivery_dt, phone, reg_extend, 
+            nationality, 
+            type, 
+            contact_id, 
+            position_code, birth_country,status)
+SELECT "LAST_NAME", "SECOND_NAME", "BIRTHDAY" ,
+       "BIRTH_TOWN", "UPDATED", "UPDATED_BY", 
+        "SEX", "FIRST_NAME", 
+       "COMMENTS", "DATE_OF_ENTRY_FUTURE", "RF",  "DOC_STATE", "FIO", "LAST_ENU", "FIRST_ENU", 
+       "ROUTE", "ADDRESS_HOME", "RELATIVES", "MED", "SECOND_ENU", 
+       "DEDUCT", "DELIVERY_DT","PHONE", "REG_EXTEND", 
+	"NATIONALITY" nat,
+	(case when "STATE"=''1'' then ''student''
+		when "STATE"=''0'' then ''expelled''
+		when "GRADUATE"=''1'' then ''graduate''
+		when "GRADUATE"=''0'' then ''continue_teach''
+	else ''other'' end
+	) typ,
+	"ID",	
+        (SELECT  code FROM cmodb.lov where "type"=''POS'' and value="POSITION" ), 
+	"BIRTH_COUNTRY"  contr,
+	''Y''
+  FROM "CMO"."CONTACT";
+
+/*======================================================================================================*/
+
+UPDATE "CMO"."CONTACT"
+set "PROG_TEACH"=''ВКЛЮЧЁННОЕ ОБУЧЕНИЕ''
+where "PROG_TEACH"=''ВКЛЮЧЕННОЕ ОБУЧЕНИЕ'' or "PROG_TEACH"=''ВКЛЮЧЕННОЕ ОБРАЗОВАНИЕ'';
+/*======================================================================================================*/
+
+
+/*загружаем факультеты*/
+/*
+truncate table cmodb.facultet;
+INSERT INTO cmodb.facultet(code, name, status)
+    select row_number() over (order by facult), facult, ''Y''  from (SELECT  DISTINCT("FACULT") as  facult
+  FROM "CMO"."CONTACT" where coalesce("FACULT",'''')<>'''' ) n;
+  */
+/*загружаем специальности*/
+/*
+truncate table cmodb.speciality;
+INSERT INTO cmodb.speciality(code, name, status)
+select ''SPEC-''||row_number() over (order by spec), spec, ''Y''  from 
+(SELECT  DISTINCT(v."SPEC") as  spec FROM "CMO"."CONTACT" v where coalesce(v."SPEC",'''')<>'''' ) n;  
+*/
+/*мапим*/
+/*
+UPDATE cmodb.speciality as f
+set   par_code = (select code from cmodb.facultet where name=(select "FACULT" FROM "CMO"."CONTACT" where "SPEC"=f.name limit 1));
+*/
+
+/*======================================================================================================*/
+truncate table cmodb.teach_info;
+
+INSERT INTO cmodb.teach_info(
+            postup_year, 
+	    form_teach_code, form_pay_code, prog_teach_code,
+	    contact_id, status/*, spec_code, 
+            facult_code*/ )
+
+SELECT "POSTUP_YEAR", 	
+	(SELECT code  FROM cmodb.lov where "type"=''FO'' AND "value"="FORM_TEACH"),		
+	(SELECT code  FROM cmodb.lov where "type"=''FIN'' AND "value"="FORM_PAY"),	
+	(SELECT code  FROM cmodb.lov where "type"=''PTEACH'' AND "value"="PROG_TEACH"),	
+	"ID",''Y''/*, 
+       (select code from cmodb.speciality where name="SPEC") ,      
+       (select code from cmodb.facultet where name="FACULT")  */    
+         FROM "CMO"."CONTACT";
+
+/*==================================================================*/
+truncate table cmodb.agree;
+INSERT INTO cmodb.agree(
+            contact_id, status,num, dt, from_dt, to_dt)  
+SELECT "ID",''Y'', "AGREE_NUM", 	"AGREE_DATE", "AGREE_FR", "AGREE_TO" FROM "CMO"."CONTACT" WHERE "AGREE_NUM" IS NOT NULL;      
+/*======================================================================================================*/
+truncate table cmodb.addr_inter;
+INSERT INTO cmodb.addr_inter(
+            contact_id, status, 
+            address_code)
+SELECT con_id, case when state=''1'' then ''Y'' else ''N'' end, addr_id
+  FROM "CMO"."ADDR_INTER";
+
+/*======================================================================================================*/
+truncate table cmodb.address;
+
+INSERT INTO cmodb.address(
+             obl, rayon, town, street, house, corp, stroenie, 
+            flat, socr_obl, socr_rayon, socr_town, socr_street, full_address,code)
+SELECT obl, rayon, town, street, 
+       house, corp, stroenie, flat, socr_obl, socr_rayon, socr_town, 
+       socr_street, full_address, "Id"
+  FROM "CMO"."ADDRESS";
+
+/*======================================================================================================*/
+truncate table cmodb.children;
+
+INSERT INTO cmodb.children(
+            contact_id, fio, birthday, address, nationality)
+SELECT  con_id, fio, birthday, 
+	address,
+	"nationality" nat
+  FROM "CMO"."CON_CHILD";
+/*======================================================================================================*/
+truncate table cmodb.entry;
+INSERT INTO cmodb.entry(
+            entry_dt, leave_dt, contact_id, txt, type, status)
+	SELECT ent, leav, con_id, txt,"TYPE",  
+	case when state=''Активно'' then ''Y'' else ''N'' end
+		FROM "CMO"."ENT";
+
+/*======================================================================================================*/
+truncate table cmodb.document;
+INSERT INTO cmodb.document(
+             contact_id, created, 
+            created_by, updated, updated_by, 
+            type, invite_num, ser, num, issue_dt, 
+            validity_from_dt, validity_to_dt,  status ,ident,code)
+select * from (            
+SELECT con_id, created, created_by, updated, updated_by, 
+case when visa=''1'' THEN ''visa''
+when residence_permit=''1'' THEN ''vng''
+when temp_residence_permit=''1'' THEN ''rvp''
+else null
+end as type,
+	"Invite_num", 
+	case when trim(visa_ser)='''' then NULL else trim(visa_ser) end,
+	case when trim(visa_num)='''' then NULL else trim(visa_num) end,
+	date_issue,"Validity_from_dt",date_validity,
+        case when state=''Активно'' then ''Y'' else ''N'' end , 
+        "Ident","Id"
+  FROM "CMO"."MIGR_DATA") t where type IS NOT NULL;
+
+
+/*=====================чистим данные========================================================*/
+update cmodb.document 
+set deleted=''Y''
+where id not in (
+SELECT max(id) as id/*, contact_id, ident, type, invite_num, ser, num, issue_dt, 
+       validity_from_dt, validity_to_dt, status, code, deleted*/
+  FROM cmodb.document
+  /*where status=''N'' and contact_id=8332*/
+group by contact_id, ident, type, invite_num, ser, num, issue_dt, 
+       validity_from_dt, validity_to_dt, status,  deleted
+       );
+/*======================================================================================================*/
+truncate table cmodb.migr_card;
+INSERT INTO cmodb.migr_card(
+            contact_id, ser, num, kpp_code, entry_dt, tenure_from_dt, 
+            tenure_to_dt, status, purpose_entry, created, created_by, updated, 
+            updated_by,document_id)
+SELECT con_id, 
+	case when trim(mig_ser)='''' THEN NULL else trim(mig_ser) END , 
+	mig_num,kpp, date_of_entry,tenure_from,tenure, case when state=''Активно'' then ''Y'' else ''N'' end ,purpose_of_entry,
+created, created_by, updated, updated_by, case when visa=''1'' or residence_permit=''1'' or temp_residence_permit=''1'' THEN "Id" else null end as type 
+  FROM "CMO"."MIGR_DATA";
+
+/*=====================чистим данные========================================================*/
+update cmodb.migr_card 
+set deleted=''Y'' 
+where id not in (
+SELECT max(id) as id
+  FROM cmodb.migr_card
+  group by contact_id, ser, num, kpp_code, entry_dt, tenure_from_dt, 
+       tenure_to_dt, status, purpose_entry, deleted
+       );
+
+/*======================================================================================================*/
+truncate table cmodb.expell;
+INSERT INTO cmodb.expell(
+           contact_id, expelled, expelled_num, expelled_dt, status)
+   SELECT  "ID", "EXPELLED", "EXPELLED_NUM", "EXPELLED_DT", ''Y''
+  FROM "CMO"."CONTACT" WHERE "EXPELLED" IS NOT NULL;
+/*======================================================================================================*/
+truncate table cmodb.pf;
+INSERT INTO cmodb.pf(
+            name, contact_id, created, created_by)
+   SELECT "NAME", con_id, created, created_by FROM "CMO"."DOC";
+/*======================================================================================================*/
+UPDATE cmodb.contact
+   SET  status=''Y'';
+   
+/*======================================================================================================*/
+truncate table cmodb.holliday;
+INSERT INTO cmodb.holliday(dt, type)
+    SELECT "Dt", "Type" FROM "CMO"."Holi";
+
+';
+
+
+ALTER FUNCTION "cmodb"."migration"() OWNER TO "AdminCMO";
+
+--
+-- TOC entry 307 (class 1255 OID 17267)
+-- Name: reg_change_trg(); Type: FUNCTION; Schema: cmodb; Owner: AdminCMO
+--
+
+CREATE FUNCTION "reg_change_trg"() RETURNS "trigger"
+    LANGUAGE "plpgsql"
+    AS 'BEGIN
+if COALESCE(OLD."visa",'''')<>NEW."visa" THEN
+INSERT INTO "CMO"."AUDIT_CHANGE"(con_id,tbl,"NAME",old_val,new_val) VALUES(NEW."con_id",''REGISTRATION'',''Виза'',OLD."visa",NEW."visa");
+END IF;
+if COALESCE(OLD."residence_permit",'''')<>NEW."residence_permit" THEN
+INSERT INTO "CMO"."AUDIT_CHANGE"(con_id,tbl,"NAME",old_val,new_val) VALUES(NEW."con_id",''REGISTRATION'',''Вид на жительство'',OLD."residence_permit",NEW."residence_permit");
+END IF;
+if COALESCE(OLD."temp_residence_permit",'''')<>NEW."temp_residence_permit" THEN
+INSERT INTO "CMO"."AUDIT_CHANGE"(con_id,tbl,"NAME",old_val,new_val) VALUES(NEW."con_id",''REGISTRATION'',''РВП'',OLD."temp_residence_permit",NEW."temp_residence_permit");
+END IF;
+if COALESCE(OLD."purpose_of_entry",'''')<>NEW."purpose_of_entry" THEN
+INSERT INTO "CMO"."AUDIT_CHANGE"(con_id,tbl,"NAME",old_val,new_val) VALUES(NEW."con_id",''REGISTRATION'',''Цель въезда'',OLD."purpose_of_entry",NEW."purpose_of_entry");
+END IF;
+if COALESCE(OLD."profession",'''')<>NEW."profession" THEN
+INSERT INTO "CMO"."AUDIT_CHANGE"(con_id,tbl,"NAME",old_val,new_val) VALUES(NEW."con_id",''REGISTRATION'',''Профессия'',OLD."profession",NEW."profession");
+END IF;
+if COALESCE(OLD."date_of_entry",''1980-01-01'')<>NEW."date_of_entry" THEN
+INSERT INTO "CMO"."AUDIT_CHANGE"(con_id,tbl,"NAME",old_val,new_val) VALUES(NEW."con_id",''REGISTRATION'',''Дата въезда'',OLD."date_of_entry",NEW."date_of_entry");
+END IF;
+if COALESCE(OLD."tenure",''1980-01-01'')<>NEW."tenure" THEN
+INSERT INTO "CMO"."AUDIT_CHANGE"(con_id,tbl,"NAME",old_val,new_val) VALUES(NEW."con_id",''REGISTRATION'',''Срок пребывания до'',OLD."tenure",NEW."tenure");
+END IF;
+if COALESCE(OLD."mig_ser",'''')<>NEW."mig_ser" THEN
+INSERT INTO "CMO"."AUDIT_CHANGE"(con_id,tbl,"NAME",old_val,new_val) VALUES(NEW."con_id",''REGISTRATION'',''МК: серия'',OLD."mig_ser",NEW."mig_ser");
+END IF;
+if COALESCE(OLD."mig_num",'''')<>NEW."mig_num" THEN
+INSERT INTO "CMO"."AUDIT_CHANGE"(con_id,tbl,"NAME",old_val,new_val) VALUES(NEW."con_id",''REGISTRATION'',''МК: номер'',OLD."mig_num",NEW."mig_num");
+END IF;
+if COALESCE(OLD."representative",'''')<>NEW."representative" THEN
+INSERT INTO "CMO"."AUDIT_CHANGE"(con_id,tbl,"NAME",old_val,new_val) VALUES(NEW."con_id",''REGISTRATION'',''Представитель'',OLD."representative",NEW."representative");
+END IF;
+if COALESCE(OLD."old_address",'''')<>NEW."old_address" THEN
+INSERT INTO "CMO"."AUDIT_CHANGE"(con_id,tbl,"NAME",old_val,new_val) VALUES(NEW."con_id",''REGISTRATION'',''Предыдущий адрес'',OLD."old_address",NEW."old_address");
+END IF;
+if COALESCE(OLD."date_issue",''1980-01-01'')<>NEW."date_issue" THEN
+INSERT INTO "CMO"."AUDIT_CHANGE"(con_id,tbl,"NAME",old_val,new_val) VALUES(NEW."con_id",''REGISTRATION'',''Дата выдачи'',OLD."date_issue",NEW."date_issue");
+END IF;
+if COALESCE(OLD."date_validity",''1980-01-01'')<>NEW."date_validity" THEN
+INSERT INTO "CMO"."AUDIT_CHANGE"(con_id,tbl,"NAME",old_val,new_val) VALUES(NEW."con_id",''REGISTRATION'',''Срок действия'',OLD."date_validity",NEW."date_validity");
+END IF;
+if COALESCE(OLD."visa_num",'''')<>NEW."visa_num" THEN
+INSERT INTO "CMO"."AUDIT_CHANGE"(con_id,tbl,"NAME",old_val,new_val) VALUES(NEW."con_id",''REGISTRATION'',''Номер документа'',OLD."visa_num",NEW."visa_num");
+END IF;
+if COALESCE(OLD."visa_ser",'''')<>NEW."visa_ser" THEN
+INSERT INTO "CMO"."AUDIT_CHANGE"(con_id,tbl,"NAME",old_val,new_val) VALUES(NEW."con_id",''REGISTRATION'',''Серия документа'',OLD."visa_ser",NEW."visa_ser");
+END IF;
+if COALESCE(OLD."Ident",'''')<>NEW."Ident" THEN
+INSERT INTO "CMO"."AUDIT_CHANGE"(con_id,tbl,"NAME",old_val,new_val) VALUES(NEW."con_id",''REGISTRATION'',''Идентификатор визы'',OLD."Ident",NEW."Ident");
+END IF;
+if COALESCE(OLD."Validity_from_dt",''1980-01-01'')<>NEW."Validity_from_dt" THEN
+INSERT INTO "CMO"."AUDIT_CHANGE"(con_id,tbl,"NAME",old_val,new_val) VALUES(NEW."con_id",''REGISTRATION'',''Срок действия визы с'',OLD."Validity_from_dt",NEW."Validity_from_dt");
+END IF;
+if COALESCE(OLD."Invite_num",'''')<>NEW."Invite_num" THEN
+INSERT INTO "CMO"."AUDIT_CHANGE"(con_id,tbl,"NAME",old_val,new_val) VALUES(NEW."con_id",''REGISTRATION'',''Номер приглашения'',OLD."Invite_num",NEW."Invite_num");
+END IF;
+if COALESCE(OLD."kpp",'''')<>NEW."kpp" THEN
+INSERT INTO "CMO"."AUDIT_CHANGE"(con_id,tbl,"NAME",old_val,new_val) VALUES(NEW."con_id",''REGISTRATION'',''КПП'',OLD."kpp",NEW."kpp");
+END IF;
+RETURN NEW;
+END;';
+
+
+ALTER FUNCTION "cmodb"."reg_change_trg"() OWNER TO "AdminCMO";
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- TOC entry 177 (class 1259 OID 17268)
+-- Name: address; Type: TABLE; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+CREATE TABLE "address" (
+    "created" timestamp without time zone DEFAULT "now"(),
+    "created_by" character varying(20) DEFAULT "current_user"(),
+    "updated" timestamp without time zone DEFAULT "now"(),
+    "updated_by" character varying(20) DEFAULT "current_user"(),
+    "obl" character varying(40),
+    "rayon" character varying(40),
+    "town" character varying(40),
+    "street" character varying(40),
+    "house" character varying(4),
+    "corp" character varying(4),
+    "stroenie" character varying(4),
+    "flat" character varying(4),
+    "socr_obl" character varying(10),
+    "socr_rayon" character varying(10),
+    "socr_town" character varying(10),
+    "socr_street" character varying(10),
+    "full_address" character varying(120),
+    "id" integer NOT NULL,
+    "code" smallint,
+    "kladr_code" character varying(30),
+    "pin" character varying(1) DEFAULT 0,
+    "deleted" character(1) DEFAULT 'N'::"bpchar"
+);
+
+
+ALTER TABLE "address" OWNER TO "AdminCMO";
+
+--
+-- TOC entry 178 (class 1259 OID 17275)
+-- Name: ADDRESS_Id_seq; Type: SEQUENCE; Schema: cmodb; Owner: AdminCMO
+--
+
+CREATE SEQUENCE "ADDRESS_Id_seq"
+    START WITH 491
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE "ADDRESS_Id_seq" OWNER TO "AdminCMO";
+
+--
+-- TOC entry 2590 (class 0 OID 0)
+-- Dependencies: 178
+-- Name: ADDRESS_Id_seq; Type: SEQUENCE OWNED BY; Schema: cmodb; Owner: AdminCMO
+--
+
+ALTER SEQUENCE "ADDRESS_Id_seq" OWNED BY "address"."id";
+
+
+--
+-- TOC entry 179 (class 1259 OID 17277)
+-- Name: addr_inter; Type: TABLE; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+CREATE TABLE "addr_inter" (
+    "contact_id" integer,
+    "created" timestamp without time zone DEFAULT "now"(),
+    "created_by" character varying(20) DEFAULT "current_user"(),
+    "updated" timestamp without time zone DEFAULT "now"(),
+    "updated_by" character varying(20) DEFAULT "current_user"(),
+    "status" character(1),
+    "address_code" integer,
+    "id" integer NOT NULL,
+    "deleted" character(1) DEFAULT 'N'::"bpchar"
+);
+
+
+ALTER TABLE "addr_inter" OWNER TO "AdminCMO";
+
+--
+-- TOC entry 180 (class 1259 OID 17282)
+-- Name: ADDR_INTER_Id_seq; Type: SEQUENCE; Schema: cmodb; Owner: AdminCMO
+--
+
+CREATE SEQUENCE "ADDR_INTER_Id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE "ADDR_INTER_Id_seq" OWNER TO "AdminCMO";
+
+--
+-- TOC entry 2593 (class 0 OID 0)
+-- Dependencies: 180
+-- Name: ADDR_INTER_Id_seq; Type: SEQUENCE OWNED BY; Schema: cmodb; Owner: AdminCMO
+--
+
+ALTER SEQUENCE "ADDR_INTER_Id_seq" OWNED BY "addr_inter"."id";
+
+
+--
+-- TOC entry 181 (class 1259 OID 17284)
+-- Name: CON_CHILD_Id_seq; Type: SEQUENCE; Schema: cmodb; Owner: AdminCMO
+--
+
+CREATE SEQUENCE "CON_CHILD_Id_seq"
+    START WITH 5
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE "CON_CHILD_Id_seq" OWNER TO "AdminCMO";
+
+--
+-- TOC entry 182 (class 1259 OID 17286)
+-- Name: host; Type: TABLE; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+CREATE TABLE "host" (
+    "last_name" character varying(50),
+    "first_name" character varying(50),
+    "second_name" character varying(50),
+    "doc" character varying(11),
+    "doc_num" character varying(9),
+    "date_issue" "date",
+    "date_valid" "date",
+    "obl" character varying(50),
+    "rayon" character varying(50),
+    "town" character varying(50),
+    "street" character varying(40),
+    "house" character varying(4),
+    "korp" character varying(4),
+    "stro" character varying(4),
+    "flat" character varying(4),
+    "phone" character varying(15),
+    "org_name" character varying(52),
+    "address" character varying(80),
+    "org_phis" character varying(20),
+    "inn" character varying(12),
+    "created" timestamp without time zone DEFAULT "now"(),
+    "created_by" character varying(20) DEFAULT "current_user"(),
+    "updated" timestamp without time zone DEFAULT "now"(),
+    "updated_by" character varying(20) DEFAULT "current_user"(),
+    "doc_ser" character varying(4),
+    "birthday" "date",
+    "id" integer NOT NULL,
+    "status" character varying(1)
+);
+
+
+ALTER TABLE "host" OWNER TO "AdminCMO";
+
+--
+-- TOC entry 183 (class 1259 OID 17296)
+-- Name: HOST_Id_seq; Type: SEQUENCE; Schema: cmodb; Owner: AdminCMO
+--
+
+CREATE SEQUENCE "HOST_Id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE "HOST_Id_seq" OWNER TO "AdminCMO";
+
+--
+-- TOC entry 2597 (class 0 OID 0)
+-- Dependencies: 183
+-- Name: HOST_Id_seq; Type: SEQUENCE OWNED BY; Schema: cmodb; Owner: AdminCMO
+--
+
+ALTER SEQUENCE "HOST_Id_seq" OWNED BY "host"."id";
+
+
+--
+-- TOC entry 184 (class 1259 OID 17298)
+-- Name: migr_card; Type: TABLE; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+CREATE TABLE "migr_card" (
+    "id" integer NOT NULL,
+    "contact_id" integer,
+    "ser" character varying(6),
+    "num" character varying(10),
+    "kpp_code" character varying(40),
+    "entry_dt" "date",
+    "tenure_from_dt" "date",
+    "tenure_to_dt" "date",
+    "status" character(1),
+    "purpose_entry" character varying(20),
+    "created" timestamp without time zone DEFAULT "now"(),
+    "created_by" character varying(20) DEFAULT "current_user"(),
+    "updated" timestamp without time zone DEFAULT "now"(),
+    "updated_by" character varying(20) DEFAULT "current_user"(),
+    "document_id" smallint,
+    "deleted" character(1) DEFAULT 'N'::"bpchar"
+);
+
+
+ALTER TABLE "migr_card" OWNER TO "AdminCMO";
+
+--
+-- TOC entry 2599 (class 0 OID 0)
+-- Dependencies: 184
+-- Name: COLUMN "migr_card"."entry_dt"; Type: COMMENT; Schema: cmodb; Owner: AdminCMO
+--
+
+COMMENT ON COLUMN "migr_card"."entry_dt" IS 'дата въезда';
+
+
+--
+-- TOC entry 2600 (class 0 OID 0)
+-- Dependencies: 184
+-- Name: COLUMN "migr_card"."tenure_from_dt"; Type: COMMENT; Schema: cmodb; Owner: AdminCMO
+--
+
+COMMENT ON COLUMN "migr_card"."tenure_from_dt" IS 'срок пребывания с';
+
+
+--
+-- TOC entry 2601 (class 0 OID 0)
+-- Dependencies: 184
+-- Name: COLUMN "migr_card"."tenure_to_dt"; Type: COMMENT; Schema: cmodb; Owner: AdminCMO
+--
+
+COMMENT ON COLUMN "migr_card"."tenure_to_dt" IS 'срок пребывания до';
+
+
+--
+-- TOC entry 2602 (class 0 OID 0)
+-- Dependencies: 184
+-- Name: COLUMN "migr_card"."purpose_entry"; Type: COMMENT; Schema: cmodb; Owner: AdminCMO
+--
+
+COMMENT ON COLUMN "migr_card"."purpose_entry" IS 'цель въезда';
+
+
+--
+-- TOC entry 185 (class 1259 OID 17301)
+-- Name: MIGR_CARD_id_seq; Type: SEQUENCE; Schema: cmodb; Owner: AdminCMO
+--
+
+CREATE SEQUENCE "MIGR_CARD_id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE "MIGR_CARD_id_seq" OWNER TO "AdminCMO";
+
+--
+-- TOC entry 2604 (class 0 OID 0)
+-- Dependencies: 185
+-- Name: MIGR_CARD_id_seq; Type: SEQUENCE OWNED BY; Schema: cmodb; Owner: AdminCMO
+--
+
+ALTER SEQUENCE "MIGR_CARD_id_seq" OWNED BY "migr_card"."id";
+
+
+--
+-- TOC entry 190 (class 1259 OID 17313)
+-- Name: contact; Type: TABLE; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+CREATE TABLE "contact" (
+    "last_name" character varying(50),
+    "second_name" character varying(50),
+    "birthday" "date",
+    "birth_town" character varying(60),
+    "updated" timestamp without time zone DEFAULT "now"(),
+    "updated_by" character varying(20) DEFAULT "current_user"(),
+    "sex" character varying(10),
+    "first_name" character varying(50),
+    "comments" "text",
+    "date_entry_future" "date",
+    "rf" character varying(1),
+    "doc_state" smallint,
+    "fio" character varying(80),
+    "last_enu" character varying(50),
+    "first_enu" character varying(50),
+    "route" character varying(50),
+    "address_home" character varying(200),
+    "position_code" character varying(30),
+    "relatives" character varying(300),
+    "med" character varying(30),
+    "second_enu" character varying(40),
+    "deduct" character varying(1),
+    "delivery_dt" "date",
+    "phone" character varying(250),
+    "reg_extend" smallint DEFAULT 0,
+    "type" character varying(15),
+    "contact_id" integer NOT NULL,
+    "delegate_last_name" character varying(50),
+    "delegate_first_name" character varying(50),
+    "delegate_second_name" character varying(50),
+    "delegate_ser" character varying(10),
+    "delegate_num" character varying(15),
+    "delegate_dul_issue_dt" "date",
+    "delegate_dul_code" character varying(15),
+    "status" character varying(1),
+    "id" integer NOT NULL,
+    "birth_country" character varying(70),
+    "nationality" character varying(70),
+    "delegate_country" character varying(70),
+    "delegate_nationality" character varying(70)
+);
+
+
+ALTER TABLE "contact" OWNER TO "AdminCMO";
+
+--
+-- TOC entry 2606 (class 0 OID 0)
+-- Dependencies: 190
+-- Name: COLUMN "contact"."last_name"; Type: COMMENT; Schema: cmodb; Owner: AdminCMO
+--
+
+COMMENT ON COLUMN "contact"."last_name" IS 'Фамилия';
+
+
+--
+-- TOC entry 2607 (class 0 OID 0)
+-- Dependencies: 190
+-- Name: COLUMN "contact"."second_name"; Type: COMMENT; Schema: cmodb; Owner: AdminCMO
+--
+
+COMMENT ON COLUMN "contact"."second_name" IS 'Отчество';
+
+
+--
+-- TOC entry 2608 (class 0 OID 0)
+-- Dependencies: 190
+-- Name: COLUMN "contact"."birthday"; Type: COMMENT; Schema: cmodb; Owner: AdminCMO
+--
+
+COMMENT ON COLUMN "contact"."birthday" IS 'Дата рождения';
+
+
+--
+-- TOC entry 2609 (class 0 OID 0)
+-- Dependencies: 190
+-- Name: COLUMN "contact"."birth_town"; Type: COMMENT; Schema: cmodb; Owner: AdminCMO
+--
+
+COMMENT ON COLUMN "contact"."birth_town" IS 'Место рождения: город или н.п.';
+
+
+--
+-- TOC entry 2610 (class 0 OID 0)
+-- Dependencies: 190
+-- Name: COLUMN "contact"."sex"; Type: COMMENT; Schema: cmodb; Owner: AdminCMO
+--
+
+COMMENT ON COLUMN "contact"."sex" IS 'Пол';
+
+
+--
+-- TOC entry 2611 (class 0 OID 0)
+-- Dependencies: 190
+-- Name: COLUMN "contact"."first_name"; Type: COMMENT; Schema: cmodb; Owner: AdminCMO
+--
+
+COMMENT ON COLUMN "contact"."first_name" IS 'Имя';
+
+
+--
+-- TOC entry 2612 (class 0 OID 0)
+-- Dependencies: 190
+-- Name: COLUMN "contact"."date_entry_future"; Type: COMMENT; Schema: cmodb; Owner: AdminCMO
+--
+
+COMMENT ON COLUMN "contact"."date_entry_future" IS 'поле Виза готова
+
+дата готовновности визы';
+
+
+--
+-- TOC entry 2613 (class 0 OID 0)
+-- Dependencies: 190
+-- Name: COLUMN "contact"."rf"; Type: COMMENT; Schema: cmodb; Owner: AdminCMO
+--
+
+COMMENT ON COLUMN "contact"."rf" IS '1 - есть паспорт РФ 0 - иностранец';
+
+
+--
+-- TOC entry 2614 (class 0 OID 0)
+-- Dependencies: 190
+-- Name: COLUMN "contact"."doc_state"; Type: COMMENT; Schema: cmodb; Owner: AdminCMO
+--
+
+COMMENT ON COLUMN "contact"."doc_state" IS '1 - документы на визу отданы';
+
+
+--
+-- TOC entry 2615 (class 0 OID 0)
+-- Dependencies: 190
+-- Name: COLUMN "contact"."fio"; Type: COMMENT; Schema: cmodb; Owner: AdminCMO
+--
+
+COMMENT ON COLUMN "contact"."fio" IS 'ФИО';
+
+
+--
+-- TOC entry 2616 (class 0 OID 0)
+-- Dependencies: 190
+-- Name: COLUMN "contact"."last_enu"; Type: COMMENT; Schema: cmodb; Owner: AdminCMO
+--
+
+COMMENT ON COLUMN "contact"."last_enu" IS 'Фамилия enu';
+
+
+--
+-- TOC entry 2617 (class 0 OID 0)
+-- Dependencies: 190
+-- Name: COLUMN "contact"."first_enu"; Type: COMMENT; Schema: cmodb; Owner: AdminCMO
+--
+
+COMMENT ON COLUMN "contact"."first_enu" IS 'Имя enu';
+
+
+--
+-- TOC entry 2618 (class 0 OID 0)
+-- Dependencies: 190
+-- Name: COLUMN "contact"."route"; Type: COMMENT; Schema: cmodb; Owner: AdminCMO
+--
+
+COMMENT ON COLUMN "contact"."route" IS 'Маршрут';
+
+
+--
+-- TOC entry 2619 (class 0 OID 0)
+-- Dependencies: 190
+-- Name: COLUMN "contact"."address_home"; Type: COMMENT; Schema: cmodb; Owner: AdminCMO
+--
+
+COMMENT ON COLUMN "contact"."address_home" IS 'Адрес в стране проживания';
+
+
+--
+-- TOC entry 2620 (class 0 OID 0)
+-- Dependencies: 190
+-- Name: COLUMN "contact"."position_code"; Type: COMMENT; Schema: cmodb; Owner: AdminCMO
+--
+
+COMMENT ON COLUMN "contact"."position_code" IS 'Должность код';
+
+
+--
+-- TOC entry 2621 (class 0 OID 0)
+-- Dependencies: 190
+-- Name: COLUMN "contact"."relatives"; Type: COMMENT; Schema: cmodb; Owner: AdminCMO
+--
+
+COMMENT ON COLUMN "contact"."relatives" IS 'Родственники';
+
+
+--
+-- TOC entry 2622 (class 0 OID 0)
+-- Dependencies: 190
+-- Name: COLUMN "contact"."med"; Type: COMMENT; Schema: cmodb; Owner: AdminCMO
+--
+
+COMMENT ON COLUMN "contact"."med" IS 'Страховка';
+
+
+--
+-- TOC entry 2623 (class 0 OID 0)
+-- Dependencies: 190
+-- Name: COLUMN "contact"."second_enu"; Type: COMMENT; Schema: cmodb; Owner: AdminCMO
+--
+
+COMMENT ON COLUMN "contact"."second_enu" IS 'Отчество enu';
+
+
+--
+-- TOC entry 2624 (class 0 OID 0)
+-- Dependencies: 190
+-- Name: COLUMN "contact"."deduct"; Type: COMMENT; Schema: cmodb; Owner: AdminCMO
+--
+
+COMMENT ON COLUMN "contact"."deduct" IS 'На отчисление';
+
+
+--
+-- TOC entry 2625 (class 0 OID 0)
+-- Dependencies: 190
+-- Name: COLUMN "contact"."delivery_dt"; Type: COMMENT; Schema: cmodb; Owner: AdminCMO
+--
+
+COMMENT ON COLUMN "contact"."delivery_dt" IS 'Дата сдачи документов по визе';
+
+
+--
+-- TOC entry 2626 (class 0 OID 0)
+-- Dependencies: 190
+-- Name: COLUMN "contact"."type"; Type: COMMENT; Schema: cmodb; Owner: AdminCMO
+--
+
+COMMENT ON COLUMN "contact"."type" IS 'Студент          Student      2
+Приглашение  Invite
+Выпускник      Graduate    1
+Продолжение обучения     ContinueTeach     0
+Отчислен        Expelled
+Другой           Other
+
+бывш. graduate
+Выпускник - 1
+Продолжение обучения - 0
+По умолчанию - 2
+
+status   0 отчислен 1 учится
+
+';
+
+
+--
+-- TOC entry 196 (class 1259 OID 17337)
+-- Name: entry; Type: TABLE; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+CREATE TABLE "entry" (
+    "entry_dt" "date",
+    "leave_dt" "date",
+    "contact_id" integer,
+    "created" timestamp without time zone DEFAULT "now"(),
+    "txt" character varying(50),
+    "type" character varying(20),
+    "created_by" character varying(20) DEFAULT "current_user"(),
+    "updated" time without time zone DEFAULT "now"(),
+    "updated_by" character varying(20) DEFAULT "current_user"(),
+    "id" integer NOT NULL,
+    "status" character(1),
+    "deleted" character(1) DEFAULT 'N'::"bpchar"
+);
+
+
+ALTER TABLE "entry" OWNER TO "AdminCMO";
+
+--
+-- TOC entry 186 (class 1259 OID 17303)
+-- Name: teach_info; Type: TABLE; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+CREATE TABLE "teach_info" (
+    "id" integer NOT NULL,
+    "postup_year" character varying(4),
+    "contact_id" integer,
+    "status" character(1),
+    "form_teach_code" character varying(20),
+    "form_pay_code" character varying(20),
+    "prog_teach_code" character varying(20),
+    "period_total" smallint,
+    "period_ind" smallint,
+    "period_total_p" character varying(4),
+    "period_ind_p" character varying(4),
+    "facult_code" smallint,
+    "amount" real,
+    "spec_code" integer,
+    "deleted" character(1) DEFAULT 'N'::"bpchar",
+    "deduct_year" character varying(4)
+);
+
+
+ALTER TABLE "teach_info" OWNER TO "AdminCMO";
+
+--
+-- TOC entry 230 (class 1259 OID 91206)
+-- Name: Resident; Type: VIEW; Schema: cmodb; Owner: AdminCMO
+--
+
+CREATE VIEW "Resident" AS
+ SELECT "con"."contact_id",
+    "date_part"('days'::"text", "res"."allday") AS "allday"
+   FROM ("contact" "con"
+     JOIN ( SELECT "rs"."ID",
+            "sum"("rs"."cnt") AS "allday"
+           FROM ( SELECT "cb"."ID",
+                    "cb"."date_of_entry",
+                    "cb"."viezdpomigr",
+                    ("cb"."viezdpomigr" - "cb"."date_of_entry") AS "cnt"
+                   FROM ( SELECT "fr"."ID",
+                                CASE
+                                    WHEN (("now"() - '1 year'::interval) > "fr"."date_of_entry") THEN ("now"() - '1 year'::interval)
+                                    ELSE ("fr"."date_of_entry")::timestamp with time zone
+                                END AS "date_of_entry",
+                                CASE
+                                    WHEN ("now"() < "fr"."viezdpomigr") THEN "now"()
+                                    ELSE ("fr"."viezdpomigr")::timestamp with time zone
+                                END AS "viezdpomigr"
+                           FROM ( SELECT "cv"."ID",
+                                    "cv"."date_of_entry",
+                                    COALESCE("cv"."viezd", "cv"."tenure") AS "viezdpomigr"
+                                   FROM ( SELECT "v"."ID",
+    "v"."date_of_entry",
+    "v"."tenure",
+    ( SELECT "min"("x"."leave_dt") AS "min"
+     FROM "entry" "x"
+    WHERE ((((("x"."type")::"text" = 'зарубеж'::"text") AND ("x"."contact_id" = "v"."ID")) AND ("x"."leave_dt" >= "v"."date_of_entry")) AND ("x"."leave_dt" <= "v"."tenure"))) AS "viezd"
+   FROM ( SELECT DISTINCT "c"."contact_id" AS "ID",
+      "m"."entry_dt" AS "date_of_entry",
+      "max"("m"."tenure_to_dt") AS "tenure"
+     FROM ((( SELECT "contact"."contact_id"
+       FROM "contact"
+      WHERE (("contact"."type")::"text" <> 'expelled'::"text")) "c"
+       LEFT JOIN "migr_card" "m" ON (("c"."contact_id" = "m"."contact_id")))
+       LEFT JOIN "teach_info" "t" ON (("c"."contact_id" = "t"."contact_id")))
+    WHERE ((((("m"."entry_dt" IS NOT NULL) AND ("m"."tenure_to_dt" IS NOT NULL)) AND ((("t"."form_teach_code")::"text" = 'fulltime'::"text") OR (("t"."form_teach_code")::"text" = 'fullhidden'::"text"))) AND ("m"."deleted" = 'N'::"bpchar")) AND ("t"."deleted" = 'N'::"bpchar"))
+    GROUP BY "c"."contact_id", "m"."entry_dt") "v"
+  ORDER BY "v"."ID", "v"."date_of_entry") "cv") "fr"
+                          WHERE ("fr"."viezdpomigr" >= ("now"() - '1 year'::interval))) "cb"
+                  ORDER BY "cb"."date_of_entry") "rs"
+          GROUP BY "rs"."ID") "res" ON (("con"."contact_id" = "res"."ID")));
+
+
+ALTER TABLE "Resident" OWNER TO "AdminCMO";
+
+--
+-- TOC entry 187 (class 1259 OID 17306)
+-- Name: TEACH_INFO_Id_seq; Type: SEQUENCE; Schema: cmodb; Owner: AdminCMO
+--
+
+CREATE SEQUENCE "TEACH_INFO_Id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE "TEACH_INFO_Id_seq" OWNER TO "AdminCMO";
+
+--
+-- TOC entry 2631 (class 0 OID 0)
+-- Dependencies: 187
+-- Name: TEACH_INFO_Id_seq; Type: SEQUENCE OWNED BY; Schema: cmodb; Owner: AdminCMO
+--
+
+ALTER SEQUENCE "TEACH_INFO_Id_seq" OWNED BY "teach_info"."id";
+
+
+--
+-- TOC entry 207 (class 1259 OID 49154)
+-- Name: agree; Type: TABLE; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+CREATE TABLE "agree" (
+    "num" character varying(40),
+    "dt" "date",
+    "from_dt" "date",
+    "to_dt" "date",
+    "contact_id" integer,
+    "status" character varying(1),
+    "id" integer NOT NULL,
+    "deleted" character(1) DEFAULT 'N'::"bpchar"
+);
+
+
+ALTER TABLE "agree" OWNER TO "AdminCMO";
+
+--
+-- TOC entry 2633 (class 0 OID 0)
+-- Dependencies: 207
+-- Name: TABLE "agree"; Type: COMMENT; Schema: cmodb; Owner: AdminCMO
+--
+
+COMMENT ON TABLE "agree" IS 'Договора';
+
+
+--
+-- TOC entry 208 (class 1259 OID 49162)
+-- Name: agree_id_seq; Type: SEQUENCE; Schema: cmodb; Owner: AdminCMO
+--
+
+CREATE SEQUENCE "agree_id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE "agree_id_seq" OWNER TO "AdminCMO";
+
+--
+-- TOC entry 2635 (class 0 OID 0)
+-- Dependencies: 208
+-- Name: agree_id_seq; Type: SEQUENCE OWNED BY; Schema: cmodb; Owner: AdminCMO
+--
+
+ALTER SEQUENCE "agree_id_seq" OWNED BY "agree"."id";
+
+
+--
+-- TOC entry 234 (class 1259 OID 93224)
+-- Name: audit; Type: TABLE; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+CREATE TABLE "audit" (
+    "id" integer NOT NULL,
+    "contact_id" integer,
+    "table_name" character varying(20),
+    "field_name" character varying(30),
+    "old_value" character varying(250),
+    "new_value" character varying(250),
+    "created" time without time zone DEFAULT "now"(),
+    "created_by" character varying DEFAULT "current_user"(),
+    "action" character varying(1)
+);
+
+
+ALTER TABLE "audit" OWNER TO "AdminCMO";
+
+--
+-- TOC entry 233 (class 1259 OID 93222)
+-- Name: audit_id_seq; Type: SEQUENCE; Schema: cmodb; Owner: AdminCMO
+--
+
+CREATE SEQUENCE "audit_id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE "audit_id_seq" OWNER TO "AdminCMO";
+
+--
+-- TOC entry 2638 (class 0 OID 0)
+-- Dependencies: 233
+-- Name: audit_id_seq; Type: SEQUENCE OWNED BY; Schema: cmodb; Owner: AdminCMO
+--
+
+ALTER SEQUENCE "audit_id_seq" OWNED BY "audit"."id";
+
+
+--
+-- TOC entry 188 (class 1259 OID 17308)
+-- Name: children; Type: TABLE; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+CREATE TABLE "children" (
+    "contact_id" integer,
+    "fio" character varying(100),
+    "birthday" "date",
+    "address" character varying(100),
+    "id" integer NOT NULL,
+    "nationality" character varying(70)
+);
+
+
+ALTER TABLE "children" OWNER TO "AdminCMO";
+
+--
+-- TOC entry 189 (class 1259 OID 17311)
+-- Name: children_id_seq; Type: SEQUENCE; Schema: cmodb; Owner: AdminCMO
+--
+
+CREATE SEQUENCE "children_id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE "children_id_seq" OWNER TO "AdminCMO";
+
+--
+-- TOC entry 2641 (class 0 OID 0)
+-- Dependencies: 189
+-- Name: children_id_seq; Type: SEQUENCE OWNED BY; Schema: cmodb; Owner: AdminCMO
+--
+
+ALTER SEQUENCE "children_id_seq" OWNED BY "children"."id";
+
+
+--
+-- TOC entry 223 (class 1259 OID 81964)
+-- Name: con_id; Type: SEQUENCE; Schema: cmodb; Owner: AdminCMO
+--
+
+CREATE SEQUENCE "con_id"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE "con_id" OWNER TO "AdminCMO";
+
+--
+-- TOC entry 224 (class 1259 OID 90407)
+-- Name: contact_id_seq; Type: SEQUENCE; Schema: cmodb; Owner: AdminCMO
+--
+
+CREATE SEQUENCE "contact_id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE "contact_id_seq" OWNER TO "AdminCMO";
+
+--
+-- TOC entry 2644 (class 0 OID 0)
+-- Dependencies: 224
+-- Name: contact_id_seq; Type: SEQUENCE OWNED BY; Schema: cmodb; Owner: AdminCMO
+--
+
+ALTER SEQUENCE "contact_id_seq" OWNED BY "contact"."id";
+
+
+--
+-- TOC entry 191 (class 1259 OID 17324)
+-- Name: country; Type: TABLE; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+CREATE TABLE "country" (
+    "name" character varying(70),
+    "code" smallint NOT NULL
+);
+
+
+ALTER TABLE "country" OWNER TO "AdminCMO";
+
+--
+-- TOC entry 192 (class 1259 OID 17327)
+-- Name: document; Type: TABLE; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+CREATE TABLE "document" (
+    "id" integer NOT NULL,
+    "contact_id" integer,
+    "ident" character varying(20),
+    "type" character varying(5),
+    "invite_num" character varying(20),
+    "ser" character varying(6),
+    "num" character varying(15),
+    "issue_dt" "date",
+    "validity_from_dt" "date",
+    "validity_to_dt" "date",
+    "status" character(1),
+    "created" timestamp without time zone DEFAULT "now"(),
+    "created_by" character varying(20) DEFAULT "current_user"(),
+    "updated" timestamp without time zone DEFAULT "now"(),
+    "updated_by" character varying(20) DEFAULT "current_user"(),
+    "code" smallint,
+    "deleted" character(1) DEFAULT 'N'::"bpchar",
+    "validity_to_ext_dt" "date",
+    "workday_expire" smallint
+);
+
+
+ALTER TABLE "document" OWNER TO "AdminCMO";
+
+--
+-- TOC entry 2647 (class 0 OID 0)
+-- Dependencies: 192
+-- Name: COLUMN "document"."ident"; Type: COMMENT; Schema: cmodb; Owner: AdminCMO
+--
+
+COMMENT ON COLUMN "document"."ident" IS 'идентификатор визы';
+
+
+--
+-- TOC entry 2648 (class 0 OID 0)
+-- Dependencies: 192
+-- Name: COLUMN "document"."type"; Type: COMMENT; Schema: cmodb; Owner: AdminCMO
+--
+
+COMMENT ON COLUMN "document"."type" IS 'тип документа';
+
+
+--
+-- TOC entry 2649 (class 0 OID 0)
+-- Dependencies: 192
+-- Name: COLUMN "document"."invite_num"; Type: COMMENT; Schema: cmodb; Owner: AdminCMO
+--
+
+COMMENT ON COLUMN "document"."invite_num" IS 'номер приглашения';
+
+
+--
+-- TOC entry 2650 (class 0 OID 0)
+-- Dependencies: 192
+-- Name: COLUMN "document"."issue_dt"; Type: COMMENT; Schema: cmodb; Owner: AdminCMO
+--
+
+COMMENT ON COLUMN "document"."issue_dt" IS 'дата выдачи';
+
+
+--
+-- TOC entry 2651 (class 0 OID 0)
+-- Dependencies: 192
+-- Name: COLUMN "document"."validity_from_dt"; Type: COMMENT; Schema: cmodb; Owner: AdminCMO
+--
+
+COMMENT ON COLUMN "document"."validity_from_dt" IS 'срок действия с ';
+
+
+--
+-- TOC entry 2652 (class 0 OID 0)
+-- Dependencies: 192
+-- Name: COLUMN "document"."validity_to_dt"; Type: COMMENT; Schema: cmodb; Owner: AdminCMO
+--
+
+COMMENT ON COLUMN "document"."validity_to_dt" IS 'срок действия по';
+
+
+--
+-- TOC entry 2653 (class 0 OID 0)
+-- Dependencies: 192
+-- Name: COLUMN "document"."validity_to_ext_dt"; Type: COMMENT; Schema: cmodb; Owner: AdminCMO
+--
+
+COMMENT ON COLUMN "document"."validity_to_ext_dt" IS 'Виза: крайний срок подачи
+через триггер -20 рабочих дней';
+
+
+--
+-- TOC entry 2654 (class 0 OID 0)
+-- Dependencies: 192
+-- Name: COLUMN "document"."workday_expire"; Type: COMMENT; Schema: cmodb; Owner: AdminCMO
+--
+
+COMMENT ON COLUMN "document"."workday_expire" IS 'Рабочих дней до окончания визы';
+
+
+--
+-- TOC entry 193 (class 1259 OID 17330)
+-- Name: document_id_seq; Type: SEQUENCE; Schema: cmodb; Owner: AdminCMO
+--
+
+CREATE SEQUENCE "document_id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE "document_id_seq" OWNER TO "AdminCMO";
+
+--
+-- TOC entry 2656 (class 0 OID 0)
+-- Dependencies: 193
+-- Name: document_id_seq; Type: SEQUENCE OWNED BY; Schema: cmodb; Owner: AdminCMO
+--
+
+ALTER SEQUENCE "document_id_seq" OWNED BY "document"."id";
+
+
+--
+-- TOC entry 194 (class 1259 OID 17332)
+-- Name: dul; Type: TABLE; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+CREATE TABLE "dul" (
+    "type" character varying(15),
+    "ser" character varying(15),
+    "num" character varying(15),
+    "issue" "date",
+    "validity" "date",
+    "status" character(1),
+    "contact_id" integer,
+    "id" integer NOT NULL,
+    "updated" timestamp without time zone DEFAULT "now"(),
+    "updated_by" character varying(20) DEFAULT "current_user"(),
+    "deleted" character(1) DEFAULT 'N'::"bpchar"
+);
+
+
+ALTER TABLE "dul" OWNER TO "AdminCMO";
+
+--
+-- TOC entry 195 (class 1259 OID 17335)
+-- Name: dul_id_seq; Type: SEQUENCE; Schema: cmodb; Owner: AdminCMO
+--
+
+CREATE SEQUENCE "dul_id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE "dul_id_seq" OWNER TO "AdminCMO";
+
+--
+-- TOC entry 2659 (class 0 OID 0)
+-- Dependencies: 195
+-- Name: dul_id_seq; Type: SEQUENCE OWNED BY; Schema: cmodb; Owner: AdminCMO
+--
+
+ALTER SEQUENCE "dul_id_seq" OWNED BY "dul"."id";
+
+
+--
+-- TOC entry 197 (class 1259 OID 17344)
+-- Name: entry_id_seq; Type: SEQUENCE; Schema: cmodb; Owner: AdminCMO
+--
+
+CREATE SEQUENCE "entry_id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE "entry_id_seq" OWNER TO "AdminCMO";
+
+--
+-- TOC entry 2661 (class 0 OID 0)
+-- Dependencies: 197
+-- Name: entry_id_seq; Type: SEQUENCE OWNED BY; Schema: cmodb; Owner: AdminCMO
+--
+
+ALTER SEQUENCE "entry_id_seq" OWNED BY "entry"."id";
+
+
+--
+-- TOC entry 210 (class 1259 OID 49226)
+-- Name: expell; Type: TABLE; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+CREATE TABLE "expell" (
+    "id" integer NOT NULL,
+    "contact_id" smallint,
+    "expelled" character varying(100),
+    "expelled_num" character varying(20),
+    "expelled_dt" "date",
+    "status" character varying(1),
+    "created" timestamp without time zone DEFAULT "now"(),
+    "created_by" character varying(20) DEFAULT "current_user"(),
+    "deleted" character(1) DEFAULT 'N'::"bpchar"
+);
+
+
+ALTER TABLE "expell" OWNER TO "AdminCMO";
+
+--
+-- TOC entry 2663 (class 0 OID 0)
+-- Dependencies: 210
+-- Name: COLUMN "expell"."expelled"; Type: COMMENT; Schema: cmodb; Owner: AdminCMO
+--
+
+COMMENT ON COLUMN "expell"."expelled" IS 'Основание прекращения учебы';
+
+
+--
+-- TOC entry 2664 (class 0 OID 0)
+-- Dependencies: 210
+-- Name: COLUMN "expell"."expelled_num"; Type: COMMENT; Schema: cmodb; Owner: AdminCMO
+--
+
+COMMENT ON COLUMN "expell"."expelled_num" IS 'Основание прекращения учебы: номер приказа';
+
+
+--
+-- TOC entry 2665 (class 0 OID 0)
+-- Dependencies: 210
+-- Name: COLUMN "expell"."expelled_dt"; Type: COMMENT; Schema: cmodb; Owner: AdminCMO
+--
+
+COMMENT ON COLUMN "expell"."expelled_dt" IS 'Основание прекращения учебы: дата';
+
+
+--
+-- TOC entry 209 (class 1259 OID 49224)
+-- Name: expell_id_seq; Type: SEQUENCE; Schema: cmodb; Owner: AdminCMO
+--
+
+CREATE SEQUENCE "expell_id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE "expell_id_seq" OWNER TO "AdminCMO";
+
+--
+-- TOC entry 2667 (class 0 OID 0)
+-- Dependencies: 209
+-- Name: expell_id_seq; Type: SEQUENCE OWNED BY; Schema: cmodb; Owner: AdminCMO
+--
+
+ALTER SEQUENCE "expell_id_seq" OWNED BY "expell"."id";
+
+
+--
+-- TOC entry 198 (class 1259 OID 17346)
+-- Name: facultet; Type: TABLE; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+CREATE TABLE "facultet" (
+    "name" character varying(100),
+    "id" integer NOT NULL,
+    "short_name" character varying(50),
+    "status" character varying(1),
+    "code" smallint,
+    "deleted" character(1) DEFAULT 'N'::"bpchar"
+);
+
+
+ALTER TABLE "facultet" OWNER TO "AdminCMO";
+
+--
+-- TOC entry 205 (class 1259 OID 33026)
+-- Name: facultet_id_seq; Type: SEQUENCE; Schema: cmodb; Owner: AdminCMO
+--
+
+CREATE SEQUENCE "facultet_id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE "facultet_id_seq" OWNER TO "AdminCMO";
+
+--
+-- TOC entry 2670 (class 0 OID 0)
+-- Dependencies: 205
+-- Name: facultet_id_seq; Type: SEQUENCE OWNED BY; Schema: cmodb; Owner: AdminCMO
+--
+
+ALTER SEQUENCE "facultet_id_seq" OWNED BY "facultet"."id";
+
+
+--
+-- TOC entry 231 (class 1259 OID 91876)
+-- Name: filters; Type: TABLE; Schema: cmodb; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE "filters" (
+    "filtername" character varying(50),
+    "id" integer NOT NULL,
+    "filter_order" smallint,
+    "expr" character varying(500),
+    "column_order" character varying(500),
+    "code" smallint,
+    "type" character varying(10)
+);
+
+
+ALTER TABLE "filters" OWNER TO "postgres";
+
+--
+-- TOC entry 232 (class 1259 OID 91882)
+-- Name: filters_id_seq; Type: SEQUENCE; Schema: cmodb; Owner: postgres
+--
+
+CREATE SEQUENCE "filters_id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE "filters_id_seq" OWNER TO "postgres";
+
+--
+-- TOC entry 2673 (class 0 OID 0)
+-- Dependencies: 232
+-- Name: filters_id_seq; Type: SEQUENCE OWNED BY; Schema: cmodb; Owner: postgres
+--
+
+ALTER SEQUENCE "filters_id_seq" OWNED BY "filters"."id";
+
+
+--
+-- TOC entry 211 (class 1259 OID 65536)
+-- Name: freqjoin; Type: TABLE; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+CREATE TABLE "freqjoin" (
+    "id" integer NOT NULL,
+    "filter_id" smallint,
+    "req_join" smallint
+);
+
+
+ALTER TABLE "freqjoin" OWNER TO "AdminCMO";
+
+--
+-- TOC entry 212 (class 1259 OID 65539)
+-- Name: freqjoin_id_seq; Type: SEQUENCE; Schema: cmodb; Owner: AdminCMO
+--
+
+CREATE SEQUENCE "freqjoin_id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE "freqjoin_id_seq" OWNER TO "AdminCMO";
+
+--
+-- TOC entry 2676 (class 0 OID 0)
+-- Dependencies: 212
+-- Name: freqjoin_id_seq; Type: SEQUENCE OWNED BY; Schema: cmodb; Owner: AdminCMO
+--
+
+ALTER SEQUENCE "freqjoin_id_seq" OWNED BY "freqjoin"."id";
+
+
+--
+-- TOC entry 199 (class 1259 OID 17349)
+-- Name: holliday; Type: TABLE; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+CREATE TABLE "holliday" (
+    "dt" "date" NOT NULL,
+    "type" character varying(15) NOT NULL
+);
+
+
+ALTER TABLE "holliday" OWNER TO "AdminCMO";
+
+--
+-- TOC entry 200 (class 1259 OID 17352)
+-- Name: lov; Type: TABLE; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+CREATE TABLE "lov" (
+    "code" character varying(20) NOT NULL,
+    "type" character varying(20) NOT NULL,
+    "value" character varying(80),
+    "ord" smallint
+);
+
+
+ALTER TABLE "lov" OWNER TO "AdminCMO";
+
+--
+-- TOC entry 213 (class 1259 OID 65541)
+-- Name: mflt; Type: TABLE; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+CREATE TABLE "mflt" (
+    "id" integer NOT NULL,
+    "name" character varying(40),
+    "name_expr" character varying(200),
+    "link" smallint,
+    "req" character(1) DEFAULT 'N'::"bpchar",
+    "column_order" smallint,
+    "vis" character(1) DEFAULT 'Y'::"bpchar"
+);
+
+
+ALTER TABLE "mflt" OWNER TO "AdminCMO";
+
+--
+-- TOC entry 2680 (class 0 OID 0)
+-- Dependencies: 213
+-- Name: TABLE "mflt"; Type: COMMENT; Schema: cmodb; Owner: AdminCMO
+--
+
+COMMENT ON TABLE "mflt" IS 'Список всех полей';
+
+
+--
+-- TOC entry 214 (class 1259 OID 65546)
+-- Name: mflt_id_seq; Type: SEQUENCE; Schema: cmodb; Owner: AdminCMO
+--
+
+CREATE SEQUENCE "mflt_id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    MINVALUE 0
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE "mflt_id_seq" OWNER TO "AdminCMO";
+
+--
+-- TOC entry 2682 (class 0 OID 0)
+-- Dependencies: 214
+-- Name: mflt_id_seq; Type: SEQUENCE OWNED BY; Schema: cmodb; Owner: AdminCMO
+--
+
+ALTER SEQUENCE "mflt_id_seq" OWNED BY "mflt"."id";
+
+
+--
+-- TOC entry 215 (class 1259 OID 65548)
+-- Name: mtbl; Type: TABLE; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+CREATE TABLE "mtbl" (
+    "id" integer NOT NULL,
+    "Expr" character varying(300)
+);
+
+
+ALTER TABLE "mtbl" OWNER TO "AdminCMO";
+
+--
+-- TOC entry 216 (class 1259 OID 65551)
+-- Name: mtbl_id_seq; Type: SEQUENCE; Schema: cmodb; Owner: AdminCMO
+--
+
+CREATE SEQUENCE "mtbl_id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE "mtbl_id_seq" OWNER TO "AdminCMO";
+
+--
+-- TOC entry 2685 (class 0 OID 0)
+-- Dependencies: 216
+-- Name: mtbl_id_seq; Type: SEQUENCE OWNED BY; Schema: cmodb; Owner: AdminCMO
+--
+
+ALTER SEQUENCE "mtbl_id_seq" OWNED BY "mtbl"."id";
+
+
+--
+-- TOC entry 201 (class 1259 OID 17355)
+-- Name: nationality; Type: TABLE; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+CREATE TABLE "nationality" (
+    "name" character varying(70),
+    "code" smallint NOT NULL,
+    "fullname" character varying(150)
+);
+
+
+ALTER TABLE "nationality" OWNER TO "AdminCMO";
+
+--
+-- TOC entry 202 (class 1259 OID 17358)
+-- Name: pf; Type: TABLE; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+CREATE TABLE "pf" (
+    "name" character varying(100),
+    "contact_id" integer,
+    "created" timestamp without time zone DEFAULT "now"(),
+    "created_by" character varying(20) DEFAULT "current_user"(),
+    "id" integer NOT NULL
+);
+
+
+ALTER TABLE "pf" OWNER TO "AdminCMO";
+
+--
+-- TOC entry 203 (class 1259 OID 17363)
+-- Name: pf_id_seq; Type: SEQUENCE; Schema: cmodb; Owner: AdminCMO
+--
+
+CREATE SEQUENCE "pf_id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE "pf_id_seq" OWNER TO "AdminCMO";
+
+--
+-- TOC entry 2689 (class 0 OID 0)
+-- Dependencies: 203
+-- Name: pf_id_seq; Type: SEQUENCE OWNED BY; Schema: cmodb; Owner: AdminCMO
+--
+
+ALTER SEQUENCE "pf_id_seq" OWNED BY "pf"."id";
+
+
+--
+-- TOC entry 228 (class 1259 OID 90802)
+-- Name: pos; Type: TABLE; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+CREATE TABLE "pos" (
+    "id" integer NOT NULL,
+    "username" character varying(20),
+    "pos" character varying(30),
+    "name" character varying(30)
+);
+
+
+ALTER TABLE "pos" OWNER TO "AdminCMO";
+
+--
+-- TOC entry 227 (class 1259 OID 90800)
+-- Name: pos_id_seq; Type: SEQUENCE; Schema: cmodb; Owner: AdminCMO
+--
+
+CREATE SEQUENCE "pos_id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE "pos_id_seq" OWNER TO "AdminCMO";
+
+--
+-- TOC entry 2692 (class 0 OID 0)
+-- Dependencies: 227
+-- Name: pos_id_seq; Type: SEQUENCE OWNED BY; Schema: cmodb; Owner: AdminCMO
+--
+
+ALTER SEQUENCE "pos_id_seq" OWNED BY "pos"."id";
+
+
+--
+-- TOC entry 204 (class 1259 OID 17365)
+-- Name: speciality; Type: TABLE; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+CREATE TABLE "speciality" (
+    "code" character varying(20) NOT NULL,
+    "name" character varying(250),
+    "status" character varying(1),
+    "par_code" smallint,
+    "id" integer NOT NULL,
+    "amt_year" real,
+    "prog_teach_code" character varying(20),
+    "spec_code" integer,
+    "deleted" character(1) DEFAULT 'N'::"bpchar"
+);
+
+
+ALTER TABLE "speciality" OWNER TO "AdminCMO";
+
+--
+-- TOC entry 2694 (class 0 OID 0)
+-- Dependencies: 204
+-- Name: COLUMN "speciality"."code"; Type: COMMENT; Schema: cmodb; Owner: AdminCMO
+--
+
+COMMENT ON COLUMN "speciality"."code" IS 'шифр';
+
+
+--
+-- TOC entry 2695 (class 0 OID 0)
+-- Dependencies: 204
+-- Name: COLUMN "speciality"."name"; Type: COMMENT; Schema: cmodb; Owner: AdminCMO
+--
+
+COMMENT ON COLUMN "speciality"."name" IS 'наименование';
+
+
+--
+-- TOC entry 2696 (class 0 OID 0)
+-- Dependencies: 204
+-- Name: COLUMN "speciality"."par_code"; Type: COMMENT; Schema: cmodb; Owner: AdminCMO
+--
+
+COMMENT ON COLUMN "speciality"."par_code" IS 'id факультета';
+
+
+--
+-- TOC entry 2697 (class 0 OID 0)
+-- Dependencies: 204
+-- Name: COLUMN "speciality"."amt_year"; Type: COMMENT; Schema: cmodb; Owner: AdminCMO
+--
+
+COMMENT ON COLUMN "speciality"."amt_year" IS 'оплата за год
+';
+
+
+--
+-- TOC entry 206 (class 1259 OID 40981)
+-- Name: speciality_id_seq; Type: SEQUENCE; Schema: cmodb; Owner: AdminCMO
+--
+
+CREATE SEQUENCE "speciality_id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE "speciality_id_seq" OWNER TO "AdminCMO";
+
+--
+-- TOC entry 2699 (class 0 OID 0)
+-- Dependencies: 206
+-- Name: speciality_id_seq; Type: SEQUENCE OWNED BY; Schema: cmodb; Owner: AdminCMO
+--
+
+ALTER SEQUENCE "speciality_id_seq" OWNED BY "speciality"."id";
+
+
+--
+-- TOC entry 226 (class 1259 OID 90775)
+-- Name: stage; Type: TABLE; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+CREATE TABLE "stage" (
+    "id" integer NOT NULL,
+    "contact_id" integer,
+    "due_dt" "date",
+    "to_dt" "date",
+    "amount" numeric(10,2),
+    "receipt" character varying(1),
+    "pay_dt" "date",
+    "status" character varying(1),
+    "stage" character varying(15)
+);
+
+
+ALTER TABLE "stage" OWNER TO "AdminCMO";
+
+--
+-- TOC entry 2701 (class 0 OID 0)
+-- Dependencies: 226
+-- Name: COLUMN "stage"."due_dt"; Type: COMMENT; Schema: cmodb; Owner: AdminCMO
+--
+
+COMMENT ON COLUMN "stage"."due_dt" IS 'срок оплаты';
+
+
+--
+-- TOC entry 2702 (class 0 OID 0)
+-- Dependencies: 226
+-- Name: COLUMN "stage"."amount"; Type: COMMENT; Schema: cmodb; Owner: AdminCMO
+--
+
+COMMENT ON COLUMN "stage"."amount" IS 'сумма';
+
+
+--
+-- TOC entry 2703 (class 0 OID 0)
+-- Dependencies: 226
+-- Name: COLUMN "stage"."receipt"; Type: COMMENT; Schema: cmodb; Owner: AdminCMO
+--
+
+COMMENT ON COLUMN "stage"."receipt" IS 'принес квитанцию?';
+
+
+--
+-- TOC entry 2704 (class 0 OID 0)
+-- Dependencies: 226
+-- Name: COLUMN "stage"."pay_dt"; Type: COMMENT; Schema: cmodb; Owner: AdminCMO
+--
+
+COMMENT ON COLUMN "stage"."pay_dt" IS 'дата оплаты';
+
+
+--
+-- TOC entry 225 (class 1259 OID 90773)
+-- Name: stage_id_seq; Type: SEQUENCE; Schema: cmodb; Owner: AdminCMO
+--
+
+CREATE SEQUENCE "stage_id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE "stage_id_seq" OWNER TO "AdminCMO";
+
+--
+-- TOC entry 2706 (class 0 OID 0)
+-- Dependencies: 225
+-- Name: stage_id_seq; Type: SEQUENCE OWNED BY; Schema: cmodb; Owner: AdminCMO
+--
+
+ALTER SEQUENCE "stage_id_seq" OWNED BY "stage"."id";
+
+
+--
+-- TOC entry 217 (class 1259 OID 65553)
+-- Name: user_filter; Type: TABLE; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+CREATE TABLE "user_filter" (
+    "id" integer NOT NULL,
+    "filter_id" smallint,
+    "user_name" character varying(30),
+    "filter_expr" character varying(5000)
+);
+
+
+ALTER TABLE "user_filter" OWNER TO "AdminCMO";
+
+--
+-- TOC entry 218 (class 1259 OID 65559)
+-- Name: user_filter_column; Type: TABLE; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+CREATE TABLE "user_filter_column" (
+    "id" integer NOT NULL,
+    "filter_id" smallint,
+    "user_name" character varying(30),
+    "column_id" smallint,
+    "column_ord" smallint
+);
+
+
+ALTER TABLE "user_filter_column" OWNER TO "AdminCMO";
+
+--
+-- TOC entry 219 (class 1259 OID 65562)
+-- Name: user_filter_column_id_seq; Type: SEQUENCE; Schema: cmodb; Owner: AdminCMO
+--
+
+CREATE SEQUENCE "user_filter_column_id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE "user_filter_column_id_seq" OWNER TO "AdminCMO";
+
+--
+-- TOC entry 2710 (class 0 OID 0)
+-- Dependencies: 219
+-- Name: user_filter_column_id_seq; Type: SEQUENCE OWNED BY; Schema: cmodb; Owner: AdminCMO
+--
+
+ALTER SEQUENCE "user_filter_column_id_seq" OWNED BY "user_filter_column"."id";
+
+
+--
+-- TOC entry 220 (class 1259 OID 65564)
+-- Name: user_filter_id_seq; Type: SEQUENCE; Schema: cmodb; Owner: AdminCMO
+--
+
+CREATE SEQUENCE "user_filter_id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE "user_filter_id_seq" OWNER TO "AdminCMO";
+
+--
+-- TOC entry 2712 (class 0 OID 0)
+-- Dependencies: 220
+-- Name: user_filter_id_seq; Type: SEQUENCE OWNED BY; Schema: cmodb; Owner: AdminCMO
+--
+
+ALTER SEQUENCE "user_filter_id_seq" OWNED BY "user_filter"."id";
+
+
+--
+-- TOC entry 229 (class 1259 OID 90814)
+-- Name: validation; Type: VIEW; Schema: cmodb; Owner: AdminCMO
+--
+
+CREATE VIEW "validation" AS
+ SELECT "contact"."contact_id",
+        CASE
+            WHEN (("rs"."ent" < 0) OR ("rs"."tenure" < 0)) THEN (-1)
+            ELSE 0
+        END AS "rs",
+    COALESCE("rs"."ent", 0) AS "rs_ent",
+    COALESCE("rs"."tenure", 0) AS "rs_ten",
+    ((
+        CASE
+            WHEN ("rs"."ent" = (-1)) THEN 'Студент не въехал.'::"text"
+            ELSE ''::"text"
+        END ||
+        CASE
+            WHEN ("rs"."ent" = 1) THEN 'Ожидается въезд в течении 3-х дней.'::"text"
+            ELSE ''::"text"
+        END) ||
+        CASE
+            WHEN ("rs"."tenure" = (-1)) THEN 'Истекла регистрация.'::"text"
+            WHEN ("rs"."tenure" = (-2)) THEN 'До истечения регистрации менее 30 дней.'::"text"
+            WHEN ("rs"."tenure" = (-3)) THEN 'До истечения регистрации менее 40 дней.'::"text"
+            ELSE ''::"text"
+        END) AS "rsmes"
+   FROM ("contact"
+     LEFT JOIN ( SELECT "b"."contact_id",
+                CASE
+                    WHEN ("c"."entry_dt" IS NULL) THEN 0
+                    WHEN ("c"."entry_dt" < ('now'::"text")::"date") THEN (-1)
+                    WHEN (("c"."entry_dt" - ('now'::"text")::"date") <= 3) THEN 1
+                    ELSE 0
+                END AS "ent",
+                CASE
+                    WHEN ("b"."tenure_to_dt" IS NULL) THEN 0
+                    WHEN ("b"."tenure_to_dt" <= ('now'::"text")::"date") THEN (-1)
+                    WHEN (("b"."tenure_to_dt" > ('now'::"text")::"date") AND (("b"."tenure_to_dt" - ('now'::"text")::"date") < 30)) THEN (-2)
+                    WHEN ((("b"."tenure_to_dt" - ('now'::"text")::"date") > 30) AND (("b"."tenure_to_dt" - ('now'::"text")::"date") < 40)) THEN (-3)
+                    ELSE 0
+                END AS "tenure"
+           FROM ("migr_card" "b"
+             LEFT JOIN "entry" "c" ON (((("b"."contact_id" = "c"."contact_id") AND (("c"."status")::"text" = 'Y'::"text")) AND (("c"."deleted")::"text" = 'N'::"text"))))
+          WHERE ((("b"."status")::"text" = 'Y'::"text") AND (("b"."deleted")::"text" = 'N'::"text"))) "rs" ON (("contact"."contact_id" = "rs"."contact_id")));
+
+
+ALTER TABLE "validation" OWNER TO "AdminCMO";
+
+--
+-- TOC entry 2301 (class 2604 OID 17368)
+-- Name: id; Type: DEFAULT; Schema: cmodb; Owner: AdminCMO
+--
+
+ALTER TABLE ONLY "addr_inter" ALTER COLUMN "id" SET DEFAULT "nextval"('"ADDR_INTER_Id_seq"'::"regclass");
+
+
+--
+-- TOC entry 2297 (class 2604 OID 17369)
+-- Name: id; Type: DEFAULT; Schema: cmodb; Owner: AdminCMO
+--
+
+ALTER TABLE ONLY "address" ALTER COLUMN "id" SET DEFAULT "nextval"('"ADDRESS_Id_seq"'::"regclass");
+
+
+--
+-- TOC entry 2346 (class 2604 OID 49164)
+-- Name: id; Type: DEFAULT; Schema: cmodb; Owner: AdminCMO
+--
+
+ALTER TABLE ONLY "agree" ALTER COLUMN "id" SET DEFAULT "nextval"('"agree_id_seq"'::"regclass");
+
+
+--
+-- TOC entry 2362 (class 2604 OID 93227)
+-- Name: id; Type: DEFAULT; Schema: cmodb; Owner: AdminCMO
+--
+
+ALTER TABLE ONLY "audit" ALTER COLUMN "id" SET DEFAULT "nextval"('"audit_id_seq"'::"regclass");
+
+
+--
+-- TOC entry 2318 (class 2604 OID 17370)
+-- Name: id; Type: DEFAULT; Schema: cmodb; Owner: AdminCMO
+--
+
+ALTER TABLE ONLY "children" ALTER COLUMN "id" SET DEFAULT "nextval"('"children_id_seq"'::"regclass");
+
+
+--
+-- TOC entry 2322 (class 2604 OID 90409)
+-- Name: id; Type: DEFAULT; Schema: cmodb; Owner: AdminCMO
+--
+
+ALTER TABLE ONLY "contact" ALTER COLUMN "id" SET DEFAULT "nextval"('"contact_id_seq"'::"regclass");
+
+
+--
+-- TOC entry 2323 (class 2604 OID 17371)
+-- Name: id; Type: DEFAULT; Schema: cmodb; Owner: AdminCMO
+--
+
+ALTER TABLE ONLY "document" ALTER COLUMN "id" SET DEFAULT "nextval"('"document_id_seq"'::"regclass");
+
+
+--
+-- TOC entry 2329 (class 2604 OID 17372)
+-- Name: id; Type: DEFAULT; Schema: cmodb; Owner: AdminCMO
+--
+
+ALTER TABLE ONLY "dul" ALTER COLUMN "id" SET DEFAULT "nextval"('"dul_id_seq"'::"regclass");
+
+
+--
+-- TOC entry 2337 (class 2604 OID 17373)
+-- Name: id; Type: DEFAULT; Schema: cmodb; Owner: AdminCMO
+--
+
+ALTER TABLE ONLY "entry" ALTER COLUMN "id" SET DEFAULT "nextval"('"entry_id_seq"'::"regclass");
+
+
+--
+-- TOC entry 2350 (class 2604 OID 49229)
+-- Name: id; Type: DEFAULT; Schema: cmodb; Owner: AdminCMO
+--
+
+ALTER TABLE ONLY "expell" ALTER COLUMN "id" SET DEFAULT "nextval"('"expell_id_seq"'::"regclass");
+
+
+--
+-- TOC entry 2339 (class 2604 OID 33028)
+-- Name: id; Type: DEFAULT; Schema: cmodb; Owner: AdminCMO
+--
+
+ALTER TABLE ONLY "facultet" ALTER COLUMN "id" SET DEFAULT "nextval"('"facultet_id_seq"'::"regclass");
+
+
+--
+-- TOC entry 2361 (class 2604 OID 91884)
+-- Name: id; Type: DEFAULT; Schema: cmodb; Owner: postgres
+--
+
+ALTER TABLE ONLY "filters" ALTER COLUMN "id" SET DEFAULT "nextval"('"filters_id_seq"'::"regclass");
+
+
+--
+-- TOC entry 2352 (class 2604 OID 65566)
+-- Name: id; Type: DEFAULT; Schema: cmodb; Owner: AdminCMO
+--
+
+ALTER TABLE ONLY "freqjoin" ALTER COLUMN "id" SET DEFAULT "nextval"('"freqjoin_id_seq"'::"regclass");
+
+
+--
+-- TOC entry 2309 (class 2604 OID 17374)
+-- Name: id; Type: DEFAULT; Schema: cmodb; Owner: AdminCMO
+--
+
+ALTER TABLE ONLY "host" ALTER COLUMN "id" SET DEFAULT "nextval"('"HOST_Id_seq"'::"regclass");
+
+
+--
+-- TOC entry 2355 (class 2604 OID 65567)
+-- Name: id; Type: DEFAULT; Schema: cmodb; Owner: AdminCMO
+--
+
+ALTER TABLE ONLY "mflt" ALTER COLUMN "id" SET DEFAULT "nextval"('"mflt_id_seq"'::"regclass");
+
+
+--
+-- TOC entry 2310 (class 2604 OID 17375)
+-- Name: id; Type: DEFAULT; Schema: cmodb; Owner: AdminCMO
+--
+
+ALTER TABLE ONLY "migr_card" ALTER COLUMN "id" SET DEFAULT "nextval"('"MIGR_CARD_id_seq"'::"regclass");
+
+
+--
+-- TOC entry 2356 (class 2604 OID 65568)
+-- Name: id; Type: DEFAULT; Schema: cmodb; Owner: AdminCMO
+--
+
+ALTER TABLE ONLY "mtbl" ALTER COLUMN "id" SET DEFAULT "nextval"('"mtbl_id_seq"'::"regclass");
+
+
+--
+-- TOC entry 2343 (class 2604 OID 17376)
+-- Name: id; Type: DEFAULT; Schema: cmodb; Owner: AdminCMO
+--
+
+ALTER TABLE ONLY "pf" ALTER COLUMN "id" SET DEFAULT "nextval"('"pf_id_seq"'::"regclass");
+
+
+--
+-- TOC entry 2360 (class 2604 OID 90805)
+-- Name: id; Type: DEFAULT; Schema: cmodb; Owner: AdminCMO
+--
+
+ALTER TABLE ONLY "pos" ALTER COLUMN "id" SET DEFAULT "nextval"('"pos_id_seq"'::"regclass");
+
+
+--
+-- TOC entry 2344 (class 2604 OID 40983)
+-- Name: id; Type: DEFAULT; Schema: cmodb; Owner: AdminCMO
+--
+
+ALTER TABLE ONLY "speciality" ALTER COLUMN "id" SET DEFAULT "nextval"('"speciality_id_seq"'::"regclass");
+
+
+--
+-- TOC entry 2359 (class 2604 OID 90778)
+-- Name: id; Type: DEFAULT; Schema: cmodb; Owner: AdminCMO
+--
+
+ALTER TABLE ONLY "stage" ALTER COLUMN "id" SET DEFAULT "nextval"('"stage_id_seq"'::"regclass");
+
+
+--
+-- TOC entry 2316 (class 2604 OID 17377)
+-- Name: id; Type: DEFAULT; Schema: cmodb; Owner: AdminCMO
+--
+
+ALTER TABLE ONLY "teach_info" ALTER COLUMN "id" SET DEFAULT "nextval"('"TEACH_INFO_Id_seq"'::"regclass");
+
+
+--
+-- TOC entry 2357 (class 2604 OID 65569)
+-- Name: id; Type: DEFAULT; Schema: cmodb; Owner: AdminCMO
+--
+
+ALTER TABLE ONLY "user_filter" ALTER COLUMN "id" SET DEFAULT "nextval"('"user_filter_id_seq"'::"regclass");
+
+
+--
+-- TOC entry 2358 (class 2604 OID 65570)
+-- Name: id; Type: DEFAULT; Schema: cmodb; Owner: AdminCMO
+--
+
+ALTER TABLE ONLY "user_filter_column" ALTER COLUMN "id" SET DEFAULT "nextval"('"user_filter_column_id_seq"'::"regclass");
+
+
+--
+-- TOC entry 2371 (class 2606 OID 17379)
+-- Name: ADDR_INTER_pkey; Type: CONSTRAINT; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+ALTER TABLE ONLY "addr_inter"
+    ADD CONSTRAINT "ADDR_INTER_pkey" PRIMARY KEY ("id");
+
+
+--
+-- TOC entry 2373 (class 2606 OID 17381)
+-- Name: HOST_pkey; Type: CONSTRAINT; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+ALTER TABLE ONLY "host"
+    ADD CONSTRAINT "HOST_pkey" PRIMARY KEY ("id");
+
+
+--
+-- TOC entry 2379 (class 2606 OID 17383)
+-- Name: TEACH_INFO_pkey; Type: CONSTRAINT; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+ALTER TABLE ONLY "teach_info"
+    ADD CONSTRAINT "TEACH_INFO_pkey" PRIMARY KEY ("id");
+
+
+--
+-- TOC entry 2367 (class 2606 OID 17385)
+-- Name: address_pkey; Type: CONSTRAINT; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+ALTER TABLE ONLY "address"
+    ADD CONSTRAINT "address_pkey" PRIMARY KEY ("id");
+
+
+--
+-- TOC entry 2423 (class 2606 OID 49169)
+-- Name: agree_pkey; Type: CONSTRAINT; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+ALTER TABLE ONLY "agree"
+    ADD CONSTRAINT "agree_pkey" PRIMARY KEY ("id");
+
+
+--
+-- TOC entry 2445 (class 2606 OID 93234)
+-- Name: audit_pkey; Type: CONSTRAINT; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+ALTER TABLE ONLY "audit"
+    ADD CONSTRAINT "audit_pkey" PRIMARY KEY ("id");
+
+
+--
+-- TOC entry 2383 (class 2606 OID 17387)
+-- Name: children_pkey; Type: CONSTRAINT; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+ALTER TABLE ONLY "children"
+    ADD CONSTRAINT "children_pkey" PRIMARY KEY ("id");
+
+
+--
+-- TOC entry 2387 (class 2606 OID 90418)
+-- Name: contact_pkey; Type: CONSTRAINT; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+ALTER TABLE ONLY "contact"
+    ADD CONSTRAINT "contact_pkey" PRIMARY KEY ("id");
+
+
+--
+-- TOC entry 2393 (class 2606 OID 17391)
+-- Name: country_pkey; Type: CONSTRAINT; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+ALTER TABLE ONLY "country"
+    ADD CONSTRAINT "country_pkey" PRIMARY KEY ("code");
+
+
+--
+-- TOC entry 2396 (class 2606 OID 17393)
+-- Name: document_pkey; Type: CONSTRAINT; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+ALTER TABLE ONLY "document"
+    ADD CONSTRAINT "document_pkey" PRIMARY KEY ("id");
+
+
+--
+-- TOC entry 2399 (class 2606 OID 17395)
+-- Name: dul_pkey; Type: CONSTRAINT; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+ALTER TABLE ONLY "dul"
+    ADD CONSTRAINT "dul_pkey" PRIMARY KEY ("id");
+
+
+--
+-- TOC entry 2402 (class 2606 OID 17397)
+-- Name: entry_pkey; Type: CONSTRAINT; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+ALTER TABLE ONLY "entry"
+    ADD CONSTRAINT "entry_pkey" PRIMARY KEY ("id");
+
+
+--
+-- TOC entry 2426 (class 2606 OID 49231)
+-- Name: expell_pkey; Type: CONSTRAINT; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+ALTER TABLE ONLY "expell"
+    ADD CONSTRAINT "expell_pkey" PRIMARY KEY ("id");
+
+
+--
+-- TOC entry 2405 (class 2606 OID 33035)
+-- Name: facultet_pkey; Type: CONSTRAINT; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+ALTER TABLE ONLY "facultet"
+    ADD CONSTRAINT "facultet_pkey" PRIMARY KEY ("id");
+
+
+--
+-- TOC entry 2443 (class 2606 OID 91886)
+-- Name: filters_pkey; Type: CONSTRAINT; Schema: cmodb; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY "filters"
+    ADD CONSTRAINT "filters_pkey" PRIMARY KEY ("id");
+
+
+--
+-- TOC entry 2429 (class 2606 OID 65572)
+-- Name: freqjoin_pkey; Type: CONSTRAINT; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+ALTER TABLE ONLY "freqjoin"
+    ADD CONSTRAINT "freqjoin_pkey" PRIMARY KEY ("id");
+
+
+--
+-- TOC entry 2407 (class 2606 OID 17401)
+-- Name: holliday_pkey; Type: CONSTRAINT; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+ALTER TABLE ONLY "holliday"
+    ADD CONSTRAINT "holliday_pkey" PRIMARY KEY ("dt", "type");
+
+
+--
+-- TOC entry 2411 (class 2606 OID 17403)
+-- Name: lov_pkey; Type: CONSTRAINT; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+ALTER TABLE ONLY "lov"
+    ADD CONSTRAINT "lov_pkey" PRIMARY KEY ("type", "code");
+
+
+--
+-- TOC entry 2431 (class 2606 OID 65574)
+-- Name: mflt_pkey; Type: CONSTRAINT; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+ALTER TABLE ONLY "mflt"
+    ADD CONSTRAINT "mflt_pkey" PRIMARY KEY ("id");
+
+
+--
+-- TOC entry 2377 (class 2606 OID 17405)
+-- Name: migr_card_pkey; Type: CONSTRAINT; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+ALTER TABLE ONLY "migr_card"
+    ADD CONSTRAINT "migr_card_pkey" PRIMARY KEY ("id");
+
+
+--
+-- TOC entry 2433 (class 2606 OID 65576)
+-- Name: mtbl_pkey; Type: CONSTRAINT; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+ALTER TABLE ONLY "mtbl"
+    ADD CONSTRAINT "mtbl_pkey" PRIMARY KEY ("id");
+
+
+--
+-- TOC entry 2414 (class 2606 OID 17407)
+-- Name: nationality_pkey; Type: CONSTRAINT; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+ALTER TABLE ONLY "nationality"
+    ADD CONSTRAINT "nationality_pkey" PRIMARY KEY ("code");
+
+
+--
+-- TOC entry 2417 (class 2606 OID 17409)
+-- Name: pf_pkey; Type: CONSTRAINT; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+ALTER TABLE ONLY "pf"
+    ADD CONSTRAINT "pf_pkey" PRIMARY KEY ("id");
+
+
+--
+-- TOC entry 2441 (class 2606 OID 90807)
+-- Name: pos_pkey; Type: CONSTRAINT; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+ALTER TABLE ONLY "pos"
+    ADD CONSTRAINT "pos_pkey" PRIMARY KEY ("id");
+
+
+--
+-- TOC entry 2420 (class 2606 OID 40988)
+-- Name: speciality_pkey; Type: CONSTRAINT; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+ALTER TABLE ONLY "speciality"
+    ADD CONSTRAINT "speciality_pkey" PRIMARY KEY ("id");
+
+
+--
+-- TOC entry 2439 (class 2606 OID 90780)
+-- Name: stage_pkey; Type: CONSTRAINT; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+ALTER TABLE ONLY "stage"
+    ADD CONSTRAINT "stage_pkey" PRIMARY KEY ("id");
+
+
+--
+-- TOC entry 2437 (class 2606 OID 65578)
+-- Name: user_filter_column_pkey; Type: CONSTRAINT; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+ALTER TABLE ONLY "user_filter_column"
+    ADD CONSTRAINT "user_filter_column_pkey" PRIMARY KEY ("id");
+
+
+--
+-- TOC entry 2435 (class 2606 OID 65580)
+-- Name: user_filter_pkey; Type: CONSTRAINT; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+ALTER TABLE ONLY "user_filter"
+    ADD CONSTRAINT "user_filter_pkey" PRIMARY KEY ("id");
+
+
+--
+-- TOC entry 2368 (class 1259 OID 17412)
+-- Name: ADDR_INTER_con_id_addr_id_idx; Type: INDEX; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+CREATE INDEX "ADDR_INTER_con_id_addr_id_idx" ON "addr_inter" USING "btree" ("contact_id", "address_code");
+
+
+--
+-- TOC entry 2369 (class 1259 OID 17413)
+-- Name: ADDR_INTER_con_id_state_idx; Type: INDEX; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+CREATE INDEX "ADDR_INTER_con_id_state_idx" ON "addr_inter" USING "btree" ("contact_id", "status");
+
+
+--
+-- TOC entry 2415 (class 1259 OID 17414)
+-- Name: DOC_con_id_idx; Type: INDEX; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+CREATE INDEX "DOC_con_id_idx" ON "pf" USING "btree" ("contact_id");
+
+
+--
+-- TOC entry 2400 (class 1259 OID 17415)
+-- Name: ENT_con_id_idx; Type: INDEX; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+CREATE INDEX "ENT_con_id_idx" ON "entry" USING "btree" ("contact_id");
+
+
+--
+-- TOC entry 2408 (class 1259 OID 17416)
+-- Name: LIST_Code_idx; Type: INDEX; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+CREATE INDEX "LIST_Code_idx" ON "lov" USING "btree" ("code");
+
+
+--
+-- TOC entry 2409 (class 1259 OID 17417)
+-- Name: LIST_Type_idx; Type: INDEX; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+CREATE INDEX "LIST_Type_idx" ON "lov" USING "btree" ("type");
+
+
+--
+-- TOC entry 2365 (class 1259 OID 57360)
+-- Name: address_code_idx; Type: INDEX; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+CREATE INDEX "address_code_idx" ON "address" USING "btree" ("code");
+
+
+--
+-- TOC entry 2421 (class 1259 OID 57361)
+-- Name: agree_contact_id_idx; Type: INDEX; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+CREATE INDEX "agree_contact_id_idx" ON "agree" USING "btree" ("contact_id");
+
+
+--
+-- TOC entry 2384 (class 1259 OID 91167)
+-- Name: contact_contact_id_idx; Type: INDEX; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+CREATE INDEX "contact_contact_id_idx" ON "contact" USING "btree" ("contact_id");
+
+
+--
+-- TOC entry 2385 (class 1259 OID 95727)
+-- Name: contact_last_name_idx; Type: INDEX; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+CREATE INDEX "contact_last_name_idx" ON "contact" USING "btree" ("last_name");
+
+
+--
+-- TOC entry 2388 (class 1259 OID 93118)
+-- Name: contact_rf_type_status_idx; Type: INDEX; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+CREATE INDEX "contact_rf_type_status_idx" ON "contact" USING "btree" ("rf", "type", "status");
+
+
+--
+-- TOC entry 2389 (class 1259 OID 94644)
+-- Name: contact_status_idx; Type: INDEX; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+CREATE INDEX "contact_status_idx" ON "contact" USING "btree" ("status");
+
+
+--
+-- TOC entry 2390 (class 1259 OID 91194)
+-- Name: contact_type_idx1; Type: INDEX; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+CREATE INDEX "contact_type_idx1" ON "contact" USING "hash" ("type");
+
+
+--
+-- TOC entry 2391 (class 1259 OID 57362)
+-- Name: country_code_idx; Type: INDEX; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+CREATE INDEX "country_code_idx" ON "country" USING "btree" ("code");
+
+
+--
+-- TOC entry 2394 (class 1259 OID 57363)
+-- Name: document_contact_id_idx; Type: INDEX; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+CREATE INDEX "document_contact_id_idx" ON "document" USING "btree" ("contact_id");
+
+
+--
+-- TOC entry 2397 (class 1259 OID 57364)
+-- Name: dul_contact_id_idx; Type: INDEX; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+CREATE INDEX "dul_contact_id_idx" ON "dul" USING "btree" ("contact_id");
+
+
+--
+-- TOC entry 2424 (class 1259 OID 57368)
+-- Name: expell_contact_id_idx; Type: INDEX; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+CREATE INDEX "expell_contact_id_idx" ON "expell" USING "btree" ("contact_id");
+
+
+--
+-- TOC entry 2403 (class 1259 OID 57369)
+-- Name: facultet_code_idx; Type: INDEX; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+CREATE INDEX "facultet_code_idx" ON "facultet" USING "btree" ("code");
+
+
+--
+-- TOC entry 2427 (class 1259 OID 90781)
+-- Name: freqjoin_filter_id_idx; Type: INDEX; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+CREATE INDEX "freqjoin_filter_id_idx" ON "freqjoin" USING "btree" ("filter_id");
+
+
+--
+-- TOC entry 2374 (class 1259 OID 57370)
+-- Name: migr_card_contact_id_idx; Type: INDEX; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+CREATE INDEX "migr_card_contact_id_idx" ON "migr_card" USING "btree" ("contact_id");
+
+
+--
+-- TOC entry 2375 (class 1259 OID 57371)
+-- Name: migr_card_document_id_idx; Type: INDEX; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+CREATE INDEX "migr_card_document_id_idx" ON "migr_card" USING "btree" ("document_id");
+
+
+--
+-- TOC entry 2412 (class 1259 OID 57372)
+-- Name: nationality_code_idx; Type: INDEX; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+CREATE INDEX "nationality_code_idx" ON "nationality" USING "btree" ("code");
+
+
+--
+-- TOC entry 2418 (class 1259 OID 57373)
+-- Name: speciality_code_idx; Type: INDEX; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+CREATE INDEX "speciality_code_idx" ON "speciality" USING "btree" ("code");
+
+
+--
+-- TOC entry 2380 (class 1259 OID 57374)
+-- Name: teach_info_contact_id_idx; Type: INDEX; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+CREATE INDEX "teach_info_contact_id_idx" ON "teach_info" USING "btree" ("contact_id");
+
+
+--
+-- TOC entry 2381 (class 1259 OID 91143)
+-- Name: teach_info_form_teach_code_idx; Type: INDEX; Schema: cmodb; Owner: AdminCMO; Tablespace: 
+--
+
+CREATE INDEX "teach_info_form_teach_code_idx" ON "teach_info" USING "btree" ("form_teach_code");
+
+
+--
+-- TOC entry 2447 (class 2620 OID 17420)
+-- Name: FIO; Type: TRIGGER; Schema: cmodb; Owner: AdminCMO
+--
+
+CREATE TRIGGER "FIO" BEFORE INSERT OR UPDATE OF "last_name", "second_name", "first_name" ON "contact" FOR EACH ROW EXECUTE PROCEDURE "fio_trg"();
+
+ALTER TABLE "contact" DISABLE TRIGGER "FIO";
+
+
+--
+-- TOC entry 2448 (class 2620 OID 17421)
+-- Name: contact_change; Type: TRIGGER; Schema: cmodb; Owner: AdminCMO
+--
+
+CREATE TRIGGER "contact_change" AFTER UPDATE ON "contact" FOR EACH ROW EXECUTE PROCEDURE "contact_change_trg"();
+
+
+--
+-- TOC entry 2446 (class 2620 OID 17422)
+-- Name: generate_full_address; Type: TRIGGER; Schema: cmodb; Owner: AdminCMO
+--
+
+CREATE TRIGGER "generate_full_address" BEFORE INSERT OR UPDATE ON "address" FOR EACH ROW EXECUTE PROCEDURE "fulladdress_trg"();
+
+ALTER TABLE "address" DISABLE TRIGGER "generate_full_address";
+
+
+--
+-- TOC entry 2449 (class 2620 OID 94646)
+-- Name: validity_change; Type: TRIGGER; Schema: cmodb; Owner: AdminCMO
+--
+
+CREATE TRIGGER "validity_change" BEFORE INSERT OR UPDATE ON "document" FOR EACH ROW EXECUTE PROCEDURE "doc_validity_change"();
+
+
+--
+-- TOC entry 2569 (class 0 OID 0)
+-- Dependencies: 10
+-- Name: cmodb; Type: ACL; Schema: -; Owner: AdminCMO
+--
+
+REVOKE ALL ON SCHEMA "cmodb" FROM PUBLIC;
+REVOKE ALL ON SCHEMA "cmodb" FROM "AdminCMO";
+GRANT ALL ON SCHEMA "cmodb" TO "AdminCMO";
+GRANT ALL ON SCHEMA "cmodb" TO "CMO";
+GRANT USAGE ON SCHEMA "cmodb" TO "guest";
+GRANT ALL ON SCHEMA "cmodb" TO "CMORO";
+
+
+--
+-- TOC entry 2570 (class 0 OID 0)
+-- Dependencies: 313
+-- Name: GenerateUserFilter(character varying, integer); Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON FUNCTION "GenerateUserFilter"("USERNAME" character varying, "FILTERID" integer, OUT "RESULT" integer) FROM PUBLIC;
+REVOKE ALL ON FUNCTION "GenerateUserFilter"("USERNAME" character varying, "FILTERID" integer, OUT "RESULT" integer) FROM "AdminCMO";
+GRANT ALL ON FUNCTION "GenerateUserFilter"("USERNAME" character varying, "FILTERID" integer, OUT "RESULT" integer) TO "AdminCMO";
+GRANT ALL ON FUNCTION "GenerateUserFilter"("USERNAME" character varying, "FILTERID" integer, OUT "RESULT" integer) TO "CMO";
+GRANT ALL ON FUNCTION "GenerateUserFilter"("USERNAME" character varying, "FILTERID" integer, OUT "RESULT" integer) TO "CMORO";
+
+
+--
+-- TOC entry 2571 (class 0 OID 0)
+-- Dependencies: 316
+-- Name: Resident(integer); Type: ACL; Schema: cmodb; Owner: postgres
+--
+
+REVOKE ALL ON FUNCTION "Resident"(integer) FROM PUBLIC;
+REVOKE ALL ON FUNCTION "Resident"(integer) FROM "postgres";
+GRANT ALL ON FUNCTION "Resident"(integer) TO "postgres";
+GRANT ALL ON FUNCTION "Resident"(integer) TO "CMO";
+GRANT ALL ON FUNCTION "Resident"(integer) TO "CMORO";
+
+
+--
+-- TOC entry 2572 (class 0 OID 0)
+-- Dependencies: 322
+-- Name: addaddress("text", "text", "text", "text", "text", "text"); Type: ACL; Schema: cmodb; Owner: postgres
+--
+
+REVOKE ALL ON FUNCTION "addaddress"("kladr_code" "text", "dom" "text", "korp" "text", "stroenie" "text", "flat" "text", "fulladdr" "text") FROM PUBLIC;
+REVOKE ALL ON FUNCTION "addaddress"("kladr_code" "text", "dom" "text", "korp" "text", "stroenie" "text", "flat" "text", "fulladdr" "text") FROM "postgres";
+GRANT ALL ON FUNCTION "addaddress"("kladr_code" "text", "dom" "text", "korp" "text", "stroenie" "text", "flat" "text", "fulladdr" "text") TO "postgres";
+GRANT ALL ON FUNCTION "addaddress"("kladr_code" "text", "dom" "text", "korp" "text", "stroenie" "text", "flat" "text", "fulladdr" "text") TO PUBLIC;
+GRANT ALL ON FUNCTION "addaddress"("kladr_code" "text", "dom" "text", "korp" "text", "stroenie" "text", "flat" "text", "fulladdr" "text") TO "CMO";
+
+
+--
+-- TOC entry 2573 (class 0 OID 0)
+-- Dependencies: 327
+-- Name: checkfield(integer, "text", "text", "text", "text", "text"); Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON FUNCTION "checkfield"("contact_id_in" integer, "table_name_in" "text", "field_name_in" "text", "old_value" "text", "new_value" "text", "act" "text") FROM PUBLIC;
+REVOKE ALL ON FUNCTION "checkfield"("contact_id_in" integer, "table_name_in" "text", "field_name_in" "text", "old_value" "text", "new_value" "text", "act" "text") FROM "AdminCMO";
+GRANT ALL ON FUNCTION "checkfield"("contact_id_in" integer, "table_name_in" "text", "field_name_in" "text", "old_value" "text", "new_value" "text", "act" "text") TO "AdminCMO";
+GRANT ALL ON FUNCTION "checkfield"("contact_id_in" integer, "table_name_in" "text", "field_name_in" "text", "old_value" "text", "new_value" "text", "act" "text") TO "CMO";
+GRANT ALL ON FUNCTION "checkfield"("contact_id_in" integer, "table_name_in" "text", "field_name_in" "text", "old_value" "text", "new_value" "text", "act" "text") TO "CMORO";
+
+
+--
+-- TOC entry 2574 (class 0 OID 0)
+-- Dependencies: 304
+-- Name: checkworkday("date"); Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON FUNCTION "checkworkday"("datefirst" "date") FROM PUBLIC;
+REVOKE ALL ON FUNCTION "checkworkday"("datefirst" "date") FROM "AdminCMO";
+GRANT ALL ON FUNCTION "checkworkday"("datefirst" "date") TO "AdminCMO";
+GRANT ALL ON FUNCTION "checkworkday"("datefirst" "date") TO "CMO";
+GRANT ALL ON FUNCTION "checkworkday"("datefirst" "date") TO "CMORO";
+
+
+--
+-- TOC entry 2575 (class 0 OID 0)
+-- Dependencies: 305
+-- Name: contact_change_trg(); Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON FUNCTION "contact_change_trg"() FROM PUBLIC;
+REVOKE ALL ON FUNCTION "contact_change_trg"() FROM "AdminCMO";
+GRANT ALL ON FUNCTION "contact_change_trg"() TO "AdminCMO";
+GRANT ALL ON FUNCTION "contact_change_trg"() TO PUBLIC;
+GRANT ALL ON FUNCTION "contact_change_trg"() TO "CMO";
+
+
+--
+-- TOC entry 2576 (class 0 OID 0)
+-- Dependencies: 329
+-- Name: doc_validity_change(); Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON FUNCTION "doc_validity_change"() FROM PUBLIC;
+REVOKE ALL ON FUNCTION "doc_validity_change"() FROM "AdminCMO";
+GRANT ALL ON FUNCTION "doc_validity_change"() TO "AdminCMO";
+GRANT ALL ON FUNCTION "doc_validity_change"() TO PUBLIC;
+GRANT ALL ON FUNCTION "doc_validity_change"() TO "CMO";
+
+
+--
+-- TOC entry 2577 (class 0 OID 0)
+-- Dependencies: 303
+-- Name: fio_trg(); Type: ACL; Schema: cmodb; Owner: postgres
+--
+
+REVOKE ALL ON FUNCTION "fio_trg"() FROM PUBLIC;
+REVOKE ALL ON FUNCTION "fio_trg"() FROM "postgres";
+GRANT ALL ON FUNCTION "fio_trg"() TO "postgres";
+GRANT ALL ON FUNCTION "fio_trg"() TO PUBLIC;
+
+
+--
+-- TOC entry 2578 (class 0 OID 0)
+-- Dependencies: 306
+-- Name: fulladdress_trg(); Type: ACL; Schema: cmodb; Owner: postgres
+--
+
+REVOKE ALL ON FUNCTION "fulladdress_trg"() FROM PUBLIC;
+REVOKE ALL ON FUNCTION "fulladdress_trg"() FROM "postgres";
+GRANT ALL ON FUNCTION "fulladdress_trg"() TO "postgres";
+GRANT ALL ON FUNCTION "fulladdress_trg"() TO PUBLIC;
+GRANT ALL ON FUNCTION "fulladdress_trg"() TO "CMO";
+
+
+--
+-- TOC entry 2579 (class 0 OID 0)
+-- Dependencies: 309
+-- Name: getcountry(integer); Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON FUNCTION "getcountry"("pcode" integer) FROM PUBLIC;
+REVOKE ALL ON FUNCTION "getcountry"("pcode" integer) FROM "AdminCMO";
+GRANT ALL ON FUNCTION "getcountry"("pcode" integer) TO "AdminCMO";
+GRANT ALL ON FUNCTION "getcountry"("pcode" integer) TO "CMO";
+GRANT ALL ON FUNCTION "getcountry"("pcode" integer) TO "CMORO";
+
+
+--
+-- TOC entry 2580 (class 0 OID 0)
+-- Dependencies: 314
+-- Name: getfulladdress("text"); Type: ACL; Schema: cmodb; Owner: postgres
+--
+
+REVOKE ALL ON FUNCTION "getfulladdress"("kladr_code" "text") FROM PUBLIC;
+REVOKE ALL ON FUNCTION "getfulladdress"("kladr_code" "text") FROM "postgres";
+GRANT ALL ON FUNCTION "getfulladdress"("kladr_code" "text") TO "postgres";
+GRANT ALL ON FUNCTION "getfulladdress"("kladr_code" "text") TO PUBLIC;
+GRANT ALL ON FUNCTION "getfulladdress"("kladr_code" "text") TO "CMO";
+GRANT ALL ON FUNCTION "getfulladdress"("kladr_code" "text") TO "CMORO";
+
+
+--
+-- TOC entry 2581 (class 0 OID 0)
+-- Dependencies: 315
+-- Name: getfulladdress("text", "text", "text", "text", "text"); Type: ACL; Schema: cmodb; Owner: postgres
+--
+
+REVOKE ALL ON FUNCTION "getfulladdress"("kladr_code" "text", "dom" "text", "korp" "text", "stroenie" "text", "flat" "text") FROM PUBLIC;
+REVOKE ALL ON FUNCTION "getfulladdress"("kladr_code" "text", "dom" "text", "korp" "text", "stroenie" "text", "flat" "text") FROM "postgres";
+GRANT ALL ON FUNCTION "getfulladdress"("kladr_code" "text", "dom" "text", "korp" "text", "stroenie" "text", "flat" "text") TO "postgres";
+GRANT ALL ON FUNCTION "getfulladdress"("kladr_code" "text", "dom" "text", "korp" "text", "stroenie" "text", "flat" "text") TO PUBLIC;
+GRANT ALL ON FUNCTION "getfulladdress"("kladr_code" "text", "dom" "text", "korp" "text", "stroenie" "text", "flat" "text") TO "CMO";
+GRANT ALL ON FUNCTION "getfulladdress"("kladr_code" "text", "dom" "text", "korp" "text", "stroenie" "text", "flat" "text") TO "CMORO";
+
+
+--
+-- TOC entry 2582 (class 0 OID 0)
+-- Dependencies: 310
+-- Name: getnationality(integer); Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON FUNCTION "getnationality"("pcode" integer) FROM PUBLIC;
+REVOKE ALL ON FUNCTION "getnationality"("pcode" integer) FROM "AdminCMO";
+GRANT ALL ON FUNCTION "getnationality"("pcode" integer) TO "AdminCMO";
+GRANT ALL ON FUNCTION "getnationality"("pcode" integer) TO "CMO";
+GRANT ALL ON FUNCTION "getnationality"("pcode" integer) TO "CMORO";
+
+
+--
+-- TOC entry 2583 (class 0 OID 0)
+-- Dependencies: 328
+-- Name: getwork("date", "date"); Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON FUNCTION "getwork"("datefirst" "date", "datelast" "date") FROM PUBLIC;
+REVOKE ALL ON FUNCTION "getwork"("datefirst" "date", "datelast" "date") FROM "AdminCMO";
+GRANT ALL ON FUNCTION "getwork"("datefirst" "date", "datelast" "date") TO "AdminCMO";
+GRANT ALL ON FUNCTION "getwork"("datefirst" "date", "datelast" "date") TO "CMO";
+GRANT ALL ON FUNCTION "getwork"("datefirst" "date", "datelast" "date") TO "CMORO";
+
+
+--
+-- TOC entry 2584 (class 0 OID 0)
+-- Dependencies: 308
+-- Name: getworkday("date", integer); Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON FUNCTION "getworkday"("datefirst" "date", "cnt" integer) FROM PUBLIC;
+REVOKE ALL ON FUNCTION "getworkday"("datefirst" "date", "cnt" integer) FROM "AdminCMO";
+GRANT ALL ON FUNCTION "getworkday"("datefirst" "date", "cnt" integer) TO "AdminCMO";
+GRANT ALL ON FUNCTION "getworkday"("datefirst" "date", "cnt" integer) TO "CMO";
+GRANT ALL ON FUNCTION "getworkday"("datefirst" "date", "cnt" integer) TO "CMORO";
+
+
+--
+-- TOC entry 2585 (class 0 OID 0)
+-- Dependencies: 311
+-- Name: lookupname(character varying, character varying); Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON FUNCTION "lookupname"("ptype" character varying, "pvalue" character varying) FROM PUBLIC;
+REVOKE ALL ON FUNCTION "lookupname"("ptype" character varying, "pvalue" character varying) FROM "AdminCMO";
+GRANT ALL ON FUNCTION "lookupname"("ptype" character varying, "pvalue" character varying) TO "AdminCMO";
+GRANT ALL ON FUNCTION "lookupname"("ptype" character varying, "pvalue" character varying) TO "CMO";
+GRANT ALL ON FUNCTION "lookupname"("ptype" character varying, "pvalue" character varying) TO "CMORO";
+
+
+--
+-- TOC entry 2586 (class 0 OID 0)
+-- Dependencies: 312
+-- Name: lookupvalue(character varying, character varying); Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON FUNCTION "lookupvalue"("ptype" character varying, "pvalue" character varying) FROM PUBLIC;
+REVOKE ALL ON FUNCTION "lookupvalue"("ptype" character varying, "pvalue" character varying) FROM "AdminCMO";
+GRANT ALL ON FUNCTION "lookupvalue"("ptype" character varying, "pvalue" character varying) TO "AdminCMO";
+GRANT ALL ON FUNCTION "lookupvalue"("ptype" character varying, "pvalue" character varying) TO "CMO";
+GRANT ALL ON FUNCTION "lookupvalue"("ptype" character varying, "pvalue" character varying) TO "CMORO";
+
+
+--
+-- TOC entry 2587 (class 0 OID 0)
+-- Dependencies: 326
+-- Name: migration(); Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON FUNCTION "migration"() FROM PUBLIC;
+GRANT ALL ON FUNCTION "migration"() TO "CMORO";
+GRANT ALL ON FUNCTION "migration"() TO "CMO" WITH GRANT OPTION;
+
+
+--
+-- TOC entry 2588 (class 0 OID 0)
+-- Dependencies: 307
+-- Name: reg_change_trg(); Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON FUNCTION "reg_change_trg"() FROM PUBLIC;
+REVOKE ALL ON FUNCTION "reg_change_trg"() FROM "AdminCMO";
+GRANT ALL ON FUNCTION "reg_change_trg"() TO "AdminCMO";
+GRANT ALL ON FUNCTION "reg_change_trg"() TO PUBLIC;
+GRANT ALL ON FUNCTION "reg_change_trg"() TO "CMO";
+
+
+--
+-- TOC entry 2589 (class 0 OID 0)
+-- Dependencies: 177
+-- Name: address; Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON TABLE "address" FROM PUBLIC;
+REVOKE ALL ON TABLE "address" FROM "AdminCMO";
+GRANT ALL ON TABLE "address" TO "AdminCMO";
+GRANT ALL ON TABLE "address" TO "CMO";
+GRANT SELECT ON TABLE "address" TO "CMORO";
+
+
+--
+-- TOC entry 2591 (class 0 OID 0)
+-- Dependencies: 178
+-- Name: ADDRESS_Id_seq; Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON SEQUENCE "ADDRESS_Id_seq" FROM PUBLIC;
+REVOKE ALL ON SEQUENCE "ADDRESS_Id_seq" FROM "AdminCMO";
+GRANT ALL ON SEQUENCE "ADDRESS_Id_seq" TO "AdminCMO";
+GRANT ALL ON SEQUENCE "ADDRESS_Id_seq" TO "CMO";
+GRANT ALL ON SEQUENCE "ADDRESS_Id_seq" TO "CMORO";
+
+
+--
+-- TOC entry 2592 (class 0 OID 0)
+-- Dependencies: 179
+-- Name: addr_inter; Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON TABLE "addr_inter" FROM PUBLIC;
+REVOKE ALL ON TABLE "addr_inter" FROM "AdminCMO";
+GRANT ALL ON TABLE "addr_inter" TO "AdminCMO";
+GRANT ALL ON TABLE "addr_inter" TO "CMO";
+GRANT SELECT ON TABLE "addr_inter" TO "CMORO";
+
+
+--
+-- TOC entry 2594 (class 0 OID 0)
+-- Dependencies: 180
+-- Name: ADDR_INTER_Id_seq; Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON SEQUENCE "ADDR_INTER_Id_seq" FROM PUBLIC;
+REVOKE ALL ON SEQUENCE "ADDR_INTER_Id_seq" FROM "AdminCMO";
+GRANT ALL ON SEQUENCE "ADDR_INTER_Id_seq" TO "AdminCMO";
+GRANT ALL ON SEQUENCE "ADDR_INTER_Id_seq" TO "CMO";
+GRANT ALL ON SEQUENCE "ADDR_INTER_Id_seq" TO "CMORO";
+
+
+--
+-- TOC entry 2595 (class 0 OID 0)
+-- Dependencies: 181
+-- Name: CON_CHILD_Id_seq; Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON SEQUENCE "CON_CHILD_Id_seq" FROM PUBLIC;
+REVOKE ALL ON SEQUENCE "CON_CHILD_Id_seq" FROM "AdminCMO";
+GRANT ALL ON SEQUENCE "CON_CHILD_Id_seq" TO "AdminCMO";
+GRANT ALL ON SEQUENCE "CON_CHILD_Id_seq" TO "CMO";
+GRANT ALL ON SEQUENCE "CON_CHILD_Id_seq" TO "CMORO";
+
+
+--
+-- TOC entry 2596 (class 0 OID 0)
+-- Dependencies: 182
+-- Name: host; Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON TABLE "host" FROM PUBLIC;
+REVOKE ALL ON TABLE "host" FROM "AdminCMO";
+GRANT ALL ON TABLE "host" TO "AdminCMO";
+GRANT ALL ON TABLE "host" TO "CMO";
+GRANT SELECT ON TABLE "host" TO "CMORO";
+
+
+--
+-- TOC entry 2598 (class 0 OID 0)
+-- Dependencies: 183
+-- Name: HOST_Id_seq; Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON SEQUENCE "HOST_Id_seq" FROM PUBLIC;
+REVOKE ALL ON SEQUENCE "HOST_Id_seq" FROM "AdminCMO";
+GRANT ALL ON SEQUENCE "HOST_Id_seq" TO "AdminCMO";
+GRANT ALL ON SEQUENCE "HOST_Id_seq" TO "CMO";
+GRANT ALL ON SEQUENCE "HOST_Id_seq" TO "CMORO";
+
+
+--
+-- TOC entry 2603 (class 0 OID 0)
+-- Dependencies: 184
+-- Name: migr_card; Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON TABLE "migr_card" FROM PUBLIC;
+REVOKE ALL ON TABLE "migr_card" FROM "AdminCMO";
+GRANT ALL ON TABLE "migr_card" TO "AdminCMO";
+GRANT ALL ON TABLE "migr_card" TO "CMO";
+GRANT SELECT ON TABLE "migr_card" TO "CMORO";
+
+
+--
+-- TOC entry 2605 (class 0 OID 0)
+-- Dependencies: 185
+-- Name: MIGR_CARD_id_seq; Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON SEQUENCE "MIGR_CARD_id_seq" FROM PUBLIC;
+REVOKE ALL ON SEQUENCE "MIGR_CARD_id_seq" FROM "AdminCMO";
+GRANT ALL ON SEQUENCE "MIGR_CARD_id_seq" TO "AdminCMO";
+GRANT ALL ON SEQUENCE "MIGR_CARD_id_seq" TO "CMO";
+GRANT ALL ON SEQUENCE "MIGR_CARD_id_seq" TO "CMORO";
+
+
+--
+-- TOC entry 2627 (class 0 OID 0)
+-- Dependencies: 190
+-- Name: contact; Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON TABLE "contact" FROM PUBLIC;
+REVOKE ALL ON TABLE "contact" FROM "AdminCMO";
+GRANT ALL ON TABLE "contact" TO "AdminCMO";
+GRANT ALL ON TABLE "contact" TO "CMO";
+GRANT SELECT ON TABLE "contact" TO "CMORO";
+
+
+--
+-- TOC entry 2628 (class 0 OID 0)
+-- Dependencies: 196
+-- Name: entry; Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON TABLE "entry" FROM PUBLIC;
+REVOKE ALL ON TABLE "entry" FROM "AdminCMO";
+GRANT ALL ON TABLE "entry" TO "AdminCMO";
+GRANT ALL ON TABLE "entry" TO "CMO";
+GRANT SELECT ON TABLE "entry" TO "CMORO";
+
+
+--
+-- TOC entry 2629 (class 0 OID 0)
+-- Dependencies: 186
+-- Name: teach_info; Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON TABLE "teach_info" FROM PUBLIC;
+REVOKE ALL ON TABLE "teach_info" FROM "AdminCMO";
+GRANT ALL ON TABLE "teach_info" TO "AdminCMO";
+GRANT ALL ON TABLE "teach_info" TO "CMO";
+GRANT SELECT ON TABLE "teach_info" TO "CMORO";
+
+
+--
+-- TOC entry 2630 (class 0 OID 0)
+-- Dependencies: 230
+-- Name: Resident; Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON TABLE "Resident" FROM PUBLIC;
+REVOKE ALL ON TABLE "Resident" FROM "AdminCMO";
+GRANT ALL ON TABLE "Resident" TO "AdminCMO";
+GRANT SELECT,REFERENCES ON TABLE "Resident" TO "CMO";
+GRANT SELECT ON TABLE "Resident" TO "CMORO";
+
+
+--
+-- TOC entry 2632 (class 0 OID 0)
+-- Dependencies: 187
+-- Name: TEACH_INFO_Id_seq; Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON SEQUENCE "TEACH_INFO_Id_seq" FROM PUBLIC;
+REVOKE ALL ON SEQUENCE "TEACH_INFO_Id_seq" FROM "AdminCMO";
+GRANT ALL ON SEQUENCE "TEACH_INFO_Id_seq" TO "AdminCMO";
+GRANT ALL ON SEQUENCE "TEACH_INFO_Id_seq" TO "CMO";
+GRANT ALL ON SEQUENCE "TEACH_INFO_Id_seq" TO "CMORO";
+
+
+--
+-- TOC entry 2634 (class 0 OID 0)
+-- Dependencies: 207
+-- Name: agree; Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON TABLE "agree" FROM PUBLIC;
+REVOKE ALL ON TABLE "agree" FROM "AdminCMO";
+GRANT ALL ON TABLE "agree" TO "AdminCMO";
+GRANT ALL ON TABLE "agree" TO "CMO";
+GRANT SELECT ON TABLE "agree" TO "CMORO";
+
+
+--
+-- TOC entry 2636 (class 0 OID 0)
+-- Dependencies: 208
+-- Name: agree_id_seq; Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON SEQUENCE "agree_id_seq" FROM PUBLIC;
+REVOKE ALL ON SEQUENCE "agree_id_seq" FROM "AdminCMO";
+GRANT ALL ON SEQUENCE "agree_id_seq" TO "AdminCMO";
+GRANT ALL ON SEQUENCE "agree_id_seq" TO "CMO";
+GRANT ALL ON SEQUENCE "agree_id_seq" TO "CMORO";
+
+
+--
+-- TOC entry 2637 (class 0 OID 0)
+-- Dependencies: 234
+-- Name: audit; Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON TABLE "audit" FROM PUBLIC;
+REVOKE ALL ON TABLE "audit" FROM "AdminCMO";
+GRANT ALL ON TABLE "audit" TO "AdminCMO";
+GRANT SELECT,REFERENCES ON TABLE "audit" TO "CMORO";
+GRANT ALL ON TABLE "audit" TO "CMO";
+
+
+--
+-- TOC entry 2639 (class 0 OID 0)
+-- Dependencies: 233
+-- Name: audit_id_seq; Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON SEQUENCE "audit_id_seq" FROM PUBLIC;
+REVOKE ALL ON SEQUENCE "audit_id_seq" FROM "AdminCMO";
+GRANT ALL ON SEQUENCE "audit_id_seq" TO "AdminCMO";
+GRANT ALL ON SEQUENCE "audit_id_seq" TO "CMORO";
+GRANT ALL ON SEQUENCE "audit_id_seq" TO "CMO";
+
+
+--
+-- TOC entry 2640 (class 0 OID 0)
+-- Dependencies: 188
+-- Name: children; Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON TABLE "children" FROM PUBLIC;
+REVOKE ALL ON TABLE "children" FROM "AdminCMO";
+GRANT ALL ON TABLE "children" TO "AdminCMO";
+GRANT ALL ON TABLE "children" TO "CMO";
+GRANT SELECT ON TABLE "children" TO "CMORO";
+
+
+--
+-- TOC entry 2642 (class 0 OID 0)
+-- Dependencies: 189
+-- Name: children_id_seq; Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON SEQUENCE "children_id_seq" FROM PUBLIC;
+REVOKE ALL ON SEQUENCE "children_id_seq" FROM "AdminCMO";
+GRANT ALL ON SEQUENCE "children_id_seq" TO "AdminCMO";
+GRANT ALL ON SEQUENCE "children_id_seq" TO "CMO";
+GRANT ALL ON SEQUENCE "children_id_seq" TO "CMORO";
+
+
+--
+-- TOC entry 2643 (class 0 OID 0)
+-- Dependencies: 223
+-- Name: con_id; Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON SEQUENCE "con_id" FROM PUBLIC;
+REVOKE ALL ON SEQUENCE "con_id" FROM "AdminCMO";
+GRANT ALL ON SEQUENCE "con_id" TO "AdminCMO";
+GRANT ALL ON SEQUENCE "con_id" TO "CMO";
+GRANT ALL ON SEQUENCE "con_id" TO "CMORO";
+
+
+--
+-- TOC entry 2645 (class 0 OID 0)
+-- Dependencies: 224
+-- Name: contact_id_seq; Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON SEQUENCE "contact_id_seq" FROM PUBLIC;
+REVOKE ALL ON SEQUENCE "contact_id_seq" FROM "AdminCMO";
+GRANT ALL ON SEQUENCE "contact_id_seq" TO "AdminCMO";
+GRANT ALL ON SEQUENCE "contact_id_seq" TO "CMO";
+GRANT ALL ON SEQUENCE "contact_id_seq" TO "CMORO";
+
+
+--
+-- TOC entry 2646 (class 0 OID 0)
+-- Dependencies: 191
+-- Name: country; Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON TABLE "country" FROM PUBLIC;
+REVOKE ALL ON TABLE "country" FROM "AdminCMO";
+GRANT ALL ON TABLE "country" TO "AdminCMO";
+GRANT ALL ON TABLE "country" TO "CMO";
+GRANT SELECT ON TABLE "country" TO "CMORO";
+
+
+--
+-- TOC entry 2655 (class 0 OID 0)
+-- Dependencies: 192
+-- Name: document; Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON TABLE "document" FROM PUBLIC;
+REVOKE ALL ON TABLE "document" FROM "AdminCMO";
+GRANT ALL ON TABLE "document" TO "AdminCMO";
+GRANT ALL ON TABLE "document" TO "CMO";
+GRANT SELECT ON TABLE "document" TO "CMORO";
+
+
+--
+-- TOC entry 2657 (class 0 OID 0)
+-- Dependencies: 193
+-- Name: document_id_seq; Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON SEQUENCE "document_id_seq" FROM PUBLIC;
+REVOKE ALL ON SEQUENCE "document_id_seq" FROM "AdminCMO";
+GRANT ALL ON SEQUENCE "document_id_seq" TO "AdminCMO";
+GRANT ALL ON SEQUENCE "document_id_seq" TO "CMO";
+GRANT ALL ON SEQUENCE "document_id_seq" TO "CMORO";
+
+
+--
+-- TOC entry 2658 (class 0 OID 0)
+-- Dependencies: 194
+-- Name: dul; Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON TABLE "dul" FROM PUBLIC;
+REVOKE ALL ON TABLE "dul" FROM "AdminCMO";
+GRANT ALL ON TABLE "dul" TO "AdminCMO";
+GRANT ALL ON TABLE "dul" TO "CMO";
+GRANT SELECT ON TABLE "dul" TO "CMORO";
+
+
+--
+-- TOC entry 2660 (class 0 OID 0)
+-- Dependencies: 195
+-- Name: dul_id_seq; Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON SEQUENCE "dul_id_seq" FROM PUBLIC;
+REVOKE ALL ON SEQUENCE "dul_id_seq" FROM "AdminCMO";
+GRANT ALL ON SEQUENCE "dul_id_seq" TO "AdminCMO";
+GRANT ALL ON SEQUENCE "dul_id_seq" TO "CMO";
+GRANT ALL ON SEQUENCE "dul_id_seq" TO "CMORO";
+
+
+--
+-- TOC entry 2662 (class 0 OID 0)
+-- Dependencies: 197
+-- Name: entry_id_seq; Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON SEQUENCE "entry_id_seq" FROM PUBLIC;
+REVOKE ALL ON SEQUENCE "entry_id_seq" FROM "AdminCMO";
+GRANT ALL ON SEQUENCE "entry_id_seq" TO "AdminCMO";
+GRANT ALL ON SEQUENCE "entry_id_seq" TO "CMO";
+GRANT ALL ON SEQUENCE "entry_id_seq" TO "CMORO";
+
+
+--
+-- TOC entry 2666 (class 0 OID 0)
+-- Dependencies: 210
+-- Name: expell; Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON TABLE "expell" FROM PUBLIC;
+REVOKE ALL ON TABLE "expell" FROM "AdminCMO";
+GRANT ALL ON TABLE "expell" TO "AdminCMO";
+GRANT ALL ON TABLE "expell" TO "CMO";
+GRANT SELECT ON TABLE "expell" TO "CMORO";
+
+
+--
+-- TOC entry 2668 (class 0 OID 0)
+-- Dependencies: 209
+-- Name: expell_id_seq; Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON SEQUENCE "expell_id_seq" FROM PUBLIC;
+REVOKE ALL ON SEQUENCE "expell_id_seq" FROM "AdminCMO";
+GRANT ALL ON SEQUENCE "expell_id_seq" TO "AdminCMO";
+GRANT ALL ON SEQUENCE "expell_id_seq" TO "CMO";
+GRANT ALL ON SEQUENCE "expell_id_seq" TO "CMORO";
+
+
+--
+-- TOC entry 2669 (class 0 OID 0)
+-- Dependencies: 198
+-- Name: facultet; Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON TABLE "facultet" FROM PUBLIC;
+REVOKE ALL ON TABLE "facultet" FROM "AdminCMO";
+GRANT ALL ON TABLE "facultet" TO "AdminCMO";
+GRANT ALL ON TABLE "facultet" TO "CMO";
+GRANT SELECT ON TABLE "facultet" TO "CMORO";
+
+
+--
+-- TOC entry 2671 (class 0 OID 0)
+-- Dependencies: 205
+-- Name: facultet_id_seq; Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON SEQUENCE "facultet_id_seq" FROM PUBLIC;
+REVOKE ALL ON SEQUENCE "facultet_id_seq" FROM "AdminCMO";
+GRANT ALL ON SEQUENCE "facultet_id_seq" TO "AdminCMO";
+GRANT ALL ON SEQUENCE "facultet_id_seq" TO "CMO";
+GRANT ALL ON SEQUENCE "facultet_id_seq" TO "CMORO";
+
+
+--
+-- TOC entry 2672 (class 0 OID 0)
+-- Dependencies: 231
+-- Name: filters; Type: ACL; Schema: cmodb; Owner: postgres
+--
+
+REVOKE ALL ON TABLE "filters" FROM PUBLIC;
+REVOKE ALL ON TABLE "filters" FROM "postgres";
+GRANT ALL ON TABLE "filters" TO "postgres";
+GRANT ALL ON TABLE "filters" TO "AdminCMO";
+GRANT ALL ON TABLE "filters" TO "CMO";
+GRANT SELECT ON TABLE "filters" TO "CMORO";
+
+
+--
+-- TOC entry 2674 (class 0 OID 0)
+-- Dependencies: 232
+-- Name: filters_id_seq; Type: ACL; Schema: cmodb; Owner: postgres
+--
+
+REVOKE ALL ON SEQUENCE "filters_id_seq" FROM PUBLIC;
+REVOKE ALL ON SEQUENCE "filters_id_seq" FROM "postgres";
+GRANT ALL ON SEQUENCE "filters_id_seq" TO "postgres";
+GRANT ALL ON SEQUENCE "filters_id_seq" TO "CMO";
+GRANT ALL ON SEQUENCE "filters_id_seq" TO "CMORO";
+
+
+--
+-- TOC entry 2675 (class 0 OID 0)
+-- Dependencies: 211
+-- Name: freqjoin; Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON TABLE "freqjoin" FROM PUBLIC;
+REVOKE ALL ON TABLE "freqjoin" FROM "AdminCMO";
+GRANT ALL ON TABLE "freqjoin" TO "AdminCMO";
+GRANT ALL ON TABLE "freqjoin" TO "CMO";
+GRANT SELECT ON TABLE "freqjoin" TO "CMORO";
+
+
+--
+-- TOC entry 2677 (class 0 OID 0)
+-- Dependencies: 212
+-- Name: freqjoin_id_seq; Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON SEQUENCE "freqjoin_id_seq" FROM PUBLIC;
+REVOKE ALL ON SEQUENCE "freqjoin_id_seq" FROM "AdminCMO";
+GRANT ALL ON SEQUENCE "freqjoin_id_seq" TO "AdminCMO";
+GRANT ALL ON SEQUENCE "freqjoin_id_seq" TO "CMO";
+GRANT ALL ON SEQUENCE "freqjoin_id_seq" TO "CMORO";
+
+
+--
+-- TOC entry 2678 (class 0 OID 0)
+-- Dependencies: 199
+-- Name: holliday; Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON TABLE "holliday" FROM PUBLIC;
+REVOKE ALL ON TABLE "holliday" FROM "AdminCMO";
+GRANT ALL ON TABLE "holliday" TO "AdminCMO";
+GRANT ALL ON TABLE "holliday" TO "CMO";
+GRANT SELECT ON TABLE "holliday" TO "CMORO";
+
+
+--
+-- TOC entry 2679 (class 0 OID 0)
+-- Dependencies: 200
+-- Name: lov; Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON TABLE "lov" FROM PUBLIC;
+REVOKE ALL ON TABLE "lov" FROM "AdminCMO";
+GRANT ALL ON TABLE "lov" TO "AdminCMO";
+GRANT ALL ON TABLE "lov" TO "CMO";
+GRANT SELECT ON TABLE "lov" TO "CMORO";
+
+
+--
+-- TOC entry 2681 (class 0 OID 0)
+-- Dependencies: 213
+-- Name: mflt; Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON TABLE "mflt" FROM PUBLIC;
+REVOKE ALL ON TABLE "mflt" FROM "AdminCMO";
+GRANT ALL ON TABLE "mflt" TO "AdminCMO";
+GRANT ALL ON TABLE "mflt" TO "CMO";
+GRANT SELECT ON TABLE "mflt" TO "CMORO";
+
+
+--
+-- TOC entry 2683 (class 0 OID 0)
+-- Dependencies: 214
+-- Name: mflt_id_seq; Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON SEQUENCE "mflt_id_seq" FROM PUBLIC;
+REVOKE ALL ON SEQUENCE "mflt_id_seq" FROM "AdminCMO";
+GRANT ALL ON SEQUENCE "mflt_id_seq" TO "AdminCMO";
+GRANT ALL ON SEQUENCE "mflt_id_seq" TO "CMO";
+GRANT ALL ON SEQUENCE "mflt_id_seq" TO "CMORO";
+
+
+--
+-- TOC entry 2684 (class 0 OID 0)
+-- Dependencies: 215
+-- Name: mtbl; Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON TABLE "mtbl" FROM PUBLIC;
+REVOKE ALL ON TABLE "mtbl" FROM "AdminCMO";
+GRANT ALL ON TABLE "mtbl" TO "AdminCMO";
+GRANT ALL ON TABLE "mtbl" TO "CMO";
+GRANT SELECT ON TABLE "mtbl" TO "CMORO";
+
+
+--
+-- TOC entry 2686 (class 0 OID 0)
+-- Dependencies: 216
+-- Name: mtbl_id_seq; Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON SEQUENCE "mtbl_id_seq" FROM PUBLIC;
+REVOKE ALL ON SEQUENCE "mtbl_id_seq" FROM "AdminCMO";
+GRANT ALL ON SEQUENCE "mtbl_id_seq" TO "AdminCMO";
+GRANT ALL ON SEQUENCE "mtbl_id_seq" TO "CMO";
+GRANT ALL ON SEQUENCE "mtbl_id_seq" TO "CMORO";
+
+
+--
+-- TOC entry 2687 (class 0 OID 0)
+-- Dependencies: 201
+-- Name: nationality; Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON TABLE "nationality" FROM PUBLIC;
+REVOKE ALL ON TABLE "nationality" FROM "AdminCMO";
+GRANT ALL ON TABLE "nationality" TO "AdminCMO";
+GRANT ALL ON TABLE "nationality" TO "CMO";
+GRANT SELECT ON TABLE "nationality" TO "CMORO";
+
+
+--
+-- TOC entry 2688 (class 0 OID 0)
+-- Dependencies: 202
+-- Name: pf; Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON TABLE "pf" FROM PUBLIC;
+REVOKE ALL ON TABLE "pf" FROM "AdminCMO";
+GRANT ALL ON TABLE "pf" TO "AdminCMO";
+GRANT ALL ON TABLE "pf" TO "CMO";
+GRANT SELECT ON TABLE "pf" TO "CMORO";
+
+
+--
+-- TOC entry 2690 (class 0 OID 0)
+-- Dependencies: 203
+-- Name: pf_id_seq; Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON SEQUENCE "pf_id_seq" FROM PUBLIC;
+REVOKE ALL ON SEQUENCE "pf_id_seq" FROM "AdminCMO";
+GRANT ALL ON SEQUENCE "pf_id_seq" TO "AdminCMO";
+GRANT ALL ON SEQUENCE "pf_id_seq" TO "CMO";
+GRANT ALL ON SEQUENCE "pf_id_seq" TO "CMORO";
+
+
+--
+-- TOC entry 2691 (class 0 OID 0)
+-- Dependencies: 228
+-- Name: pos; Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON TABLE "pos" FROM PUBLIC;
+REVOKE ALL ON TABLE "pos" FROM "AdminCMO";
+GRANT ALL ON TABLE "pos" TO "AdminCMO";
+GRANT ALL ON TABLE "pos" TO "CMO";
+GRANT SELECT ON TABLE "pos" TO "guest";
+GRANT SELECT ON TABLE "pos" TO "CMORO";
+
+
+--
+-- TOC entry 2693 (class 0 OID 0)
+-- Dependencies: 227
+-- Name: pos_id_seq; Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON SEQUENCE "pos_id_seq" FROM PUBLIC;
+REVOKE ALL ON SEQUENCE "pos_id_seq" FROM "AdminCMO";
+GRANT ALL ON SEQUENCE "pos_id_seq" TO "AdminCMO";
+GRANT ALL ON SEQUENCE "pos_id_seq" TO "CMO";
+GRANT ALL ON SEQUENCE "pos_id_seq" TO "CMORO";
+
+
+--
+-- TOC entry 2698 (class 0 OID 0)
+-- Dependencies: 204
+-- Name: speciality; Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON TABLE "speciality" FROM PUBLIC;
+REVOKE ALL ON TABLE "speciality" FROM "AdminCMO";
+GRANT ALL ON TABLE "speciality" TO "AdminCMO";
+GRANT ALL ON TABLE "speciality" TO "CMO";
+GRANT SELECT ON TABLE "speciality" TO "CMORO";
+
+
+--
+-- TOC entry 2700 (class 0 OID 0)
+-- Dependencies: 206
+-- Name: speciality_id_seq; Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON SEQUENCE "speciality_id_seq" FROM PUBLIC;
+REVOKE ALL ON SEQUENCE "speciality_id_seq" FROM "AdminCMO";
+GRANT ALL ON SEQUENCE "speciality_id_seq" TO "AdminCMO";
+GRANT ALL ON SEQUENCE "speciality_id_seq" TO "CMO";
+GRANT ALL ON SEQUENCE "speciality_id_seq" TO "CMORO";
+
+
+--
+-- TOC entry 2705 (class 0 OID 0)
+-- Dependencies: 226
+-- Name: stage; Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON TABLE "stage" FROM PUBLIC;
+REVOKE ALL ON TABLE "stage" FROM "AdminCMO";
+GRANT ALL ON TABLE "stage" TO "AdminCMO";
+GRANT ALL ON TABLE "stage" TO "CMO";
+GRANT SELECT ON TABLE "stage" TO "CMORO";
+
+
+--
+-- TOC entry 2707 (class 0 OID 0)
+-- Dependencies: 225
+-- Name: stage_id_seq; Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON SEQUENCE "stage_id_seq" FROM PUBLIC;
+REVOKE ALL ON SEQUENCE "stage_id_seq" FROM "AdminCMO";
+GRANT ALL ON SEQUENCE "stage_id_seq" TO "AdminCMO";
+GRANT ALL ON SEQUENCE "stage_id_seq" TO "CMO";
+GRANT ALL ON SEQUENCE "stage_id_seq" TO "CMORO";
+
+
+--
+-- TOC entry 2708 (class 0 OID 0)
+-- Dependencies: 217
+-- Name: user_filter; Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON TABLE "user_filter" FROM PUBLIC;
+REVOKE ALL ON TABLE "user_filter" FROM "AdminCMO";
+GRANT ALL ON TABLE "user_filter" TO "AdminCMO";
+GRANT ALL ON TABLE "user_filter" TO "CMO";
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE "user_filter" TO "CMORO";
+
+
+--
+-- TOC entry 2709 (class 0 OID 0)
+-- Dependencies: 218
+-- Name: user_filter_column; Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON TABLE "user_filter_column" FROM PUBLIC;
+REVOKE ALL ON TABLE "user_filter_column" FROM "AdminCMO";
+GRANT ALL ON TABLE "user_filter_column" TO "AdminCMO";
+GRANT ALL ON TABLE "user_filter_column" TO "CMO";
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE "user_filter_column" TO "CMORO";
+
+
+--
+-- TOC entry 2711 (class 0 OID 0)
+-- Dependencies: 219
+-- Name: user_filter_column_id_seq; Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON SEQUENCE "user_filter_column_id_seq" FROM PUBLIC;
+REVOKE ALL ON SEQUENCE "user_filter_column_id_seq" FROM "AdminCMO";
+GRANT ALL ON SEQUENCE "user_filter_column_id_seq" TO "AdminCMO";
+GRANT ALL ON SEQUENCE "user_filter_column_id_seq" TO "CMO";
+GRANT ALL ON SEQUENCE "user_filter_column_id_seq" TO "CMORO";
+
+
+--
+-- TOC entry 2713 (class 0 OID 0)
+-- Dependencies: 220
+-- Name: user_filter_id_seq; Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON SEQUENCE "user_filter_id_seq" FROM PUBLIC;
+REVOKE ALL ON SEQUENCE "user_filter_id_seq" FROM "AdminCMO";
+GRANT ALL ON SEQUENCE "user_filter_id_seq" TO "AdminCMO";
+GRANT ALL ON SEQUENCE "user_filter_id_seq" TO "CMO";
+GRANT ALL ON SEQUENCE "user_filter_id_seq" TO "CMORO";
+
+
+--
+-- TOC entry 2714 (class 0 OID 0)
+-- Dependencies: 229
+-- Name: validation; Type: ACL; Schema: cmodb; Owner: AdminCMO
+--
+
+REVOKE ALL ON TABLE "validation" FROM PUBLIC;
+REVOKE ALL ON TABLE "validation" FROM "AdminCMO";
+GRANT ALL ON TABLE "validation" TO "AdminCMO";
+GRANT SELECT,REFERENCES ON TABLE "validation" TO "CMO";
+GRANT SELECT ON TABLE "validation" TO "CMORO";
+
+
+--
+-- TOC entry 1951 (class 826 OID 93207)
+-- Name: DEFAULT PRIVILEGES FOR TABLES; Type: DEFAULT ACL; Schema: cmodb; Owner: postgres
+--
+
+ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "cmodb" REVOKE ALL ON TABLES  FROM PUBLIC;
+ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "cmodb" REVOKE ALL ON TABLES  FROM "postgres";
+ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "cmodb" GRANT SELECT ON TABLES  TO "CMORO";
+
+
+-- Completed on 2018-10-27 20:43:56
+
+--
+-- PostgreSQL database dump complete
+--
+
