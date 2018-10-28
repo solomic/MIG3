@@ -10,11 +10,11 @@ using System.Data;
 using Npgsql;
 using System.Windows.Forms;
 using iTextSharp.text.pdf;
-using Excel = Microsoft.Office.Interop.Excel;
+//using Excel = Microsoft.Office.Interop.Excel;
 using System.Text.RegularExpressions;
 using System.Reflection;
 using WordDoc = Microsoft.Office.Interop.Word;
-
+using ClosedXML.Excel;
 
 namespace Mig
 {
@@ -1633,8 +1633,7 @@ namespace Mig
         
         public string GenerateNotifyXls()
         {
-
-            Logger.Log.Debug("Отчет - Уведомление о прибытии:" + DateTime.Now.ToString());
+           
             /*Уведомление о прибытии*/
             string TemplateName = "Notify Template.xls";
             string TemplatePath = Directory.GetCurrentDirectory() + @"\template\" + TemplateName;
@@ -1647,61 +1646,57 @@ namespace Mig
             {
                 return "Нет активного исполнителя!";
             }
-            Logger.Log.Debug("Запрос данных:" + DateTime.Now.ToString());
             DataTable pfreq = DB.QueryTableMultipleParams(pref.PfRequest, new List<object> { pref.CONTACTID });
-            Logger.Log.Debug("Данные получены:" + DateTime.Now.ToString());
 
             string NewFile = pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO + ReportName;
 
-            Logger.Log.Debug("Создание папки:" + DateTime.Now.ToString());
             Directory.CreateDirectory(pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO);
 
-            Logger.Log.Debug("new Excel.Application():" + DateTime.Now.ToString());
-            Excel.Application excelApp = new Excel.Application();
-            Logger.Log.Debug("new Excel.Application() OK:" + DateTime.Now.ToString());
-            excelApp.DisplayAlerts = false;
-            excelApp.Visible = false;
-            Logger.Log.Debug("Открываем шаблон:" + DateTime.Now.ToString());
-            Excel.Workbook excelWorkbook = excelApp.Workbooks.Open(TemplatePath,
-                0, false, 5, "", "", false, Excel.XlPlatform.xlWindows, "",
-                true, false, 0, true, false, false);
-            Logger.Log.Debug("Шаблон открыт:" + DateTime.Now.ToString());
-            Excel.Sheets excelSheets = excelWorkbook.Worksheets;
+            //Excel.Application excelApp = new Excel.Application();            
+            //excelApp.DisplayAlerts = false;
+            //excelApp.Visible = false;            
+            //Excel.Workbook excelWorkbook = excelApp.Workbooks.Open(TemplatePath,
+            //    0, false, 5, "", "", false, Excel.XlPlatform.xlWindows, "",
+            //    true, false, 0, true, false, false);
+            //Logger.Log.Debug("Шаблон открыт:" + DateTime.Now.ToString());
+            //Excel.Sheets excelSheets = excelWorkbook.Worksheets;
+            XLWorkbook excelApp1XML = new ClosedXML.Excel.XLWorkbook(TemplatePath);
             string currentSheet = "стр.1";
             string currentSheet2 = "стр.2";
-            Excel.Worksheet excelWorksheet = (Excel.Worksheet)excelSheets.get_Item(currentSheet);
-            Excel.Worksheet excelWorksheet2 = (Excel.Worksheet)excelSheets.get_Item(currentSheet2);
+            //Excel.Worksheet excelWorksheet = (Excel.Worksheet)excelSheets.get_Item(currentSheet);
+            //Excel.Worksheet excelWorksheet2 = (Excel.Worksheet)excelSheets.get_Item(currentSheet2);
+            IXLWorksheet sheetExcel1XML = excelApp1XML.Worksheet(currentSheet);
+            IXLWorksheet sheetExcel2XML = excelApp1XML.Worksheet(currentSheet2);
 
-            Logger.Log.Debug("Заполнение отчета:" + DateTime.Now.ToString());
             try
             {                
                
                 string str="";
                 /*
                 for (int i = 1; i <= str.Length; i++)
-                    excelWorksheet.Range[arAdr[i]].Value = str[i];*/
+                    sheetExcel1XML.Range(arAdr[i]).Value = str[i];*/
                 //фамилия
                 str = pfreq.Rows[0]["con_last_name"].ToString();
                 for (int i = 0; i < str.Length; i++)
-                {
-                    excelWorksheet.Range[arName[i]].Value = str[i].ToString();
-                    excelWorksheet.Range[arNameB[i]].Value = str[i].ToString();                    
+                {                    
+                    sheetExcel1XML.Range(arName[i]).Value = str[i].ToString();
+                    sheetExcel1XML.Range(arNameB[i]).Value = str[i].ToString();                    
                 }
                 str = "";
                 //имя +отчество
                 str = pfreq.Rows[0]["con_first_name"].ToString() + " " + pfreq.Rows[0]["con_second_name"].ToString();
                 for (int i = 0; i < str.Length; i++)
                 {
-                    excelWorksheet.Range[arLastName[i]].Value = str[i].ToString();
-                    excelWorksheet.Range[arLastNameB[i]].Value = str[i].ToString();
+                    sheetExcel1XML.Range(arLastName[i]).Value = str[i].ToString();
+                    sheetExcel1XML.Range(arLastNameB[i]).Value = str[i].ToString();
                 }
                 str = "";
                 //гражданство
                 str = pfreq.Rows[0]["con_nat"].ToString();
                 for (int i = 0; i < str.Length; i++)
                 {
-                    excelWorksheet.Range[arPoddan[i]].Value = str[i].ToString();
-                    excelWorksheet.Range[arPoddanB[i]].Value = str[i].ToString();
+                    sheetExcel1XML.Range(arPoddan[i]).Value = str[i].ToString();
+                    sheetExcel1XML.Range(arPoddanB[i]).Value = str[i].ToString();
                 }
                 str = "";
 
@@ -1709,47 +1704,47 @@ namespace Mig
                 str = pfreq.Rows[0]["con_birthday"].ToString();
                 if (str!="")
                 { 
-                    excelWorksheet.Range[arDateBirth[0]].Value = str[0].ToString();
-                    excelWorksheet.Range[arDateBirth[1]].Value = str[1].ToString();
+                    sheetExcel1XML.Range(arDateBirth[0]).Value = str[0].ToString();
+                    sheetExcel1XML.Range(arDateBirth[1]).Value = str[1].ToString();
 
-                    excelWorksheet.Range[arDateBirth[2]].Value = str[3].ToString();
-                    excelWorksheet.Range[arDateBirth[3]].Value = str[4].ToString();
+                    sheetExcel1XML.Range(arDateBirth[2]).Value = str[3].ToString();
+                    sheetExcel1XML.Range(arDateBirth[3]).Value = str[4].ToString();
 
-                    excelWorksheet.Range[arDateBirth[4]].Value = str[6].ToString();
-                    excelWorksheet.Range[arDateBirth[5]].Value = str[7].ToString();
-                    excelWorksheet.Range[arDateBirth[6]].Value = str[8].ToString();
-                    excelWorksheet.Range[arDateBirth[7]].Value = str[9].ToString();
+                    sheetExcel1XML.Range(arDateBirth[4]).Value = str[6].ToString();
+                    sheetExcel1XML.Range(arDateBirth[5]).Value = str[7].ToString();
+                    sheetExcel1XML.Range(arDateBirth[6]).Value = str[8].ToString();
+                    sheetExcel1XML.Range(arDateBirth[7]).Value = str[9].ToString();
                     //----------------------
-                    excelWorksheet.Range[arDateBirthB[0]].Value = str[0].ToString();
-                    excelWorksheet.Range[arDateBirthB[1]].Value = str[1].ToString();
+                    sheetExcel1XML.Range(arDateBirthB[0]).Value = str[0].ToString();
+                    sheetExcel1XML.Range(arDateBirthB[1]).Value = str[1].ToString();
 
-                    excelWorksheet.Range[arDateBirthB[2]].Value = str[3].ToString();
-                    excelWorksheet.Range[arDateBirthB[3]].Value = str[4].ToString();
+                    sheetExcel1XML.Range(arDateBirthB[2]).Value = str[3].ToString();
+                    sheetExcel1XML.Range(arDateBirthB[3]).Value = str[4].ToString();
 
-                    excelWorksheet.Range[arDateBirthB[4]].Value = str[6].ToString();
-                    excelWorksheet.Range[arDateBirthB[5]].Value = str[7].ToString();
-                    excelWorksheet.Range[arDateBirthB[6]].Value = str[8].ToString();
-                    excelWorksheet.Range[arDateBirthB[7]].Value = str[9].ToString();
+                    sheetExcel1XML.Range(arDateBirthB[4]).Value = str[6].ToString();
+                    sheetExcel1XML.Range(arDateBirthB[5]).Value = str[7].ToString();
+                    sheetExcel1XML.Range(arDateBirthB[6]).Value = str[8].ToString();
+                    sheetExcel1XML.Range(arDateBirthB[7]).Value = str[9].ToString();
                    
                 }
                 str = "";
                 //пол
                 if (pfreq.Rows[0]["con_sex"].ToString() == "ЖЕНСКИЙ")
                 {
-                    excelWorksheet.Range[arSex[1]].Value = 'X'.ToString();
-                    excelWorksheet.Range[arSexB[1]].Value = 'X'.ToString();
+                    sheetExcel1XML.Range(arSex[1]).Value = 'X'.ToString();
+                    sheetExcel1XML.Range(arSexB[1]).Value = 'X'.ToString();
                 }
                 else
                 {
-                    excelWorksheet.Range[arSex[0]].Value = 'X'.ToString();
-                    excelWorksheet.Range[arSexB[0]].Value = 'X'.ToString();
+                    sheetExcel1XML.Range(arSex[0]).Value = 'X'.ToString();
+                    sheetExcel1XML.Range(arSexB[0]).Value = 'X'.ToString();
                 }
 
                 //страна рождения
                 str = pfreq.Rows[0]["con_birth_country"].ToString();
                 for (int i = 0; i < str.Length; i++)
                 {
-                    excelWorksheet.Range[arCountryBirth[i]].Value = str[i].ToString();                    
+                    sheetExcel1XML.Range(arCountryBirth[i]).Value = str[i].ToString();                    
                 }
                 str = "";
 
@@ -1757,7 +1752,7 @@ namespace Mig
                 str = pfreq.Rows[0]["con_birth_town"].ToString();
                 for (int i = 0; i < str.Length; i++)
                 {
-                    excelWorksheet.Range[arTownBirth[i]].Value = str[i].ToString();
+                    sheetExcel1XML.Range(arTownBirth[i]).Value = str[i].ToString();
                 }
                 str = "";
 
@@ -1765,8 +1760,8 @@ namespace Mig
                 str = pfreq.Rows[0]["dul_type"].ToString().ToUpper();
                 for (int i = 0; i < str.Length; i++)
                 {
-                    excelWorksheet.Range[arDocView[i]].Value = str[i].ToString();
-                    excelWorksheet.Range[arDocViewB[i]].Value = str[i].ToString();
+                    sheetExcel1XML.Range(arDocView[i]).Value = str[i].ToString();
+                    sheetExcel1XML.Range(arDocViewB[i]).Value = str[i].ToString();
                 }
                 str = "";
 
@@ -1774,8 +1769,8 @@ namespace Mig
                 str = pfreq.Rows[0]["dul_ser"].ToString();
                 for (int i = 0; i < str.Length; i++)
                 {
-                    excelWorksheet.Range[arDocSer[i]].Value = str[i].ToString();
-                    excelWorksheet.Range[arDocSerB[i]].Value = str[i].ToString();
+                    sheetExcel1XML.Range(arDocSer[i]).Value = str[i].ToString();
+                    sheetExcel1XML.Range(arDocSerB[i]).Value = str[i].ToString();
                 }
                 str = "";
 
@@ -1783,8 +1778,8 @@ namespace Mig
                 str = pfreq.Rows[0]["dul_num"].ToString();
                 for (int i = 0; i < str.Length; i++)
                 {
-                    excelWorksheet.Range[arDocNum[i]].Value = str[i].ToString();
-                    excelWorksheet.Range[arDocNumB[i]].Value = str[i].ToString();
+                    sheetExcel1XML.Range(arDocNum[i]).Value = str[i].ToString();
+                    sheetExcel1XML.Range(arDocNumB[i]).Value = str[i].ToString();
                 }
                 str = "";
 
@@ -1792,16 +1787,16 @@ namespace Mig
                 str = pfreq.Rows[0]["dul_issue"].ToString();
                 if ( str != "")
                 {
-                    excelWorksheet.Range[arDateVid[0]].Value = str[0].ToString();
-                    excelWorksheet.Range[arDateVid[1]].Value = str[1].ToString();
+                    sheetExcel1XML.Range(arDateVid[0]).Value = str[0].ToString();
+                    sheetExcel1XML.Range(arDateVid[1]).Value = str[1].ToString();
 
-                    excelWorksheet.Range[arDateVid[2]].Value = str[3].ToString();
-                    excelWorksheet.Range[arDateVid[3]].Value = str[4].ToString();
+                    sheetExcel1XML.Range(arDateVid[2]).Value = str[3].ToString();
+                    sheetExcel1XML.Range(arDateVid[3]).Value = str[4].ToString();
 
-                    excelWorksheet.Range[arDateVid[4]].Value = str[6].ToString();
-                    excelWorksheet.Range[arDateVid[5]].Value = str[7].ToString();
-                    excelWorksheet.Range[arDateVid[6]].Value = str[8].ToString();
-                    excelWorksheet.Range[arDateVid[7]].Value = str[9].ToString();                    
+                    sheetExcel1XML.Range(arDateVid[4]).Value = str[6].ToString();
+                    sheetExcel1XML.Range(arDateVid[5]).Value = str[7].ToString();
+                    sheetExcel1XML.Range(arDateVid[6]).Value = str[8].ToString();
+                    sheetExcel1XML.Range(arDateVid[7]).Value = str[9].ToString();                    
                 }
                 str = "";
 
@@ -1809,16 +1804,16 @@ namespace Mig
                 str = pfreq.Rows[0]["dul_validity"].ToString();
                 if (str != "")
                 {
-                    excelWorksheet.Range[arDateExpired[0]].Value = str[0].ToString();
-                    excelWorksheet.Range[arDateExpired[1]].Value = str[1].ToString();
+                    sheetExcel1XML.Range(arDateExpired[0]).Value = str[0].ToString();
+                    sheetExcel1XML.Range(arDateExpired[1]).Value = str[1].ToString();
 
-                    excelWorksheet.Range[arDateExpired[2]].Value = str[3].ToString();
-                    excelWorksheet.Range[arDateExpired[3]].Value = str[4].ToString();
+                    sheetExcel1XML.Range(arDateExpired[2]).Value = str[3].ToString();
+                    sheetExcel1XML.Range(arDateExpired[3]).Value = str[4].ToString();
 
-                    excelWorksheet.Range[arDateExpired[4]].Value = str[6].ToString();
-                    excelWorksheet.Range[arDateExpired[5]].Value = str[7].ToString();
-                    excelWorksheet.Range[arDateExpired[6]].Value = str[8].ToString();
-                    excelWorksheet.Range[arDateExpired[7]].Value = str[9].ToString();
+                    sheetExcel1XML.Range(arDateExpired[4]).Value = str[6].ToString();
+                    sheetExcel1XML.Range(arDateExpired[5]).Value = str[7].ToString();
+                    sheetExcel1XML.Range(arDateExpired[6]).Value = str[8].ToString();
+                    sheetExcel1XML.Range(arDateExpired[7]).Value = str[9].ToString();
                 }
                 str = "";
 
@@ -1826,19 +1821,19 @@ namespace Mig
                 switch (pfreq.Rows[0]["doc_type"].ToString())
                 {
                     case "Виза":
-                        excelWorksheet.Range["W37"].Value = 'X'.ToString();
-                        excelWorksheet.Range["AY37"].Value = String.Empty;
-                        excelWorksheet.Range["CM37"].Value = String.Empty;
+                        sheetExcel1XML.Range("W37").Value = 'X'.ToString();
+                        sheetExcel1XML.Range("AY37").Value = String.Empty;
+                        sheetExcel1XML.Range("CM37").Value = String.Empty;
                         break;
                     case "ВНЖ":
-                        excelWorksheet.Range["W37"].Value = String.Empty;
-                        excelWorksheet.Range["AY37"].Value = 'X'.ToString();
-                        excelWorksheet.Range["CM37"].Value = String.Empty;
+                        sheetExcel1XML.Range("W37").Value = String.Empty;
+                        sheetExcel1XML.Range("AY37").Value = 'X'.ToString();
+                        sheetExcel1XML.Range("CM37").Value = String.Empty;
                         break;
                     case "РВП":
-                        excelWorksheet.Range["W37"].Value = String.Empty;
-                        excelWorksheet.Range["AY37"].Value = String.Empty;
-                        excelWorksheet.Range["CM37"].Value = 'X'.ToString();
+                        sheetExcel1XML.Range("W37").Value = String.Empty;
+                        sheetExcel1XML.Range("AY37").Value = String.Empty;
+                        sheetExcel1XML.Range("CM37").Value = 'X'.ToString();
                         break;
                 }
 
@@ -1847,7 +1842,7 @@ namespace Mig
                 str = pfreq.Rows[0]["doc_ser"].ToString();
                 for (int i = 0; i < str.Length; i++)
                 {
-                    excelWorksheet.Range[arVisDocSer[i]].Value = str[i].ToString();                   
+                    sheetExcel1XML.Range(arVisDocSer[i]).Value = str[i].ToString();                   
                 }
                 str = "";
 
@@ -1856,7 +1851,7 @@ namespace Mig
                 str = pfreq.Rows[0]["doc_num"].ToString();
                 for (int i = 0; i < str.Length; i++)
                 {
-                    excelWorksheet.Range[arVisDocNum[i]].Value = str[i].ToString();
+                    sheetExcel1XML.Range(arVisDocNum[i]).Value = str[i].ToString();
                 }
                 str = "";
 
@@ -1864,16 +1859,16 @@ namespace Mig
                 str = pfreq.Rows[0]["doc_issue_dt"].ToString();
                 if (str != "")
                 {
-                    excelWorksheet.Range[arVisDateVid[0]].Value = str[0].ToString();
-                    excelWorksheet.Range[arVisDateVid[1]].Value = str[1].ToString();
+                    sheetExcel1XML.Range(arVisDateVid[0]).Value = str[0].ToString();
+                    sheetExcel1XML.Range(arVisDateVid[1]).Value = str[1].ToString();
 
-                    excelWorksheet.Range[arVisDateVid[2]].Value = str[3].ToString();
-                    excelWorksheet.Range[arVisDateVid[3]].Value = str[4].ToString();
+                    sheetExcel1XML.Range(arVisDateVid[2]).Value = str[3].ToString();
+                    sheetExcel1XML.Range(arVisDateVid[3]).Value = str[4].ToString();
 
-                    excelWorksheet.Range[arVisDateVid[4]].Value = str[6].ToString();
-                    excelWorksheet.Range[arVisDateVid[5]].Value = str[7].ToString();
-                    excelWorksheet.Range[arVisDateVid[6]].Value = str[8].ToString();
-                    excelWorksheet.Range[arVisDateVid[7]].Value = str[9].ToString();
+                    sheetExcel1XML.Range(arVisDateVid[4]).Value = str[6].ToString();
+                    sheetExcel1XML.Range(arVisDateVid[5]).Value = str[7].ToString();
+                    sheetExcel1XML.Range(arVisDateVid[6]).Value = str[8].ToString();
+                    sheetExcel1XML.Range(arVisDateVid[7]).Value = str[9].ToString();
                 }
                 str = "";
 
@@ -1881,16 +1876,16 @@ namespace Mig
                 str = pfreq.Rows[0]["doc_validity_to_dt"].ToString();
                 if (str != "")
                 {
-                    excelWorksheet.Range[arVisDateExpired[0]].Value = str[0].ToString();
-                    excelWorksheet.Range[arVisDateExpired[1]].Value = str[1].ToString();
+                    sheetExcel1XML.Range(arVisDateExpired[0]).Value = str[0].ToString();
+                    sheetExcel1XML.Range(arVisDateExpired[1]).Value = str[1].ToString();
 
-                    excelWorksheet.Range[arVisDateExpired[2]].Value = str[3].ToString();
-                    excelWorksheet.Range[arVisDateExpired[3]].Value = str[4].ToString();
+                    sheetExcel1XML.Range(arVisDateExpired[2]).Value = str[3].ToString();
+                    sheetExcel1XML.Range(arVisDateExpired[3]).Value = str[4].ToString();
 
-                    excelWorksheet.Range[arVisDateExpired[4]].Value = str[6].ToString();
-                    excelWorksheet.Range[arVisDateExpired[5]].Value = str[7].ToString();
-                    excelWorksheet.Range[arVisDateExpired[6]].Value = str[8].ToString();
-                    excelWorksheet.Range[arVisDateExpired[7]].Value = str[9].ToString();
+                    sheetExcel1XML.Range(arVisDateExpired[4]).Value = str[6].ToString();
+                    sheetExcel1XML.Range(arVisDateExpired[5]).Value = str[7].ToString();
+                    sheetExcel1XML.Range(arVisDateExpired[6]).Value = str[8].ToString();
+                    sheetExcel1XML.Range(arVisDateExpired[7]).Value = str[9].ToString();
                 }
                 str = "";
 
@@ -1898,31 +1893,31 @@ namespace Mig
                 switch (pfreq.Rows[0]["card_purpose_entry"].ToString())
                 {
                     case "СЛУЖЕБНАЯ":
-                        excelWorksheet.Range["AM43"].Value = 'X'.ToString();
+                        sheetExcel1XML.Range("AM43").Value = 'X'.ToString();
                         break;
                     case "ТУРИЗМ":
-                        excelWorksheet.Range["AY43"].Value = 'X'.ToString();
+                        sheetExcel1XML.Range("AY43").Value = 'X'.ToString();
                         break;
                     case "ДЕЛОВАЯ":
-                        excelWorksheet.Range["BO43"].Value = 'X'.ToString();
+                        sheetExcel1XML.Range("BO43").Value = 'X'.ToString();
                         break;
                     case "УЧЕБА":
-                        excelWorksheet.Range["CA43"].Value = 'X'.ToString();
+                        sheetExcel1XML.Range("CA43").Value = 'X'.ToString();
                         break;
                     case "РАБОТА":
-                        excelWorksheet.Range["CM43"].Value = 'X'.ToString();
+                        sheetExcel1XML.Range("CM43").Value = 'X'.ToString();
                         break;
                     case "ЧАСТНАЯ":
-                        excelWorksheet.Range["CY43"].Value = 'X'.ToString();
+                        sheetExcel1XML.Range("CY43").Value = 'X'.ToString();
                         break;
                     case "ТРАНЗИТ":
-                        excelWorksheet.Range["DK43"].Value = 'X'.ToString();
+                        sheetExcel1XML.Range("DK43").Value = 'X'.ToString();
                         break;
                     case "ГУМАНИТАРНАЯ":
-                        excelWorksheet.Range["EE43"].Value = 'X'.ToString();
+                        sheetExcel1XML.Range("EE43").Value = 'X'.ToString();
                         break;
                     case "ДРУГАЯ":
-                        excelWorksheet.Range["EQ43"].Value = 'X'.ToString();
+                        sheetExcel1XML.Range("EQ43").Value = 'X'.ToString();
                         break;
                 }
 
@@ -1930,7 +1925,7 @@ namespace Mig
                 str = "";
                 for (int i = 0; i < str.Length; i++)
                 {
-                    excelWorksheet.Range[arProf[i]].Value = str[i].ToString();
+                    sheetExcel1XML.Range(arProf[i]).Value = str[i].ToString();
                 }
                 str = "";
 
@@ -1938,16 +1933,16 @@ namespace Mig
                 str = pfreq.Rows[0]["card_entry_dt"].ToString();
                 if (str != "")
                 {
-                    excelWorksheet.Range[arEnt[0]].Value = str[0].ToString();
-                    excelWorksheet.Range[arEnt[1]].Value = str[1].ToString();
+                    sheetExcel1XML.Range(arEnt[0]).Value = str[0].ToString();
+                    sheetExcel1XML.Range(arEnt[1]).Value = str[1].ToString();
 
-                    excelWorksheet.Range[arEnt[2]].Value = str[3].ToString();
-                    excelWorksheet.Range[arEnt[3]].Value = str[4].ToString();
+                    sheetExcel1XML.Range(arEnt[2]).Value = str[3].ToString();
+                    sheetExcel1XML.Range(arEnt[3]).Value = str[4].ToString();
 
-                    excelWorksheet.Range[arEnt[4]].Value = str[6].ToString();
-                    excelWorksheet.Range[arEnt[5]].Value = str[7].ToString();
-                    excelWorksheet.Range[arEnt[6]].Value = str[8].ToString();
-                    excelWorksheet.Range[arEnt[7]].Value = str[9].ToString();
+                    sheetExcel1XML.Range(arEnt[4]).Value = str[6].ToString();
+                    sheetExcel1XML.Range(arEnt[5]).Value = str[7].ToString();
+                    sheetExcel1XML.Range(arEnt[6]).Value = str[8].ToString();
+                    sheetExcel1XML.Range(arEnt[7]).Value = str[9].ToString();
                 }
                 str = "";
 
@@ -1955,29 +1950,29 @@ namespace Mig
                 str = pfreq.Rows[0]["card_tenure_to_dt"].ToString();
                 if (str != "")
                 {
-                    excelWorksheet.Range[arTenure[0]].Value = str[0].ToString();
-                    excelWorksheet.Range[arTenure[1]].Value = str[1].ToString();
+                    sheetExcel1XML.Range(arTenure[0]).Value = str[0].ToString();
+                    sheetExcel1XML.Range(arTenure[1]).Value = str[1].ToString();
 
-                    excelWorksheet.Range[arTenure[2]].Value = str[3].ToString();
-                    excelWorksheet.Range[arTenure[3]].Value = str[4].ToString();
+                    sheetExcel1XML.Range(arTenure[2]).Value = str[3].ToString();
+                    sheetExcel1XML.Range(arTenure[3]).Value = str[4].ToString();
 
-                    excelWorksheet.Range[arTenure[4]].Value = str[6].ToString();
-                    excelWorksheet.Range[arTenure[5]].Value = str[7].ToString();
-                    excelWorksheet.Range[arTenure[6]].Value = str[8].ToString();
-                    excelWorksheet.Range[arTenure[7]].Value = str[9].ToString();
+                    sheetExcel1XML.Range(arTenure[4]).Value = str[6].ToString();
+                    sheetExcel1XML.Range(arTenure[5]).Value = str[7].ToString();
+                    sheetExcel1XML.Range(arTenure[6]).Value = str[8].ToString();
+                    sheetExcel1XML.Range(arTenure[7]).Value = str[9].ToString();
                     
 
 
-                    excelWorksheet.Range[arTenureB[0]].Value = str[0].ToString();
-                    excelWorksheet.Range[arTenureB[1]].Value = str[1].ToString();
+                    sheetExcel1XML.Range(arTenureB[0]).Value = str[0].ToString();
+                    sheetExcel1XML.Range(arTenureB[1]).Value = str[1].ToString();
 
-                    excelWorksheet.Range[arTenureB[2]].Value = str[3].ToString();
-                    excelWorksheet.Range[arTenureB[3]].Value = str[4].ToString();
+                    sheetExcel1XML.Range(arTenureB[2]).Value = str[3].ToString();
+                    sheetExcel1XML.Range(arTenureB[3]).Value = str[4].ToString();
 
-                    excelWorksheet.Range[arTenureB[4]].Value = str[6].ToString();
-                    excelWorksheet.Range[arTenureB[5]].Value = str[7].ToString();
-                    excelWorksheet.Range[arTenureB[6]].Value = str[8].ToString();
-                    excelWorksheet.Range[arTenureB[7]].Value = str[9].ToString();
+                    sheetExcel1XML.Range(arTenureB[4]).Value = str[6].ToString();
+                    sheetExcel1XML.Range(arTenureB[5]).Value = str[7].ToString();
+                    sheetExcel1XML.Range(arTenureB[6]).Value = str[8].ToString();
+                    sheetExcel1XML.Range(arTenureB[7]).Value = str[9].ToString();
 
                 }
                 str = "";
@@ -1986,7 +1981,7 @@ namespace Mig
                 str = pfreq.Rows[0]["card_ser"].ToString();
                 for (int i = 0; i < str.Length; i++)
                 {
-                    excelWorksheet.Range[arMigrSer[i]].Value = str[i].ToString();
+                    sheetExcel1XML.Range(arMigrSer[i]).Value = str[i].ToString();
                 }
                 str = "";
 
@@ -1994,7 +1989,7 @@ namespace Mig
                 str = pfreq.Rows[0]["card_num"].ToString();
                 for (int i = 0; i < str.Length; i++)
                 {
-                    excelWorksheet.Range[arMigrNum[i]].Value = str[i].ToString();
+                    sheetExcel1XML.Range(arMigrNum[i]).Value = str[i].ToString();
                 }
                 str = "";
 
@@ -2002,14 +1997,14 @@ namespace Mig
                 str = "";
                 for (int i = 0; i < str.Length; i++)
                 {
-                    excelWorksheet.Range[arSved[i]].Value = str[i].ToString();
+                    sheetExcel1XML.Range(arSved[i]).Value = str[i].ToString();
                 }
                 str = "";
                 //прежний адрес
                 str = "";
                 for (int i = 0; i < str.Length; i++)
                 {
-                    excelWorksheet.Range[arAdr[i]].Value = str[i].ToString();
+                    sheetExcel1XML.Range(arAdr[i]).Value = str[i].ToString();
                 }
                 str = "";
                 /*-----------линия отрыва-----------------*/
@@ -2018,8 +2013,8 @@ namespace Mig
                 str = pfreq.Rows[0]["ad_obl"].ToString().ToUpper();
                 for (int i = 0; i < str.Length; i++)
                 {
-                    excelWorksheet.Range[arOblB[i]].Value = str[i].ToString();
-                    excelWorksheet2.Range[arObl2[i]].Value = str[i].ToString();
+                    sheetExcel1XML.Range(arOblB[i]).Value = str[i].ToString();
+                    sheetExcel2XML.Range(arObl2[i]).Value = str[i].ToString();
                     
                 }
                 str = "";
@@ -2030,8 +2025,8 @@ namespace Mig
                     str = pfreq.Rows[0]["ad_rayon"].ToString().ToUpper();
                     for (int i = 0; i < str.Length; i++)
                     {
-                        excelWorksheet.Range[arRayonB[i]].Value = str[i].ToString();
-                        excelWorksheet2.Range[arRayon2[i]].Value = str[i].ToString();
+                        sheetExcel1XML.Range(arRayonB[i]).Value = str[i].ToString();
+                        sheetExcel2XML.Range(arRayon2[i]).Value = str[i].ToString();
 
                     }                   
                 }
@@ -2040,8 +2035,8 @@ namespace Mig
                     str = "МКР. " + pfreq.Rows[0]["ad_rayon"].ToString().ToUpper();
                     for (int i = 0; i < str.Length; i++)
                     {
-                        excelWorksheet.Range[arRayonB[i]].Value = str[i].ToString();
-                        excelWorksheet2.Range[arRayon2[i]].Value = str[i].ToString();
+                        sheetExcel1XML.Range(arRayonB[i]).Value = str[i].ToString();
+                        sheetExcel2XML.Range(arRayon2[i]).Value = str[i].ToString();
 
                     }                   
                 }
@@ -2052,8 +2047,8 @@ namespace Mig
                 str = pfreq.Rows[0]["ad_socr_town"].ToString() + " " + pfreq.Rows[0]["ad_town"].ToString().ToUpper();
                 for (int i = 0; i < str.Length; i++)
                 {
-                    excelWorksheet.Range[arTownB[i]].Value = str[i].ToString();
-                    excelWorksheet2.Range[arTown2[i]].Value = str[i].ToString();
+                    sheetExcel1XML.Range(arTownB[i]).Value = str[i].ToString();
+                    sheetExcel2XML.Range(arTown2[i]).Value = str[i].ToString();
                 }
                 str = "";
 
@@ -2064,8 +2059,8 @@ namespace Mig
                         str = "ПРОСПЕКТ " + pfreq.Rows[0]["ad_street"].ToString().ToUpper();
                         for (int i = 0; i < str.Length; i++)
                         {
-                            excelWorksheet.Range[arStreetB[i]].Value = str[i].ToString();
-                            excelWorksheet2.Range[arStreet2[i]].Value = str[i].ToString();
+                            sheetExcel1XML.Range(arStreetB[i]).Value = str[i].ToString();
+                            sheetExcel2XML.Range(arStreet2[i]).Value = str[i].ToString();
                         }                        
                         break;
 
@@ -2073,8 +2068,8 @@ namespace Mig
                         str = pfreq.Rows[0]["ad_socr_street"].ToString().ToUpper() + " " + pfreq.Rows[0]["ad_street"].ToString().ToUpper();
                         for (int i = 0; i < str.Length; i++)
                         {
-                            excelWorksheet.Range[arStreetB[i]].Value = str[i].ToString();
-                            excelWorksheet2.Range[arStreet2[i]].Value = str[i].ToString();
+                            sheetExcel1XML.Range(arStreetB[i]).Value = str[i].ToString();
+                            sheetExcel2XML.Range(arStreet2[i]).Value = str[i].ToString();
                         }
                         break;
                 }
@@ -2085,8 +2080,8 @@ namespace Mig
                 str = pfreq.Rows[0]["ad_house"].ToString();
                 for (int i = 0; i < str.Length; i++)
                 {
-                    excelWorksheet.Range[arHouseB[i]].Value = str[i].ToString();
-                    excelWorksheet2.Range[arHouse2[i]].Value = str[i].ToString();
+                    sheetExcel1XML.Range(arHouseB[i]).Value = str[i].ToString();
+                    sheetExcel2XML.Range(arHouse2[i]).Value = str[i].ToString();
                 }
                 str = "";
 
@@ -2094,8 +2089,8 @@ namespace Mig
                 str = pfreq.Rows[0]["ad_corp"].ToString();
                 for (int i = 0; i < str.Length; i++)
                 {
-                    excelWorksheet.Range[arKorpB[i]].Value = str[i].ToString();
-                    excelWorksheet2.Range[arKorp2[i]].Value = str[i].ToString();
+                    sheetExcel1XML.Range(arKorpB[i]).Value = str[i].ToString();
+                    sheetExcel2XML.Range(arKorp2[i]).Value = str[i].ToString();
                 }
                 str = "";
 
@@ -2103,8 +2098,8 @@ namespace Mig
                 str = pfreq.Rows[0]["ad_stroenie"].ToString();
                 for (int i = 0; i < str.Length; i++)
                 {
-                    excelWorksheet.Range[arStroB[i]].Value = str[i].ToString();
-                    excelWorksheet2.Range[arStro2[i]].Value = str[i].ToString();
+                    sheetExcel1XML.Range(arStroB[i]).Value = str[i].ToString();
+                    sheetExcel2XML.Range(arStro2[i]).Value = str[i].ToString();
                 }
                 str = "";
 
@@ -2112,8 +2107,8 @@ namespace Mig
                 str = pfreq.Rows[0]["ad_flat"].ToString();
                 for (int i = 0; i < str.Length; i++)
                 {
-                    excelWorksheet.Range[arFlatB[i]].Value = str[i].ToString();
-                    excelWorksheet2.Range[arFlat2[i]].Value = str[i].ToString();
+                    sheetExcel1XML.Range(arFlatB[i]).Value = str[i].ToString();
+                    sheetExcel2XML.Range(arFlat2[i]).Value = str[i].ToString();
                 }
                 str = "";
 
@@ -2121,21 +2116,21 @@ namespace Mig
 
                 if (pfhost.Rows[0]["org_phis"].ToString() == "Организация")
                 {                    
-                    excelWorksheet2.Range["EE26"].Value = 'X'.ToString();
-                    excelWorksheet2.Range["FC26"].Value = String.Empty;
+                    sheetExcel2XML.Range("EE26").Value = 'X'.ToString();
+                    sheetExcel2XML.Range("FC26").Value = String.Empty;
                 }
                 else
                 {
-                    excelWorksheet2.Range["EE26"].Value = String.Empty;
-                    excelWorksheet2.Range["FC26"].Value = 'X'.ToString();
+                    sheetExcel2XML.Range("EE26").Value = String.Empty;
+                    sheetExcel2XML.Range("FC26").Value = 'X'.ToString();
                 }
 
                 //фамилия
                 str = pfhost.Rows[0]["last_name"].ToString().ToUpper();
                 for (int i = 0; i < str.Length; i++)
                 {
-                    excelWorksheet2.Range[arNameP[i]].Value = str[i].ToString();
-                    excelWorksheet2.Range[arName2B[i]].Value = str[i].ToString();
+                    sheetExcel2XML.Range(arNameP[i]).Value = str[i].ToString();
+                    sheetExcel2XML.Range(arName2B[i]).Value = str[i].ToString();
                 }
                 str = "";
 
@@ -2144,8 +2139,8 @@ namespace Mig
                 str = pfhost.Rows[0]["first_name"].ToString().ToUpper() + " " + pfhost.Rows[0]["second_name"].ToString().ToUpper();
                 for (int i = 0; i < str.Length; i++)
                 {
-                    excelWorksheet2.Range[arLastNameP[i]].Value = str[i].ToString();
-                    excelWorksheet2.Range[arLastName2B[i]].Value = str[i].ToString();
+                    sheetExcel2XML.Range(arLastNameP[i]).Value = str[i].ToString();
+                    sheetExcel2XML.Range(arLastName2B[i]).Value = str[i].ToString();
                 }
                 str = "";
 
@@ -2154,16 +2149,16 @@ namespace Mig
                 str = pfhost.Rows[0]["birthday"].ToString();
                 if (str != "")
                 {
-                    excelWorksheet2.Range[arDateBirthP[0]].Value = str[0].ToString();
-                    excelWorksheet2.Range[arDateBirthP[1]].Value = str[1].ToString();
+                    sheetExcel2XML.Range(arDateBirthP[0]).Value = str[0].ToString();
+                    sheetExcel2XML.Range(arDateBirthP[1]).Value = str[1].ToString();
 
-                    excelWorksheet2.Range[arDateBirthP[2]].Value = str[3].ToString();
-                    excelWorksheet2.Range[arDateBirthP[3]].Value = str[4].ToString();
+                    sheetExcel2XML.Range(arDateBirthP[2]).Value = str[3].ToString();
+                    sheetExcel2XML.Range(arDateBirthP[3]).Value = str[4].ToString();
 
-                    excelWorksheet2.Range[arDateBirthP[4]].Value = str[6].ToString();
-                    excelWorksheet2.Range[arDateBirthP[5]].Value = str[7].ToString();
-                    excelWorksheet2.Range[arDateBirthP[6]].Value = str[8].ToString();
-                    excelWorksheet2.Range[arDateBirthP[7]].Value = str[9].ToString();
+                    sheetExcel2XML.Range(arDateBirthP[4]).Value = str[6].ToString();
+                    sheetExcel2XML.Range(arDateBirthP[5]).Value = str[7].ToString();
+                    sheetExcel2XML.Range(arDateBirthP[6]).Value = str[8].ToString();
+                    sheetExcel2XML.Range(arDateBirthP[7]).Value = str[9].ToString();
                    
                 }
                 str = "";
@@ -2172,7 +2167,7 @@ namespace Mig
                 str = pfhost.Rows[0]["doc"].ToString();
                 for (int i = 0; i < str.Length; i++)
                 {
-                    excelWorksheet2.Range[arDocViewP[i]].Value = str[i].ToString();                    
+                    sheetExcel2XML.Range(arDocViewP[i]).Value = str[i].ToString();                    
                 }
                 str = "";
 
@@ -2180,7 +2175,7 @@ namespace Mig
                 str = pfhost.Rows[0]["doc_ser"].ToString();
                 for (int i = 0; i < str.Length; i++)
                 {
-                    excelWorksheet2.Range[arDocSerP[i]].Value = str[i].ToString();
+                    sheetExcel2XML.Range(arDocSerP[i]).Value = str[i].ToString();
                 }
                 str = "";
 
@@ -2188,7 +2183,7 @@ namespace Mig
                 str = pfhost.Rows[0]["doc_num"].ToString();
                 for (int i = 0; i < str.Length; i++)
                 {
-                    excelWorksheet2.Range[arDocNumP[i]].Value = str[i].ToString();
+                    sheetExcel2XML.Range(arDocNumP[i]).Value = str[i].ToString();
                 }
                 str = "";
 
@@ -2196,16 +2191,16 @@ namespace Mig
                 str = pfhost.Rows[0]["date_issue"].ToString();
                 if (str != "")
                 {
-                    excelWorksheet2.Range[arDateVidP[0]].Value = str[0].ToString();
-                    excelWorksheet2.Range[arDateVidP[1]].Value = str[1].ToString();
+                    sheetExcel2XML.Range(arDateVidP[0]).Value = str[0].ToString();
+                    sheetExcel2XML.Range(arDateVidP[1]).Value = str[1].ToString();
 
-                    excelWorksheet2.Range[arDateVidP[2]].Value = str[3].ToString();
-                    excelWorksheet2.Range[arDateVidP[3]].Value = str[4].ToString();
+                    sheetExcel2XML.Range(arDateVidP[2]).Value = str[3].ToString();
+                    sheetExcel2XML.Range(arDateVidP[3]).Value = str[4].ToString();
 
-                    excelWorksheet2.Range[arDateVidP[4]].Value = str[6].ToString();
-                    excelWorksheet2.Range[arDateVidP[5]].Value = str[7].ToString();
-                    excelWorksheet2.Range[arDateVidP[6]].Value = str[8].ToString();
-                    excelWorksheet2.Range[arDateVidP[7]].Value = str[9].ToString();
+                    sheetExcel2XML.Range(arDateVidP[4]).Value = str[6].ToString();
+                    sheetExcel2XML.Range(arDateVidP[5]).Value = str[7].ToString();
+                    sheetExcel2XML.Range(arDateVidP[6]).Value = str[8].ToString();
+                    sheetExcel2XML.Range(arDateVidP[7]).Value = str[9].ToString();
                 }
                 str = "";
 
@@ -2213,16 +2208,16 @@ namespace Mig
                 str = pfhost.Rows[0]["date_valid"].ToString();
                 if (str != "")
                 {
-                    excelWorksheet2.Range[arDateExpiredP[0]].Value = str[0].ToString();
-                    excelWorksheet2.Range[arDateExpiredP[1]].Value = str[1].ToString();
+                    sheetExcel2XML.Range(arDateExpiredP[0]).Value = str[0].ToString();
+                    sheetExcel2XML.Range(arDateExpiredP[1]).Value = str[1].ToString();
 
-                    excelWorksheet2.Range[arDateExpiredP[2]].Value = str[3].ToString();
-                    excelWorksheet2.Range[arDateExpiredP[3]].Value = str[4].ToString();
+                    sheetExcel2XML.Range(arDateExpiredP[2]).Value = str[3].ToString();
+                    sheetExcel2XML.Range(arDateExpiredP[3]).Value = str[4].ToString();
 
-                    excelWorksheet2.Range[arDateExpiredP[4]].Value = str[6].ToString();
-                    excelWorksheet2.Range[arDateExpiredP[5]].Value = str[7].ToString();
-                    excelWorksheet2.Range[arDateExpiredP[6]].Value = str[8].ToString();
-                    excelWorksheet2.Range[arDateExpiredP[7]].Value = str[9].ToString();
+                    sheetExcel2XML.Range(arDateExpiredP[4]).Value = str[6].ToString();
+                    sheetExcel2XML.Range(arDateExpiredP[5]).Value = str[7].ToString();
+                    sheetExcel2XML.Range(arDateExpiredP[6]).Value = str[8].ToString();
+                    sheetExcel2XML.Range(arDateExpiredP[7]).Value = str[9].ToString();
                 }
                 str = "";
 
@@ -2230,7 +2225,7 @@ namespace Mig
                 str = pfhost.Rows[0]["obl"].ToString().ToUpper();
                 for (int i = 0; i < str.Length; i++)
                 {
-                    excelWorksheet2.Range[arOblP[i]].Value = str[i].ToString();
+                    sheetExcel2XML.Range(arOblP[i]).Value = str[i].ToString();
                 }
                 str = "";
 
@@ -2238,7 +2233,7 @@ namespace Mig
                 str = pfhost.Rows[0]["rayon"].ToString().ToUpper();
                 for (int i = 0; i < str.Length; i++)
                 {
-                    excelWorksheet2.Range[arRayonP[i]].Value = str[i].ToString();
+                    sheetExcel2XML.Range(arRayonP[i]).Value = str[i].ToString();
                 }
                 str = "";
 
@@ -2246,7 +2241,7 @@ namespace Mig
                 str = pfhost.Rows[0]["town"].ToString().ToUpper();
                 for (int i = 0; i < str.Length; i++)
                 {
-                    excelWorksheet2.Range[arTownP[i]].Value = str[i].ToString();
+                    sheetExcel2XML.Range(arTownP[i]).Value = str[i].ToString();
                 }
                 str = "";
 
@@ -2254,7 +2249,7 @@ namespace Mig
                 str = pfhost.Rows[0]["street"].ToString().ToUpper();
                 for (int i = 0; i < str.Length; i++)
                 {
-                    excelWorksheet2.Range[arStreetP[i]].Value = str[i].ToString();
+                    sheetExcel2XML.Range(arStreetP[i]).Value = str[i].ToString();
                 }
                 str = "";
 
@@ -2262,7 +2257,7 @@ namespace Mig
                 str = pfhost.Rows[0]["house"].ToString().ToUpper();
                 for (int i = 0; i < str.Length; i++)
                 {
-                    excelWorksheet2.Range[arHouseP[i]].Value = str[i].ToString();
+                    sheetExcel2XML.Range(arHouseP[i]).Value = str[i].ToString();
                 }
                 str = "";
 
@@ -2270,7 +2265,7 @@ namespace Mig
                 str = pfhost.Rows[0]["korp"].ToString().ToUpper();
                 for (int i = 0; i < str.Length; i++)
                 {
-                    excelWorksheet2.Range[arKorpP[i]].Value = str[i].ToString();
+                    sheetExcel2XML.Range(arKorpP[i]).Value = str[i].ToString();
                 }
                 str = "";
 
@@ -2278,7 +2273,7 @@ namespace Mig
                 str = pfhost.Rows[0]["stro"].ToString().ToUpper();
                 for (int i = 0; i < str.Length; i++)
                 {
-                    excelWorksheet2.Range[arStroP[i]].Value = str[i].ToString();
+                    sheetExcel2XML.Range(arStroP[i]).Value = str[i].ToString();
                 }
                 str = "";
 
@@ -2286,7 +2281,7 @@ namespace Mig
                 str = pfhost.Rows[0]["flat"].ToString().ToUpper();
                 for (int i = 0; i < str.Length; i++)
                 {
-                    excelWorksheet2.Range[arFlatP[i]].Value = str[i].ToString();
+                    sheetExcel2XML.Range(arFlatP[i]).Value = str[i].ToString();
                 }
                 str = "";
 
@@ -2295,7 +2290,7 @@ namespace Mig
                 str = pfhost.Rows[0]["phone"].ToString().ToUpper();
                 for (int i = 0; i < str.Length; i++)
                 {
-                    excelWorksheet2.Range[arPhoneP[i]].Value = str[i].ToString();
+                    sheetExcel2XML.Range(arPhoneP[i]).Value = str[i].ToString();
                 }
                 str = "";
 
@@ -2303,7 +2298,7 @@ namespace Mig
                 str = pfhost.Rows[0]["inn"].ToString().ToUpper();
                 for (int i = 0; i < str.Length; i++)
                 {
-                    excelWorksheet2.Range[arInnP[i]].Value = str[i].ToString();
+                    sheetExcel2XML.Range(arInnP[i]).Value = str[i].ToString();
                 }
                 str = "";
 
@@ -2328,13 +2323,13 @@ namespace Mig
                 str = res.ToUpper();
                 for (int i = 0; i < str.Length; i++)
                 {
-                    excelWorksheet2.Range[arOrgNameP[i]].Value = str[i].ToString();
+                    sheetExcel2XML.Range(arOrgNameP[i]).Value = str[i].ToString();
                 }
                 str = "";
                 str = res2.ToUpper();
                 for (int i = 0; i < str.Length; i++)
                 {
-                    excelWorksheet2.Range[arOrgNameP2[i]].Value = str[i].ToString();
+                    sheetExcel2XML.Range(arOrgNameP2[i]).Value = str[i].ToString();
                 }
                 str = "";
             
@@ -2359,36 +2354,32 @@ namespace Mig
                 str = res.ToUpper();
                 for (int i = 0; i < str.Length; i++)
                 {
-                    excelWorksheet2.Range[arFactAdrP[i]].Value = str[i].ToString();
+                    sheetExcel2XML.Range(arFactAdrP[i]).Value = str[i].ToString();
                 }
                 str = "";
                 str = res2.ToUpper();
                 for (int i = 0; i < str.Length; i++)
                 {
-                    excelWorksheet2.Range[arFactAdrP2[i]].Value = str[i].ToString();
+                    sheetExcel2XML.Range(arFactAdrP2[i]).Value = str[i].ToString();
                 }
                 str = "";
 
+                //excelWorksheet.SaveAs(NewFile);
+                excelApp1XML.Save();
 
-                Logger.Log.Debug("Заполнение отчета ОК:" + DateTime.Now.ToString());
-                excelWorksheet.SaveAs(NewFile);
-                Logger.Log.Debug("Сохранили файл отчета:" + DateTime.Now.ToString());
                 string SavePf = InsertPf(ReportName);
                 if (SavePf != "")
                     ErrMsg = SavePf;
 
             }
             catch (Exception e)
-            {
-                Logger.Log.Error(ClassName + "Function:GenerateNotify\n Error:" + e);
+            {               
                 ErrMsg = "Ошибка ^_^";
             }
             finally
-            {
-
-              //  excelWorkbook.Close(null, null, null);                 // close your workbook              
-                excelApp.Quit();                                   // exit excel application
-                System.Runtime.InteropServices.Marshal.ReleaseComObject(excelApp);                
+            {  
+                //excelApp.Quit();                                   // exit excel application
+                //System.Runtime.InteropServices.Marshal.ReleaseComObject(excelApp);                
 
             }
             return ErrMsg;
