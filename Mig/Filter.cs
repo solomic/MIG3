@@ -73,8 +73,6 @@ namespace Mig
                     foreach (var item in sorted)
                     {
                         dataGridView1.Columns[item.ColumnName].DisplayIndex = item.DisplayIndex;
-                        // dataGridView1.Columns[item.ColumnIndex].Visible = item.Visible;
-                        // dataGridView1.Columns[item.ColumnIndex].Width = item.Width;
                         dataGridView1.Columns[item.ColumnName].Width = item.Width;
                     }
                 }
@@ -126,6 +124,7 @@ namespace Mig
             }
             catch(Exception ex)
             {
+                Logger.Log.Error(ClassName + "Function:SaveColumnOrder\n Error:" + ex);
                 throw new Exception("Ошибка сохранения положения колонок:\n\n"+ ex.Message);
             }
         }
@@ -144,21 +143,11 @@ namespace Mig
             SetDoubleBuffered(dataGridView1, true);
         }
 
-        private void fMigr_FormClosed(object sender, FormClosedEventArgs e)
-        {
-           
-        }
+       
 
         private void fMigr_Load(object sender, EventArgs e)
-        {
-            try
-            { 
-                DirectMenu(false);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+        {            
+                DirectMenu(false);           
         }
 
         private void FilterLoad()
@@ -178,23 +167,39 @@ namespace Mig
 
         private void comboBox1_SelectedValueChanged(object sender, EventArgs e)
         {
-            /*выбрали другой фильтр*/           
-            tsFilterLoad.Text = "Загрузка данных...";
+            /*выбрали другой фильтр*/  
             try
-            {                
+            {
+                FilterChange();
+            }
+            catch (Exception err)
+            {
+                Logger.Log.Error(ClassName + "Function:comboBox1_SelectedValueChanged\n Error:" + err);
+                MessageBox.Show("Ошибка фильтра:\n\n"+err.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+            }
+            
+        }
+
+        private void FilterChange()
+        {
+            try
+            {
+                tsFilterLoad.Text = "Загрузка данных...";
+
                 bindingSource1.Filter = "";
                 dataGridView1.DataSource = null;
                 lFilter.ResetText();
 
-                int filter_code = DB.GetTableValueInt("SELECT code FROM cmodb.filters where filtername=:param1;", new List<object> { cmbFilter.Text });               
+                int filter_code = DB.GetTableValueInt("SELECT code FROM cmodb.filters where filtername=:param1;", new List<object> { cmbFilter.Text });
                 String sql_text = DB.GetTableValue("SELECT filter_expr FROM cmodb.user_filter where filter_id=:param1 AND user_name=:param2;", new List<object> { filter_code, pref.USER });
-                
-                bindingSource1.DataSource = DB.QueryTableMultipleParams(sql_text, null);              
-                dataGridView1.DataSource = bindingSource1;                
+
+                bindingSource1.DataSource = DB.QueryTableMultipleParams(sql_text, null);
+                dataGridView1.DataSource = bindingSource1;
                 stCnt.Text = "Количество записей: " + bindingSource1.Count;
 
                 /*применяем фильтр*/
-                textBox1_TextChanged(this, null);               
+                textBox1_TextChanged(this, null);
 
                 //  dataGridView1.Columns[0].Width = 50;
                 dataGridView1.Columns["warning"].HeaderText = "Предупреждения";
@@ -210,21 +215,16 @@ namespace Mig
                 dataGridView1.Columns["rs_ten"].Visible = false;
                 dataGridView1.Columns["rs_ent"].Visible = false;
                 if (dataGridView1.Columns.Contains("pass_expire"))
-                    dataGridView1.Columns["pass_expire"].Visible = false;  
+                    dataGridView1.Columns["pass_expire"].Visible = false;
 
                 SetColumnOrder();
+                tsFilterLoad.Text = "Данные успешно загружены";
             }
             catch (Exception err)
             {
-                Logger.Log.Error(ClassName + "Function:comboBox1_SelectedValueChanged\n Error:" + err);
-                MessageBox.Show("Ошибка фильтра:\n\n"+err.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
+                Logger.Log.Error(ClassName + "Function:FilterChange\n Error:" + err);
+                throw new Exception("Ошибка фильтра:\n\n" + err.Message);
             }
-            finally
-            {
-                tsFilterLoad.Text = "Данные успешно загружены";
-            }
-
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -257,70 +257,71 @@ namespace Mig
             }
         }
 
-        private void menuAdd_Click(object sender, EventArgs e)
-        {
-
-        }
 
 
-        private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
-        {
-
-        }
 
         public int[] getSelectedRowsId(DataGridView gv)
         {
-            int[] AllCells = new int[gv.SelectedCells.Count];
+            int[] iId = { 0};
+            try
+            {                
 
-            for (int i = 0; i < gv.SelectedCells.Count; i++)
-            {
-                AllCells[i] = gv.SelectedCells[i].RowIndex;
-            }
-            int[] DistRows = new int[AllCells.Distinct<int>().Count()];
-            int a = 0;
-            foreach (var m in AllCells.Distinct<int>())
-            {
-                DistRows[a++] = m;
-            }
-            int[] iId = new int[DistRows.Count()];
-            if (DistRows.Count() > 0)
-            {
+                int[] AllCells = new int[gv.SelectedCells.Count];
 
-                for (int i = 0; i < DistRows.Count(); i++)
+                for (int i = 0; i < gv.SelectedCells.Count; i++)
                 {
-                    iId[i] = Convert.ToInt32(gv.Rows[DistRows[i]].Cells["contact_id"].Value);
+                    AllCells[i] = gv.SelectedCells[i].RowIndex;
+                }
+                int[] DistRows = new int[AllCells.Distinct<int>().Count()];
+                int a = 0;
+                foreach (var m in AllCells.Distinct<int>())
+                {
+                    DistRows[a++] = m;
+                }
+                iId = new int[DistRows.Count()];
+                if (DistRows.Count() > 0)
+                {
+
+                    for (int i = 0; i < DistRows.Count(); i++)
+                    {
+                        iId[i] = Convert.ToInt32(gv.Rows[DistRows[i]].Cells["contact_id"].Value);
+                    }
                 }
             }
-
+            catch(Exception ex)
+            {
+                Logger.Log.Error(ClassName + "Function:getSelectedRowsId\n Error:" + ex);
+                throw new Exception("Ошибка при получении id:\n\n" + ex.Message);
+            }
 
             return iId;
         }
 
         private void miGraduate_Click(object sender, EventArgs e)
-        {
-
-            int[] SelRows = getSelectedRowsId(dataGridView1);
-
-            if (SelRows.Count() != 0)
+        {            
+            try
             {
+                int[] SelRows = getSelectedRowsId(dataGridView1);
 
-                string msg = SetContactType("graduate", SelRows);
-                if (msg != "")
-                    MessageBox.Show("Ошибка: \n" + msg, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                else
+                if (SelRows.Count() != 0)
                 {
-                    comboBox1_SelectedValueChanged(this, null);
+                    SetContactType("graduate", SelRows);
+                    FilterChange();
                     MessageBox.Show("Успешно обновлено", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                   
                 }
-
-
             }
 
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ClassName + "Function:miGraduate_Click\n Error:" + ex);
+                MessageBox.Show("Ошибка :\n\n" + ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
-        private string SetContactType(string type, int[] ids)
-        {
-            string mes = "";
+
+        private void SetContactType(string type, int[] ids)
+        {           
             NpgsqlTransaction transaction = null;
             NpgsqlCommand cmd;
             string sql = "";
@@ -338,29 +339,26 @@ namespace Mig
                 arpar.ParameterName = "contact_id";
                 arpar.NpgsqlDbType = NpgsqlDbType.Array | NpgsqlDbType.Integer;
                 arpar.Value = ids;
-                cmd.Parameters.Add(arpar);
-                // cmd.Parameters.AddWithValue("contact_id", ids);                
+                cmd.Parameters.Add(arpar);                            
                 cmd.Parameters.AddWithValue("type", type);
                 cmd.ExecuteNonQuery();
                 transaction.Commit();
             }
-            catch (Exception msg)
+            catch (Exception ex)
             {
-                if (transaction != null) transaction.Rollback();
-                mes = msg.Message;
-                Logger.Log.Error(ClassName + "Function:SetContactType\n Error:" + msg);
+                if (transaction != null) transaction.Rollback();               
+                Logger.Log.Error(ClassName + "Function:SetContactType\n Error:" + ex);
+                throw new Exception("Ошибка:\n\n" + ex.Message);
             }
-            return mes;
+           
         }
-        private string SetRegExtend(int type, int[] ids)
-        {
-            string mes = "";
+        private void SetRegExtend(int type, int[] ids)
+        {           
             NpgsqlTransaction transaction = null;
             NpgsqlCommand cmd;
             string sql = "";
             try
             {
-
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
                 cmd = new NpgsqlCommand(sql, DB.conn);
                 sql = "UPDATE cmodb.contact SET " +
@@ -372,24 +370,22 @@ namespace Mig
                 arpar.ParameterName = "contact_id";
                 arpar.NpgsqlDbType = NpgsqlDbType.Array | NpgsqlDbType.Integer;
                 arpar.Value = ids;
-                cmd.Parameters.Add(arpar);
-                // cmd.Parameters.AddWithValue("contact_id", ids);                
+                cmd.Parameters.Add(arpar);                           
                 cmd.Parameters.AddWithValue("reg_extend", type);
                 cmd.ExecuteNonQuery();
                 transaction.Commit();
             }
-            catch (Exception msg)
+            catch (Exception ex)
             {
-                if (transaction != null) transaction.Rollback();
-                mes = msg.Message;
-                Logger.Log.Error(ClassName + "Function:SetRegExtend\n Error:" + msg);
+                if (transaction != null) transaction.Rollback();               
+                Logger.Log.Error(ClassName + "Function:SetRegExtend\n Error:" + ex);
+                throw new Exception("Ошибка:\n\n" + ex.Message);
             }
-            return mes;
+           
         }
 
-        private string SetDeduct(string type, int[] ids)
-        {
-            string mes = "";
+        private void SetDeduct(string type, int[] ids)
+        {            
             NpgsqlTransaction transaction = null;
             NpgsqlCommand cmd;
             string sql = "";
@@ -412,17 +408,16 @@ namespace Mig
                 cmd.ExecuteNonQuery();
                 transaction.Commit();
             }
-            catch (Exception msg)
+            catch (Exception ex)
             {
-                if (transaction != null) transaction.Rollback();
-                mes = msg.Message;
-                Logger.Log.Error(ClassName + "Function:SetDeduct\n Error:" + msg);
+                if (transaction != null) transaction.Rollback();               
+                Logger.Log.Error(ClassName + "Function:SetDeduct\n Error:" + ex);
+                throw new Exception("Ошибка:\n\n" + ex.Message);
             }
-            return mes;
+           
         }
-        private string SetRF(string type, int[] ids)
-        {
-            string mes = "";
+        private void SetRF(string type, int[] ids)
+        {            
             NpgsqlTransaction transaction = null;
             NpgsqlCommand cmd;
             string sql = "";
@@ -445,17 +440,17 @@ namespace Mig
                 cmd.ExecuteNonQuery();
                 transaction.Commit();
             }
-            catch (Exception msg)
+            catch (Exception ex)
             {
-                if (transaction != null) transaction.Rollback();
-                mes = msg.Message;
-                Logger.Log.Error(ClassName + "Function:SetRF\n Error:" + msg);
+                if (transaction != null) transaction.Rollback();               
+                Logger.Log.Error(ClassName + "Function:SetRF\n Error:" + ex);
+                throw new Exception("Ошибка:\n\n" + ex.Message);
             }
-            return mes;
+           
         }
-        private string SetDoc(int type, string dt, int[] ids)
+        private void SetDoc(int type, string dt, int[] ids)
         {
-            string mes = "";
+           
             NpgsqlTransaction transaction = null;
             NpgsqlCommand cmd;
             string sql = "";
@@ -482,242 +477,242 @@ namespace Mig
                 cmd.ExecuteNonQuery();
                 transaction.Commit();
             }
-            catch (Exception msg)
+            catch (Exception ex)
             {
-                if (transaction != null) transaction.Rollback();
-                mes = msg.Message;
-                Logger.Log.Error(ClassName + "Function:SetDoc\n Error:" + msg);
+                if (transaction != null) transaction.Rollback();               
+                Logger.Log.Error(ClassName + "Function:SetDoc\n Error:" + ex);
+                throw new Exception("Ошибка:\n\n" + ex.Message);
             }
-            return mes;
+            
         }
 
 
 
         private void miContinueTeach_Click(object sender, EventArgs e)
         {
-            int[] SelRows = getSelectedRowsId(dataGridView1);
-
-            if (SelRows.Count() != 0)
+            try
             {
+                int[] SelRows = getSelectedRowsId(dataGridView1);
 
-                string msg = SetContactType("continue_teach", SelRows);
-                if (msg != "")
-                    MessageBox.Show("Ошибка: \n" + msg, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                else
+                if (SelRows.Count() != 0)
                 {
-                    comboBox1_SelectedValueChanged(this, null);
-                    MessageBox.Show("Успешно обновлено", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    SetContactType("continue_teach", SelRows);
+                    FilterChange();
+                    MessageBox.Show("Успешно обновлено", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);   
                 }
-
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show("Ошибка :\n\n" + ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void miStudent_Click(object sender, EventArgs e)
         {
-            int[] SelRows = getSelectedRowsId(dataGridView1);
-
-            if (SelRows.Count() != 0)
+            try
             {
+                int[] SelRows = getSelectedRowsId(dataGridView1);
 
-
-                string msg = SetContactType("student", SelRows);
-                if (msg != "")
-                    MessageBox.Show("Ошибка: \n" + msg, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                else
+                if (SelRows.Count() != 0)
                 {
-                    comboBox1_SelectedValueChanged(this, null);
-                    MessageBox.Show("Успешно обновлено", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    SetContactType("student", SelRows);
+                    FilterChange();
                 }
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show("Ошибка :\n\n" + ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void tpRegExendSet_Click(object sender, EventArgs e)
         {
-            int[] SelRows = getSelectedRowsId(dataGridView1);
-
-            if (SelRows.Count() != 0)
+            try
             {
+                int[] SelRows = getSelectedRowsId(dataGridView1);
 
-                string msg = SetRegExtend(1, SelRows);
-                if (msg != "")
-                    MessageBox.Show("Ошибка: \n" + msg, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                else
+                if (SelRows.Count() != 0)
                 {
-                    comboBox1_SelectedValueChanged(this, null);
-                    MessageBox.Show("Успешно обновлено", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    SetRegExtend(1, SelRows);
+                    FilterChange();
+                    MessageBox.Show("Успешно обновлено", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);                    
                 }
+            }            
+            catch(Exception ex)
+            {
+                MessageBox.Show("Ошибка :\n\n" + ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
+}
 
         private void tpRegExendClear_Click(object sender, EventArgs e)
         {
-            int[] SelRows = getSelectedRowsId(dataGridView1);
+            try { 
+                    int[] SelRows = getSelectedRowsId(dataGridView1);
 
-            if (SelRows.Count() != 0)
+                    if (SelRows.Count() != 0)
+                    {
+
+                        SetRegExtend(0, SelRows);
+                        FilterChange();
+                        MessageBox.Show("Успешно обновлено", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                
+                    }
+            }
+            catch (Exception ex)
             {
-
-                string msg = SetRegExtend(0, SelRows);
-                if (msg != "")
-                    MessageBox.Show("Ошибка: \n" + msg, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                else
-                {
-                    comboBox1_SelectedValueChanged(this, null);
-                    MessageBox.Show("Успешно обновлено", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
+                MessageBox.Show("Ошибка :\n\n" + ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void tpDocDone_Click(object sender, EventArgs e)
         {
             //виза документы сданы
-            int[] SelRows = getSelectedRowsId(dataGridView1);
+            try { 
+                    int[] SelRows = getSelectedRowsId(dataGridView1);
 
-            if (SelRows.Count() != 0)
+                    if (SelRows.Count() != 0)
+                    {
+                        fDocFms fDocFmsForm = new fDocFms();
+                        if (fDocFmsForm.ShowDialog(this) == DialogResult.OK)
+                        {
+                            if (fDocFmsForm.DocFmsDt == "")
+                            {
+                                MessageBox.Show("Укажите дату", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                return;
+                            }
+                            SetDoc(1, fDocFmsForm.DocFmsDt, SelRows);
+                            FilterChange();                            
+                        }
+
+                    }
+            }
+            catch (Exception ex)
             {
-                fDocFms fDocFmsForm = new fDocFms();
-                if (fDocFmsForm.ShowDialog(this) == DialogResult.OK)
-                {
-                    if (fDocFmsForm.DocFmsDt == "")
-                    {
-                        MessageBox.Show("Укажите дату", "ту ту туду ", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return;
-                    }
-
-                    string msg = SetDoc(1, fDocFmsForm.DocFmsDt, SelRows);
-                    if (msg != "")
-                        MessageBox.Show("Ошибка: \n" + msg, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    else
-                    {
-                        comboBox1_SelectedValueChanged(this, null);
-                        MessageBox.Show("Успешно обновлено", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                }
-
+                MessageBox.Show("Ошибка :\n\n" + ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void tpDocClear_Click(object sender, EventArgs e)
         {
-            //виза документы сданы - снять выделение
-            int[] SelRows = getSelectedRowsId(dataGridView1);
+            try { 
+                    //виза документы сданы - снять выделение
+                    int[] SelRows = getSelectedRowsId(dataGridView1);
 
-            if (SelRows.Count() != 0)
+                    if (SelRows.Count() != 0)
+                    {
+                        SetDoc(0, "", SelRows);
+                        FilterChange();
+                        MessageBox.Show("Успешно обновлено", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                       
+                    }
+            }
+            catch (Exception ex)
             {
-
-                string msg = SetDoc(0, "", SelRows);
-                if (msg != "")
-                    MessageBox.Show("Ошибка: \n" + msg, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                else
-                {
-                    comboBox1_SelectedValueChanged(this, null);
-                    MessageBox.Show("Успешно обновлено", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-
+                MessageBox.Show("Ошибка :\n\n" + ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void tpDeductSet_Click(object sender, EventArgs e)
         {
-            //на отчисление
-            int[] SelRows = getSelectedRowsId(dataGridView1);
+            try { 
+                //на отчисление
+                int[] SelRows = getSelectedRowsId(dataGridView1);
 
-            if (SelRows.Count() != 0)
-            {
-
-                string msg = SetDeduct("1", SelRows);
-                if (msg != "")
-                    MessageBox.Show("Ошибка: \n" + msg, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                else
+                if (SelRows.Count() != 0)
                 {
-                    comboBox1_SelectedValueChanged(this, null);
-                    MessageBox.Show("Успешно обновлено", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                   SetDeduct("1", SelRows);
+                    FilterChange();
+                   MessageBox.Show("Успешно обновлено", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);                  
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ошибка :\n\n" + ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void tpDeductClear_Click(object sender, EventArgs e)
         {
             //снять на отчисление
-            int[] SelRows = getSelectedRowsId(dataGridView1);
+            try { 
+                    int[] SelRows = getSelectedRowsId(dataGridView1);
 
-            if (SelRows.Count() != 0)
+                    if (SelRows.Count() != 0)
+                    {
+                        SetDeduct("0", SelRows);
+                        FilterChange();
+                        MessageBox.Show("Успешно обновлено", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);                       
+                    }
+            }
+            catch (Exception ex)
             {
-
-                string msg = SetDeduct("0", SelRows);
-                if (msg != "")
-                    MessageBox.Show("Ошибка: \n" + msg, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                else
-                {
-                    comboBox1_SelectedValueChanged(this, null);
-                    MessageBox.Show("Успешно обновлено", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
+                MessageBox.Show("Ошибка :\n\n" + ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void tpDelete_Click(object sender, EventArgs e)
         {
             //отчислен
-            int[] SelRows = getSelectedRowsId(dataGridView1);
+            try { 
+                    int[] SelRows = getSelectedRowsId(dataGridView1);
 
-            if (SelRows.Count() != 0)
+                    if (SelRows.Count() != 0)
+                    {
+                         SetContactType("expelled", SelRows);
+                         FilterChange();
+                         MessageBox.Show("Успешно отчислен", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);    
+                    }
+            }
+            catch (Exception ex)
             {
-
-
-                string msg = SetContactType("expelled", SelRows);
-                if (msg != "")
-                    MessageBox.Show("Ошибка: \n" + msg, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                else
-                {
-                    comboBox1_SelectedValueChanged(this, null);
-                    MessageBox.Show("Успешно отчислен", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-
+                MessageBox.Show("Ошибка :\n\n" + ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void tpRecover_Click(object sender, EventArgs e)
         {
             //восстановить 
-            int[] SelRows = getSelectedRowsId(dataGridView1);
-
-            if (SelRows.Count() != 0)
+            try
             {
+                    int[] SelRows = getSelectedRowsId(dataGridView1);
 
-                string msg = SetContactType("student", SelRows);
-                if (msg != "")
-                    MessageBox.Show("Ошибка: \n" + msg, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                else
-                {
-                    comboBox1_SelectedValueChanged(this, null);
-                    MessageBox.Show("Восстановлен, вперед учиться!", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
+                    if (SelRows.Count() != 0)
+                    {
 
+                       SetContactType("student", SelRows);
+                       FilterChange();
+                       MessageBox.Show("Восстановлен, вперед учиться!", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);                       
+                    }
+                
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ошибка :\n\n" + ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void tpRF_Click(object sender, EventArgs e)
         {
             //получен паспорт РФ
-            int[] SelRows = getSelectedRowsId(dataGridView1);
+            try { 
+                    int[] SelRows = getSelectedRowsId(dataGridView1);
 
-            if (SelRows.Count() != 0)
+                    if (SelRows.Count() != 0)
+                    {
+
+                        SetRF("1", SelRows);
+                        FilterChange();
+                        MessageBox.Show("Успешно обновлено", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);                       
+                    }
+            }
+            catch (Exception ex)
             {
-
-                string msg = SetRF("1", SelRows);
-                if (msg != "")
-                    MessageBox.Show("Ошибка: \n" + msg, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                else
-                {
-                    comboBox1_SelectedValueChanged(this, null);
-                    MessageBox.Show("Успешно обновлено", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
+                MessageBox.Show("Ошибка :\n\n" + ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        private void menuMig_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
-        {
-
-        }
+       
 
         private void advancedDataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -740,7 +735,7 @@ namespace Mig
 
         private void FilterRefresh()
         {
-            comboBox1_SelectedValueChanged(this, null);
+            FilterChange();
             if (pref.CONTACTID > 0)
             {
                 try
@@ -777,8 +772,6 @@ namespace Mig
                             e.CellBounds.Top, e.CellBounds.Right - 1,
                             e.CellBounds.Bottom);
 
-                        // Draw the inset highlight box.
-                        // e.Graphics.DrawRectangle(Pens.Blue, newRect);
 
                         int dx = 1;
                         //выпускник
@@ -858,7 +851,7 @@ namespace Mig
                 }
 
             }
-        }
+                }
 
         private void dataGridView1_SortStringChanged(object sender, EventArgs e)
         {
@@ -887,13 +880,7 @@ namespace Mig
             }
         }
 
-        private void dataGridView1_ColumnDisplayIndexChanged(object sender, DataGridViewColumnEventArgs e)
-        {
-           
-        }
-
        
-
 
         private void allViewToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -995,20 +982,14 @@ namespace Mig
             fAddContactForm = null;
         }
 
-        private void textBox1_MouseHover(object sender, EventArgs e)
-        {
-           
-        }
-
-        private void dataGridView1_MouseHover(object sender, EventArgs e)
-        {
-
-        }
+      
 
         private void btnExit_Click(object sender, EventArgs e)
         {
            // DB.Close();
             Application.Exit();
         }
+
+       
     }
 }

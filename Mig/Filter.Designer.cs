@@ -142,7 +142,6 @@
             this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             this.textBox1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox1_KeyDown);
             this.textBox1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox1_KeyPress);
-            this.textBox1.MouseHover += new System.EventHandler(this.textBox1_MouseHover);
             // 
             // label1
             // 
@@ -176,7 +175,7 @@
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.Size = new System.Drawing.Size(250, 292);
             this.contextMenuStrip1.Text = "Выпускник";
-            this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
+          
             // 
             // miGraduate
             // 
@@ -332,10 +331,9 @@
             this.dataGridView1.SortStringChanged += new System.EventHandler(this.dataGridView1_SortStringChanged);
             this.dataGridView1.FilterStringChanged += new System.EventHandler(this.dataGridView1_FilterStringChanged);
             this.dataGridView1.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.advancedDataGridView1_CellDoubleClick);
+       
             this.dataGridView1.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.advancedDataGridView1_CellPainting);
-            this.dataGridView1.ColumnDisplayIndexChanged += new System.Windows.Forms.DataGridViewColumnEventHandler(this.dataGridView1_ColumnDisplayIndexChanged);
             this.dataGridView1.ColumnWidthChanged += new System.Windows.Forms.DataGridViewColumnEventHandler(this.dataGridView1_ColumnWidthChanged);
-            this.dataGridView1.MouseHover += new System.EventHandler(this.dataGridView1_MouseHover);
             // 
             // menuStrip1
             // 
@@ -468,7 +466,7 @@
             this.Name = "fFilter";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Миграционный учет";
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.fMigr_FormClosed);
+           
             this.Load += new System.EventHandler(this.fMigr_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
