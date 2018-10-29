@@ -1635,11 +1635,11 @@ namespace Mig
         {
            
             /*Уведомление о прибытии*/
-            string TemplateName = "Notify Template.xls";
+            string TemplateName = "Notify Template.xlsx";
             string TemplatePath = Directory.GetCurrentDirectory() + @"\template\" + TemplateName;
            // string pathFont = Directory.GetCurrentDirectory() + "\\ARIALUNI.ttf";
             string ErrMsg = "";
-            string ReportName = GETNOW + "_Уведомление_о_прибытии.xls";
+            string ReportName = GETNOW + "_Уведомление_о_прибытии.xlsx";
 
             DataTable pfhost = DB.QueryTableMultipleParams(pref.PfHost, null);
             if (pfhost.Rows.Count == 0)
@@ -1651,6 +1651,7 @@ namespace Mig
             string NewFile = pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO + ReportName;
 
             Directory.CreateDirectory(pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO);
+            File.Copy(TemplatePath, NewFile, true);
 
             //Excel.Application excelApp = new Excel.Application();            
             //excelApp.DisplayAlerts = false;
@@ -1660,7 +1661,7 @@ namespace Mig
             //    true, false, 0, true, false, false);
             //Logger.Log.Debug("Шаблон открыт:" + DateTime.Now.ToString());
             //Excel.Sheets excelSheets = excelWorkbook.Worksheets;
-            XLWorkbook excelApp1XML = new ClosedXML.Excel.XLWorkbook(TemplatePath);
+            XLWorkbook excelApp1XML = new ClosedXML.Excel.XLWorkbook(NewFile);
             string currentSheet = "стр.1";
             string currentSheet2 = "стр.2";
             //Excel.Worksheet excelWorksheet = (Excel.Worksheet)excelSheets.get_Item(currentSheet);
