@@ -754,9 +754,10 @@ namespace Mig
 
         private void advancedDataGridView1_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
         {
-
+           
             if (e.ColumnIndex == dataGridView1.Columns["warning"].Index && e.RowIndex != -1)
             {
+                
                 Rectangle newRect = new Rectangle(e.CellBounds.X + 1,
                 e.CellBounds.Y + 1, e.CellBounds.Width - 4,
                 e.CellBounds.Height - 4);
@@ -856,7 +857,7 @@ namespace Mig
                 }
 
             }
-                }
+         }
 
         private void dataGridView1_SortStringChanged(object sender, EventArgs e)
         {

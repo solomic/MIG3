@@ -69,7 +69,7 @@
             this.btnExit.TabIndex = 7;
             this.btnExit.Text = "Отмена";
             this.btnExit.UseVisualStyleBackColor = true;
-            this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
+            
             // 
             // btnLogin
             // 
@@ -99,7 +99,7 @@
             this.Name = "fAuth";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Авторизация";
-            this.Load += new System.EventHandler(this.fAuth_Load);
+            
             this.ResumeLayout(false);
             this.PerformLayout();
 

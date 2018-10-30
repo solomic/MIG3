@@ -78,15 +78,7 @@ namespace Mig
 
         }
 
-        private void btnExit_Click(object sender, EventArgs e)
-        {
-          
-        }
-
-        private void fAuth_Load(object sender, EventArgs e)
-        {
-
-        }
+       
 
        
     }
