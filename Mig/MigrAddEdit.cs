@@ -239,11 +239,7 @@ namespace Mig
 
         }
 
-        private void tMigEntryDt_Enter(object sender, EventArgs e)
-        {
-            
-        }
-
+        
       
 
         private void tMigEntryDt_Validated(object sender, EventArgs e)
@@ -251,14 +247,6 @@ namespace Mig
             set90day();
         }
 
-        private void btnCancel_Click(object sender, EventArgs e)
-        {
-            
-        }
-
-        private void tMigEntryDt_EnabledChanged(object sender, EventArgs e)
-        {
-            
-        }
+       
     }
 }

@@ -198,8 +198,8 @@ namespace Mig
                 dataGridView1.DataSource = bindingSource1;
                 stCnt.Text = "Количество записей: " + bindingSource1.Count;
 
-                /*применяем фильтр*/
-                textBox1_TextChanged(this, null);
+                /*применяем фильтр*/                
+                FilterTextChange();
 
                 //  dataGridView1.Columns[0].Width = 50;
                 dataGridView1.Columns["warning"].HeaderText = "Предупреждения";
@@ -229,6 +229,11 @@ namespace Mig
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
+            FilterTextChange();
+        }
+
+        private void FilterTextChange()
+        {
             try
             {
                 bindingSource1.Filter = "Фамилия LIKE'" + textBox1.Text + "%'";
@@ -238,8 +243,6 @@ namespace Mig
                 Logger.Log.Error(ClassName + "Function:textBox1_TextChanged\n Error:" + err);
             }
         }
-
-
 
         private void textBox1_KeyDown(object sender, KeyEventArgs e)
         {
@@ -262,7 +265,7 @@ namespace Mig
 
         public int[] getSelectedRowsId(DataGridView gv)
         {
-            int[] iId = { 0};
+            int[] iId = {0};
             try
             {                
 
@@ -774,14 +777,16 @@ namespace Mig
 
 
                         int dx = 1;
+                        string grd = dataGridView1.Rows[e.RowIndex].Cells["graduate"].Value.ToString();
+                        string rsten = dataGridView1.Rows[e.RowIndex].Cells["rs_ten"].Value.ToString();
                         //выпускник
-                        if (dataGridView1.Rows[e.RowIndex].Cells["graduate"].Value.ToString() == "graduate")
+                        if (grd == "graduate")
                         {
                             e.Graphics.DrawImage(Mig.Properties.Resources.graduate, new Rectangle(e.CellBounds.X + dx, e.CellBounds.Y + 1, 16, 16));
                             dx += 18;
                         }
                         //продолжение обучения
-                        if (dataGridView1.Rows[e.RowIndex].Cells["graduate"].Value.ToString() == "continue_teach")
+                        if (grd == "continue_teach")
                         {
                             e.Graphics.DrawImage(Mig.Properties.Resources.stairs_up, new Rectangle(e.CellBounds.X + dx, e.CellBounds.Y + 1, 16, 16));
                             dx += 18;
@@ -804,19 +809,19 @@ namespace Mig
                             dx += 18;
                         }
                         //истекла регистрация - красная лампа
-                        if (dataGridView1.Rows[e.RowIndex].Cells["rs_ten"].Value.ToString() == "-1")
+                        if (rsten == "-1")
                         {
                             e.Graphics.DrawImage(Mig.Properties.Resources.red_lamp, new Rectangle(e.CellBounds.X + dx, e.CellBounds.Y + 1, 16, 16));
                             dx += 18;
                         }
                         //20 дней до истечения регистрации - желтая лампа
-                        if (dataGridView1.Rows[e.RowIndex].Cells["rs_ten"].Value.ToString() == "-2")
+                        if (rsten == "-2")
                         {
                             e.Graphics.DrawImage(Mig.Properties.Resources.yellow_lamp, new Rectangle(e.CellBounds.X + dx, e.CellBounds.Y + 1, 16, 16));
                             dx += 18;
                         }
                         //30 дней до истечения регистрации - зеленая лампа
-                        if (dataGridView1.Rows[e.RowIndex].Cells["rs_ten"].Value.ToString() == "-3")
+                        if (rsten == "-3")
                         {
                             e.Graphics.DrawImage(Mig.Properties.Resources.green_lamp, new Rectangle(e.CellBounds.X + dx, e.CellBounds.Y + 1, 16, 16));
                             dx += 18;
@@ -985,8 +990,7 @@ namespace Mig
       
 
         private void btnExit_Click(object sender, EventArgs e)
-        {
-           // DB.Close();
+        {           
             Application.Exit();
         }
 

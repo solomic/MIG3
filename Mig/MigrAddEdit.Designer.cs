@@ -119,8 +119,6 @@
             this.tMigEntryDt.SelectedDate = "";
             this.tMigEntryDt.Size = new System.Drawing.Size(93, 20);
             this.tMigEntryDt.TabIndex = 46;
-            this.tMigEntryDt.EnabledChanged += new System.EventHandler(this.tMigEntryDt_EnabledChanged);
-            this.tMigEntryDt.Enter += new System.EventHandler(this.tMigEntryDt_Enter);
             this.tMigEntryDt.Validated += new System.EventHandler(this.tMigEntryDt_Validated);
             // 
             // cmbKPP
@@ -240,8 +238,7 @@
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 38;
             this.btnCancel.Text = "Отмена";
-            this.btnCancel.UseVisualStyleBackColor = true;
-            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            this.btnCancel.UseVisualStyleBackColor = true;         
             // 
             // btnSave
             // 
