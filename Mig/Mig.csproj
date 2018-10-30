@@ -54,7 +54,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>catbox2.ico</ApplicationIcon>
+    <ApplicationIcon>Cat.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup>
@@ -197,7 +197,6 @@
     <Compile Include="DocMigrHistPopup.Designer.cs">
       <DependentUpon>DocMigrHistPopup.cs</DependentUpon>
     </Compile>
-    <Compile Include="Entity\Address.cs" />
     <Compile Include="EntryAdd.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -411,6 +410,7 @@
     <None Include="Resources\arrow-upp1.png" />
     <None Include="Resources\arrow-upp.png" />
     <None Include="Resources\arrow-down1.png" />
+    <Content Include="Cat.ico" />
     <Content Include="catbox2.ico" />
     <Content Include="prefDB.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
