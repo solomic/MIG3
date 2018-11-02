@@ -439,7 +439,7 @@ namespace Mig
                         MessageBox.Show("Укажите входные параметры", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         break;
                     }
-                    RepRes = (new pf()).GeneratePetitionStandart(cmbPetitionStandartParam1.Text, cmbPetitionStandartParam2.Text);
+                    (new pf()).GeneratePetitionStandart(cmbPetitionStandartParam1.Text, cmbPetitionStandartParam2.Text);
                     if (RepRes != "")
                         MessageBox.Show(RepRes, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     else
