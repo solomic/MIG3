@@ -44,6 +44,7 @@ namespace Mig
                     var bookmarkStart = docElement as BookmarkStart;
                     // Записываем id и имя закладки
                     bStartWithNoEnds.Add(bookmarkStart.Id, bookmarkStart.Name);
+                    bookmarkStart.Name.InnerText = "";
                 }
 
                 // BookmarkEnd определяет конец закладки в рамках документа
@@ -135,93 +136,72 @@ namespace Mig
         {            
             /*Регистрация.Ходатайство.Обычное*/
             string TemplateName = "PETITION.STANDART.docx";
-            string TemplatePath = Directory.GetCurrentDirectory()+@"\template\" + TemplateName;
-            string ErrMsg = "";
+            string TemplatePath = Directory.GetCurrentDirectory()+@"\template\" + TemplateName;           
             string ReportName = GETNOW + "_Ходатайство_Обычное.docx";
+            Dictionary<string, string> param = new Dictionary<string, string>();
 
-            Dictionary<string, string> param = new Dictionary<string, string>(20);
-
-            WordprocessingDocument doc =  WordprocessingDocument.Open(TemplatePath, true);
-            var bookMarks = FindBookmarks(doc.MainDocumentPart.Document);
-           // WordDoc._Application application;
-           // WordDoc._Document oDoc = null;
-          //  Logger.Log.Debug("new WordDoc.Application()" + DateTime.Now.ToString());
-           // application = new WordDoc.Application();
-         //   Logger.Log.Debug("new WordDoc.Application() OK" + DateTime.Now.ToString());
             try
             {
-                // Logger.Log.Debug("Открываем шаблон - "+ TemplatePath+": " + DateTime.Now.ToString());
-                //oDoc = application.Documents.Add(TemplatePath);
-                // Logger.Log.Debug("Открываем шаблон OK:" + DateTime.Now.ToString());
-                param.Add("change", s1);
-                param.Add("post", s2);
-                //oDoc.Bookmarks["change"].Range.Text = s1;
-                //oDoc.Bookmarks["post"].Range.Text = s2;
-
                 DataTable pfreq = DB.QueryTableMultipleParams(pref.PfRequest, new List<object> { pref.CONTACTID });
-               // Logger.Log.Debug("Данные получены:" + DateTime.Now.ToString());
-
-                //oDoc.Bookmarks["gr"].Range.Text = pfreq.Rows[0]["gr"].ToString();
-                param.Add("gr", pfreq.Rows[0]["gr"].ToString());
-                //  Logger.Log.Debug("gr " + DateTime.Now.ToString());
-                //oDoc.Bookmarks["nationality"].Range.Text = Regex.Replace(pfreq.Rows[0]["con_nat"].ToString(), @"\w+", new MatchEvaluator(CapitalizeString));
+                Directory.CreateDirectory(pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO);
+                string NewPath = pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO + ReportName;
+                File.Copy(TemplatePath,NewPath );
+                OpenSettings os = new OpenSettings
+                {
+                    AutoSave = true
+                };
+                WordprocessingDocument doc = WordprocessingDocument.Open(NewPath, true, os);              
+                var bookMarks = FindBookmarks(doc.MainDocumentPart.Document);               
+                param.Add("change", s1);
+                param.Add("post", s2);     
+                param.Add("gr", pfreq.Rows[0]["gr"].ToString());              
                 param.Add("nationality", Regex.Replace(pfreq.Rows[0]["con_nat"].ToString(), @"\w+", new MatchEvaluator(CapitalizeString)));
-                //  Logger.Log.Debug("nat " + DateTime.Now.ToString());
                 param.Add("fio", FirstUpper(pfreq.Rows[0]["con_fio"].ToString()));
-                //oDoc.Bookmarks["fio"].Range.Text = FirstUpper( pfreq.Rows[0]["con_fio"].ToString()) ;
-                // Logger.Log.Debug("fio " + DateTime.Now.ToString());
                 param.Add("birthday", pfreq.Rows[0]["con_birthday"].ToString());
-                //oDoc.Bookmarks["birthday"].Range.Text = pfreq.Rows[0]["con_birthday"].ToString();
-                // Logger.Log.Debug("др " + DateTime.Now.ToString());
                 param.Add("dul_type", FirstUpper(pfreq.Rows[0]["dul_type"].ToString()));
-                // oDoc.Bookmarks["dul_type"].Range.Text = FirstUpper(pfreq.Rows[0]["dul_type"].ToString());
-                // Logger.Log.Debug("дул " + DateTime.Now.ToString());
                 param.Add("dul_ser", pfreq.Rows[0]["dul_ser"].ToString());
-                // oDoc.Bookmarks["dul_ser"].Range.Text = pfreq.Rows[0]["dul_ser"].ToString();
-                // Logger.Log.Debug("серия " + DateTime.Now.ToString());
                 param.Add("dul_num", pfreq.Rows[0]["dul_num"].ToString());
-                // oDoc.Bookmarks["dul_num"].Range.Text = pfreq.Rows[0]["dul_num"].ToString();
-                // Logger.Log.Debug("номер " + DateTime.Now.ToString());
                 param.Add("dul_issue", pfreq.Rows[0]["dul_issue"].ToString());
-               // oDoc.Bookmarks["dul_issue"].Range.Text = pfreq.Rows[0]["dul_issue"].ToString();
-                // Logger.Log.Debug("выдано " + DateTime.Now.ToString()); 
                 param.Add("card_tenure_to_dt", pfreq.Rows[0]["card_tenure_to_dt"].ToString());
-               // oDoc.Bookmarks["card_tenure_to_dt"].Range.Text = pfreq.Rows[0]["card_tenure_to_dt"].ToString();
-                // Logger.Log.Debug("мигр до" + DateTime.Now.ToString());
                 param.Add("full_address", pfreq.Rows[0]["ad_full_address"].ToString());
-                // oDoc.Bookmarks["full_address"].Range.Text = pfreq.Rows[0]["ad_full_address"].ToString();
-
-                int i = 0;
+                               
                 foreach (var end in bookMarks)
-                {                 
-                    param.f
-                    if (end.Key != "Name" && end.Key != "Age" && end.Key != "Surname") continue;
+                {                   
+                     if (end.Key == "_GoBack") continue;
                     // Создаём текстовый элемент
-                    var textElement = new Text(data[i].ToString());
-                    // Далее данный текст добавляем в закладку
-                    var runElement = new Run(textElement);
-                    end.Value.InsertAfterSelf(runElement);
-                    i++;
+                    foreach (var item in param)
+                    {
+                        if( item.Key == end.Key)
+                        {
+                            var textElement = new Text(item.Value.ToString());
+                            // Далее данный текст добавляем в закладку
+                            var runElement = new Run(textElement);
+                            end.Value.InsertAfterSelf(runElement);
+                           
+                            param.Remove(item.Key);
+                            
+                            break;
+                        }
+                    }
+                    
                 }
 
-                Directory.CreateDirectory(pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper()+@"\"+pref.CONFIO);
-                // oDoc.SaveAs(pref.FULLREPORTPATCH+ pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\"+pref.CONFIO + ReportName);   //Путь к заполненному шаблону
-                doc.SaveAs(pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO + ReportName);
-              //  oDoc.Close();
-               // Logger.Log.Debug("Закрыли Doc:" + DateTime.Now.ToString());
+                //doc.MainDocumentPart.Document.RemoveAllChildren<BookmarkStart>();
+                //doc.MainDocumentPart.Document.RemoveAllChildren<BookmarkEnd>();
+
+                //Directory.CreateDirectory(pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper()+@"\"+pref.CONFIO);
+                doc.Save();
+                doc.Close();
+
                 InsertPf(ReportName);
                
             }
             catch(Exception e)  {
-                Logger.Log.Error(ClassName + "Function:GeneratePetitionStandart\n Error:" + e);             
-                //oDoc.Close(ref falseObj, ref missingObj, ref missingObj);
+                Logger.Log.Error(ClassName + "Function:GeneratePetitionStandart\n Error:" + e);
                 throw new Exception(e.Message);
             }
-            finally {                
+            finally {
                
-                //oDoc = null;
-                //application.Quit(SaveChanges: false);
-                //application = null;
             }
            
         }
