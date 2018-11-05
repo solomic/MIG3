@@ -29,44 +29,44 @@ namespace Mig
         Object trueObj = true;
         Object falseObj = false;
 
-        private static Dictionary<string, BookmarkEnd> FindBookmarks(OpenXmlElement documentPart, Dictionary<string, BookmarkEnd> outs = null, Dictionary<string, string> bStartWithNoEnds = null)
-        {
-            if (outs == null) { outs = new Dictionary<string, BookmarkEnd>(); }
-            if (bStartWithNoEnds == null) { bStartWithNoEnds = new Dictionary<string, string>(); }
+        //private static Dictionary<string, BookmarkEnd> FindBookmarks(OpenXmlElement documentPart, Dictionary<string, BookmarkEnd> outs = null, Dictionary<string, string> bStartWithNoEnds = null)
+        //{
+        //    if (outs == null) { outs = new Dictionary<string, BookmarkEnd>(); }
+        //    if (bStartWithNoEnds == null) { bStartWithNoEnds = new Dictionary<string, string>(); }
 
-            // Проходимся по всем элементам на странице Word-документа
-            foreach (var docElement in documentPart.Elements())
-            {
-                // BookmarkStart определяет начало закладки в рамках документа
-                // маркер начала связан с маркером конца закладки
-                if (docElement is BookmarkStart)
-                {
-                    var bookmarkStart = docElement as BookmarkStart;
-                    // Записываем id и имя закладки
-                    bStartWithNoEnds.Add(bookmarkStart.Id, bookmarkStart.Name);
-                    bookmarkStart.Name.InnerText = "";
-                }
+        //    // Проходимся по всем элементам на странице Word-документа
+        //    foreach (var docElement in documentPart.Elements())
+        //    {
+        //        // BookmarkStart определяет начало закладки в рамках документа
+        //        // маркер начала связан с маркером конца закладки
+        //        if (docElement is BookmarkStart)
+        //        {
+        //            var bookmarkStart = docElement as BookmarkStart;
+        //            // Записываем id и имя закладки
+        //            bStartWithNoEnds.Add(bookmarkStart.Id, bookmarkStart.Name);
+        //            bookmarkStart.Name.InnerText = "";
+        //        }
 
-                // BookmarkEnd определяет конец закладки в рамках документа
-                if (docElement is BookmarkEnd)
-                {
-                    var bookmarkEnd = docElement as BookmarkEnd;
-                    foreach (var startName in bStartWithNoEnds)
-                    {
-                        // startName.Key как раз и содержит id закладки
-                        // здесь проверяем, что есть связь между началом и концом закладки
-                        if (bookmarkEnd.Id == startName.Key)
-                            // В конечный массив добавляем то, что нам и нужно получить
-                            outs.Add(startName.Value, bookmarkEnd);
-                    }
-                }
-                // Рекурсивно вызываем данный метод, чтобы пройтись по всем элементам
-                // word-документа
-                FindBookmarks(docElement, outs, bStartWithNoEnds);
-            }
+        //        // BookmarkEnd определяет конец закладки в рамках документа
+        //        if (docElement is BookmarkEnd)
+        //        {
+        //            var bookmarkEnd = docElement as BookmarkEnd;
+        //            foreach (var startName in bStartWithNoEnds)
+        //            {
+        //                // startName.Key как раз и содержит id закладки
+        //                // здесь проверяем, что есть связь между началом и концом закладки
+        //                if (bookmarkEnd.Id == startName.Key)
+        //                    // В конечный массив добавляем то, что нам и нужно получить
+        //                    outs.Add(startName.Value, bookmarkEnd);
+        //            }
+        //        }
+        //        // Рекурсивно вызываем данный метод, чтобы пройтись по всем элементам
+        //        // word-документа
+        //        FindBookmarks(docElement, outs, bStartWithNoEnds);
+        //    }
 
-            return outs;
-        }
+        //    return outs;
+        //}
 
         string CapitalizeString(Match matchString)
         {
@@ -132,6 +132,22 @@ namespace Mig
             }
 
         }
+
+        public static void InsertIntoBookmark(BookmarkStart bookmarkStart, string text)
+        {
+            OpenXmlElement elem = bookmarkStart.NextSibling();
+
+            while (elem != null && !(elem is BookmarkEnd))
+            {
+                OpenXmlElement nextElem = elem.NextSibling();
+                elem.Remove();
+                elem = nextElem;
+            }
+            //FontSize fontSize = new FontSize();
+            //fontSize.Val = "14";
+            bookmarkStart.Parent.InsertAfter<Run>(new Run (new Text(text)), bookmarkStart);
+        }
+
         public void GeneratePetitionStandart(string s1,string s2)
         {            
             /*Регистрация.Ходатайство.Обычное*/
@@ -151,7 +167,7 @@ namespace Mig
                     AutoSave = true
                 };
                 WordprocessingDocument doc = WordprocessingDocument.Open(NewPath, true, os);              
-                var bookMarks = FindBookmarks(doc.MainDocumentPart.Document);               
+                //var bookMarks = FindBookmarks(doc.MainDocumentPart.Document);               
                 param.Add("change", s1);
                 param.Add("post", s2);     
                 param.Add("gr", pfreq.Rows[0]["gr"].ToString());              
@@ -164,32 +180,46 @@ namespace Mig
                 param.Add("dul_issue", pfreq.Rows[0]["dul_issue"].ToString());
                 param.Add("card_tenure_to_dt", pfreq.Rows[0]["card_tenure_to_dt"].ToString());
                 param.Add("full_address", pfreq.Rows[0]["ad_full_address"].ToString());
-                               
-                foreach (var end in bookMarks)
-                {                   
-                     if (end.Key == "_GoBack") continue;
-                    // Создаём текстовый элемент
+
+                foreach (BookmarkStart bookmarkStart in doc.MainDocumentPart.RootElement.Descendants<BookmarkStart>())
+                {
+                    if (bookmarkStart.Name == "_GoBack") continue;
                     foreach (var item in param)
                     {
-                        if( item.Key == end.Key)
+                        if (item.Key == bookmarkStart.Name)
                         {
-                            var textElement = new Text(item.Value.ToString());
-                            // Далее данный текст добавляем в закладку
-                            var runElement = new Run(textElement);
-                            end.Value.InsertAfterSelf(runElement);
-                           
+                            //var textElement = new Text(item.Value.ToString());                           
+                            //var runElement = new Run(textElement);                            
+                            InsertIntoBookmark(bookmarkStart, item.Value);
                             param.Remove(item.Key);
-                            
                             break;
                         }
                     }
                     
                 }
 
-                //doc.MainDocumentPart.Document.RemoveAllChildren<BookmarkStart>();
-                //doc.MainDocumentPart.Document.RemoveAllChildren<BookmarkEnd>();
+                //foreach (var end in bookMarks)
+                //{                   
+                //     if (end.Key == "_GoBack") continue;
+                //    // Создаём текстовый элемент
+                //    foreach (var item in param)
+                //    {
+                //        if( item.Key == end.Key)
+                //        {
+                //            var textElement = new Text(item.Value.ToString());
+                //            // Далее данный текст добавляем в закладку
+                //            var runElement = new Run(textElement);
+                //            //end.Value.InsertAfterSelf(runElement);
+                            
+                //            param.Remove(item.Key);
+                            
+                //            break;
+                //        }
+                //    }
+                    
+                //}
 
-                //Directory.CreateDirectory(pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper()+@"\"+pref.CONFIO);
+               
                 doc.Save();
                 doc.Close();
 
