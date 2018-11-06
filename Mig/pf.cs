@@ -29,44 +29,6 @@ namespace Mig
         Object trueObj = true;
         Object falseObj = false;
 
-        //private static Dictionary<string, BookmarkEnd> FindBookmarks(OpenXmlElement documentPart, Dictionary<string, BookmarkEnd> outs = null, Dictionary<string, string> bStartWithNoEnds = null)
-        //{
-        //    if (outs == null) { outs = new Dictionary<string, BookmarkEnd>(); }
-        //    if (bStartWithNoEnds == null) { bStartWithNoEnds = new Dictionary<string, string>(); }
-
-        //    // Проходимся по всем элементам на странице Word-документа
-        //    foreach (var docElement in documentPart.Elements())
-        //    {
-        //        // BookmarkStart определяет начало закладки в рамках документа
-        //        // маркер начала связан с маркером конца закладки
-        //        if (docElement is BookmarkStart)
-        //        {
-        //            var bookmarkStart = docElement as BookmarkStart;
-        //            // Записываем id и имя закладки
-        //            bStartWithNoEnds.Add(bookmarkStart.Id, bookmarkStart.Name);
-        //            bookmarkStart.Name.InnerText = "";
-        //        }
-
-        //        // BookmarkEnd определяет конец закладки в рамках документа
-        //        if (docElement is BookmarkEnd)
-        //        {
-        //            var bookmarkEnd = docElement as BookmarkEnd;
-        //            foreach (var startName in bStartWithNoEnds)
-        //            {
-        //                // startName.Key как раз и содержит id закладки
-        //                // здесь проверяем, что есть связь между началом и концом закладки
-        //                if (bookmarkEnd.Id == startName.Key)
-        //                    // В конечный массив добавляем то, что нам и нужно получить
-        //                    outs.Add(startName.Value, bookmarkEnd);
-        //            }
-        //        }
-        //        // Рекурсивно вызываем данный метод, чтобы пройтись по всем элементам
-        //        // word-документа
-        //        FindBookmarks(docElement, outs, bStartWithNoEnds);
-        //    }
-
-        //    return outs;
-        //}
 
         string CapitalizeString(Match matchString)
         {
@@ -142,15 +104,26 @@ namespace Mig
                 OpenXmlElement nextElem = elem.NextSibling();
                 elem.Remove();
                 elem = nextElem;
-            }
-            //FontSize fontSize = new FontSize();
-            //fontSize.Val = "14";
-            bookmarkStart.Parent.InsertAfter<Run>(new Run (new Text(text)), bookmarkStart);
+            }           
+            //bookmarkStart.Parent.InsertAfter<Run>(new Run (new Text(text)), bookmarkStart);
+            Run run = new Run();
+            Text currLine = new Text(text);
+            run.AppendChild<Text>(currLine);
+            RunProperties runProp = new RunProperties();          
+            FontSize size = new FontSize();
+            size.Val = new StringValue("28");           
+            runProp.Append(size);
+            run.PrependChild<RunProperties>(runProp);
+            bookmarkStart.Parent.InsertAfter<Run> (run, bookmarkStart);
         }
 
         public void GeneratePetitionStandart(string s1,string s2)
-        {            
+        {
             /*Регистрация.Ходатайство.Обычное*/
+            if (s1 == "" || s2 == "")           
+                throw new Exception("Укажите входные параметры");
+            
+
             string TemplateName = "PETITION.STANDART.docx";
             string TemplatePath = Directory.GetCurrentDirectory()+@"\template\" + TemplateName;           
             string ReportName = GETNOW + "_Ходатайство_Обычное.docx";
@@ -187,39 +160,14 @@ namespace Mig
                     foreach (var item in param)
                     {
                         if (item.Key == bookmarkStart.Name)
-                        {
-                            //var textElement = new Text(item.Value.ToString());                           
-                            //var runElement = new Run(textElement);                            
+                        {                                                       
                             InsertIntoBookmark(bookmarkStart, item.Value);
                             param.Remove(item.Key);
                             break;
                         }
-                    }
-                    
+                    }                    
                 }
 
-                //foreach (var end in bookMarks)
-                //{                   
-                //     if (end.Key == "_GoBack") continue;
-                //    // Создаём текстовый элемент
-                //    foreach (var item in param)
-                //    {
-                //        if( item.Key == end.Key)
-                //        {
-                //            var textElement = new Text(item.Value.ToString());
-                //            // Далее данный текст добавляем в закладку
-                //            var runElement = new Run(textElement);
-                //            //end.Value.InsertAfterSelf(runElement);
-                            
-                //            param.Remove(item.Key);
-                            
-                //            break;
-                //        }
-                //    }
-                    
-                //}
-
-               
                 doc.Save();
                 doc.Close();
 
@@ -229,9 +177,6 @@ namespace Mig
             catch(Exception e)  {
                 Logger.Log.Error(ClassName + "Function:GeneratePetitionStandart\n Error:" + e);
                 throw new Exception(e.Message);
-            }
-            finally {
-               
             }
            
         }
@@ -953,60 +898,72 @@ namespace Mig
             }
             return ErrMsg;
         }
-        public string GeneratePetitionVisa(string s1, string s2)
+        public void GeneratePetitionVisa(string s1, string s2)
         {
-            
             /*Регистрация.Ходатайство.Смена визы*/
-            string TemplateName = "PETITION.VISA.doc";
-            string TemplatePath = Directory.GetCurrentDirectory() + @"\template\" + TemplateName;
-            string ErrMsg = "";
-            string ReportName = GETNOW + "_Ходатайство_Смена_визы.doc";
-            WordDoc._Application application;
-            WordDoc._Document oDoc = null;
-            application = new WordDoc.Application();
+            if (s1 == "" || s2 == "")
+                throw new Exception("Укажите входные параметры");                  
+            
+            string TemplateName = "PETITION.VISA.docx";
+            string TemplatePath = Directory.GetCurrentDirectory() + @"\template\" + TemplateName;           
+            string ReportName = GETNOW + "_Ходатайство_Смена_визы.docx";
+            Dictionary<string, string> param = new Dictionary<string, string>();
+
             try
             {
-                oDoc = application.Documents.Add(TemplatePath);
-                oDoc.Bookmarks["change"].Range.Text = s1;
-                oDoc.Bookmarks["post"].Range.Text = s2;
-
                 DataTable pfreq = DB.QueryTableMultipleParams(pref.PfRequest, new List<object> { pref.CONTACTID });
-
-
-                oDoc.Bookmarks["gr"].Range.Text = pfreq.Rows[0]["gr"].ToString();
-                oDoc.Bookmarks["nationality"].Range.Text = Regex.Replace(pfreq.Rows[0]["con_nat"].ToString(), @"\w+", new MatchEvaluator(CapitalizeString));
-                oDoc.Bookmarks["fio"].Range.Text = FirstUpper(pfreq.Rows[0]["con_fio"].ToString()) ;
-                oDoc.Bookmarks["birthday"].Range.Text = pfreq.Rows[0]["con_birthday"].ToString();
-                oDoc.Bookmarks["doc_ser"].Range.Text = pfreq.Rows[0]["doc_ser"].ToString();
-                oDoc.Bookmarks["doc_num"].Range.Text = pfreq.Rows[0]["doc_num"].ToString();
-                oDoc.Bookmarks["doc_issue_dt"].Range.Text = pfreq.Rows[0]["doc_issue_dt"].ToString();
-                oDoc.Bookmarks["doc_validity_to_dt"].Range.Text = pfreq.Rows[0]["doc_validity_to_dt"].ToString();
-                oDoc.Bookmarks["full_address"].Range.Text = pfreq.Rows[0]["ad_full_address"].ToString();
-                oDoc.Bookmarks["card_tenure_to_dt"].Range.Text = pfreq.Rows[0]["card_tenure_to_dt"].ToString();
-                oDoc.Bookmarks["p3"].Range.Text = pfreq.Rows[0]["p3"].ToString();
-                oDoc.Bookmarks["p4"].Range.Text = pfreq.Rows[0]["p4"].ToString();
-
                 Directory.CreateDirectory(pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO);
-                oDoc.SaveAs(pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO + ReportName);   
-                oDoc.Close();
+                string NewPath = pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO + ReportName;
+                File.Copy(TemplatePath, NewPath);
+                OpenSettings os = new OpenSettings
+                {
+                    AutoSave = true
+                };
+                WordprocessingDocument doc = WordprocessingDocument.Open(NewPath, true, os);
 
-                 InsertPf(ReportName);
-               
+                param.Add("change",s1);
+                param.Add("post",s2);
+                param.Add("gr",pfreq.Rows[0]["gr"].ToString());
+                param.Add("nationality", Regex.Replace(pfreq.Rows[0]["con_nat"].ToString(), @"\w+", new MatchEvaluator(CapitalizeString)));
+                param.Add("fio",FirstUpper(pfreq.Rows[0]["con_fio"].ToString()) );
+                param.Add("birthday",pfreq.Rows[0]["con_birthday"].ToString());
+                param.Add("doc_ser",pfreq.Rows[0]["doc_ser"].ToString());
+                param.Add("doc_num",pfreq.Rows[0]["doc_num"].ToString());
+                param.Add("doc_issue_dt",pfreq.Rows[0]["doc_issue_dt"].ToString());
+                param.Add("doc_validity_to_dt",pfreq.Rows[0]["doc_validity_to_dt"].ToString());
+                param.Add("full_address",pfreq.Rows[0]["ad_full_address"].ToString());
+                param.Add("card_tenure_to_dt",pfreq.Rows[0]["card_tenure_to_dt"].ToString());
+                param.Add("p3",pfreq.Rows[0]["p3"].ToString());
+                param.Add("p4",pfreq.Rows[0]["p4"].ToString());
+
+                foreach (BookmarkStart bookmarkStart in doc.MainDocumentPart.RootElement.Descendants<BookmarkStart>())
+                {
+                    if (bookmarkStart.Name == "_GoBack") continue;
+                    foreach (var item in param)
+                    {
+                        if (item.Key == bookmarkStart.Name)
+                        {
+                            InsertIntoBookmark(bookmarkStart, item.Value);
+                            param.Remove(item.Key);
+                            break;
+                        }
+                    }
+                }
+
+                doc.Save();
+                doc.Close();
+
+                InsertPf(ReportName);
+
 
             }
             catch (Exception e)
             {
                 Logger.Log.Error(ClassName + "Function:GeneratePetitionVisa\n Error:" + e);
-                oDoc.Close(ref falseObj, ref missingObj, ref missingObj);
-                ErrMsg = e.Message;
+                throw new Exception(e.Message);
             }
-            finally
-            {
-                oDoc = null;
-                application.Quit(SaveChanges: false);
-                application = null;
-            }
-            return ErrMsg;
+           
+           
         }
         public string GenerateVisaGuarant()
         {
