@@ -116,13 +116,45 @@ namespace Mig
             run.PrependChild<RunProperties>(runProp);
             bookmarkStart.Parent.InsertAfter<Run> (run, bookmarkStart);
         }
+        public void FillDoc(string path, Dictionary<string, string> prm)
+        {
+            try
+            {
+                OpenSettings os = new OpenSettings
+                {
+                    AutoSave = true
+                };
+                WordprocessingDocument doc = WordprocessingDocument.Open(path, true, os);
+                foreach (BookmarkStart bookmarkStart in doc.MainDocumentPart.RootElement.Descendants<BookmarkStart>())
+                {
+                    if (bookmarkStart.Name == "_GoBack") continue;
+                    foreach (var item in prm)
+                    {
+                        if (item.Key == bookmarkStart.Name)
+                        {
+                            InsertIntoBookmark(bookmarkStart, item.Value);
+                            prm.Remove(item.Key);
+                            break;
+                        }
+                    }
+                }
+
+                doc.Save();
+                doc.Close();
+            }
+            catch (Exception e)
+            {
+                Logger.Log.Error(ClassName + "Function:FillDoc\n Error:" + e);
+                throw new Exception(e.Message);
+            }           
+
+        }
 
         public void GeneratePetitionStandart(string s1,string s2)
         {
             /*Регистрация.Ходатайство.Обычное*/
             if (s1 == "" || s2 == "")           
                 throw new Exception("Укажите входные параметры");
-            
 
             string TemplateName = "PETITION.STANDART.docx";
             string TemplatePath = Directory.GetCurrentDirectory()+@"\template\" + TemplateName;           
@@ -135,12 +167,7 @@ namespace Mig
                 Directory.CreateDirectory(pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO);
                 string NewPath = pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO + ReportName;
                 File.Copy(TemplatePath,NewPath );
-                OpenSettings os = new OpenSettings
-                {
-                    AutoSave = true
-                };
-                WordprocessingDocument doc = WordprocessingDocument.Open(NewPath, true, os);              
-                //var bookMarks = FindBookmarks(doc.MainDocumentPart.Document);               
+                        
                 param.Add("change", s1);
                 param.Add("post", s2);     
                 param.Add("gr", pfreq.Rows[0]["gr"].ToString());              
@@ -154,23 +181,8 @@ namespace Mig
                 param.Add("card_tenure_to_dt", pfreq.Rows[0]["card_tenure_to_dt"].ToString());
                 param.Add("full_address", pfreq.Rows[0]["ad_full_address"].ToString());
 
-                foreach (BookmarkStart bookmarkStart in doc.MainDocumentPart.RootElement.Descendants<BookmarkStart>())
-                {
-                    if (bookmarkStart.Name == "_GoBack") continue;
-                    foreach (var item in param)
-                    {
-                        if (item.Key == bookmarkStart.Name)
-                        {                                                       
-                            InsertIntoBookmark(bookmarkStart, item.Value);
-                            param.Remove(item.Key);
-                            break;
-                        }
-                    }                    
-                }
-
-                doc.Save();
-                doc.Close();
-
+                FillDoc(NewPath, param);
+             
                 InsertPf(ReportName);
                
             }
@@ -180,45 +192,40 @@ namespace Mig
             }
            
         }
-        public string GenerateDepObr()
+        public void GenerateDepObr()
         {
             
             /*Уведомление о прибытии*/
-            string TemplateName = "DEP.OBR.doc";
-            string TemplatePath = Directory.GetCurrentDirectory() + @"\template\" + TemplateName;
-            string ErrMsg = "";
-            string ReportName = GETNOW + "_Уведомление_о_прибытии.doc";
-            WordDoc._Application application;
-            WordDoc._Document oDoc = null;
-            application = new WordDoc.Application();
+            string TemplateName = "DEP.OBR.docx";
+            string TemplatePath = Directory.GetCurrentDirectory() + @"\template\" + TemplateName;           
+            string ReportName = GETNOW + "_Уведомление_о_прибытии.docx";
+            Dictionary<string, string> param = new Dictionary<string, string>();
+
             try
             {
-                oDoc = application.Documents.Add(TemplatePath);
-
-                DataTable pfreq = DB.QueryTableMultipleParams(pref.PfRequest, new List<object> { pref.CONTACTID });
-                oDoc.Bookmarks["fio"].Range.Text = FirstUpper( pfreq.Rows[0]["con_fio"].ToString());
-
                 
-                oDoc.Bookmarks["nat"].Range.Text = Regex.Replace(pfreq.Rows[0]["con_nat"].ToString(), @"\w+", new MatchEvaluator(CapitalizeString)); 
-                oDoc.Bookmarks["birth"].Range.Text = pfreq.Rows[0]["con_birthday"].ToString();
-                oDoc.Bookmarks["ser"].Range.Text = pfreq.Rows[0]["dul_ser"].ToString();
-                oDoc.Bookmarks["num"].Range.Text = pfreq.Rows[0]["dul_num"].ToString();
-                oDoc.Bookmarks["pfrom"].Range.Text = pfreq.Rows[0]["dul_issue"].ToString();
-                oDoc.Bookmarks["pteach"].Range.Text = Regex.Replace(pfreq.Rows[0]["teach_pt"].ToString(), @"\w+", new MatchEvaluator(CapitalizeString)); 
+                DataTable pfreq = DB.QueryTableMultipleParams(pref.PfRequest, new List<object> { pref.CONTACTID });
+                Directory.CreateDirectory(pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO);
+                string NewPath = pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO + ReportName;
+                File.Copy(TemplatePath, NewPath);
+
+                param.Add("fio", FirstUpper( pfreq.Rows[0]["con_fio"].ToString()));
+                param.Add("nat", Regex.Replace(pfreq.Rows[0]["con_nat"].ToString(), @"\w+", new MatchEvaluator(CapitalizeString))); 
+                param.Add("birth", pfreq.Rows[0]["con_birthday"].ToString());
+                param.Add("ser", pfreq.Rows[0]["dul_ser"].ToString());
+                param.Add("num", pfreq.Rows[0]["dul_num"].ToString());
+                param.Add("pfrom", pfreq.Rows[0]["dul_issue"].ToString());
+                param.Add("pteach", Regex.Replace(pfreq.Rows[0]["teach_pt"].ToString(), @"\w+", new MatchEvaluator(CapitalizeString))); 
                 if (pfreq.Rows[0]["con_sex"].ToString() == "МУЖСКОЙ")
                 {
-                    oDoc.Bookmarks["p1"].Range.Text = "прибыл следующий иностранный гражданин";                   
+                    param.Add("p1", "прибыл следующий иностранный гражданин");                   
                 }
                 else
                 {
-                    oDoc.Bookmarks["p1"].Range.Text = "прибыла следующая иностранная гражданка";                   
-                }               
+                    param.Add("p1","прибыла следующая иностранная гражданка");                   
+                }
 
-                             
-
-                Directory.CreateDirectory(pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO);
-                oDoc.SaveAs(pref.FULLREPORTPATCH  + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO + ReportName);   //Путь к заполненному шаблону
-                oDoc.Close();
+                FillDoc(NewPath, param);
 
                 InsertPf(ReportName);
                
@@ -227,16 +234,9 @@ namespace Mig
             catch (Exception e)
             {
                 Logger.Log.Error(ClassName + "Function:GenerateDepObr\n Error:" + e);
-                oDoc.Close(ref falseObj, ref missingObj, ref missingObj);
-                ErrMsg = e.Message;
+                throw new Exception(e.Message);
             }
-            finally
-            {
-                oDoc = null;
-                application.Quit(SaveChanges: false);
-                application = null;
-            }
-            return ErrMsg;
+            
         }
        
         public string GeneratePetitionDeduct()
@@ -915,12 +915,7 @@ namespace Mig
                 Directory.CreateDirectory(pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO);
                 string NewPath = pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO + ReportName;
                 File.Copy(TemplatePath, NewPath);
-                OpenSettings os = new OpenSettings
-                {
-                    AutoSave = true
-                };
-                WordprocessingDocument doc = WordprocessingDocument.Open(NewPath, true, os);
-
+               
                 param.Add("change",s1);
                 param.Add("post",s2);
                 param.Add("gr",pfreq.Rows[0]["gr"].ToString());
@@ -936,22 +931,8 @@ namespace Mig
                 param.Add("p3",pfreq.Rows[0]["p3"].ToString());
                 param.Add("p4",pfreq.Rows[0]["p4"].ToString());
 
-                foreach (BookmarkStart bookmarkStart in doc.MainDocumentPart.RootElement.Descendants<BookmarkStart>())
-                {
-                    if (bookmarkStart.Name == "_GoBack") continue;
-                    foreach (var item in param)
-                    {
-                        if (item.Key == bookmarkStart.Name)
-                        {
-                            InsertIntoBookmark(bookmarkStart, item.Value);
-                            param.Remove(item.Key);
-                            break;
-                        }
-                    }
-                }
-
-                doc.Save();
-                doc.Close();
+                FillDoc(NewPath, param);
+                
 
                 InsertPf(ReportName);
 

@@ -450,8 +450,7 @@ namespace Mig
                             
                             break;
                         case "Node8":
-                            RepRes = (new pf()).GeneratePetitionLost();
-                           
+                            (new pf()).GeneratePetitionLost();                           
                             break;
                         case "Node9": /*Визовая анкета: анкета*/
                             if (cmbVisaAction.Text == "" || cmbVisaKrat.Text == "" || cmbVisaCat.Text == "" || cmbVisaPurpose.Text == "" || (cmbVisaSubCat.Text == "" && cmbVisaCat.SelectedIndex == 0))
@@ -472,18 +471,10 @@ namespace Mig
                                 MessageBox.Show("Укажите входные параметры", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                                 break;
                             }
-                            RepRes = (new pf()).GenerateVisaPetition(cmbVisaPetition.Text, cmbAnkHodReason.Text);
-                            //if (RepRes != "")
-                            //    MessageBox.Show(RepRes, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            //else
-                            //    MessageBox.Show("Документ успешно сформирован", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            RepRes = (new pf()).GenerateVisaPetition(cmbVisaPetition.Text, cmbAnkHodReason.Text);                           
                             break;
                         case "Node12":
-                            RepRes = (new pf()).GenerateDepObr();
-                        //if (RepRes != "")
-                        //    MessageBox.Show(RepRes, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        //else
-                        //    MessageBox.Show("Документ успешно сформирован", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            (new pf()).GenerateDepObr();                       
                         break;
                     case "Node13":
                             if (cmbPetitionOut.Text == "" )
@@ -491,42 +482,22 @@ namespace Mig
                                 MessageBox.Show("Укажите входные параметры", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                                 break;
                             }
-                            RepRes = (new pf()).GeneratePetitionOut(cmbPetitionOut.SelectedIndex);
-                            //if (RepRes != "")
-                            //    MessageBox.Show(RepRes, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            //else
-                            //    MessageBox.Show("Документ успешно сформирован", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            RepRes = (new pf()).GeneratePetitionOut(cmbPetitionOut.SelectedIndex);                            
                             break;
                         case "Node15":                   
-                            RepRes = (new pf()).GeneratePetitionDeduct();
-                            //if (RepRes != "")
-                            //    MessageBox.Show(RepRes, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            //else
-                            //    MessageBox.Show("Документ успешно сформирован", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                           (new pf()).GeneratePetitionDeduct();                           
                             break;
                         case "Node14":
-                            RepRes = (new pf()).GeneratePetitionDeductDo();
-                            //if (RepRes != "")
-                            //    MessageBox.Show(RepRes, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            //else
-                            //    MessageBox.Show("Документ успешно сформирован", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                           (new pf()).GeneratePetitionDeductDo();                            
                             break;
                         case "Node1":
-                            RepRes = (new pf()).GenerateSprBank();
-                            //if (RepRes != "")
-                            //    MessageBox.Show(RepRes, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            //else
-                            //    MessageBox.Show("Документ успешно сформирован", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            (new pf()).GenerateSprBank();                           
                             break;
                         case "NodeNotify":     
                             if (pref.NOTIFYTEMPLATE == "xls")               
                                 RepRes = (new pf()).GenerateNotifyXls();
                             else
-                                RepRes = (new pf()).GenerateNotify();
-                            //if (RepRes != "")
-                            //    MessageBox.Show(RepRes, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            //else
-                            //    MessageBox.Show("Документ успешно сформирован", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                RepRes = (new pf()).GenerateNotify();                            
                             break;
                     }
                 MessageBox.Show("Документ успешно сформирован", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
