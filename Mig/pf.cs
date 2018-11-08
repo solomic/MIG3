@@ -199,7 +199,7 @@ namespace Mig
             string TemplateName = "DEP.OBR.docx";
             string TemplatePath = Directory.GetCurrentDirectory() + @"\template\" + TemplateName;           
             string ReportName = GETNOW + "_Уведомление_о_прибытии.docx";
-            Dictionary<string, string> param = new Dictionary<string, string>();
+            Dictionary<string, string> param = new Dictionary<string, string>();           
 
             try
             {
@@ -233,670 +233,624 @@ namespace Mig
             }
             catch (Exception e)
             {
-                Logger.Log.Error(ClassName + "Function:GenerateDepObr\n Error:" + e);
+                Logger.Log.Error(ClassName + "Function:GenerateDepObr\n Error:" + e);             
                 throw new Exception(e.Message);
             }
             
         }
        
-        public string GeneratePetitionDeduct()
+        public void GeneratePetitionDeduct()
         {
            
             /*Уведомление об отчислении*/
-            string TemplateName = "PETITION.DEDUCT.doc";
-            string TemplatePath = Directory.GetCurrentDirectory() + @"\template\" + TemplateName;
-            string ErrMsg = "";
-            string ReportName = GETNOW + "_Уведомление_отчисление_УФМС.doc";
-            WordDoc._Application application;
-            WordDoc._Document oDoc = null;
-            application = new WordDoc.Application();
-            try
-            {
-                oDoc = application.Documents.Add(TemplatePath);
+            string TemplateName = "PETITION.DEDUCT.docx";
+            string TemplatePath = Directory.GetCurrentDirectory() + @"\template\" + TemplateName;           
+            string ReportName = GETNOW + "_Уведомление_отчисление_УФМС.docx";
+            Dictionary<string, string> param = new Dictionary<string, string>();
 
+            try
+            {                
                 DataTable pfreq = DB.QueryTableMultipleParams(pref.PfRequest, new List<object> { pref.CONTACTID });
-                oDoc.Bookmarks["fio"].Range.Text = FirstUpper(pfreq.Rows[0]["con_fio"].ToString());
-                
-                oDoc.Bookmarks["nat"].Range.Text = Regex.Replace(pfreq.Rows[0]["con_nat"].ToString(), @"\w+", new MatchEvaluator(CapitalizeString)); ;
-                oDoc.Bookmarks["birth"].Range.Text = pfreq.Rows[0]["con_birthday"].ToString();
-                oDoc.Bookmarks["dul"].Range.Text = FirstUpper(pfreq.Rows[0]["dul_type"].ToString());
-                oDoc.Bookmarks["ser"].Range.Text = pfreq.Rows[0]["dul_ser"].ToString();
-                oDoc.Bookmarks["n"].Range.Text = pfreq.Rows[0]["dul_num"].ToString();
-                oDoc.Bookmarks["dul_from"].Range.Text = pfreq.Rows[0]["dul_issue"].ToString();
-                oDoc.Bookmarks["pr_num"].Range.Text = pfreq.Rows[0]["exp_num"].ToString();
-                oDoc.Bookmarks["pr_from"].Range.Text = pfreq.Rows[0]["exp_dt"].ToString();
-                oDoc.Bookmarks["osn"].Range.Text = pfreq.Rows[0]["exp_expelled"].ToString();
+                Directory.CreateDirectory(pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO);
+                string NewPath = pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO + ReportName;
+                File.Copy(TemplatePath, NewPath);
+
+                param.Add("fio", FirstUpper(pfreq.Rows[0]["con_fio"].ToString()));                
+                param.Add("nat",Regex.Replace(pfreq.Rows[0]["con_nat"].ToString(), @"\w+", new MatchEvaluator(CapitalizeString))); 
+                param.Add("birth", pfreq.Rows[0]["con_birthday"].ToString());
+                param.Add("dul",FirstUpper(pfreq.Rows[0]["dul_type"].ToString()));
+                param.Add("ser", pfreq.Rows[0]["dul_ser"].ToString());
+                param.Add("n",pfreq.Rows[0]["dul_num"].ToString());
+                param.Add("dul_from", pfreq.Rows[0]["dul_issue"].ToString());
+                param.Add("pr_num", pfreq.Rows[0]["exp_num"].ToString());
+                param.Add("pr_from", pfreq.Rows[0]["exp_dt"].ToString());
+                param.Add("osn", pfreq.Rows[0]["exp_expelled"].ToString());
                 if (pfreq.Rows[0]["con_sex"].ToString() == "ЖЕНСКИЙ")
                 {
-                    oDoc.Bookmarks["p1"].Range.Text = "отчислена";
-                    oDoc.Bookmarks["p2"].Range.Text = "следующая иностранная гражданка";
+                    param.Add("p1", "отчислена");
+                    param.Add("p2","следующая иностранная гражданка");
                 }
                 else
                 {
-                    oDoc.Bookmarks["p1"].Range.Text = "отчислен";
-                    oDoc.Bookmarks["p2"].Range.Text = "следующий иностранный гражданин";
+                    param.Add("p1", "отчислен");
+                    param.Add("p2", "следующий иностранный гражданин");
                 }
-
-
-
-                Directory.CreateDirectory(pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO);
-                oDoc.SaveAs(pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO + ReportName);   //Путь к заполненному шаблону
-                oDoc.Close();
+                FillDoc(NewPath, param);
 
                 InsertPf(ReportName);
-                
+
 
             }
             catch (Exception e)
             {
                 Logger.Log.Error(ClassName + "Function:GeneratePetitionDeduct\n Error:" + e);
-                oDoc.Close(ref falseObj, ref missingObj, ref missingObj);
-                ErrMsg = e.Message;
+                throw new Exception(e.Message);
             }
-            finally
-            {
-                oDoc = null;
-                application.Quit(SaveChanges: false);
-                application = null;
-            }
-            return ErrMsg;
+            
         }
 
-        public string GenerateNotify()
-        {
+        //public string GenerateNotify()
+        //{
            
-            /*Уведомление о прибытии*/
-            string TemplateName = "Notify Template.pdf";
-            string TemplatePath = Directory.GetCurrentDirectory() + @"\template\" + TemplateName;
-            string pathFont = Directory.GetCurrentDirectory() + @"\ARIALUNI.ttf";
-            string ErrMsg = "";
-            string ReportName = GETNOW + "_Уведомление_о_прибытии.pdf";
+        //    /*Уведомление о прибытии*/
+        //    string TemplateName = "Notify Template.pdf";
+        //    string TemplatePath = Directory.GetCurrentDirectory() + @"\template\" + TemplateName;
+        //    string pathFont = Directory.GetCurrentDirectory() + @"\ARIALUNI.ttf";
+        //    string ErrMsg = "";
+        //    string ReportName = GETNOW + "_Уведомление_о_прибытии.pdf";
 
-            DataTable pfhost = DB.QueryTableMultipleParams(pref.PfHost, null);
-            if(pfhost.Rows.Count==0)
-            {
-                return "Нет активного исполнителя!";
-            }
-            DataTable pfreq = DB.QueryTableMultipleParams(pref.PfRequest, new List<object> { pref.CONTACTID });
+        //    DataTable pfhost = DB.QueryTableMultipleParams(pref.PfHost, null);
+        //    if(pfhost.Rows.Count==0)
+        //    {
+        //        return "Нет активного исполнителя!";
+        //    }
+        //    DataTable pfreq = DB.QueryTableMultipleParams(pref.PfRequest, new List<object> { pref.CONTACTID });
             
 
-            string NewFile = pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO + ReportName;
+        //    string NewFile = pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO + ReportName;
 
 
-            Directory.CreateDirectory(pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO);
-            try
-            {
-                // BaseFont baseFont = BaseFont.CreateFont(pathFont, BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
-                BaseFont bf = iTextSharp.text.pdf.BaseFont.CreateFont(pathFont, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-                iTextSharp.text.Font font = new iTextSharp.text.Font(bf, 12);
+        //    Directory.CreateDirectory(pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO);
+        //    try
+        //    {
+        //        // BaseFont baseFont = BaseFont.CreateFont(pathFont, BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
+        //        BaseFont bf = iTextSharp.text.pdf.BaseFont.CreateFont(pathFont, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+        //        iTextSharp.text.Font font = new iTextSharp.text.Font(bf, 12);
 
-               // File.Copy(TemplatePath, NewFile,true);
+        //       // File.Copy(TemplatePath, NewFile,true);
                 
 
-                PdfReader reader = new PdfReader(TemplatePath);
-                using (PdfStamper stamper = new PdfStamper(reader, new FileStream(NewFile, FileMode.Create)))
-                {
-                    AcroFields fields = stamper.AcroFields;
+        //        PdfReader reader = new PdfReader(TemplatePath);
+        //        using (PdfStamper stamper = new PdfStamper(reader, new FileStream(NewFile, FileMode.Create)))
+        //        {
+        //            AcroFields fields = stamper.AcroFields;
 
-                    fields.AddSubstitutionFont(bf);
+        //            fields.AddSubstitutionFont(bf);
                    
 
-                    // set form fields
+        //            // set form fields
 
-                    fields.SetField("comb_1", pfreq.Rows[0]["con_last_name"].ToString());
-                    fields.SetField("comb_2", pfreq.Rows[0]["con_first_name"].ToString() + " " + pfreq.Rows[0]["con_second_name"].ToString());
-                    fields.SetField("comb_3", pfreq.Rows[0]["con_nat"].ToString());
-                    if (pfreq.Rows[0]["con_birthday"].ToString() != "")
-                    {
-                        fields.SetField("comb_4", pfreq.Rows[0]["con_birthday"].ToString().Substring(0, 2));
-                        fields.SetField("comb_5", pfreq.Rows[0]["con_birthday"].ToString().Substring(3, 2));
-                        fields.SetField("comb_6", pfreq.Rows[0]["con_birthday"].ToString().Substring(6, 4));
-                    }
-                    if (pfreq.Rows[0]["con_sex"].ToString() == "ЖЕНСКИЙ")
-                        fields.SetField("comb_61", "X");
-                    else
-                        fields.SetField("comb_60", "X");
-                    fields.SetField("comb_8", pfreq.Rows[0]["con_birth_town"].ToString());
-                    fields.SetField("comb_7", pfreq.Rows[0]["con_birth_country"].ToString());
-                    fields.SetField("comb_9", FirstUpper(pfreq.Rows[0]["dul_type"].ToString().ToUpper()));
-                    fields.SetField("comb_10", pfreq.Rows[0]["dul_ser"].ToString());
-                    fields.SetField("comb_11", pfreq.Rows[0]["dul_num"].ToString());
-                    if (pfreq.Rows[0]["dul_issue"].ToString() != "")
-                    {
-                        fields.SetField("comb_12", pfreq.Rows[0]["dul_issue"].ToString().Substring(0, 2));
-                        fields.SetField("comb_13", pfreq.Rows[0]["dul_issue"].ToString().Substring(3, 2));
-                        fields.SetField("comb_14", pfreq.Rows[0]["dul_issue"].ToString().Substring(6, 4));
-                    }
-                    if (pfreq.Rows[0]["dul_validity"].ToString() != "")
-                    {
-                        fields.SetField("comb_15", pfreq.Rows[0]["dul_validity"].ToString().Substring(0, 2));
-                        fields.SetField("comb_16", pfreq.Rows[0]["dul_validity"].ToString().Substring(3, 2));
-                        fields.SetField("comb_17", pfreq.Rows[0]["dul_validity"].ToString().Substring(6, 4));
-                    }
-                    switch (pfreq.Rows[0]["doc_type"].ToString())
-                    {
-                        case "Виза":
-                            fields.SetField("comb_62", "X");
-                            break;
-                        case "ВНЖ":
-                            fields.SetField("comb_63", "X");
-                            break;
-                        case "РВП":
-                            fields.SetField("comb_64", "X");
-                            break;
-                    }
-                    fields.SetField("comb_18", pfreq.Rows[0]["doc_ser"].ToString());
-                    fields.SetField("comb_19", pfreq.Rows[0]["doc_num"].ToString());
+        //            fields.SetField("comb_1", pfreq.Rows[0]["con_last_name"].ToString());
+        //            fields.SetField("comb_2", pfreq.Rows[0]["con_first_name"].ToString() + " " + pfreq.Rows[0]["con_second_name"].ToString());
+        //            fields.SetField("comb_3", pfreq.Rows[0]["con_nat"].ToString());
+        //            if (pfreq.Rows[0]["con_birthday"].ToString() != "")
+        //            {
+        //                fields.SetField("comb_4", pfreq.Rows[0]["con_birthday"].ToString().Substring(0, 2));
+        //                fields.SetField("comb_5", pfreq.Rows[0]["con_birthday"].ToString().Substring(3, 2));
+        //                fields.SetField("comb_6", pfreq.Rows[0]["con_birthday"].ToString().Substring(6, 4));
+        //            }
+        //            if (pfreq.Rows[0]["con_sex"].ToString() == "ЖЕНСКИЙ")
+        //                fields.SetField("comb_61", "X");
+        //            else
+        //                fields.SetField("comb_60", "X");
+        //            fields.SetField("comb_8", pfreq.Rows[0]["con_birth_town"].ToString());
+        //            fields.SetField("comb_7", pfreq.Rows[0]["con_birth_country"].ToString());
+        //            fields.SetField("comb_9", FirstUpper(pfreq.Rows[0]["dul_type"].ToString().ToUpper()));
+        //            fields.SetField("comb_10", pfreq.Rows[0]["dul_ser"].ToString());
+        //            fields.SetField("comb_11", pfreq.Rows[0]["dul_num"].ToString());
+        //            if (pfreq.Rows[0]["dul_issue"].ToString() != "")
+        //            {
+        //                fields.SetField("comb_12", pfreq.Rows[0]["dul_issue"].ToString().Substring(0, 2));
+        //                fields.SetField("comb_13", pfreq.Rows[0]["dul_issue"].ToString().Substring(3, 2));
+        //                fields.SetField("comb_14", pfreq.Rows[0]["dul_issue"].ToString().Substring(6, 4));
+        //            }
+        //            if (pfreq.Rows[0]["dul_validity"].ToString() != "")
+        //            {
+        //                fields.SetField("comb_15", pfreq.Rows[0]["dul_validity"].ToString().Substring(0, 2));
+        //                fields.SetField("comb_16", pfreq.Rows[0]["dul_validity"].ToString().Substring(3, 2));
+        //                fields.SetField("comb_17", pfreq.Rows[0]["dul_validity"].ToString().Substring(6, 4));
+        //            }
+        //            switch (pfreq.Rows[0]["doc_type"].ToString())
+        //            {
+        //                case "Виза":
+        //                    fields.SetField("comb_62", "X");
+        //                    break;
+        //                case "ВНЖ":
+        //                    fields.SetField("comb_63", "X");
+        //                    break;
+        //                case "РВП":
+        //                    fields.SetField("comb_64", "X");
+        //                    break;
+        //            }
+        //            fields.SetField("comb_18", pfreq.Rows[0]["doc_ser"].ToString());
+        //            fields.SetField("comb_19", pfreq.Rows[0]["doc_num"].ToString());
 
-                    if (pfreq.Rows[0]["doc_issue_dt"].ToString() != "")
-                    {
-                        fields.SetField("comb_20", pfreq.Rows[0]["doc_issue_dt"].ToString().Substring(0, 2));
-                        fields.SetField("comb_21", pfreq.Rows[0]["doc_issue_dt"].ToString().Substring(3, 2));
-                        fields.SetField("comb_22", pfreq.Rows[0]["doc_issue_dt"].ToString().Substring(6, 4));
-                    }
-                    if (pfreq.Rows[0]["doc_validity_to_dt"].ToString() != "")
-                    {
-                        fields.SetField("comb_23", pfreq.Rows[0]["doc_validity_to_dt"].ToString().Substring(0, 2));
-                        fields.SetField("comb_24", pfreq.Rows[0]["doc_validity_to_dt"].ToString().Substring(3, 2));
-                        fields.SetField("comb_25", pfreq.Rows[0]["doc_validity_to_dt"].ToString().Substring(6, 4));
-                    }
-                    switch (pfreq.Rows[0]["card_purpose_entry"].ToString())
-                    {
-                        case "СЛУЖЕБНАЯ":
-                        fields.SetField("comb_65", "X");
-                        break;
-                        case "ТУРИЗМ":
-                            fields.SetField("comb_66", "X");
-                            break;
-                        case "ДЕЛОВАЯ":
-                            fields.SetField("comb_67", "X");
-                            break;
-                        case "УЧЕБА":
-                            fields.SetField("comb_68", "X");
-                            break;
-                        case "РАБОТА":
-                            fields.SetField("comb_69", "X");
-                            break;
-                        case "ЧАСТНАЯ":
-                            fields.SetField("comb_70", "X");
-                            break;
-                        case "ТРАНЗИТ":
-                            fields.SetField("comb_71", "X");
-                            break;
-                        case "ГУМАНИТАРНАЯ":
-                            fields.SetField("comb_72", "X");
-                            break;
-                        case "ДРУГАЯ":
-                            fields.SetField("comb_73", "X");
-                            break;
-                    }
+        //            if (pfreq.Rows[0]["doc_issue_dt"].ToString() != "")
+        //            {
+        //                fields.SetField("comb_20", pfreq.Rows[0]["doc_issue_dt"].ToString().Substring(0, 2));
+        //                fields.SetField("comb_21", pfreq.Rows[0]["doc_issue_dt"].ToString().Substring(3, 2));
+        //                fields.SetField("comb_22", pfreq.Rows[0]["doc_issue_dt"].ToString().Substring(6, 4));
+        //            }
+        //            if (pfreq.Rows[0]["doc_validity_to_dt"].ToString() != "")
+        //            {
+        //                fields.SetField("comb_23", pfreq.Rows[0]["doc_validity_to_dt"].ToString().Substring(0, 2));
+        //                fields.SetField("comb_24", pfreq.Rows[0]["doc_validity_to_dt"].ToString().Substring(3, 2));
+        //                fields.SetField("comb_25", pfreq.Rows[0]["doc_validity_to_dt"].ToString().Substring(6, 4));
+        //            }
+        //            switch (pfreq.Rows[0]["card_purpose_entry"].ToString())
+        //            {
+        //                case "СЛУЖЕБНАЯ":
+        //                fields.SetField("comb_65", "X");
+        //                break;
+        //                case "ТУРИЗМ":
+        //                    fields.SetField("comb_66", "X");
+        //                    break;
+        //                case "ДЕЛОВАЯ":
+        //                    fields.SetField("comb_67", "X");
+        //                    break;
+        //                case "УЧЕБА":
+        //                    fields.SetField("comb_68", "X");
+        //                    break;
+        //                case "РАБОТА":
+        //                    fields.SetField("comb_69", "X");
+        //                    break;
+        //                case "ЧАСТНАЯ":
+        //                    fields.SetField("comb_70", "X");
+        //                    break;
+        //                case "ТРАНЗИТ":
+        //                    fields.SetField("comb_71", "X");
+        //                    break;
+        //                case "ГУМАНИТАРНАЯ":
+        //                    fields.SetField("comb_72", "X");
+        //                    break;
+        //                case "ДРУГАЯ":
+        //                    fields.SetField("comb_73", "X");
+        //                    break;
+        //            }
 
-                    fields.SetField("comb_26", "");//профессия
-
-
-                    if (pfreq.Rows[0]["card_entry_dt"].ToString() != "")
-                    {
-                        fields.SetField("comb_27", pfreq.Rows[0]["card_entry_dt"].ToString().Substring(0, 2));
-                        fields.SetField("comb_28", pfreq.Rows[0]["card_entry_dt"].ToString().Substring(3, 2));
-                        fields.SetField("comb_29", pfreq.Rows[0]["card_entry_dt"].ToString().Substring(6, 4));
-                    }
-                    if (pfreq.Rows[0]["card_tenure_to_dt"].ToString() != "")
-                    {
-                        fields.SetField("comb_30", pfreq.Rows[0]["card_tenure_to_dt"].ToString().Substring(0, 2));
-                        fields.SetField("comb_31", pfreq.Rows[0]["card_tenure_to_dt"].ToString().Substring(3, 2));
-                        fields.SetField("comb_32", pfreq.Rows[0]["card_tenure_to_dt"].ToString().Substring(6, 4));
-                    }
-                    fields.SetField("comb_33", pfreq.Rows[0]["card_ser"].ToString());
-                    fields.SetField("comb_34", pfreq.Rows[0]["card_num"].ToString());
+        //            fields.SetField("comb_26", "");//профессия
 
 
-                    fields.SetField("comb_35", "");//законный представитель
-                    fields.SetField("comb_36", "");//законный представитель
-
-                    fields.SetField("comb_37", "");//прежний адрес
-                    fields.SetField("comb_38", "");//прежний адрес
-                    fields.SetField("comb_39", "");//прежний адрес
-
-
-                    /*-----------линия отрыва-----------------*/
-                    fields.SetField("comb_40", pfreq.Rows[0]["con_last_name"].ToString());
-                    fields.SetField("comb_41", pfreq.Rows[0]["con_first_name"].ToString() + " " + pfreq.Rows[0]["con_second_name"].ToString());
-                    fields.SetField("comb_42", pfreq.Rows[0]["con_nat"].ToString());
-                    if (pfreq.Rows[0]["con_birthday"].ToString() != "")
-                    {
-                        fields.SetField("comb_43", pfreq.Rows[0]["con_birthday"].ToString().Substring(0, 2));
-                        fields.SetField("comb_44", pfreq.Rows[0]["con_birthday"].ToString().Substring(3, 2));
-                        fields.SetField("comb_45", pfreq.Rows[0]["con_birthday"].ToString().Substring(6, 4));
-                    }
-                    if (pfreq.Rows[0]["con_sex"].ToString() == "ЖЕНСКИЙ")
-                        fields.SetField("comb_75", "X");
-                    else
-                        fields.SetField("comb_74", "X");
-                    fields.SetField("comb_46", FirstUpper(pfreq.Rows[0]["dul_type"].ToString()));
-                    fields.SetField("comb_47", pfreq.Rows[0]["dul_ser"].ToString());
-                    fields.SetField("comb_48", pfreq.Rows[0]["dul_num"].ToString());
-
-                    if (pfreq.Rows[0]["card_tenure_to_dt"].ToString() != "")
-                    {
-                        fields.SetField("comb_57", pfreq.Rows[0]["card_tenure_to_dt"].ToString().Substring(0, 2));
-                        fields.SetField("comb_58", pfreq.Rows[0]["card_tenure_to_dt"].ToString().Substring(3, 2));
-                        fields.SetField("comb_59", pfreq.Rows[0]["card_tenure_to_dt"].ToString().Substring(6, 4));
-                    }
-
-                    fields.SetField("comb_49", pfreq.Rows[0]["ad_obl"].ToString().ToUpper());
-                    fields.SetField("comb_1_2", pfreq.Rows[0]["ad_obl"].ToString().ToUpper());
-
-                    if (pfreq.Rows[0]["ad_socr_rayon"].ToString() != "мкр.")
-                    {
-                        fields.SetField("comb_50", pfreq.Rows[0]["ad_rayon"].ToString().ToUpper());
-                        fields.SetField("comb_2_2", pfreq.Rows[0]["ad_rayon"].ToString().ToUpper());
-                    }
-                    else
-                    {
-                        fields.SetField("comb_50", "МКР. " + pfreq.Rows[0]["ad_rayon"].ToString().ToUpper());
-                        fields.SetField("comb_2_2", "МКР. " + pfreq.Rows[0]["ad_rayon"].ToString().ToUpper());
-                    }
-
-                    fields.SetField("comb_51", (pfreq.Rows[0]["ad_socr_town"].ToString()+" "+pfreq.Rows[0]["ad_town"].ToString()).ToUpper());
-                    fields.SetField("comb_3_2", (pfreq.Rows[0]["ad_socr_town"].ToString() + " " + pfreq.Rows[0]["ad_town"].ToString()).ToUpper());
-
-                    switch (pfreq.Rows[0]["ad_socr_street"].ToString())
-                    {
-                        case "пр-кт":
-                            fields.SetField("comb_52", "ПРОСПЕКТ "+pfreq.Rows[0]["ad_street"].ToString().ToUpper());
-                            fields.SetField("comb_4_2", "ПРОСПЕКТ " + pfreq.Rows[0]["ad_street"].ToString().ToUpper());
-                            break;
-
-                        default:
-                            fields.SetField("comb_52", pfreq.Rows[0]["ad_socr_street"].ToString().ToUpper()+" "+pfreq.Rows[0]["ad_street"].ToString().ToUpper());
-                            fields.SetField("comb_4_2", pfreq.Rows[0]["ad_socr_street"].ToString().ToUpper() + " " + pfreq.Rows[0]["ad_street"].ToString().ToUpper());
-                            break;
-                    }
-
-                    fields.SetField("comb_53", pfreq.Rows[0]["ad_house"].ToString());
-                    fields.SetField("comb_5_2", pfreq.Rows[0]["ad_house"].ToString());
-                    fields.SetField("comb_54", pfreq.Rows[0]["ad_corp"].ToString());
-                    fields.SetField("comb_6_2", pfreq.Rows[0]["ad_corp"].ToString());
-                    fields.SetField("comb_55", pfreq.Rows[0]["ad_stroenie"].ToString());
-                    fields.SetField("comb_7_2", pfreq.Rows[0]["ad_stroenie"].ToString());
-                    fields.SetField("comb_56", pfreq.Rows[0]["ad_flat"].ToString());
-                    fields.SetField("comb_8_2", pfreq.Rows[0]["ad_flat"].ToString());
-
-                    /*Сведения о принимающей стороне*/
-                    if (pfhost.Rows[0]["org_phis"].ToString() == "Организация")
-                    {
-                        fields.SetField("comb_43_2", "X");
-                        fields.SetField("comb_44_2", " ");
-                    }
-                    else
-                    {
-                        fields.SetField("comb_43_2", " ");
-                        fields.SetField("comb_44_2", "X");
-                    }
-                    fields.SetField("comb_10_2", pfhost.Rows[0]["last_name"].ToString().ToUpper());
-                    fields.SetField("comb_14_2", pfhost.Rows[0]["first_name"].ToString().ToUpper() + " "+ pfhost.Rows[0]["second_name"].ToString().ToUpper());
-
-                    if (pfhost.Rows[0]["birthday"].ToString() != "")
-                    {
-                        fields.SetField("comb_11_2", pfhost.Rows[0]["birthday"].ToString().Substring(0, 2));
-                        fields.SetField("comb_12_2", pfhost.Rows[0]["birthday"].ToString().Substring(3, 2));
-                        fields.SetField("comb_13_2", pfhost.Rows[0]["birthday"].ToString().Substring(6, 4));
-                    }
-                    fields.SetField("comb_15_2", pfhost.Rows[0]["doc"].ToString());
-                    fields.SetField("comb_16_2", pfhost.Rows[0]["doc_ser"].ToString());
-                    fields.SetField("comb_17_2", pfhost.Rows[0]["doc_num"].ToString());
-                    if (pfhost.Rows[0]["date_issue"].ToString() != "")
-                    {
-                        fields.SetField("comb_18_2", pfhost.Rows[0]["date_issue"].ToString().Substring(0, 2));
-                        fields.SetField("comb_19_2", pfhost.Rows[0]["date_issue"].ToString().Substring(3, 2));
-                        fields.SetField("comb_20_2", pfhost.Rows[0]["date_issue"].ToString().Substring(6, 4));
-                    }
-                    if (pfhost.Rows[0]["date_valid"].ToString() != "")
-                    {
-                        fields.SetField("comb_21_2", pfhost.Rows[0]["date_valid"].ToString().Substring(0, 2));
-                        fields.SetField("comb_22_2", pfhost.Rows[0]["date_valid"].ToString().Substring(3, 2));
-                        fields.SetField("comb_23_2", pfhost.Rows[0]["date_valid"].ToString().Substring(6, 4));
-                    }
-                    fields.SetField("comb_24_2", pfhost.Rows[0]["obl"].ToString().ToUpper());
-                    fields.SetField("comb_25_2", pfhost.Rows[0]["rayon"].ToString().ToUpper());
-                    fields.SetField("comb_26_2", pfhost.Rows[0]["town"].ToString().ToUpper());
-                    fields.SetField("comb_27_2", pfhost.Rows[0]["street"].ToString().ToUpper());
-                    fields.SetField("comb_28_2", pfhost.Rows[0]["house"].ToString().ToUpper());
-                    fields.SetField("comb_29_2", pfhost.Rows[0]["korp"].ToString().ToUpper());
-                    fields.SetField("comb_30_2", pfhost.Rows[0]["stro"].ToString().ToUpper());
-                    fields.SetField("comb_31_2", pfhost.Rows[0]["flat"].ToString().ToUpper());
-
-                    fields.SetField("comb_32_2", pfhost.Rows[0]["phone"].ToString().ToUpper());
-
-                    //перенести  - наименование орг.
-                    string tPerenos = pfhost.Rows[0]["org_name"].ToString();
-                    string res = "";
-                    string res2 = "";
-                    if (tPerenos.Length < 24)
-                    {
-                        res = tPerenos;
-                    }
-                    else
-                    {
-                        int i;
-                        string stemp = "";
-                        stemp = tPerenos.Substring(0, 24);
-                        i = stemp.LastIndexOf(" ");
-                        res = tPerenos.Substring(0, i + 1);
-                        res2 = tPerenos.Substring(i, tPerenos.Length - i);
-                    }
-                    fields.SetField("comb_33_2", res.ToUpper());
-                    fields.SetField("comb_34_2", res2.ToUpper());
-
-                    //адрес
-                    tPerenos = pfhost.Rows[0]["address"].ToString();
-                    res = "";
-                    res2 = "";
-                    if (tPerenos.Length < 24)
-                    {
-                        res = tPerenos;
-                    }
-                    else
-                    {
-                        int i;
-                        string stemp = "";
-                        stemp = tPerenos.Substring(0, 24);
-                        i = stemp.LastIndexOf(" ");
-                        res = tPerenos.Substring(0, i + 1);
-                        res2 = tPerenos.Substring(i, tPerenos.Length - i);
-                    }
-                    fields.SetField("comb_35_2", res.ToUpper());
-                    fields.SetField("comb_36_2", res2.ToUpper());
-
-                    fields.SetField("comb_37_2", pfhost.Rows[0]["inn"].ToString().ToUpper());
+        //            if (pfreq.Rows[0]["card_entry_dt"].ToString() != "")
+        //            {
+        //                fields.SetField("comb_27", pfreq.Rows[0]["card_entry_dt"].ToString().Substring(0, 2));
+        //                fields.SetField("comb_28", pfreq.Rows[0]["card_entry_dt"].ToString().Substring(3, 2));
+        //                fields.SetField("comb_29", pfreq.Rows[0]["card_entry_dt"].ToString().Substring(6, 4));
+        //            }
+        //            if (pfreq.Rows[0]["card_tenure_to_dt"].ToString() != "")
+        //            {
+        //                fields.SetField("comb_30", pfreq.Rows[0]["card_tenure_to_dt"].ToString().Substring(0, 2));
+        //                fields.SetField("comb_31", pfreq.Rows[0]["card_tenure_to_dt"].ToString().Substring(3, 2));
+        //                fields.SetField("comb_32", pfreq.Rows[0]["card_tenure_to_dt"].ToString().Substring(6, 4));
+        //            }
+        //            fields.SetField("comb_33", pfreq.Rows[0]["card_ser"].ToString());
+        //            fields.SetField("comb_34", pfreq.Rows[0]["card_num"].ToString());
 
 
+        //            fields.SetField("comb_35", "");//законный представитель
+        //            fields.SetField("comb_36", "");//законный представитель
 
-                    fields.SetField("comb_41_2", pfreq.Rows[0]["con_last_name"].ToString());
-                    fields.SetField("comb_42_2", pfreq.Rows[0]["con_first_name"].ToString() + " " + pfreq.Rows[0]["con_second_name"].ToString());
+        //            fields.SetField("comb_37", "");//прежний адрес
+        //            fields.SetField("comb_38", "");//прежний адрес
+        //            fields.SetField("comb_39", "");//прежний адрес
 
 
-                    //for (int i = 1; i < 120; i++)
-                     //   fields.SetField("comb_" + i.ToString()+"_2", (i).ToString());
+        //            /*-----------линия отрыва-----------------*/
+        //            fields.SetField("comb_40", pfreq.Rows[0]["con_last_name"].ToString());
+        //            fields.SetField("comb_41", pfreq.Rows[0]["con_first_name"].ToString() + " " + pfreq.Rows[0]["con_second_name"].ToString());
+        //            fields.SetField("comb_42", pfreq.Rows[0]["con_nat"].ToString());
+        //            if (pfreq.Rows[0]["con_birthday"].ToString() != "")
+        //            {
+        //                fields.SetField("comb_43", pfreq.Rows[0]["con_birthday"].ToString().Substring(0, 2));
+        //                fields.SetField("comb_44", pfreq.Rows[0]["con_birthday"].ToString().Substring(3, 2));
+        //                fields.SetField("comb_45", pfreq.Rows[0]["con_birthday"].ToString().Substring(6, 4));
+        //            }
+        //            if (pfreq.Rows[0]["con_sex"].ToString() == "ЖЕНСКИЙ")
+        //                fields.SetField("comb_75", "X");
+        //            else
+        //                fields.SetField("comb_74", "X");
+        //            fields.SetField("comb_46", FirstUpper(pfreq.Rows[0]["dul_type"].ToString()));
+        //            fields.SetField("comb_47", pfreq.Rows[0]["dul_ser"].ToString());
+        //            fields.SetField("comb_48", pfreq.Rows[0]["dul_num"].ToString());
+
+        //            if (pfreq.Rows[0]["card_tenure_to_dt"].ToString() != "")
+        //            {
+        //                fields.SetField("comb_57", pfreq.Rows[0]["card_tenure_to_dt"].ToString().Substring(0, 2));
+        //                fields.SetField("comb_58", pfreq.Rows[0]["card_tenure_to_dt"].ToString().Substring(3, 2));
+        //                fields.SetField("comb_59", pfreq.Rows[0]["card_tenure_to_dt"].ToString().Substring(6, 4));
+        //            }
+
+        //            fields.SetField("comb_49", pfreq.Rows[0]["ad_obl"].ToString().ToUpper());
+        //            fields.SetField("comb_1_2", pfreq.Rows[0]["ad_obl"].ToString().ToUpper());
+
+        //            if (pfreq.Rows[0]["ad_socr_rayon"].ToString() != "мкр.")
+        //            {
+        //                fields.SetField("comb_50", pfreq.Rows[0]["ad_rayon"].ToString().ToUpper());
+        //                fields.SetField("comb_2_2", pfreq.Rows[0]["ad_rayon"].ToString().ToUpper());
+        //            }
+        //            else
+        //            {
+        //                fields.SetField("comb_50", "МКР. " + pfreq.Rows[0]["ad_rayon"].ToString().ToUpper());
+        //                fields.SetField("comb_2_2", "МКР. " + pfreq.Rows[0]["ad_rayon"].ToString().ToUpper());
+        //            }
+
+        //            fields.SetField("comb_51", (pfreq.Rows[0]["ad_socr_town"].ToString()+" "+pfreq.Rows[0]["ad_town"].ToString()).ToUpper());
+        //            fields.SetField("comb_3_2", (pfreq.Rows[0]["ad_socr_town"].ToString() + " " + pfreq.Rows[0]["ad_town"].ToString()).ToUpper());
+
+        //            switch (pfreq.Rows[0]["ad_socr_street"].ToString())
+        //            {
+        //                case "пр-кт":
+        //                    fields.SetField("comb_52", "ПРОСПЕКТ "+pfreq.Rows[0]["ad_street"].ToString().ToUpper());
+        //                    fields.SetField("comb_4_2", "ПРОСПЕКТ " + pfreq.Rows[0]["ad_street"].ToString().ToUpper());
+        //                    break;
+
+        //                default:
+        //                    fields.SetField("comb_52", pfreq.Rows[0]["ad_socr_street"].ToString().ToUpper()+" "+pfreq.Rows[0]["ad_street"].ToString().ToUpper());
+        //                    fields.SetField("comb_4_2", pfreq.Rows[0]["ad_socr_street"].ToString().ToUpper() + " " + pfreq.Rows[0]["ad_street"].ToString().ToUpper());
+        //                    break;
+        //            }
+
+        //            fields.SetField("comb_53", pfreq.Rows[0]["ad_house"].ToString());
+        //            fields.SetField("comb_5_2", pfreq.Rows[0]["ad_house"].ToString());
+        //            fields.SetField("comb_54", pfreq.Rows[0]["ad_corp"].ToString());
+        //            fields.SetField("comb_6_2", pfreq.Rows[0]["ad_corp"].ToString());
+        //            fields.SetField("comb_55", pfreq.Rows[0]["ad_stroenie"].ToString());
+        //            fields.SetField("comb_7_2", pfreq.Rows[0]["ad_stroenie"].ToString());
+        //            fields.SetField("comb_56", pfreq.Rows[0]["ad_flat"].ToString());
+        //            fields.SetField("comb_8_2", pfreq.Rows[0]["ad_flat"].ToString());
+
+        //            /*Сведения о принимающей стороне*/
+        //            if (pfhost.Rows[0]["org_phis"].ToString() == "Организация")
+        //            {
+        //                fields.SetField("comb_43_2", "X");
+        //                fields.SetField("comb_44_2", " ");
+        //            }
+        //            else
+        //            {
+        //                fields.SetField("comb_43_2", " ");
+        //                fields.SetField("comb_44_2", "X");
+        //            }
+        //            fields.SetField("comb_10_2", pfhost.Rows[0]["last_name"].ToString().ToUpper());
+        //            fields.SetField("comb_14_2", pfhost.Rows[0]["first_name"].ToString().ToUpper() + " "+ pfhost.Rows[0]["second_name"].ToString().ToUpper());
+
+        //            if (pfhost.Rows[0]["birthday"].ToString() != "")
+        //            {
+        //                fields.SetField("comb_11_2", pfhost.Rows[0]["birthday"].ToString().Substring(0, 2));
+        //                fields.SetField("comb_12_2", pfhost.Rows[0]["birthday"].ToString().Substring(3, 2));
+        //                fields.SetField("comb_13_2", pfhost.Rows[0]["birthday"].ToString().Substring(6, 4));
+        //            }
+        //            fields.SetField("comb_15_2", pfhost.Rows[0]["doc"].ToString());
+        //            fields.SetField("comb_16_2", pfhost.Rows[0]["doc_ser"].ToString());
+        //            fields.SetField("comb_17_2", pfhost.Rows[0]["doc_num"].ToString());
+        //            if (pfhost.Rows[0]["date_issue"].ToString() != "")
+        //            {
+        //                fields.SetField("comb_18_2", pfhost.Rows[0]["date_issue"].ToString().Substring(0, 2));
+        //                fields.SetField("comb_19_2", pfhost.Rows[0]["date_issue"].ToString().Substring(3, 2));
+        //                fields.SetField("comb_20_2", pfhost.Rows[0]["date_issue"].ToString().Substring(6, 4));
+        //            }
+        //            if (pfhost.Rows[0]["date_valid"].ToString() != "")
+        //            {
+        //                fields.SetField("comb_21_2", pfhost.Rows[0]["date_valid"].ToString().Substring(0, 2));
+        //                fields.SetField("comb_22_2", pfhost.Rows[0]["date_valid"].ToString().Substring(3, 2));
+        //                fields.SetField("comb_23_2", pfhost.Rows[0]["date_valid"].ToString().Substring(6, 4));
+        //            }
+        //            fields.SetField("comb_24_2", pfhost.Rows[0]["obl"].ToString().ToUpper());
+        //            fields.SetField("comb_25_2", pfhost.Rows[0]["rayon"].ToString().ToUpper());
+        //            fields.SetField("comb_26_2", pfhost.Rows[0]["town"].ToString().ToUpper());
+        //            fields.SetField("comb_27_2", pfhost.Rows[0]["street"].ToString().ToUpper());
+        //            fields.SetField("comb_28_2", pfhost.Rows[0]["house"].ToString().ToUpper());
+        //            fields.SetField("comb_29_2", pfhost.Rows[0]["korp"].ToString().ToUpper());
+        //            fields.SetField("comb_30_2", pfhost.Rows[0]["stro"].ToString().ToUpper());
+        //            fields.SetField("comb_31_2", pfhost.Rows[0]["flat"].ToString().ToUpper());
+
+        //            fields.SetField("comb_32_2", pfhost.Rows[0]["phone"].ToString().ToUpper());
+
+        //            //перенести  - наименование орг.
+        //            string tPerenos = pfhost.Rows[0]["org_name"].ToString();
+        //            string res = "";
+        //            string res2 = "";
+        //            if (tPerenos.Length < 24)
+        //            {
+        //                res = tPerenos;
+        //            }
+        //            else
+        //            {
+        //                int i;
+        //                string stemp = "";
+        //                stemp = tPerenos.Substring(0, 24);
+        //                i = stemp.LastIndexOf(" ");
+        //                res = tPerenos.Substring(0, i + 1);
+        //                res2 = tPerenos.Substring(i, tPerenos.Length - i);
+        //            }
+        //            fields.SetField("comb_33_2", res.ToUpper());
+        //            fields.SetField("comb_34_2", res2.ToUpper());
+
+        //            //адрес
+        //            tPerenos = pfhost.Rows[0]["address"].ToString();
+        //            res = "";
+        //            res2 = "";
+        //            if (tPerenos.Length < 24)
+        //            {
+        //                res = tPerenos;
+        //            }
+        //            else
+        //            {
+        //                int i;
+        //                string stemp = "";
+        //                stemp = tPerenos.Substring(0, 24);
+        //                i = stemp.LastIndexOf(" ");
+        //                res = tPerenos.Substring(0, i + 1);
+        //                res2 = tPerenos.Substring(i, tPerenos.Length - i);
+        //            }
+        //            fields.SetField("comb_35_2", res.ToUpper());
+        //            fields.SetField("comb_36_2", res2.ToUpper());
+
+        //            fields.SetField("comb_37_2", pfhost.Rows[0]["inn"].ToString().ToUpper());
+
+
+
+        //            fields.SetField("comb_41_2", pfreq.Rows[0]["con_last_name"].ToString());
+        //            fields.SetField("comb_42_2", pfreq.Rows[0]["con_first_name"].ToString() + " " + pfreq.Rows[0]["con_second_name"].ToString());
+
+
+        //            //for (int i = 1; i < 120; i++)
+        //             //   fields.SetField("comb_" + i.ToString()+"_2", (i).ToString());
                     
-                    // stamper.FormFlattening = true;
-                    stamper.Close();
-                 }
+        //            // stamper.FormFlattening = true;
+        //            stamper.Close();
+        //         }
                 
 
-                InsertPf(ReportName);
+        //        InsertPf(ReportName);
                 
 
-            }
-            catch (Exception e)
-            {
-                Logger.Log.Error(ClassName + "Function:GenerateNotify\n Error:" + e);
-                ErrMsg = "Ошибка ^_^";
-            }
-            finally
-            {
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Logger.Log.Error(ClassName + "Function:GenerateNotify\n Error:" + e);
+        //        ErrMsg = "Ошибка ^_^";
+        //    }
+        //    finally
+        //    {
                 
-            }
-            return ErrMsg;
-        }
-        public string GeneratePetitionDeductDo()
+        //    }
+        //    return ErrMsg;
+        //}
+        public void GeneratePetitionDeductDo()
         {
             
             /*Уведомление об отчислении*/
-            string TemplateName = "PETITION.DEDUCT.DO.doc";
-            string TemplatePath = Directory.GetCurrentDirectory() + @"\template\" + TemplateName;
-            string ErrMsg = "";
-            string ReportName = GETNOW + "_Уведомление_отчисление_ДО.doc";
-            WordDoc._Application application;
-            WordDoc._Document oDoc = null;
-            application = new WordDoc.Application();
-            try
-            {
-                oDoc = application.Documents.Add(TemplatePath);
+            string TemplateName = "PETITION.DEDUCT.DO.docx";
+            string TemplatePath = Directory.GetCurrentDirectory() + @"\template\" + TemplateName;            
+            string ReportName = GETNOW + "_Уведомление_отчисление_ДО.docx";
+            Dictionary<string, string> param = new Dictionary<string, string>();
 
+            try
+            {                
                 DataTable pfreq = DB.QueryTableMultipleParams(pref.PfRequest, new List<object> { pref.CONTACTID });
-              
-              
-                oDoc.Bookmarks["fio"].Range.Text = FirstUpper( pfreq.Rows[0]["con_fio"].ToString());
-                oDoc.Bookmarks["nat"].Range.Text = Regex.Replace(pfreq.Rows[0]["con_nat"].ToString(), @"\w+", new MatchEvaluator(CapitalizeString));
-                oDoc.Bookmarks["birth"].Range.Text = pfreq.Rows[0]["con_birthday"].ToString();
-                oDoc.Bookmarks["dul"].Range.Text = FirstUpper(pfreq.Rows[0]["dul_type"].ToString());
-                oDoc.Bookmarks["ser"].Range.Text = pfreq.Rows[0]["dul_ser"].ToString();
-                oDoc.Bookmarks["n"].Range.Text = pfreq.Rows[0]["dul_num"].ToString();
-                oDoc.Bookmarks["dul_from"].Range.Text = pfreq.Rows[0]["dul_issue"].ToString();
-                oDoc.Bookmarks["pr_num"].Range.Text = pfreq.Rows[0]["exp_num"].ToString();
-                oDoc.Bookmarks["pr_from"].Range.Text = pfreq.Rows[0]["exp_dt"].ToString();
-                oDoc.Bookmarks["osn"].Range.Text = pfreq.Rows[0]["exp_expelled"].ToString();
+                Directory.CreateDirectory(pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO);
+                string NewPath = pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO + ReportName;
+                File.Copy(TemplatePath, NewPath);
+
+                param.Add("fio", FirstUpper( pfreq.Rows[0]["con_fio"].ToString()));
+                param.Add("nat", Regex.Replace(pfreq.Rows[0]["con_nat"].ToString(), @"\w+", new MatchEvaluator(CapitalizeString)));
+                param.Add("birth", pfreq.Rows[0]["con_birthday"].ToString());
+                param.Add("dul", FirstUpper(pfreq.Rows[0]["dul_type"].ToString()));
+                param.Add("ser", pfreq.Rows[0]["dul_ser"].ToString());
+                param.Add("n", pfreq.Rows[0]["dul_num"].ToString());
+                param.Add("dul_from", pfreq.Rows[0]["dul_issue"].ToString());
+                param.Add("pr_num", pfreq.Rows[0]["exp_num"].ToString());
+                param.Add("pr_from", pfreq.Rows[0]["exp_dt"].ToString());
+                param.Add("osn", pfreq.Rows[0]["exp_expelled"].ToString());
                 if (pfreq.Rows[0]["con_sex"].ToString() == "ЖЕНСКИЙ")
                 {
-                    oDoc.Bookmarks["p1"].Range.Text = "отчислена";
-                    oDoc.Bookmarks["p2"].Range.Text = "следующая иностранная гражданка";
+                    param.Add("p1", "отчислена");
+                    param.Add("p2", "следующая иностранная гражданка");
                 }
                 else
                 {
-                    oDoc.Bookmarks["p1"].Range.Text = "отчислен";
-                    oDoc.Bookmarks["p2"].Range.Text = "следующий иностранный гражданин";
+                    param.Add("p1", "отчислен");
+                    param.Add("p2", "следующий иностранный гражданин");
                 }
-
-
-
-                Directory.CreateDirectory(pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO);
-                oDoc.SaveAs(pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO + ReportName);   //Путь к заполненному шаблону
-                oDoc.Close();
+                FillDoc(NewPath, param);
 
                 InsertPf(ReportName);
-                
 
             }
             catch (Exception e)
             {
                 Logger.Log.Error(ClassName + "Function:GeneratePetitionDeductDo\n Error:" + e);
-                oDoc.Close(ref falseObj, ref missingObj, ref missingObj);
-                ErrMsg = "Ошибка ^_^";
+                throw new Exception(e.Message);
             }
-            finally
-            {
-                oDoc = null;
-                application.Quit(SaveChanges: false);
-                application = null;
-            }
-            return ErrMsg;
+           
         }
-        public string GenerateSprBank()
+        public void GenerateSprBank()
         {
             
             /*Справка в банк*/
-            string TemplateName = "SPR_TO_BANK.doc";
-            string TemplatePath = Directory.GetCurrentDirectory() + @"\template\" + TemplateName;
-            string ErrMsg = "";
-            string ReportName = GETNOW + "_Справка_в_банк.doc";
-            WordDoc._Application application;
-            WordDoc._Document oDoc = null;
-            application = new WordDoc.Application();
+            string TemplateName = "SPR_TO_BANK.docx";
+            string TemplatePath = Directory.GetCurrentDirectory() + @"\template\" + TemplateName;            
+            string ReportName = GETNOW + "_Справка_в_банк.docx";
+            Dictionary<string, string> param = new Dictionary<string, string>();
+
             try
             {
-                oDoc = application.Documents.Add(TemplatePath);
-
                 DataTable pfreq = DB.QueryTableMultipleParams(pref.PfRequest, new List<object> { pref.CONTACTID });
-
-
-                oDoc.Bookmarks["fio"].Range.Text = FirstUpper(pfreq.Rows[0]["con_fio"].ToString());
-                oDoc.Bookmarks["to"].Range.Text = pfreq.Rows[0]["card_tenure_to_dt"].ToString();
-                oDoc.Bookmarks["addr"].Range.Text = pfreq.Rows[0]["ad_full_address"].ToString();
-                
                 Directory.CreateDirectory(pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO);
-                oDoc.SaveAs(pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO + ReportName);   //Путь к заполненному шаблону
-                oDoc.Close();
+                string NewPath = pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO + ReportName;   //Путь к заполненному шаблону
+                File.Copy(TemplatePath, NewPath);
 
-               InsertPf(ReportName);
-               
+                param.Add("fio",FirstUpper(pfreq.Rows[0]["con_fio"].ToString()));
+                param.Add("to", pfreq.Rows[0]["card_tenure_to_dt"].ToString());
+                param.Add("addr", pfreq.Rows[0]["ad_full_address"].ToString());
+
+                FillDoc(NewPath, param);
+
+                InsertPf(ReportName);
+
 
             }
             catch (Exception e)
             {
                 Logger.Log.Error(ClassName + "Function:GenerateSprBank\n Error:" + e);
-                oDoc.Close(ref falseObj, ref missingObj, ref missingObj);
-                ErrMsg = "Ошибка ^_^";
+                throw new Exception(e.Message);
             }
-            finally
-            {
-                oDoc = null;
-                application.Quit(SaveChanges: false);
-                application = null;
-            }
-            return ErrMsg;
-        }
-        public string GeneratePetitionOut(int s1)
-        {
             
+        }
+        public void GeneratePetitionOut(int s1)
+        {
+
             /*уведомление об отчислении*/
+            //ПРОВЕРИТЬ!!!
+            if (s1 == -1)
+            {
+                throw new Exception("Укажите входные параметры");               
+            }
             string TemplateName = "PETITION.OUT.doc";
-            string TemplatePath = Directory.GetCurrentDirectory() + @"\template\" + TemplateName;
-            string ErrMsg = "";
+            string TemplatePath = Directory.GetCurrentDirectory() + @"\template\" + TemplateName;           
             string ReportName = GETNOW + "_Уведомление(отчисление)УФМС.doc";
-            WordDoc._Application application;
-            WordDoc._Document oDoc = null;
-            application = new WordDoc.Application();
+            Dictionary<string, string> param = new Dictionary<string, string>();
+
             try
             {
-                oDoc = application.Documents.Add(TemplatePath);
-
                 DataTable pfreq = DB.QueryTableMultipleParams(pref.PfRequest, new List<object> { pref.CONTACTID });
-                if(s1 == 0 )
+                Directory.CreateDirectory(pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO);
+                string NewPath = pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO + ReportName;   //Путь к заполненному шаблону
+                File.Copy(TemplatePath, NewPath);
+
+                if (s1 == 0 )
                 {
-                    oDoc.Bookmarks["p1"].Range.Text = "X";
-                    oDoc.Bookmarks["p2"].Range.Text = " ";
+                    param.Add("p1", "X");
+                    param.Add("p2", " ");
                 }
                 else
-                { 
-                    oDoc.Bookmarks["p1"].Range.Text = " ";
-                    oDoc.Bookmarks["p2"].Range.Text = "X";
+                {
+                    param.Add("p1", " ");
+                    param.Add("p2", "X");
                 }
-                oDoc.Bookmarks["l"].Range.Text = pfreq.Rows[0]["con_last_name"].ToString();
-                oDoc.Bookmarks["lu"].Range.Text = pfreq.Rows[0]["con_last_enu"].ToString();
-                oDoc.Bookmarks["f"].Range.Text = pfreq.Rows[0]["con_first_name"].ToString();
-                oDoc.Bookmarks["fu"].Range.Text = pfreq.Rows[0]["con_first_enu"].ToString();
-                oDoc.Bookmarks["m"].Range.Text = pfreq.Rows[0]["con_second_name"].ToString();
-                oDoc.Bookmarks["mu"].Range.Text = pfreq.Rows[0]["con_second_enu"].ToString();
-                oDoc.Bookmarks["br"].Range.Text = pfreq.Rows[0]["con_birthday"].ToString();
+                param.Add("l",pfreq.Rows[0]["con_last_name"].ToString());
+                param.Add("lu", pfreq.Rows[0]["con_last_enu"].ToString());
+                param.Add("f", pfreq.Rows[0]["con_first_name"].ToString());
+                param.Add("fu", pfreq.Rows[0]["con_first_enu"].ToString());
+                param.Add("m", pfreq.Rows[0]["con_second_name"].ToString());
+                param.Add("mu", pfreq.Rows[0]["con_second_enu"].ToString());
+                param.Add("br",pfreq.Rows[0]["con_birthday"].ToString());
                 
                 if (pfreq.Rows[0]["con_birth_town"].ToString() == "")
-                    oDoc.Bookmarks["brcon"].Range.Text = pfreq.Rows[0]["con_birth_country"].ToString();
+                    param.Add("brcon",pfreq.Rows[0]["con_birth_country"].ToString());
                 else
-                    oDoc.Bookmarks["brcon"].Range.Text = pfreq.Rows[0]["con_birth_town"].ToString()+","+pfreq.Rows[0]["con_birth_country"].ToString();
+                    param.Add("brcon", pfreq.Rows[0]["con_birth_town"].ToString()+","+pfreq.Rows[0]["con_birth_country"].ToString());
 
-                oDoc.Bookmarks["nat"].Range.Text = Regex.Replace(pfreq.Rows[0]["con_nat"].ToString(), @"\w+", new MatchEvaluator(CapitalizeString));
+                param.Add("nat", Regex.Replace(pfreq.Rows[0]["con_nat"].ToString(), @"\w+", new MatchEvaluator(CapitalizeString)));
 
                 if (pfreq.Rows[0]["con_sex"].ToString() == "ЖЕНСКИЙ")
                 {
-                    oDoc.Bookmarks["p3"].Range.Text = " ";
-                    oDoc.Bookmarks["p4"].Range.Text = "X";
+                    param.Add("p3", " ");
+                    param.Add("p4", "X");
                 }
                 else
                 {
-                    oDoc.Bookmarks["p3"].Range.Text = "X";
-                    oDoc.Bookmarks["p4"].Range.Text = " ";
+                    param.Add("p3", "X");
+                    param.Add("p4", " ");
                 }
 
-                oDoc.Bookmarks["dul"].Range.Text = FirstUpper(pfreq.Rows[0]["dul_type"].ToString());
-                oDoc.Bookmarks["ser"].Range.Text = pfreq.Rows[0]["dul_ser"].ToString();
-                oDoc.Bookmarks["num"].Range.Text = pfreq.Rows[0]["dul_num"].ToString();
-                oDoc.Bookmarks["dfr"].Range.Text = pfreq.Rows[0]["dul_issue"].ToString();
-                oDoc.Bookmarks["dto"].Range.Text = pfreq.Rows[0]["dul_validity"].ToString();
+                param.Add("dul", FirstUpper(pfreq.Rows[0]["dul_type"].ToString()));
+                param.Add("ser", pfreq.Rows[0]["dul_ser"].ToString());
+                param.Add("num", pfreq.Rows[0]["dul_num"].ToString());
+                param.Add("dfr", pfreq.Rows[0]["dul_issue"].ToString());
+                param.Add("dto", pfreq.Rows[0]["dul_validity"].ToString());
 
-                oDoc.Bookmarks["addr"].Range.Text = pfreq.Rows[0]["ad_full_address"].ToString();
+                param.Add("addr",pfreq.Rows[0]["ad_full_address"].ToString());
                 
                 switch(pfreq.Rows[0]["doc_type"].ToString())
                 {
                     case "РВП":
-                        oDoc.Bookmarks["post"].Range.Text = "РВП";
+                        param.Add("post", "РВП");
                         break;
                     case "ВНЖ":
-                        oDoc.Bookmarks["post"].Range.Text = "ВНЖ";
+                        param.Add("post", "ВНЖ");
                         break;
                     default:
-                        oDoc.Bookmarks["post"].Range.Text = "месту пребывания";
+                        param.Add("post","месту пребывания");
                         break;
                 }
-                oDoc.Bookmarks["mfr"].Range.Text = pfreq.Rows[0]["card_entry_dt"].ToString();
-                oDoc.Bookmarks["mto"].Range.Text = pfreq.Rows[0]["card_tenure_to_dt"].ToString();
+                param.Add("mfr", pfreq.Rows[0]["card_entry_dt"].ToString());
+                param.Add("mto",pfreq.Rows[0]["card_tenure_to_dt"].ToString());
                 //заполняем только если виза
                 if (pfreq.Rows[0]["doc_type"].ToString() == "Виза")
                 {
-                    oDoc.Bookmarks["kr"].Range.Text = "многократная";
-                    oDoc.Bookmarks["cat"].Range.Text = "обыкновенная";
+                    param.Add("kr", "многократная");
+                    param.Add("cat", "обыкновенная");
                     switch (pfreq.Rows[0]["con_pos"].ToString())
                     {
                         case "студент":
-                            oDoc.Bookmarks["entity"].Range.Text = "учеба";
+                            param.Add("entity","учеба");
                             break;
                         case "аспирант":
-                            oDoc.Bookmarks["entity"].Range.Text = "аспирантура";
+                            param.Add("entity", "аспирантура");
                             break;
                         case "стажер":
-                            oDoc.Bookmarks["entity"].Range.Text = "стажировка";
+                            param.Add("entity", "стажировка");
                             break;
                         case "курсант":
-                            oDoc.Bookmarks["entity"].Range.Text = "курсы";
+                            param.Add("entity", "курсы");
                             break;
                         default:
-                            oDoc.Bookmarks["entity"].Range.Text = "";
+                            param.Add("entity", "");
                             break;
                     }
-                    oDoc.Bookmarks["vser"].Range.Text = pfreq.Rows[0]["doc_ser"].ToString();
-                    oDoc.Bookmarks["vnum"].Range.Text = pfreq.Rows[0]["doc_num"].ToString();
-                    oDoc.Bookmarks["ident"].Range.Text = pfreq.Rows[0]["doc_ident"].ToString();
-                    oDoc.Bookmarks["fr"].Range.Text = pfreq.Rows[0]["doc_validity_from_dt"].ToString();
-                    oDoc.Bookmarks["to"].Range.Text = pfreq.Rows[0]["doc_validity_to_dt"].ToString();
+                    param.Add("vser", pfreq.Rows[0]["doc_ser"].ToString());
+                    param.Add("vnum", pfreq.Rows[0]["doc_num"].ToString());
+                    param.Add("ident", pfreq.Rows[0]["doc_ident"].ToString());
+                    param.Add("fr", pfreq.Rows[0]["doc_validity_from_dt"].ToString());
+                    param.Add("to", pfreq.Rows[0]["doc_validity_to_dt"].ToString());
                 }
                 else
                 {
-                    oDoc.Bookmarks["kr"].Range.Text = "";
-                    oDoc.Bookmarks["cat"].Range.Text = "";
-                    oDoc.Bookmarks["entity"].Range.Text = "";
-                    oDoc.Bookmarks["vser"].Range.Text = "";
-                    oDoc.Bookmarks["vnum"].Range.Text = "";
-                    oDoc.Bookmarks["ident"].Range.Text = "";
-                    oDoc.Bookmarks["fr"].Range.Text = "";
-                    oDoc.Bookmarks["to"].Range.Text = "";
+                    param.Add("kr", "");
+                    param.Add("cat", "");
+                    param.Add("entity", "");
+                    param.Add("vser", "");
+                    param.Add("vnum", "");
+                    param.Add("ident", "");
+                    param.Add("fr", "");
+                    param.Add("to","");
                 }
 
-                oDoc.Bookmarks["dd"].Range.Text = pfreq.Rows[0]["agr_dt"].ToString();
-                oDoc.Bookmarks["dn"].Range.Text = pfreq.Rows[0]["agr_num"].ToString();
-                oDoc.Bookmarks["ddfr"].Range.Text = pfreq.Rows[0]["agr_from_dt"].ToString();
-                oDoc.Bookmarks["ddto"].Range.Text = pfreq.Rows[0]["agr_to_dt"].ToString();
+                param.Add("dd", pfreq.Rows[0]["agr_dt"].ToString());
+                param.Add("dn", pfreq.Rows[0]["agr_num"].ToString());
+                param.Add("ddfr", pfreq.Rows[0]["agr_from_dt"].ToString());
+                param.Add("ddto", pfreq.Rows[0]["agr_to_dt"].ToString());
 
-                oDoc.Bookmarks["exp"].Range.Text = pfreq.Rows[0]["exp_expelled"].ToString();
-                oDoc.Bookmarks["expnum"].Range.Text = pfreq.Rows[0]["exp_num"].ToString();
-                oDoc.Bookmarks["expdt"].Range.Text = pfreq.Rows[0]["exp_dt"].ToString();
+                param.Add("exp", pfreq.Rows[0]["exp_expelled"].ToString());
+                param.Add("expnum", pfreq.Rows[0]["exp_num"].ToString());
+                param.Add("expdt", pfreq.Rows[0]["exp_dt"].ToString());
 
                 if (pfreq.Rows[0]["teach_fp"].ToString() == "НАПРАВЛЕНИЕ")
-                    oDoc.Bookmarks["bud"].Range.Text = "(студент обучался по направлению Минобрнауки России)";
+                    param.Add("bud", "(студент обучался по направлению Минобрнауки России)");
                 else
-                    oDoc.Bookmarks["bud"].Range.Text = "";
-               
+                    param.Add("bud", "");
 
-                Directory.CreateDirectory(pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO);
-                oDoc.SaveAs(pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO + ReportName);   //Путь к заполненному шаблону
-                oDoc.Close();
+                FillDoc(NewPath, param);
 
                 InsertPf(ReportName);
-               
-
             }
             catch (Exception e)
             {
                 Logger.Log.Error(ClassName + "Function:GeneratePetitionOut\n Error:" + e);
-                oDoc.Close(ref falseObj, ref missingObj, ref missingObj);
-                ErrMsg ="Ошибка ^_^";
+                throw new Exception(e.Message);
             }
-            finally
-            {
-                oDoc = null;
-                application.Quit(SaveChanges: false);
-                application = null;
-            }
-            return ErrMsg;
+           
         }
         public void GeneratePetitionVisa(string s1, string s2)
         {
@@ -946,164 +900,147 @@ namespace Mig
            
            
         }
-        public string GenerateVisaGuarant()
-        {
-           
+        public void GenerateVisaGuarant()
+        {           
             /*Гарантия*/
-            string TemplateName = "VISA.GUARANT.doc";
-            string TemplatePath = Directory.GetCurrentDirectory() + @"\template\" + TemplateName;
-            string ErrMsg = "";
-            string ReportName = GETNOW + "_Гарантия.doc";
-            WordDoc._Application application;
-            WordDoc._Document oDoc = null;
-            application = new WordDoc.Application();
+            string TemplateName = "VISA.GUARANT.docx";
+            string TemplatePath = Directory.GetCurrentDirectory() + @"\template\" + TemplateName;           
+            string ReportName = GETNOW + "_Гарантия.docx";
+            Dictionary<string, string> param = new Dictionary<string, string>();
+
             try
-            {
-                oDoc = application.Documents.Add(TemplatePath);
+            {            
                 DataTable pfreq = DB.QueryTableMultipleParams(pref.PfRequest, new List<object> { pref.CONTACTID });
+                Directory.CreateDirectory(pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO);
+                string NewPath = pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO + ReportName;
+                File.Copy(TemplatePath, NewPath);
+
                 if (pfreq.Rows[0]["con_sex"].ToString() == "МУЖСКОЙ")
                 {
-                    oDoc.Bookmarks["p1"].Range.Text = "иностранному гражданину";
-                    oDoc.Bookmarks["p2"].Range.Text = "его";
+                    param.Add("p1","иностранному гражданину");
+                    param.Add("p2", "его");
                 }
                 else
                 {
-                    oDoc.Bookmarks["p1"].Range.Text = "иностранной гражданке";
-                    oDoc.Bookmarks["p2"].Range.Text = "её";
+                    param.Add("p1", "иностранной гражданке");
+                    param.Add("p2", "её");
                 }
 
-                oDoc.Bookmarks["fio"].Range.Text = FirstUpper(pfreq.Rows[0]["con_fio"].ToString());
-                oDoc.Bookmarks["nat"].Range.Text = Regex.Replace(pfreq.Rows[0]["con_nat"].ToString(), @"\w+", new MatchEvaluator(CapitalizeString));
-                oDoc.Bookmarks["pass"].Range.Text = pfreq.Rows[0]["dul_ser"].ToString() + pfreq.Rows[0]["dul_num"].ToString();
-                oDoc.Bookmarks["pfrom"].Range.Text = pfreq.Rows[0]["dul_issue"].ToString();
-                oDoc.Bookmarks["ptill"].Range.Text = pfreq.Rows[0]["dul_validity"].ToString();
-                oDoc.Bookmarks["med"].Range.Text = pfreq.Rows[0]["con_med"].ToString();                
-                oDoc.Bookmarks["addr"].Range.Text = pfreq.Rows[0]["ad_full_address"].ToString();
-                
+                param.Add("fio",FirstUpper(pfreq.Rows[0]["con_fio"].ToString()));
+                param.Add("nat", Regex.Replace(pfreq.Rows[0]["con_nat"].ToString(), @"\w+", new MatchEvaluator(CapitalizeString)));
+                param.Add("pass", pfreq.Rows[0]["dul_ser"].ToString() + pfreq.Rows[0]["dul_num"].ToString());
+                param.Add("pfrom",pfreq.Rows[0]["dul_issue"].ToString());
+                param.Add("ptill",pfreq.Rows[0]["dul_validity"].ToString());
+                param.Add("med", pfreq.Rows[0]["con_med"].ToString());
+                param.Add("addr",pfreq.Rows[0]["ad_full_address"].ToString());
 
-                Directory.CreateDirectory(pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO);
-                oDoc.SaveAs(pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO + ReportName);
-                oDoc.Close();
+                FillDoc(NewPath, param);
 
                 InsertPf(ReportName);
-                
-
             }
             catch (Exception e)
             {
                 Logger.Log.Error(ClassName + "Function:GenerateVisaGuarant\n Error:" + e);
-                oDoc.Close(ref falseObj, ref missingObj, ref missingObj);
-                ErrMsg = e.Message;
+                throw new Exception(e.Message);
             }
-            finally
-            {
-                oDoc = null;
-                application.Quit(SaveChanges: false);
-                application = null;
-            }
-            return ErrMsg;
-        }
-        public string GenerateVisaPetition(string s1,string s2)
-        {
            
+        }
+        public void GenerateVisaPetition(string s1,string s2)
+        {
             /*Ходатайство на визу*/
-            string TemplateName = "";
-            string TemplatePath = "";
-            string ErrMsg = "";
-            string ReportName = GETNOW + "_Ходатайство_на_визу.doc";
-            WordDoc._Application application;
-            WordDoc._Document oDoc = null;
-            application = new WordDoc.Application();
-            try
+            if (s1 == "" || s2 == "")
             {
-                
-                DataTable pfreq = DB.QueryTableMultipleParams(pref.PfRequest, new List<object> { pref.CONTACTID });
-                if (pfreq.Rows[0]["teach_fp"].ToString() == "НАПРАВЛЕНИЕ")
-                    TemplateName = "VISA.PETITION.BUDGET.doc";
-                else
-                    TemplateName = "VISA.PETITION.CONTRACT.doc";
-                TemplatePath = Directory.GetCurrentDirectory() + @"\template\" + TemplateName;
-                oDoc = application.Documents.Add(TemplatePath);
+                throw new Exception("Укажите входные параметры");                
+            }
 
-                oDoc.Bookmarks["fio"].Range.Text = FirstUpper(pfreq.Rows[0]["con_fio"].ToString());
-                oDoc.Bookmarks["p1"].Range.Text = s1;
-                oDoc.Bookmarks["p2"].Range.Text = s2;
-                oDoc.Bookmarks["birthday"].Range.Text = pfreq.Rows[0]["con_birthday"].ToString();
+            string TemplateName = "";
+            string TemplatePath = "";            
+            string ReportName = GETNOW + "_Ходатайство_на_визу.docx";
+            Dictionary<string, string> param = new Dictionary<string, string>();
+
+            try
+            {                
+                DataTable pfreq = DB.QueryTableMultipleParams(pref.PfRequest, new List<object> { pref.CONTACTID });
+                Directory.CreateDirectory(pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO);
+                string NewPath = pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO + ReportName;
+                
+                if (pfreq.Rows[0]["teach_fp"].ToString() == "НАПРАВЛЕНИЕ")
+                    TemplateName = "VISA.PETITION.BUDGET.docx";
+                else
+                    TemplateName = "VISA.PETITION.CONTRACT.docx";
+                TemplatePath = Directory.GetCurrentDirectory() + @"\template\" + TemplateName;
+                File.Copy(TemplatePath, NewPath);
+
+                param.Add("fio", FirstUpper(pfreq.Rows[0]["con_fio"].ToString()));
+                param.Add("p1",s1);
+                param.Add("p2", s2);
+                param.Add("birthday",pfreq.Rows[0]["con_birthday"].ToString());
                 if (pfreq.Rows[0]["con_sex"].ToString()=="МУЖСКОЙ")
                 {
-                    oDoc.Bookmarks["gr"].Range.Text = "гражданину";
-                    oDoc.Bookmarks["p3"].Range.Text = "поставлен";
-                    oDoc.Bookmarks["p4"].Range.Text = "имеющему";
-                    oDoc.Bookmarks["p5"].Range.Text = "прибывшему";
+                     param.Add("gr","гражданину");
+                     param.Add("p3", "поставлен");
+                     param.Add("p4", "имеющему");
+                    param.Add("p5", "прибывшему");
                 }
                 else
                 {
-                    oDoc.Bookmarks["gr"].Range.Text = "гражданке";
-                    oDoc.Bookmarks["p3"].Range.Text = "поставлена";
-                    oDoc.Bookmarks["p4"].Range.Text = "имеющей";
-                    oDoc.Bookmarks["p5"].Range.Text = "прибывшей";
+                     param.Add("gr", "гражданке");
+                     param.Add("p3", "поставлена");
+                     param.Add("p4", "имеющей");
+                    param.Add("p5", "прибывшей");
                 }
                 
-                oDoc.Bookmarks["nat"].Range.Text = Regex.Replace(pfreq.Rows[0]["con_nat"].ToString(), @"\w+", new MatchEvaluator(CapitalizeString));
-                oDoc.Bookmarks["dul"].Range.Text = FirstUpper(pfreq.Rows[0]["dul_type"].ToString());
-                oDoc.Bookmarks["pass"].Range.Text = pfreq.Rows[0]["dul_ser"].ToString() + pfreq.Rows[0]["dul_num"].ToString();
+                param.Add("nat", Regex.Replace(pfreq.Rows[0]["con_nat"].ToString(), @"\w+", new MatchEvaluator(CapitalizeString)));
+                param.Add("dul", FirstUpper(pfreq.Rows[0]["dul_type"].ToString()));
+                param.Add("pass", pfreq.Rows[0]["dul_ser"].ToString() + pfreq.Rows[0]["dul_num"].ToString());
 
                 string dul_issue = pfreq.Rows[0]["dul_issue"].ToString();
-                oDoc.Bookmarks["d1"].Range.Text = dul_issue.Substring(0, 2);
-                oDoc.Bookmarks["d2"].Range.Text = GetMonthPad(dul_issue.Substring(3, 2)); 
-                oDoc.Bookmarks["d3"].Range.Text = dul_issue.Substring(6, 4);
-                string dul_validity = pfreq.Rows[0]["dul_validity"].ToString();
-                oDoc.Bookmarks["d4"].Range.Text = dul_validity.Substring(0, 2);
-                oDoc.Bookmarks["d5"].Range.Text = GetMonthPad(dul_validity.Substring(3, 2));
-                oDoc.Bookmarks["d6"].Range.Text = dul_validity.Substring(6, 4);
+                param.Add("d1",dul_issue.Substring(0, 2));
+                param.Add("d2", GetMonthPad(dul_issue.Substring(3, 2)));
+                param.Add("d3", dul_issue.Substring(6, 4));
 
-                oDoc.Bookmarks["addr"].Range.Text = pfreq.Rows[0]["ad_full_address"].ToString();
-                oDoc.Bookmarks["kpp"].Range.Text = pfreq.Rows[0]["card_kpp"].ToString();
-                oDoc.Bookmarks["vser"].Range.Text = pfreq.Rows[0]["doc_ser"].ToString();
-                oDoc.Bookmarks["vnum"].Range.Text = pfreq.Rows[0]["doc_num"].ToString();
+                string dul_validity = pfreq.Rows[0]["dul_validity"].ToString();
+                param.Add("d4", dul_validity.Substring(0, 2));
+                param.Add("d5", GetMonthPad(dul_validity.Substring(3, 2)));
+                param.Add("d6", dul_validity.Substring(6, 4));
+
+                param.Add("addr", pfreq.Rows[0]["ad_full_address"].ToString());
+                param.Add("kpp", pfreq.Rows[0]["card_kpp"].ToString());
+                param.Add("vser", pfreq.Rows[0]["doc_ser"].ToString());
+                param.Add("vnum", pfreq.Rows[0]["doc_num"].ToString());
 
                 string doc_validity_from_dt = pfreq.Rows[0]["doc_validity_from_dt"].ToString();
-                oDoc.Bookmarks["v1"].Range.Text = doc_validity_from_dt.Substring(0, 2);
-                oDoc.Bookmarks["v2"].Range.Text = GetMonthPad(doc_validity_from_dt.Substring(3, 2));
-                oDoc.Bookmarks["v3"].Range.Text = doc_validity_from_dt.Substring(6, 4);
+                param.Add("v1", doc_validity_from_dt.Substring(0, 2));
+                param.Add("v2", GetMonthPad(doc_validity_from_dt.Substring(3, 2)));
+                param.Add("v3",doc_validity_from_dt.Substring(6, 4));
+
                 string doc_validity_to_dt = pfreq.Rows[0]["doc_validity_to_dt"].ToString();
-                oDoc.Bookmarks["v4"].Range.Text = doc_validity_to_dt.Substring(0, 2);
-                oDoc.Bookmarks["v5"].Range.Text = GetMonthPad(doc_validity_to_dt.Substring(3, 2));
-                oDoc.Bookmarks["v6"].Range.Text = doc_validity_to_dt.Substring(6, 4);
+                param.Add("v4", doc_validity_to_dt.Substring(0, 2));
+                param.Add("v5",GetMonthPad(doc_validity_to_dt.Substring(3, 2)));
+                param.Add("v6", doc_validity_to_dt.Substring(6, 4));
 
                 string doc_validity_to_dt_1 = pfreq.Rows[0]["doc_validity_to_dt_1"].ToString();
-                oDoc.Bookmarks["s1"].Range.Text = doc_validity_to_dt_1.Substring(0, 2);
-                oDoc.Bookmarks["s2"].Range.Text = GetMonthPad(doc_validity_to_dt_1.Substring(3, 2));
-                oDoc.Bookmarks["s3"].Range.Text = doc_validity_to_dt_1.Substring(6, 4);
+                param.Add("s1",doc_validity_to_dt_1.Substring(0, 2));
+                param.Add("s2", GetMonthPad(doc_validity_to_dt_1.Substring(3, 2)));
+                param.Add("s3",doc_validity_to_dt_1.Substring(6, 4));
 
                 string card_tenure_to_dt = pfreq.Rows[0]["card_tenure_to_dt"].ToString();
-                oDoc.Bookmarks["m1"].Range.Text = card_tenure_to_dt.Substring(0, 2);
-                oDoc.Bookmarks["m2"].Range.Text = GetMonthPad(card_tenure_to_dt.Substring(3, 2));
-                oDoc.Bookmarks["m3"].Range.Text = card_tenure_to_dt.Substring(6, 4);
+                param.Add("m1",card_tenure_to_dt.Substring(0, 2));
+                param.Add("m2", GetMonthPad(card_tenure_to_dt.Substring(3, 2)));
+                param.Add("m3", card_tenure_to_dt.Substring(6, 4));
 
-                oDoc.Bookmarks["mfrom"].Range.Text = pfreq.Rows[0]["card_entry_dt"].ToString();
-                       
-                Directory.CreateDirectory(pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO);
-                oDoc.SaveAs(pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO + ReportName);
-                oDoc.Close();
+                param.Add("mfrom", pfreq.Rows[0]["card_entry_dt"].ToString());
+
+                FillDoc(NewPath, param);
 
                 InsertPf(ReportName);
-               
-
             }
             catch (Exception e)
             {
                 Logger.Log.Error(ClassName + "Function:GenerateVisaPetition\n Error:" + e);
-                oDoc.Close(ref falseObj, ref missingObj, ref missingObj);
-                ErrMsg = e.Message;
+                throw new Exception(e.Message);
             }
-            finally
-            {
-                oDoc = null;
-                application.Quit(SaveChanges: false);
-                application = null;
-            }
-            return ErrMsg;
+           
         }
         public string GetMonthPad(string m)
         {
@@ -1151,235 +1088,227 @@ namespace Mig
             }
                 return Res;
         }
-        public string GeneratePetitionPassport(string s1, string s2)
+        public void GeneratePetitionPassport(string s1, string s2)
         {
-            
             /*Регистрация.Ходатайство.Смена паспорта*/
-            string TemplateName = "PETITION.PASSPORT.doc";
-            string TemplatePath = Directory.GetCurrentDirectory() + @"\template\" + TemplateName;
-            string ErrMsg = "";
-            string ReportName = GETNOW + "_Ходатайство_Смена_паспорта.doc";
-            WordDoc._Application application;
-            WordDoc._Document oDoc = null;
-            application = new WordDoc.Application();
-            try
+            if (s1 == "" || s2== "")
             {
-                oDoc = application.Documents.Add(TemplatePath);
-                oDoc.Bookmarks["change"].Range.Text = s1;
-                oDoc.Bookmarks["post"].Range.Text = s2;
+                throw new Exception("Укажите входные параметры");                
+            }
 
+            string TemplateName = "PETITION.PASSPORT.docx";
+            string TemplatePath = Directory.GetCurrentDirectory() + @"\template\" + TemplateName;            
+            string ReportName = GETNOW + "_Ходатайство_Смена_паспорта.docx";
+            Dictionary<string, string> param = new Dictionary<string, string>();
+
+            try
+            {                
                 DataTable pfreq = DB.QueryTableMultipleParams(pref.PfRequest, new List<object> { pref.CONTACTID });
-
-                
-                oDoc.Bookmarks["gr"].Range.Text = pfreq.Rows[0]["gr"].ToString();
-                oDoc.Bookmarks["nationality"].Range.Text = Regex.Replace(pfreq.Rows[0]["con_nat"].ToString(), @"\w+", new MatchEvaluator(CapitalizeString));
-                oDoc.Bookmarks["fio"].Range.Text = FirstUpper(pfreq.Rows[0]["con_fio"].ToString()); 
-               // oDoc.Bookmarks["birthday"].Range.Text = pfreq.Rows[0]["con_birthday"].ToString();
-                oDoc.Bookmarks["dul_ser"].Range.Text = pfreq.Rows[0]["dul_ser"].ToString();
-                oDoc.Bookmarks["dul_num"].Range.Text = pfreq.Rows[0]["dul_num"].ToString();
-                oDoc.Bookmarks["dul_issue"].Range.Text = pfreq.Rows[0]["dul_issue"].ToString();
-                oDoc.Bookmarks["dul_validity"].Range.Text = pfreq.Rows[0]["dul_validity"].ToString();
-                oDoc.Bookmarks["doc_ser"].Range.Text = pfreq.Rows[0]["doc_ser"].ToString();
-                oDoc.Bookmarks["doc_num"].Range.Text = pfreq.Rows[0]["doc_num"].ToString();
-                oDoc.Bookmarks["doc_issue_dt"].Range.Text = pfreq.Rows[0]["doc_issue_dt"].ToString();
-                oDoc.Bookmarks["doc_validity_to_dt"].Range.Text = pfreq.Rows[0]["doc_validity_to_dt"].ToString();
-                oDoc.Bookmarks["full_address"].Range.Text = pfreq.Rows[0]["ad_full_address"].ToString();
-                oDoc.Bookmarks["card_tenure_to_dt"].Range.Text = pfreq.Rows[0]["card_tenure_to_dt"].ToString();
-                oDoc.Bookmarks["p3"].Range.Text = pfreq.Rows[0]["p3"].ToString();
-                oDoc.Bookmarks["p4"].Range.Text = pfreq.Rows[0]["p4"].ToString();
-
                 Directory.CreateDirectory(pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO);
-                oDoc.SaveAs(pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO + ReportName);
-                oDoc.Close();
+                string NewPath = pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO + ReportName;
+                File.Copy(TemplatePath, NewPath);
+
+                param.Add("gr",pfreq.Rows[0]["gr"].ToString());
+                param.Add("nationality", Regex.Replace(pfreq.Rows[0]["con_nat"].ToString(), @"\w+", new MatchEvaluator(CapitalizeString)));
+                param.Add("fio",FirstUpper(pfreq.Rows[0]["con_fio"].ToString()));     
+                param.Add("dul_ser", pfreq.Rows[0]["dul_ser"].ToString());
+                param.Add("dul_num", pfreq.Rows[0]["dul_num"].ToString());
+                param.Add("dul_issue", pfreq.Rows[0]["dul_issue"].ToString());
+                param.Add("dul_validity", pfreq.Rows[0]["dul_validity"].ToString());
+                param.Add("doc_ser", pfreq.Rows[0]["doc_ser"].ToString());
+                param.Add("doc_num", pfreq.Rows[0]["doc_num"].ToString());
+                param.Add("doc_issue_dt", pfreq.Rows[0]["doc_issue_dt"].ToString());
+                param.Add("doc_validity_to_dt", pfreq.Rows[0]["doc_validity_to_dt"].ToString());
+                param.Add("full_address",pfreq.Rows[0]["ad_full_address"].ToString());
+                param.Add("card_tenure_to_dt",pfreq.Rows[0]["card_tenure_to_dt"].ToString());
+                param.Add("p3", pfreq.Rows[0]["p3"].ToString());
+                param.Add("p4",pfreq.Rows[0]["p4"].ToString());
+
+                FillDoc(NewPath, param);
 
                 InsertPf(ReportName);
-                
-
             }
             catch (Exception e)
             {
                 Logger.Log.Error(ClassName + "Function:GeneratePetitionPassport\n Error:" + e);
-                oDoc.Close(ref falseObj, ref missingObj, ref missingObj);
-                ErrMsg = e.Message;
+                throw new Exception(e.Message);
             }
-            finally
-            {
-                oDoc = null;
-                application.Quit(SaveChanges: false);
-                application = null;
-            }
-            return ErrMsg;
+            
         }
-        public string GeneratePetitionLost()
+        public void GeneratePetitionLost()
         {
             
             /*Регистрация.Ходатайство.Утеря уведомления*/
-            string TemplateName = "ARRIVAL.LOST.doc";
-            string TemplatePath = Directory.GetCurrentDirectory() + @"\template\" + TemplateName;
-            string ErrMsg = "";
-            string ReportName = GETNOW + "_Ходатайство_Утеря_уведомления.doc";
-            WordDoc._Application application;
-            WordDoc._Document oDoc = null;
-            application = new WordDoc.Application();
+            string TemplateName = "ARRIVAL.LOST.docx";
+            string TemplatePath = Directory.GetCurrentDirectory() + @"\template\" + TemplateName;            
+            string ReportName = GETNOW + "_Ходатайство_Утеря_уведомления.docx";
+            Dictionary<string, string> param = new Dictionary<string, string>();
+
             try
             {
-                oDoc = application.Documents.Add(TemplatePath);
-                // oDoc.Bookmarks["change"].Range.Text = s1;
-                // oDoc.Bookmarks["post"].Range.Text = s2;
-
+                
                 DataTable pfreq = DB.QueryTableMultipleParams(pref.PfRequest, new List<object> { pref.CONTACTID });
-
-
-                oDoc.Bookmarks["gr"].Range.Text = pfreq.Rows[0]["gr"].ToString();
-                oDoc.Bookmarks["nationality"].Range.Text = Regex.Replace(pfreq.Rows[0]["con_nat"].ToString(), @"\w+", new MatchEvaluator(CapitalizeString));
-                oDoc.Bookmarks["fio"].Range.Text = FirstUpper(pfreq.Rows[0]["con_fio"].ToString());
-                oDoc.Bookmarks["birthday"].Range.Text = pfreq.Rows[0]["con_birthday"].ToString();
-                oDoc.Bookmarks["dul_type"].Range.Text = FirstUpper(pfreq.Rows[0]["dul_type"].ToString());
-                oDoc.Bookmarks["dul_ser"].Range.Text = pfreq.Rows[0]["dul_ser"].ToString();
-                oDoc.Bookmarks["dul_num"].Range.Text = pfreq.Rows[0]["dul_num"].ToString();
-                oDoc.Bookmarks["dul_issue"].Range.Text = pfreq.Rows[0]["dul_issue"].ToString();
-               // oDoc.Bookmarks["dul_validity"].Range.Text = pfreq.Rows[0]["dul_validity"].ToString();
-                //oDoc.Bookmarks["doc_ser"].Range.Text = pfreq.Rows[0]["doc_ser"].ToString();
-               // oDoc.Bookmarks["doc_num"].Range.Text = pfreq.Rows[0]["doc_num"].ToString();
-               // oDoc.Bookmarks["doc_issue_dt"].Range.Text = pfreq.Rows[0]["doc_issue_dt"].ToString();
-               // oDoc.Bookmarks["doc_validity_to_dt"].Range.Text = pfreq.Rows[0]["doc_validity_to_dt"].ToString();
-                oDoc.Bookmarks["full_address"].Range.Text = pfreq.Rows[0]["ad_full_address"].ToString();
-                oDoc.Bookmarks["card_entry_dt"].Range.Text = pfreq.Rows[0]["card_entry_dt"].ToString();
-                oDoc.Bookmarks["card_tenure_to_dt"].Range.Text = pfreq.Rows[0]["card_tenure_to_dt"].ToString();
-                // oDoc.Bookmarks["p3"].Range.Text = pfreq.Rows[0]["p3"].ToString();
-                // oDoc.Bookmarks["p4"].Range.Text = pfreq.Rows[0]["p4"].ToString();
-
                 Directory.CreateDirectory(pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO);
-                oDoc.SaveAs(pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO + ReportName);
-                oDoc.Close();
+                string NewPath = pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO + ReportName;
+                File.Copy(TemplatePath, NewPath);
+
+                param.Add("gr", pfreq.Rows[0]["gr"].ToString());
+                param.Add("nationality", Regex.Replace(pfreq.Rows[0]["con_nat"].ToString(), @"\w+", new MatchEvaluator(CapitalizeString)));
+                param.Add("fio", FirstUpper(pfreq.Rows[0]["con_fio"].ToString()));
+                param.Add("birthday", pfreq.Rows[0]["con_birthday"].ToString());
+                param.Add("dul_type", FirstUpper(pfreq.Rows[0]["dul_type"].ToString()));
+                param.Add("dul_ser", pfreq.Rows[0]["dul_ser"].ToString());
+                param.Add("dul_num",pfreq.Rows[0]["dul_num"].ToString());
+                param.Add("dul_issue",pfreq.Rows[0]["dul_issue"].ToString());               
+                param.Add("full_address", pfreq.Rows[0]["ad_full_address"].ToString());
+                param.Add("card_entry_dt", pfreq.Rows[0]["card_entry_dt"].ToString());
+                param.Add("card_tenure_to_dt",pfreq.Rows[0]["card_tenure_to_dt"].ToString());
+               
+
+                FillDoc(NewPath, param);
 
                 InsertPf(ReportName);
-                
-
             }
             catch (Exception e)
             {
                 Logger.Log.Error(ClassName + "Function:GeneratePetitionLost\n Error:" + e);
-                oDoc.Close(ref falseObj, ref missingObj, ref missingObj);
-                ErrMsg = e.Message;
+                throw new Exception(e.Message);
             }
-            finally
-            {
-                oDoc = null;
-                application.Quit(SaveChanges: false);
-                application = null;
-            }
-            return ErrMsg;
+           
         }
-        public string GenerateVisaAnketa(string s1, string s2, string s3, string s4, string s5)
+        public void GenerateVisaAnketa(string s1, string s2, string s3, string s4, string s5)
         {
-            
+            //if (cmbVisaAction.Text == "" || cmbVisaKrat.Text == "" || cmbVisaCat.Text == "" || cmbVisaPurpose.Text == "" || (cmbVisaSubCat.Text == "" && cmbVisaCat.SelectedIndex == 0))
+             
             /*Визовая анкета: анкета*/
+            if (s1 == "" || s2 == "" || s3 == "" || s5 == "" || (s4 == "" && s3 == "0"))
+            {
+               throw new Exception("Укажите входные параметры");               
+            }
 
             string TemplateName = "";           
-            string TemplatePath ="";
-            string ErrMsg = "";
-            string ReportName = GETNOW + "_Визовая_анкета.doc";
-            WordDoc._Application application;
-            WordDoc._Document oDoc = null;
-            application = new WordDoc.Application();
+            string TemplatePath ="";           
+            string ReportName = GETNOW + "_Визовая_анкета.docx";
+            Dictionary<string, string> param = new Dictionary<string, string>();
+
             try
             {
-
                 DataTable pfreq = DB.QueryTableMultipleParams(pref.PfRequest, new List<object> { pref.CONTACTID });
-                if (pfreq.Rows[0]["teach_fp"].ToString() == "НАПРАВЛЕНИЕ")
-                    TemplateName = "Anketa_byudzhet.doc";
-                else
-                    TemplateName = "Anketa_kontract.doc";
-                TemplatePath = Directory.GetCurrentDirectory() + @"\template\" + TemplateName;
-                oDoc = application.Documents.Add(TemplatePath);
+                Directory.CreateDirectory(pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO);
+                string NewPath = pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO + ReportName;
+                
 
+                if (pfreq.Rows[0]["teach_fp"].ToString() == "НАПРАВЛЕНИЕ")
+                    TemplateName = "Anketa_byudzhet.docx";
+                else
+                    TemplateName = "Anketa_kontract.docx";
+                TemplatePath = Directory.GetCurrentDirectory() + @"\template\" + TemplateName;
+                File.Copy(TemplatePath, NewPath);
 
                 switch (s1)
                 {   //оформить
                     case "0":
-                        oDoc.Bookmarks["p43"].Range.Text = string.Empty;
-                        oDoc.Bookmarks["p44"].Range.Text = "оформить";
-                        oDoc.Bookmarks["p45"].Range.Font.StrikeThrough = 1;
-                        oDoc.Bookmarks["p45"].Range.Text = "продлить";
-                        oDoc.Bookmarks["p46"].Range.Text = string.Empty;
-                        oDoc.Bookmarks["p47"].Range.Font.StrikeThrough = 1;
-                        oDoc.Bookmarks["p47"].Range.Text = "восстановить";
-                        oDoc.Bookmarks["p48"].Range.Text = string.Empty;
+                        //oDoc.Bookmarks["p43"].Range.Text = string.Empty;
+                        //oDoc.Bookmarks["p44"].Range.Text = "оформить";
+                        //oDoc.Bookmarks["p45"].Range.Font.StrikeThrough = 1;
+                        //oDoc.Bookmarks["p45"].Range.Text = "продлить";
+                        //oDoc.Bookmarks["p46"].Range.Text = string.Empty;
+                        //oDoc.Bookmarks["p47"].Range.Font.StrikeThrough = 1;
+                        //oDoc.Bookmarks["p47"].Range.Text = "восстановить";
+                        //oDoc.Bookmarks["p48"].Range.Text = string.Empty;
+                        param.Add("p43", string.Empty);
+                        param.Add("p44", "оформить");                        
+                        param.Add("p45", "продлить");
+                        param.Add("p46", string.Empty);                        
+                        param.Add("p47", "восстановить");
+                        param.Add("p48", string.Empty);
                         break;
                     //продлить
                     case "1":
-                        oDoc.Bookmarks["p43"].Range.Font.StrikeThrough = 1;
-                        oDoc.Bookmarks["p43"].Range.Text = "оформить";
-                        oDoc.Bookmarks["p44"].Range.Text = string.Empty;
-                        oDoc.Bookmarks["p45"].Range.Text = string.Empty;
-                        oDoc.Bookmarks["p46"].Range.Text = "продлить";
-                        oDoc.Bookmarks["p47"].Range.Font.StrikeThrough = 1;
-                        oDoc.Bookmarks["p47"].Range.Text = "восстановить";
-                        oDoc.Bookmarks["p48"].Range.Text = string.Empty;
+                        //oDoc.Bookmarks["p43"].Range.Font.StrikeThrough = 1;
+                        //oDoc.Bookmarks["p43"].Range.Text = "оформить";
+                        //oDoc.Bookmarks["p44"].Range.Text = string.Empty;
+                        //oDoc.Bookmarks["p45"].Range.Text = string.Empty;
+                        //oDoc.Bookmarks["p46"].Range.Text = "продлить";
+                        //oDoc.Bookmarks["p47"].Range.Font.StrikeThrough = 1;
+                        //oDoc.Bookmarks["p47"].Range.Text = "восстановить";
+                        //oDoc.Bookmarks["p48"].Range.Text = string.Empty;
+                        
+                        param.Add("p43", "оформить");
+                        param.Add("p44", string.Empty);
+                        param.Add("p45", string.Empty);
+                        param.Add("p46", "продлить");                        
+                        param.Add("p47", "восстановить");
+                        param.Add("p48", string.Empty);
                         break;
                     //восстановить
                     case "2":
-                        oDoc.Bookmarks["p43"].Range.Font.StrikeThrough = 1;
-                        oDoc.Bookmarks["p43"].Range.Text = "оформить";                       
-                        oDoc.Bookmarks["p44"].Range.Text = string.Empty;
-                        oDoc.Bookmarks["p45"].Range.Font.StrikeThrough = 1;
-                        oDoc.Bookmarks["p45"].Range.Text = "продлить";                       
-                        oDoc.Bookmarks["p46"].Range.Text = string.Empty;
-                        oDoc.Bookmarks["p47"].Range.Text = string.Empty;
-                        oDoc.Bookmarks["p48"].Range.Text = "восстановить";
+                        //oDoc.Bookmarks["p43"].Range.Font.StrikeThrough = 1;
+                        //oDoc.Bookmarks["p43"].Range.Text = "оформить";                       
+                        //oDoc.Bookmarks["p44"].Range.Text = string.Empty;
+                        //oDoc.Bookmarks["p45"].Range.Font.StrikeThrough = 1;
+                        //oDoc.Bookmarks["p45"].Range.Text = "продлить";                       
+                        //oDoc.Bookmarks["p46"].Range.Text = string.Empty;
+                        //oDoc.Bookmarks["p47"].Range.Text = string.Empty;
+                        //oDoc.Bookmarks["p48"].Range.Text = "восстановить";
                         
+                        param.Add("p43", "оформить");
+                        param.Add("p44", string.Empty);                       
+                        param.Add("p45", "продлить");
+                        param.Add("p46", string.Empty);
+                        param.Add("p47", string.Empty);
+                        param.Add("p48", "восстановить");
                         break;
                 }
-                oDoc.Bookmarks["p15"].Range.Text = pfreq.Rows[0]["con_last_name"].ToString();
-                oDoc.Bookmarks["p16"].Range.Text = pfreq.Rows[0]["con_last_enu"].ToString();
-                oDoc.Bookmarks["p17"].Range.Text = pfreq.Rows[0]["con_first_name"].ToString();
-                oDoc.Bookmarks["p18"].Range.Text = pfreq.Rows[0]["con_first_enu"].ToString();
+                param.Add("p15",pfreq.Rows[0]["con_last_name"].ToString());
+                param.Add("p16",pfreq.Rows[0]["con_last_enu"].ToString());
+                param.Add("p17",pfreq.Rows[0]["con_first_name"].ToString());
+                param.Add("p18",pfreq.Rows[0]["con_first_enu"].ToString());
                 if (pfreq.Rows[0]["con_second_name"].ToString() != "")
-                    oDoc.Bookmarks["p19"].Range.Text = pfreq.Rows[0]["con_second_name"].ToString();
+                    param.Add("p19", pfreq.Rows[0]["con_second_name"].ToString());
                 else
-                    oDoc.Bookmarks["p19"].Range.Text = string.Empty;
+                    param.Add("p19", string.Empty);
                 if (pfreq.Rows[0]["con_second_enu"].ToString() != "")
-                    oDoc.Bookmarks["p20"].Range.Text = pfreq.Rows[0]["con_second_enu"].ToString();
+                    param.Add("p20", pfreq.Rows[0]["con_second_enu"].ToString());
                 else
-                    oDoc.Bookmarks["p20"].Range.Text = string.Empty;
+                    param.Add("p20", string.Empty);
 
-                oDoc.Bookmarks["p41"].Range.Text = s5;/*цель продления*/
+                param.Add("p41", s5);/*цель продления*/
 
                 switch (s2)
                 {   
                     case "Однократная":
-                        oDoc.Bookmarks["p1"].Range.Text = "X";
-                        oDoc.Bookmarks["p2"].Range.Text = string.Empty;
-                        oDoc.Bookmarks["p3"].Range.Text = string.Empty;
+                        param.Add("p1", "X");
+                        param.Add("p2", string.Empty);
+                        param.Add("p3", string.Empty);
                         break;
                     case "Двукратная":
-                        oDoc.Bookmarks["p1"].Range.Text = string.Empty;
-                        oDoc.Bookmarks["p2"].Range.Text = "X";
-                        oDoc.Bookmarks["p3"].Range.Text = string.Empty;
+                        param.Add("p1", string.Empty);
+                        param.Add("p2", "X");
+                        param.Add("p3", string.Empty);
                         break;
                     case "Многократная":
-                        oDoc.Bookmarks["p1"].Range.Text = string.Empty;
-                        oDoc.Bookmarks["p2"].Range.Text = string.Empty;
-                        oDoc.Bookmarks["p3"].Range.Text = "X";
+                        param.Add("p1", string.Empty);
+                        param.Add("p2", string.Empty);
+                        param.Add("p3", "X");
                         break;
                 }
                 switch (s3) /*категория*/
                 {
                     case "0":
-                        oDoc.Bookmarks["p4"].Range.Text = "X";
-                        oDoc.Bookmarks["p5"].Range.Text = string.Empty;
-                        oDoc.Bookmarks["p6"].Range.Text = string.Empty;
+                        param.Add("p4", "X");
+                        param.Add("p5", string.Empty);
+                        param.Add("p6", string.Empty);
                         break;
                     case "1":
-                        oDoc.Bookmarks["p4"].Range.Text = string.Empty;
-                        oDoc.Bookmarks["p5"].Range.Text = "X";
-                        oDoc.Bookmarks["p6"].Range.Text = string.Empty;
+                        param.Add("p4", string.Empty);
+                        param.Add("p5", "X");
+                        param.Add("p6", string.Empty);
                         break;
                     case "2":
-                        oDoc.Bookmarks["p4"].Range.Text = string.Empty;
-                        oDoc.Bookmarks["p5"].Range.Text = string.Empty;
-                        oDoc.Bookmarks["p6"].Range.Text = "X";
+                        param.Add("p4", string.Empty);
+                        param.Add("p5", string.Empty);
+                        param.Add("p6", "X");
                         break;
                 }
                 
@@ -1389,127 +1318,127 @@ namespace Mig
                     switch (s4) /*подкатегория*/
                     {
                         case "0":
-                            oDoc.Bookmarks["p7"].Range.Text = "X";
-                            oDoc.Bookmarks["p8"].Range.Text = string.Empty;
-                            oDoc.Bookmarks["p9"].Range.Text = string.Empty;
-                            oDoc.Bookmarks["p10"].Range.Text = string.Empty;
-                            oDoc.Bookmarks["p11"].Range.Text = string.Empty;
-                            oDoc.Bookmarks["p12"].Range.Text = string.Empty;
-                            oDoc.Bookmarks["p13"].Range.Text = string.Empty;
-                            oDoc.Bookmarks["p14"].Range.Text = string.Empty;
+                            param.Add("p7", "X");
+                            param.Add("p8", string.Empty);
+                            param.Add("p9", string.Empty);
+                            param.Add("p10", string.Empty);
+                            param.Add("p11", string.Empty);
+                            param.Add("p12", string.Empty);
+                            param.Add("p13", string.Empty);
+                            param.Add("p14", string.Empty);
                             break;
                         case "1":
-                            oDoc.Bookmarks["p7"].Range.Text = string.Empty;
-                            oDoc.Bookmarks["p8"].Range.Text = "X";
-                            oDoc.Bookmarks["p9"].Range.Text = string.Empty;
-                            oDoc.Bookmarks["p10"].Range.Text = string.Empty;
-                            oDoc.Bookmarks["p11"].Range.Text = string.Empty;
-                            oDoc.Bookmarks["p12"].Range.Text = string.Empty;
-                            oDoc.Bookmarks["p13"].Range.Text = string.Empty;
-                            oDoc.Bookmarks["p14"].Range.Text = string.Empty;
+                            param.Add("p7", string.Empty);
+                            param.Add("p8", "X");
+                            param.Add("p9", string.Empty);
+                            param.Add("p10", string.Empty);
+                            param.Add("p11", string.Empty);
+                            param.Add("p12", string.Empty);
+                            param.Add("p13", string.Empty);
+                            param.Add("p14", string.Empty);
                             break;
                         case "2":
-                            oDoc.Bookmarks["p7"].Range.Text = string.Empty;
-                            oDoc.Bookmarks["p8"].Range.Text = string.Empty;
-                            oDoc.Bookmarks["p9"].Range.Text = "X";
-                            oDoc.Bookmarks["p10"].Range.Text = string.Empty;
-                            oDoc.Bookmarks["p11"].Range.Text = string.Empty;
-                            oDoc.Bookmarks["p12"].Range.Text = string.Empty;
-                            oDoc.Bookmarks["p13"].Range.Text = string.Empty;
-                            oDoc.Bookmarks["p14"].Range.Text = string.Empty;
+                            param.Add("p7",string.Empty);
+                            param.Add("p8",string.Empty);
+                            param.Add("p9","X");
+                            param.Add("p10", string.Empty);
+                            param.Add("p11", string.Empty);
+                            param.Add("p12", string.Empty);
+                            param.Add("p13", string.Empty);
+                            param.Add("p14", string.Empty);
                             break;
                         case "3":
-                            oDoc.Bookmarks["p7"].Range.Text = string.Empty;
-                            oDoc.Bookmarks["p8"].Range.Text = string.Empty;
-                            oDoc.Bookmarks["p9"].Range.Text = string.Empty;
-                            oDoc.Bookmarks["p10"].Range.Text = "X";
-                            oDoc.Bookmarks["p11"].Range.Text = string.Empty;
-                            oDoc.Bookmarks["p12"].Range.Text = string.Empty;
-                            oDoc.Bookmarks["p13"].Range.Text = string.Empty;
-                            oDoc.Bookmarks["p14"].Range.Text = string.Empty;
+                            param.Add("p7", string.Empty);
+                            param.Add("p8", string.Empty);
+                            param.Add("p9", string.Empty);
+                            param.Add("p10", "X");
+                            param.Add("p11", string.Empty);
+                            param.Add("p12", string.Empty);
+                            param.Add("p13", string.Empty);
+                            param.Add("p14", string.Empty);
                             break;
                         case "4":
-                            oDoc.Bookmarks["p7"].Range.Text = string.Empty;
-                            oDoc.Bookmarks["p8"].Range.Text = string.Empty;
-                            oDoc.Bookmarks["p9"].Range.Text = string.Empty;
-                            oDoc.Bookmarks["p10"].Range.Text = string.Empty;
-                            oDoc.Bookmarks["p11"].Range.Text = "X";
-                            oDoc.Bookmarks["p12"].Range.Text = string.Empty;
-                            oDoc.Bookmarks["p13"].Range.Text = string.Empty;
-                            oDoc.Bookmarks["p14"].Range.Text = string.Empty;
+                            param.Add("p7", string.Empty);
+                            param.Add("p8", string.Empty);
+                            param.Add("p9", string.Empty);
+                            param.Add("p10", string.Empty);
+                            param.Add("p11", "X");
+                            param.Add("p12", string.Empty);
+                            param.Add("p13", string.Empty);
+                            param.Add("p14", string.Empty);
                             break;
                         case "5":
-                            oDoc.Bookmarks["p7"].Range.Text = string.Empty;
-                            oDoc.Bookmarks["p8"].Range.Text = string.Empty;
-                            oDoc.Bookmarks["p9"].Range.Text = string.Empty;
-                            oDoc.Bookmarks["p10"].Range.Text = string.Empty;
-                            oDoc.Bookmarks["p11"].Range.Text = string.Empty;
-                            oDoc.Bookmarks["p12"].Range.Text = "X";
-                            oDoc.Bookmarks["p13"].Range.Text = string.Empty;
-                            oDoc.Bookmarks["p14"].Range.Text = string.Empty;
+                            param.Add("p7", string.Empty);
+                            param.Add("p8", string.Empty);
+                            param.Add("p9", string.Empty);
+                            param.Add("p10", string.Empty);
+                            param.Add("p11", string.Empty);
+                            param.Add("p12", "X");
+                            param.Add("p13", string.Empty);
+                            param.Add("p14", string.Empty);
                             break;
                         case "6":
-                            oDoc.Bookmarks["p7"].Range.Text = string.Empty;
-                            oDoc.Bookmarks["p8"].Range.Text = string.Empty;
-                            oDoc.Bookmarks["p9"].Range.Text = string.Empty;
-                            oDoc.Bookmarks["p10"].Range.Text = string.Empty;
-                            oDoc.Bookmarks["p11"].Range.Text = string.Empty;
-                            oDoc.Bookmarks["p12"].Range.Text = string.Empty;
-                            oDoc.Bookmarks["p13"].Range.Text = "X";
-                            oDoc.Bookmarks["p14"].Range.Text = string.Empty;
+                            param.Add("p7", string.Empty);
+                            param.Add("p8", string.Empty);
+                            param.Add("p9", string.Empty);
+                            param.Add("p10", string.Empty);
+                            param.Add("p11", string.Empty);
+                            param.Add("p12", string.Empty);
+                            param.Add("p13", "X");
+                            param.Add("p14", string.Empty);
                             break;
                         case "7":
-                            oDoc.Bookmarks["p7"].Range.Text = string.Empty;
-                            oDoc.Bookmarks["p8"].Range.Text = string.Empty;
-                            oDoc.Bookmarks["p9"].Range.Text = string.Empty;
-                            oDoc.Bookmarks["p10"].Range.Text = string.Empty;
-                            oDoc.Bookmarks["p11"].Range.Text = string.Empty;
-                            oDoc.Bookmarks["p12"].Range.Text = string.Empty;
-                            oDoc.Bookmarks["p13"].Range.Text = string.Empty;
-                            oDoc.Bookmarks["p14"].Range.Text = "X";
+                            param.Add("p7",string.Empty);
+                            param.Add("p8",string.Empty);
+                            param.Add("p9",string.Empty);
+                            param.Add("p10", string.Empty);
+                            param.Add("p11", string.Empty);
+                            param.Add("p12", string.Empty);
+                            param.Add("p13", string.Empty);
+                            param.Add("p14", "X");
                             break;
                     }
                 }
                 else
                 {
-                    oDoc.Bookmarks["p7"].Range.Text = string.Empty;
-                    oDoc.Bookmarks["p8"].Range.Text = string.Empty;
-                    oDoc.Bookmarks["p9"].Range.Text = string.Empty;
-                    oDoc.Bookmarks["p10"].Range.Text = string.Empty;
-                    oDoc.Bookmarks["p11"].Range.Text = string.Empty;
-                    oDoc.Bookmarks["p12"].Range.Text = string.Empty;
-                    oDoc.Bookmarks["p13"].Range.Text = string.Empty;
-                    oDoc.Bookmarks["p14"].Range.Text = string.Empty;
+                    param.Add("p7", string.Empty);
+                    param.Add("p8", string.Empty);
+                    param.Add("p9", string.Empty);
+                    param.Add("p10", string.Empty);
+                    param.Add("p11", string.Empty);
+                    param.Add("p12", string.Empty);
+                    param.Add("p13", string.Empty);
+                    param.Add("p14", string.Empty);
                 }
 
-                oDoc.Bookmarks["p21"].Range.Text = pfreq.Rows[0]["con_birthday"].ToString();
+                param.Add("p21", pfreq.Rows[0]["con_birthday"].ToString());
                 //Regex.Replace(StringToCap, @"\w+", new MatchEvaluator(CapitalizeString))
 
                 string con_birth_country = Regex.Replace(pfreq.Rows[0]["con_birth_country"].ToString(), @"\w+", new MatchEvaluator(CapitalizeString));
                 string con_birth_town = Regex.Replace(pfreq.Rows[0]["con_birth_town"].ToString(), @"\w+", new MatchEvaluator(CapitalizeString));
                 if (con_birth_town == "")
-                    oDoc.Bookmarks["p22"].Range.Text = con_birth_country;
+                    param.Add("p22", con_birth_country);
                 else
-                    oDoc.Bookmarks["p22"].Range.Text = con_birth_country + "," + con_birth_town;
+                    param.Add("p22", con_birth_country + "," + con_birth_town);
 
                 if (pfreq.Rows[0]["con_sex"].ToString()=="МУЖСКОЙ")
                 {
-                    oDoc.Bookmarks["p28"].Range.Text = "X";
-                    oDoc.Bookmarks["p29"].Range.Text = string.Empty;
+                    param.Add("p28", "X");
+                    param.Add("p29", string.Empty);
                 }
                 else
                 {
-                    oDoc.Bookmarks["p28"].Range.Text = string.Empty;
-                    oDoc.Bookmarks["p29"].Range.Text = "X";
+                    param.Add("p28", string.Empty);
+                    param.Add("p29","X");
                 }
 
-                oDoc.Bookmarks["p23"].Range.Text = Regex.Replace(pfreq.Rows[0]["con_nat"].ToString(), @"\w+", new MatchEvaluator(CapitalizeString));
-                oDoc.Bookmarks["p40"].Range.Text = pfreq.Rows[0]["dul_type"].ToString().ToLower();
-                oDoc.Bookmarks["p24"].Range.Text = pfreq.Rows[0]["dul_ser"].ToString();
-                oDoc.Bookmarks["p25"].Range.Text = pfreq.Rows[0]["dul_num"].ToString();
-                oDoc.Bookmarks["p26"].Range.Text = pfreq.Rows[0]["dul_issue"].ToString();
-                oDoc.Bookmarks["p27"].Range.Text = pfreq.Rows[0]["dul_validity"].ToString();
-                oDoc.Bookmarks["p30"].Range.Text = "г. Владимир";
+                param.Add("p23", Regex.Replace(pfreq.Rows[0]["con_nat"].ToString(), @"\w+", new MatchEvaluator(CapitalizeString)));
+                param.Add("p40", pfreq.Rows[0]["dul_type"].ToString().ToLower());
+                param.Add("p24", pfreq.Rows[0]["dul_ser"].ToString());
+                param.Add("p25", pfreq.Rows[0]["dul_num"].ToString());
+                param.Add("p26", pfreq.Rows[0]["dul_issue"].ToString());
+                param.Add("p27", pfreq.Rows[0]["dul_validity"].ToString());
+                param.Add("p30", "г. Владимир");
 
                 TextBox tb = new TextBox();
                 tb.WordWrap = true;
@@ -1533,10 +1462,10 @@ namespace Mig
                     res = tPerenos.Substring(0, i + 1);
                     res2 = tPerenos.Substring(i, tPerenos.Length - i);
                 }
-                oDoc.Bookmarks["p31"].Range.Text = res;                               
-                oDoc.Bookmarks["p42"].Range.Text = res2;
+                param.Add("p31", res);
+                param.Add("p42", res2);
 
-                oDoc.Bookmarks["p32"].Range.Text = pfreq.Rows[0]["con_pos"].ToString();
+                param.Add("p32",pfreq.Rows[0]["con_pos"].ToString());
                 /*--------------------------------*/
                 tPerenos = pfreq.Rows[0]["con_relatives"].ToString();
                 res = "";
@@ -1554,8 +1483,8 @@ namespace Mig
                     res = tPerenos.Substring(0, i + 1);
                     res2 = tPerenos.Substring(i, tPerenos.Length - i);
                 }
-                oDoc.Bookmarks["p49"].Range.Text = res;
-                oDoc.Bookmarks["p50"].Range.Text = res2;
+                param.Add("p49", res);
+                param.Add("p50", res2);
                 /*--------------------------------*/
                 //адрес проживания
                 tPerenos = pfreq.Rows[0]["ad_full_address"].ToString();
@@ -1574,15 +1503,15 @@ namespace Mig
                     res = tPerenos.Substring(0, i + 1);
                     res2 = tPerenos.Substring(i, tPerenos.Length - i);
                 }
-                oDoc.Bookmarks["ADDR1"].Range.Text = res;
-                oDoc.Bookmarks["ADDR2"].Range.Text = res2;
+                param.Add("ADDR1", res);
+                param.Add("ADDR2", res2);
                 /*--------------------------------*/
-                oDoc.Bookmarks["p34"].Range.Text = pfreq.Rows[0]["doc_ser"].ToString();
-                oDoc.Bookmarks["p35"].Range.Text = pfreq.Rows[0]["doc_num"].ToString();
-                oDoc.Bookmarks["p36"].Range.Text = pfreq.Rows[0]["doc_ident"].ToString();
-                oDoc.Bookmarks["p37"].Range.Text = pfreq.Rows[0]["doc_validity_from_dt"].ToString();
-                oDoc.Bookmarks["p38"].Range.Text = pfreq.Rows[0]["doc_validity_to_dt"].ToString();
-                oDoc.Bookmarks["p39"].Range.Text = pfreq.Rows[0]["doc_invite_num"].ToString();
+                param.Add("p34", pfreq.Rows[0]["doc_ser"].ToString());
+                param.Add("p35", pfreq.Rows[0]["doc_num"].ToString());
+                param.Add("p36", pfreq.Rows[0]["doc_ident"].ToString());
+                param.Add("p37", pfreq.Rows[0]["doc_validity_from_dt"].ToString());
+                param.Add("p38", pfreq.Rows[0]["doc_validity_to_dt"].ToString());
+                param.Add("p39", pfreq.Rows[0]["doc_invite_num"].ToString());
 
                 if (DB.GetTableValue("select count(*) from cmodb.children where contact_id=:param1;", new List<object> { pref.CONTACTID }) != "0")
                 {
@@ -1591,10 +1520,10 @@ namespace Mig
                     foreach (DataRow row in DB.QueryTableMultipleParams(pref.GetChildSql, new List<object> { pref.CONTACTID }).Rows)
                     {                       
                         ii++;
-                        oDoc.Bookmarks["d" + ii.ToString() + "f"].Range.Text = row.ItemArray[0].ToString();
-                        oDoc.Bookmarks["d" + ii.ToString() + "d"].Range.Text = row.ItemArray[1].ToString();
-                        oDoc.Bookmarks["d" + ii.ToString() + "g"].Range.Text = row.ItemArray[4].ToString();
-                        oDoc.Bookmarks["d" + ii.ToString() + "a"].Range.Text = row.ItemArray[2].ToString();
+                        param.Add("d" + ii.ToString() + "f", row.ItemArray[0].ToString());
+                        param.Add("d" + ii.ToString() + "d", row.ItemArray[1].ToString());
+                        param.Add("d" + ii.ToString() + "g", row.ItemArray[4].ToString());
+                        param.Add("d" + ii.ToString() + "a", row.ItemArray[2].ToString());
 
                     }
                     if (ii != 4)
@@ -1602,10 +1531,10 @@ namespace Mig
                         if (ii == 0) ii = 1;
                         for (int k = ii + 1; k <= 4; k++)
                         {
-                            oDoc.Bookmarks["d" + k.ToString() + "f"].Range.Text = String.Empty;
-                            oDoc.Bookmarks["d" + k.ToString() + "d"].Range.Text = String.Empty;
-                            oDoc.Bookmarks["d" + k.ToString() + "g"].Range.Text = String.Empty;
-                            oDoc.Bookmarks["d" + k.ToString() + "a"].Range.Text = String.Empty;
+                            param.Add("d" + k.ToString() + "f", String.Empty);
+                            param.Add("d" + k.ToString() + "d", String.Empty);
+                            param.Add("d" + k.ToString() + "g", String.Empty);
+                            param.Add("d" + k.ToString() + "a", String.Empty);
                         }
                     }
                 }
@@ -1613,38 +1542,25 @@ namespace Mig
                 {
                     for (int k = 1; k <= 4; k++)
                     {
-                        oDoc.Bookmarks["d" + k.ToString() + "f"].Range.Text = String.Empty;
-                        oDoc.Bookmarks["d" + k.ToString() + "d"].Range.Text = String.Empty;
-                        oDoc.Bookmarks["d" + k.ToString() + "g"].Range.Text = String.Empty;
-                        oDoc.Bookmarks["d" + k.ToString() + "a"].Range.Text = String.Empty;
+                        param.Add("d" + k.ToString() + "f", String.Empty);
+                        param.Add("d" + k.ToString() + "d", String.Empty);
+                        param.Add("d" + k.ToString() + "g", String.Empty);
+                        param.Add("d" + k.ToString() + "a", String.Empty);
                     }
                 }
-                Directory.CreateDirectory(pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO);
-                oDoc.SaveAs(pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO + ReportName);
-                oDoc.Close();
+                FillDoc(NewPath, param);
 
-                 InsertPf(ReportName);
-                
-
+                InsertPf(ReportName);
             }
             catch (Exception e)
             {
                 Logger.Log.Error(ClassName + "Function:GenerateVisaAnketa\n Error:" + e);
-                oDoc.Close(ref falseObj, ref missingObj, ref missingObj);
-                ErrMsg = e.Message;
+                throw new Exception(e.Message);
             }
-            finally
-            {
-                oDoc = null;
-                application.Quit(SaveChanges: false);
-                application = null;
-            }
-            return ErrMsg;
+           
         }
 
-      
-
-        
+ 
         public string GenerateNotifyXls()
         {
            

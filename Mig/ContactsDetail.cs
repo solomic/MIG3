@@ -440,49 +440,26 @@ namespace Mig
                         case "Node6":                           
                             (new pf()).GeneratePetitionVisa(cmbPetVisa1.Text, cmbPetVisa2.Text);                           
                             break;
-                        case "Node7":
-                            if (cmbPetPass1.Text == "" || cmbPetPass2.Text == "")
-                            {
-                                MessageBox.Show("Укажите входные параметры", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                break;
-                            }
-                            RepRes = (new pf()).GeneratePetitionPassport(cmbPetPass1.Text, cmbPetPass2.Text);
-                            
+                        case "Node7":                           
+                             (new pf()).GeneratePetitionPassport(cmbPetPass1.Text, cmbPetPass2.Text);                            
                             break;
                         case "Node8":
                             (new pf()).GeneratePetitionLost();                           
                             break;
-                        case "Node9": /*Визовая анкета: анкета*/
-                            if (cmbVisaAction.Text == "" || cmbVisaKrat.Text == "" || cmbVisaCat.Text == "" || cmbVisaPurpose.Text == "" || (cmbVisaSubCat.Text == "" && cmbVisaCat.SelectedIndex == 0))
-                            {
-                                MessageBox.Show("Укажите входные параметры", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                break;
-                            }
-                            RepRes = (new pf()).GenerateVisaAnketa(cmbVisaAction.SelectedIndex.ToString(),cmbVisaKrat.Text,cmbVisaCat.SelectedIndex.ToString(),cmbVisaSubCat.SelectedIndex.ToString(),cmbVisaPurpose.Text );
-                            
-                            break;
+                        case "Node9": /*Визовая анкета: анкета*/                        
+                             (new pf()).GenerateVisaAnketa(cmbVisaAction.SelectedIndex.ToString(),cmbVisaKrat.Text,cmbVisaCat.SelectedIndex.ToString(),cmbVisaSubCat.SelectedIndex.ToString(),cmbVisaPurpose.Text );
+                           break;
                         case "Node10":
-                            RepRes = (new pf()).GenerateVisaGuarant();
-                            
+                            (new pf()).GenerateVisaGuarant();                            
                             break;
-                        case "Node11":
-                            if (cmbVisaPetition.Text == "" || cmbAnkHodReason.Text == "")
-                            {
-                                MessageBox.Show("Укажите входные параметры", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                break;
-                            }
-                            RepRes = (new pf()).GenerateVisaPetition(cmbVisaPetition.Text, cmbAnkHodReason.Text);                           
+                        case "Node11":                            
+                            (new pf()).GenerateVisaPetition(cmbVisaPetition.Text, cmbAnkHodReason.Text);                           
                             break;
                         case "Node12":
                             (new pf()).GenerateDepObr();                       
                         break;
-                    case "Node13":
-                            if (cmbPetitionOut.Text == "" )
-                            {
-                                MessageBox.Show("Укажите входные параметры", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                break;
-                            }
-                            RepRes = (new pf()).GeneratePetitionOut(cmbPetitionOut.SelectedIndex);                            
+                    case "Node13":                            
+                            (new pf()).GeneratePetitionOut(cmbPetitionOut.SelectedIndex);                            
                             break;
                         case "Node15":                   
                            (new pf()).GeneratePetitionDeduct();                           
@@ -494,10 +471,10 @@ namespace Mig
                             (new pf()).GenerateSprBank();                           
                             break;
                         case "NodeNotify":     
-                            if (pref.NOTIFYTEMPLATE == "xls")               
+                           // if (pref.NOTIFYTEMPLATE == "xls")               
                                 RepRes = (new pf()).GenerateNotifyXls();
-                            else
-                                RepRes = (new pf()).GenerateNotify();                            
+                           // else
+                                //RepRes = (new pf()).GenerateNotify();                            
                             break;
                     }
                 MessageBox.Show("Документ успешно сформирован", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -521,26 +498,6 @@ namespace Mig
             }
 
             fContactEditForm = null;*/
-        }
-
-        private void btnAddressEdit_Click(object sender, EventArgs e)
-        {
-          
-        }
-
-    
-
-        private void btnExpellEdit_Click(object sender, EventArgs e)
-        {
-            
-        }
-
-      
-
-
-        private void btnMigrCardAdd_Click(object sender, EventArgs e)
-        {
-           
         }
 
        
@@ -629,11 +586,7 @@ namespace Mig
         }
 
 
-        private void label6_Click(object sender, EventArgs e)
-        {
-
-        }
-
+       
    
 
         private void tabDUL_Enter(object sender, EventArgs e)
@@ -641,10 +594,7 @@ namespace Mig
             LoadDUL();
         }
 
-        private void DULdataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
+      
 
         private void toolContactEdit_Click(object sender, EventArgs e)
         {
@@ -787,10 +737,7 @@ namespace Mig
                 tInfo.ReadOnly = !can;
         }
 
-        private void btnDelegateEdit_Click_1(object sender, EventArgs e)
-        {
-
-        }
+      
 
         private void btnSaveContactEx_Click(object sender, EventArgs e)
         {
@@ -863,12 +810,7 @@ namespace Mig
 
         }
 
-        private void DULbindingSource_CurrentChanged(object sender, EventArgs e)
-        {
-
-        }
-
-       
+             
 
         private void toolStripButton14_Click(object sender, EventArgs e)
         {
@@ -991,11 +933,6 @@ namespace Mig
                 LoadDUL();
                 DULRefresh();
             }
-           
-        }
-
-        private void DULdataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
            
         }
 
@@ -1137,10 +1074,7 @@ namespace Mig
             }
         }
 
-        private void tabControl1_TabIndexChanged(object sender, EventArgs e)
-        {
-
-        }
+      
 
         private void tabControl1_Deselecting(object sender, TabControlCancelEventArgs e)
         {
@@ -1340,10 +1274,7 @@ namespace Mig
             LoadExpell();
         }
 
-        private void dgTeach_Click(object sender, EventArgs e)
-        {
-           
-        }
+        
 
         public void TeachDel(int id)
         {

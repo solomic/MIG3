@@ -346,7 +346,7 @@
             this.tabControl1.Size = new System.Drawing.Size(1028, 526);
             this.tabControl1.TabIndex = 1;
             this.tabControl1.Deselecting += new System.Windows.Forms.TabControlCancelEventHandler(this.tabControl1_Deselecting);
-            this.tabControl1.TabIndexChanged += new System.EventHandler(this.tabControl1_TabIndexChanged);
+         
             // 
             // tabConInfo
             // 
@@ -862,8 +862,7 @@
             this.DULdataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.DULdataGridView.Size = new System.Drawing.Size(995, 174);
             this.DULdataGridView.TabIndex = 42;
-            this.DULdataGridView.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DULdataGridView_CellClick);
-            this.DULdataGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DULdataGridView_CellContentClick);
+          
             // 
             // toolStrip6
             // 
@@ -1181,7 +1180,7 @@
             this.dgTeach.ShowRowErrors = false;
             this.dgTeach.Size = new System.Drawing.Size(984, 124);
             this.dgTeach.TabIndex = 44;
-            this.dgTeach.Click += new System.EventHandler(this.dgTeach_Click);
+       
             // 
             // toolStrip3
             // 
@@ -2367,7 +2366,7 @@
             this.label6.Size = new System.Drawing.Size(136, 13);
             this.label6.TabIndex = 0;
             this.label6.Text = "Место рождения (гос-во):";
-            this.label6.Click += new System.EventHandler(this.label6_Click);
+      
             // 
             // tfirstname
             // 
