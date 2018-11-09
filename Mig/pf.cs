@@ -13,7 +13,7 @@ using iTextSharp.text.pdf;
 //using Excel = Microsoft.Office.Interop.Excel;
 using System.Text.RegularExpressions;
 using System.Reflection;
-using WordDoc = Microsoft.Office.Interop.Word;
+//using WordDoc = Microsoft.Office.Interop.Word;
 using ClosedXML.Excel;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
@@ -95,7 +95,7 @@ namespace Mig
 
         }
 
-        public static void InsertIntoBookmark(BookmarkStart bookmarkStart, string text)
+        public static void InsertIntoBookmark(BookmarkStart bookmarkStart, string text, string sz= "28")
         {
             OpenXmlElement elem = bookmarkStart.NextSibling();
 
@@ -111,12 +111,12 @@ namespace Mig
             run.AppendChild<Text>(currLine);
             RunProperties runProp = new RunProperties();          
             FontSize size = new FontSize();
-            size.Val = new StringValue("28");           
+            size.Val = new StringValue(sz);           
             runProp.Append(size);
             run.PrependChild<RunProperties>(runProp);
             bookmarkStart.Parent.InsertAfter<Run> (run, bookmarkStart);
         }
-        public void FillDoc(string path, Dictionary<string, string> prm)
+        public void FillDoc(string path, Dictionary<string, string> prm,string sz="28")
         {
             try
             {
@@ -132,7 +132,7 @@ namespace Mig
                     {
                         if (item.Key == bookmarkStart.Name)
                         {
-                            InsertIntoBookmark(bookmarkStart, item.Value);
+                            InsertIntoBookmark(bookmarkStart, item.Value,sz);
                             prm.Remove(item.Key);
                             break;
                         }
@@ -1548,7 +1548,7 @@ namespace Mig
                         param.Add("d" + k.ToString() + "a", String.Empty);
                     }
                 }
-                FillDoc(NewPath, param);
+                FillDoc(NewPath, param,"24");
 
                 InsertPf(ReportName);
             }
