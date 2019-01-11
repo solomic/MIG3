@@ -25,9 +25,9 @@ namespace Mig
     {
         public string GETNOW = DateTime.Now.ToString("yyyyMMdd_HHmmss");
         public string ClassName = "Class: pf.cs\n";
-        Object missingObj = System.Reflection.Missing.Value;
-        Object trueObj = true;
-        Object falseObj = false;
+        //Object missingObj = System.Reflection.Missing.Value;
+        //Object trueObj = true;
+        //Object falseObj = false;
 
 
         string CapitalizeString(Match matchString)
