@@ -926,18 +926,18 @@ namespace Mig
 
         private void tpSync_Click(object sender, EventArgs e)
         {
-            try
-            {
-                Logger.Log.Info("Запущен процесс загрузки данных...");
-                DB.GetTableValue("SELECT cmodb.migration();", null);
-                MessageBox.Show("Успешно", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                Logger.Log.Info("Запущен процесс загрузки данных:Успешно");
-            }
-            catch (Exception err)
-            {
-                Logger.Log.Error(ClassName + "Function:tpSync_Click\n Error:" + err);
-                MessageBox.Show("Ошибка синхронизации", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            //try
+            //{
+            //    Logger.Log.Info("Запущен процесс загрузки данных...");
+            //    DB.GetTableValue("SELECT cmodb.migration();", null);
+            //    MessageBox.Show("Успешно", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            //    Logger.Log.Info("Запущен процесс загрузки данных:Успешно");
+            //}
+            //catch (Exception err)
+            //{
+            //    Logger.Log.Error(ClassName + "Function:tpSync_Click\n Error:" + err);
+            //    MessageBox.Show("Ошибка синхронизации", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //}
         }
 
         private void tpAddress_Click(object sender, EventArgs e)

@@ -1163,7 +1163,7 @@ namespace Mig
         private void toolStripButton36_Click(object sender, EventArgs e)
         {
            
-                if (dgDocSel.SelectedRows.Count != 0)
+                if (dgMigrHist.SelectedRows.Count != 0)
                 {
                     if (MessageBox.Show("Удалить выбранную миграционную карту?", "Удаление", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                     {
@@ -1602,10 +1602,13 @@ namespace Mig
             {
                 if (fEntryAddForm.EntryState == "зарубеж")
                 {
-                    if (MessageBox.Show("Очистить активную миграционную карту?", "Очистка", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-                    {                       
-                        MigrDeActive(pref.CONTACTID);
-                    }
+                    //старье
+                    //if (MessageBox.Show("Очистить активную миграционную карту?", "Очистка", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                    //{
+                    //    MigrDeActive(pref.CONTACTID);
+                    //}
+                    // MessageBox.Show("Очистка миграционной карты", "Деактивация", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                     MigrDeActive(pref.CONTACTID);
                 }
                 LoadEntry();
             }
