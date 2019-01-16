@@ -380,6 +380,9 @@
     <EmbeddedResource Include="TeachAddEdit.resx">
       <DependentUpon>TeachAddEdit.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="backup.bat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Mig_TemporaryKey.pfx" />
     <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
@@ -406,6 +409,9 @@
     <None Include="Resources\arrow-upp1.png" />
     <None Include="Resources\arrow-upp.png" />
     <None Include="Resources\arrow-down1.png" />
+    <Content Include="Backup\readme.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Cat.ico" />
     <Content Include="catbox2.ico" />
     <Content Include="prefDB.xml">

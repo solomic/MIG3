@@ -236,11 +236,17 @@ namespace Mig
         {
             try
             {
-                bindingSource1.Filter = "Фамилия LIKE'" + textBox1.Text + "%'";
+                // if (textBox1.Text.Trim() != "")
+                string str = dataGridView1.FilterString == "" ? "" : " AND " + dataGridView1.FilterString;
+                bindingSource1.Filter = "[Фамилия] LIKE '" + textBox1.Text.Trim() + "%' "+ str;                        
+                  
             }
             catch (Exception err)
             {
                 Logger.Log.Error(ClassName + "Function:textBox1_TextChanged\n Error:" + err);
+                //сбрасываем фильтр по колонкам
+                dataGridView1.ClearFilter();
+                bindingSource1.Filter = "[Фамилия] LIKE '" + textBox1.Text.Trim() + "%' ";
             }
         }
 
@@ -866,7 +872,11 @@ namespace Mig
 
         private void dataGridView1_FilterStringChanged(object sender, EventArgs e)
         {
-            bindingSource1.Filter = dataGridView1.FilterString;  
+            //if (bindingSource1.Filter != "")
+            //    bindingSource1.Filter += (" AND " + dataGridView1.FilterString);
+            //else
+            //    bindingSource1.Filter = dataGridView1.FilterString;
+            FilterTextChange();
         }
 
         private void bindingSource1_ListChanged(object sender, ListChangedEventArgs e)
