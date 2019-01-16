@@ -25,7 +25,7 @@ namespace Mig
             try
             {
                 doc = new XmlDocument();
-                doc.Load(Application.StartupPath + @"\prefDB.xml");
+                doc.Load(Application.StartupPath + @"\Pref\prefDB.xml");
                 XmlNodeList nl = doc.GetElementsByTagName("DBNAME");
                 pref.DBNAME = nl[0].InnerText;
                 nl = doc.GetElementsByTagName("HOST");

@@ -414,7 +414,10 @@
     </Content>
     <Content Include="Cat.ico" />
     <Content Include="catbox2.ico" />
-    <Content Include="prefDB.xml">
+    <Content Include="Logs\readme.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Pref\prefDB.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="Resources\a_fd375ae2.jpg" />
