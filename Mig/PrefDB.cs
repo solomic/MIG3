@@ -26,7 +26,7 @@ namespace Mig
             try
             {
                 doc = new XmlDocument();
-                doc.Load(Application.StartupPath + @"\prefDB.xml");
+                doc.Load(Application.StartupPath + @"\Pref\prefDB.xml");
                 XmlNodeList nl = doc.GetElementsByTagName("DBNAME");
                 tDB.Text = nl[0].InnerText;
                 nl = doc.GetElementsByTagName("HOST");
@@ -55,14 +55,14 @@ namespace Mig
             XmlDocument doc;
             try {
                 doc = new XmlDocument();
-                doc.Load(Application.StartupPath + @"\prefDB.xml");
+                doc.Load(Application.StartupPath + @"\Pref\prefDB.xml");
                 doc.GetElementsByTagName("DBNAME")[0].InnerText = tDB.Text;
                 doc.GetElementsByTagName("HOST")[0].InnerText = tHost.Text;
                 doc.GetElementsByTagName("DBPORT")[0].InnerText = tPort.Text;
                 doc.GetElementsByTagName("MIGDATA")[0].InnerText = tMig.Text;
                 doc.GetElementsByTagName("REPORTFOLDER")[0].InnerText = tRep.Text;
 
-                doc.Save(Application.StartupPath + @"\prefDB.xml");
+                doc.Save(Application.StartupPath + @"\Pref\prefDB.xml");
                 MessageBox.Show("Успешно сохранено", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
 
