@@ -3,21 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Word = Microsoft.Office.Interop.Word;
 using System.IO;
 using Pref;
 using System.Data;
 using Npgsql;
 using System.Windows.Forms;
 using iTextSharp.text.pdf;
-//using Excel = Microsoft.Office.Interop.Excel;
 using System.Text.RegularExpressions;
 using System.Reflection;
-//using WordDoc = Microsoft.Office.Interop.Word;
 using ClosedXML.Excel;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using DocumentFormat.OpenXml;
+
 
 namespace Mig
 {
@@ -25,9 +23,6 @@ namespace Mig
     {
         public string GETNOW = DateTime.Now.ToString("yyyyMMdd_HHmmss");
         public string ClassName = "Class: pf.cs\n";
-        //Object missingObj = System.Reflection.Missing.Value;
-        //Object trueObj = true;
-        //Object falseObj = false;
 
 
         string CapitalizeString(Match matchString)
@@ -95,28 +90,63 @@ namespace Mig
 
         }
 
-        public static void InsertIntoBookmark(BookmarkStart bookmarkStart, string text, string sz= "28")
+        public static void InsertIntoBookmark(BookmarkStart bookmarkStart, string in_text, string sz= "28")
         {
+            bool repl = false;
             OpenXmlElement elem = bookmarkStart.NextSibling();
 
             while (elem != null && !(elem is BookmarkEnd))
             {
                 OpenXmlElement nextElem = elem.NextSibling();
-                elem.Remove();
+                if (repl)
+                    elem.Remove();
+                else
+                if (elem is Run && elem.GetFirstChild<Text>() != null)
+                {
+                    elem.GetFirstChild<Text>().Text = in_text;
+                    repl = true;
+                }
                 elem = nextElem;
-            }           
-            //bookmarkStart.Parent.InsertAfter<Run>(new Run (new Text(text)), bookmarkStart);
-            Run run = new Run();
-            Text currLine = new Text(text);
-            run.AppendChild<Text>(currLine);
-            RunProperties runProp = new RunProperties();          
-            FontSize size = new FontSize();
-            size.Val = new StringValue(sz);           
-            runProp.Append(size);
-            run.PrependChild<RunProperties>(runProp);
-            bookmarkStart.Parent.InsertAfter<Run> (run, bookmarkStart);
+            }
+            
+            //while (elem != null && !(elem is BookmarkEnd))
+            //{
+            //    if(elem is Text)
+            //    {
+            //        break;
+            //    }
+            //    OpenXmlElement nextElem = elem.NextSibling();
+            //    elem.Remove();
+            //    elem = nextElem;
+            //}
+            //Run run = new Run();
+            //Text currLine = new Text(text);
+            //run.AppendChild<Text>(currLine);
+            //RunProperties runProp = new RunProperties();          
+            //FontSize size = new FontSize();
+            //RunFonts fnt = new RunFonts();
+            //fnt.Ascii = "Times New Roman";
+            //size.Val = new StringValue(sz);           
+            //runProp.Append(size);
+            //runProp.Append(fnt);
+            //run.PrependChild<RunProperties>(runProp);
+            //bookmarkStart.Parent.InsertAfter<Run> (run, bookmarkStart);
+
+            //Run run = new Run();
+            //RunProperties runProperties = new RunProperties();
+            //FontSize fontSize = new FontSize() { Val = "22" };
+            //RunFonts runFonts = new RunFonts() { Ascii = "Times New Roman" };
+            //runProperties.Append(fontSize);
+            //runProperties.Append(runFonts);
+            //Text text = new Text();
+            //text.Text = in_text;
+            //run.Append(runProperties);
+            //run.Append(text);
+            //bookmarkStart.InsertAfterSelf(run);
         }
-        public void FillDoc(string path, Dictionary<string, string> prm,string sz="28")
+
+
+        public void FillDoc(string path, Dictionary<string, string> prm, string sz = "28")
         {
             try
             {
@@ -125,6 +155,7 @@ namespace Mig
                     AutoSave = true
                 };
                 WordprocessingDocument doc = WordprocessingDocument.Open(path, true, os);
+
                 foreach (BookmarkStart bookmarkStart in doc.MainDocumentPart.RootElement.Descendants<BookmarkStart>())
                 {
                     if (bookmarkStart.Name == "_GoBack") continue;
@@ -132,7 +163,7 @@ namespace Mig
                     {
                         if (item.Key == bookmarkStart.Name)
                         {
-                            InsertIntoBookmark(bookmarkStart, item.Value,sz);
+                            InsertIntoBookmark(bookmarkStart, item.Value, sz);
                             prm.Remove(item.Key);
                             break;
                         }
@@ -146,9 +177,10 @@ namespace Mig
             {
                 Logger.Log.Error(ClassName + "Function:FillDoc\n Error:" + e);
                 throw new Exception(e.Message);
-            }           
+            }
 
         }
+
 
         public void GeneratePetitionStandart(string s1,string s2)
         {
@@ -174,7 +206,7 @@ namespace Mig
                 param.Add("nationality", Regex.Replace(pfreq.Rows[0]["con_nat"].ToString(), @"\w+", new MatchEvaluator(CapitalizeString)));
                 param.Add("fio", FirstUpper(pfreq.Rows[0]["con_fio"].ToString()));
                 param.Add("birthday", pfreq.Rows[0]["con_birthday"].ToString());
-                param.Add("dul_type", FirstUpper(pfreq.Rows[0]["dul_type"].ToString()));
+                param.Add("dul_type", pfreq.Rows[0]["dul_type"].ToString().ToLower());
                 param.Add("dul_ser", pfreq.Rows[0]["dul_ser"].ToString());
                 param.Add("dul_num", pfreq.Rows[0]["dul_num"].ToString());
                 param.Add("dul_issue", pfreq.Rows[0]["dul_issue"].ToString());
@@ -258,7 +290,7 @@ namespace Mig
                 param.Add("fio", FirstUpper(pfreq.Rows[0]["con_fio"].ToString()));                
                 param.Add("nat",Regex.Replace(pfreq.Rows[0]["con_nat"].ToString(), @"\w+", new MatchEvaluator(CapitalizeString))); 
                 param.Add("birth", pfreq.Rows[0]["con_birthday"].ToString());
-                param.Add("dul",FirstUpper(pfreq.Rows[0]["dul_type"].ToString()));
+                param.Add("dul",pfreq.Rows[0]["dul_type"].ToString().ToLower());
                 param.Add("ser", pfreq.Rows[0]["dul_ser"].ToString());
                 param.Add("n",pfreq.Rows[0]["dul_num"].ToString());
                 param.Add("dul_from", pfreq.Rows[0]["dul_issue"].ToString());
@@ -645,7 +677,7 @@ namespace Mig
                 param.Add("fio", FirstUpper( pfreq.Rows[0]["con_fio"].ToString()));
                 param.Add("nat", Regex.Replace(pfreq.Rows[0]["con_nat"].ToString(), @"\w+", new MatchEvaluator(CapitalizeString)));
                 param.Add("birth", pfreq.Rows[0]["con_birthday"].ToString());
-                param.Add("dul", FirstUpper(pfreq.Rows[0]["dul_type"].ToString()));
+                param.Add("dul", pfreq.Rows[0]["dul_type"].ToString().ToLower());
                 param.Add("ser", pfreq.Rows[0]["dul_ser"].ToString());
                 param.Add("n", pfreq.Rows[0]["dul_num"].ToString());
                 param.Add("dul_from", pfreq.Rows[0]["dul_issue"].ToString());
@@ -708,17 +740,15 @@ namespace Mig
             
         }
         public void GeneratePetitionOut(int s1)
-        {
-
-            /*уведомление об отчислении*/
-            //ПРОВЕРИТЬ!!!
+        {           
+            /*уведомление об отчислении*/           
             if (s1 == -1)
             {
                 throw new Exception("Укажите входные параметры");               
             }
-            string TemplateName = "PETITION.OUT.doc";
+            string TemplateName = "PETITION.OUT.docx";
             string TemplatePath = Directory.GetCurrentDirectory() + @"\template\" + TemplateName;           
-            string ReportName = GETNOW + "_Уведомление(отчисление)УФМС.doc";
+            string ReportName = GETNOW + "_Уведомление(отчисление)УФМС.docx";
             Dictionary<string, string> param = new Dictionary<string, string>();
 
             try
@@ -731,11 +761,11 @@ namespace Mig
                 if (s1 == 0 )
                 {
                     param.Add("p1", "X");
-                    param.Add("p2", " ");
+                    param.Add("p2", string.Empty);
                 }
                 else
                 {
-                    param.Add("p1", " ");
+                    param.Add("p1", string.Empty);
                     param.Add("p2", "X");
                 }
                 param.Add("l",pfreq.Rows[0]["con_last_name"].ToString());
@@ -749,7 +779,7 @@ namespace Mig
                 if (pfreq.Rows[0]["con_birth_town"].ToString() == "")
                     param.Add("brcon",pfreq.Rows[0]["con_birth_country"].ToString());
                 else
-                    param.Add("brcon", pfreq.Rows[0]["con_birth_town"].ToString()+","+pfreq.Rows[0]["con_birth_country"].ToString());
+                    param.Add("brcon", pfreq.Rows[0]["con_birth_town"].ToString()+", "+pfreq.Rows[0]["con_birth_country"].ToString());
 
                 param.Add("nat", Regex.Replace(pfreq.Rows[0]["con_nat"].ToString(), @"\w+", new MatchEvaluator(CapitalizeString)));
 
@@ -764,7 +794,7 @@ namespace Mig
                     param.Add("p4", " ");
                 }
 
-                param.Add("dul", FirstUpper(pfreq.Rows[0]["dul_type"].ToString()));
+                param.Add("dul", pfreq.Rows[0]["dul_type"].ToString().ToLower());
                 param.Add("ser", pfreq.Rows[0]["dul_ser"].ToString());
                 param.Add("num", pfreq.Rows[0]["dul_num"].ToString());
                 param.Add("dfr", pfreq.Rows[0]["dul_issue"].ToString());
@@ -833,7 +863,9 @@ namespace Mig
                 param.Add("ddto", pfreq.Rows[0]["agr_to_dt"].ToString());
 
                 param.Add("exp", pfreq.Rows[0]["exp_expelled"].ToString());
-                param.Add("expnum", pfreq.Rows[0]["exp_num"].ToString());
+
+                string s = pfreq.Rows[0]["exp_num"].ToString() != "" ? pfreq.Rows[0]["exp_num"].ToString() : string.Empty;
+                param.Add("expnum", s);
                 param.Add("expdt", pfreq.Rows[0]["exp_dt"].ToString());
 
                 if (pfreq.Rows[0]["teach_fp"].ToString() == "НАПРАВЛЕНИЕ")
@@ -841,7 +873,7 @@ namespace Mig
                 else
                     param.Add("bud", "");
 
-                FillDoc(NewPath, param);
+                FillDoc(NewPath, param,"22");
 
                 InsertPf(ReportName);
             }
@@ -991,7 +1023,7 @@ namespace Mig
                 }
                 
                 param.Add("nat", Regex.Replace(pfreq.Rows[0]["con_nat"].ToString(), @"\w+", new MatchEvaluator(CapitalizeString)));
-                param.Add("dul", FirstUpper(pfreq.Rows[0]["dul_type"].ToString()));
+                param.Add("dul", pfreq.Rows[0]["dul_type"].ToString().ToLower());
                 param.Add("pass", pfreq.Rows[0]["dul_ser"].ToString() + pfreq.Rows[0]["dul_num"].ToString());
 
                 string dul_issue = pfreq.Rows[0]["dul_issue"].ToString();
@@ -1123,6 +1155,8 @@ namespace Mig
                 param.Add("card_tenure_to_dt",pfreq.Rows[0]["card_tenure_to_dt"].ToString());
                 param.Add("p3", pfreq.Rows[0]["p3"].ToString());
                 param.Add("p4",pfreq.Rows[0]["p4"].ToString());
+                param.Add("change", s1);
+                param.Add("post", s2);
 
                 FillDoc(NewPath, param);
 
@@ -1156,7 +1190,7 @@ namespace Mig
                 param.Add("nationality", Regex.Replace(pfreq.Rows[0]["con_nat"].ToString(), @"\w+", new MatchEvaluator(CapitalizeString)));
                 param.Add("fio", FirstUpper(pfreq.Rows[0]["con_fio"].ToString()));
                 param.Add("birthday", pfreq.Rows[0]["con_birthday"].ToString());
-                param.Add("dul_type", FirstUpper(pfreq.Rows[0]["dul_type"].ToString()));
+                param.Add("dul_type", pfreq.Rows[0]["dul_type"].ToString().ToLower());
                 param.Add("dul_ser", pfreq.Rows[0]["dul_ser"].ToString());
                 param.Add("dul_num",pfreq.Rows[0]["dul_num"].ToString());
                 param.Add("dul_issue",pfreq.Rows[0]["dul_issue"].ToString());               
@@ -1490,7 +1524,7 @@ namespace Mig
                 tPerenos = pfreq.Rows[0]["ad_full_address"].ToString();
                 res = "";
                 res2 = "";
-                if (tPerenos.Length < 30)
+                if (tPerenos.Length < 35)
                 {
                     res = tPerenos;
                 }
@@ -1498,7 +1532,7 @@ namespace Mig
                 {
                     int i;
                     string stemp = "";
-                    stemp = tPerenos.Substring(0, 30);
+                    stemp = tPerenos.Substring(0, 35);
                     i = stemp.LastIndexOf(" ");
                     res = tPerenos.Substring(0, i + 1);
                     res2 = tPerenos.Substring(i, tPerenos.Length - i);
@@ -1582,20 +1616,10 @@ namespace Mig
 
             Directory.CreateDirectory(pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO);
             File.Copy(TemplatePath, NewFile, true);
-
-            //Excel.Application excelApp = new Excel.Application();            
-            //excelApp.DisplayAlerts = false;
-            //excelApp.Visible = false;            
-            //Excel.Workbook excelWorkbook = excelApp.Workbooks.Open(TemplatePath,
-            //    0, false, 5, "", "", false, Excel.XlPlatform.xlWindows, "",
-            //    true, false, 0, true, false, false);
-            //Logger.Log.Debug("Шаблон открыт:" + DateTime.Now.ToString());
-            //Excel.Sheets excelSheets = excelWorkbook.Worksheets;
+           
             XLWorkbook excelApp1XML = new ClosedXML.Excel.XLWorkbook(NewFile);
             string currentSheet = "стр.1";
-            string currentSheet2 = "стр.2";
-            //Excel.Worksheet excelWorksheet = (Excel.Worksheet)excelSheets.get_Item(currentSheet);
-            //Excel.Worksheet excelWorksheet2 = (Excel.Worksheet)excelSheets.get_Item(currentSheet2);
+            string currentSheet2 = "стр.2";          
             IXLWorksheet sheetExcel1XML = excelApp1XML.Worksheet(currentSheet);
             IXLWorksheet sheetExcel2XML = excelApp1XML.Worksheet(currentSheet2);
 
@@ -2036,24 +2060,24 @@ namespace Mig
 
                 //квартира
                 str = pfreq.Rows[0]["ad_flat"].ToString();
-                for (int i = 0; i < str.Length; i++)
-                {
-                    sheetExcel1XML.Range(arFlatB[i]).Value = str[i].ToString();
-                    sheetExcel2XML.Range(arFlat2[i]).Value = str[i].ToString();
-                }
+                //for (int i = 0; i < str.Length; i++)
+                //{
+                    sheetExcel1XML.Range(arFlatB[0]).Value = str;
+                    sheetExcel2XML.Range(arFlat2[0]).Value = str;
+                //}
                 str = "";
 
                 /*Сведения о принимающей стороне*/
 
                 if (pfhost.Rows[0]["org_phis"].ToString() == "Организация")
                 {                    
-                    sheetExcel2XML.Range("EE26").Value = 'X'.ToString();
-                    sheetExcel2XML.Range("FC26").Value = String.Empty;
+                    sheetExcel2XML.Range("EE30").Value = 'X'.ToString();
+                    sheetExcel2XML.Range("FC30").Value = String.Empty;
                 }
                 else
                 {
-                    sheetExcel2XML.Range("EE26").Value = String.Empty;
-                    sheetExcel2XML.Range("FC26").Value = 'X'.ToString();
+                    sheetExcel2XML.Range("EE30").Value = String.Empty;
+                    sheetExcel2XML.Range("FC30").Value = 'X'.ToString();
                 }
 
                 //фамилия
@@ -2303,18 +2327,20 @@ namespace Mig
 
             }
             catch (Exception e)
-            {               
+            {
+                Logger.Log.Error(ClassName + "Function:GenerateNotifyXls\n Error:" + e);
                 ErrMsg = "Ошибка ^_^";
             }
             finally
             {  
-                //excelApp.Quit();                                   // exit excel application
-                //System.Runtime.InteropServices.Marshal.ReleaseComObject(excelApp);                
+               
 
             }
             return ErrMsg;
         }
 
+
+       
 
         /**/
         string[] arName = new string[] { "W13","AA13","AE13","AI13","AM13","AQ13","AU13","AY13","BC13","BG13","BK13","BO13",
@@ -2388,12 +2414,12 @@ namespace Mig
                                   "DW88","EA88","EE88","EI88","EM88","EQ88","EU88","EY88","FC88"};
         string[] arStreetB = new string[]{"W91","AA91","AE91","AI91","AM91","AQ91","AU91","AY91","BC91","BG91","BK91","BO91",
                                   "BS91","BW91","CA91","CE91","CI91","CM91","CQ91","CU91","CY91","DC91","DG91","DK91","DO91","DS91",
-                                  "DW91","EA91","EE91","EI91","EM91","EQ91","EU91","EY91","FC91"};
-        string[] arHouseB = new string[] { "S93", "W93", "AA93", "AE93" };
-        string[] arKorpB = new string[] { "AQ93", "AU93", "AY93", "BC93" };
-        string[] arStroB = new string[] { "BS93", "BW93", "CA93", "CE93" };
-        string[] arFlatB = new string[] { "CU93", "CY93", "DC93", "DG93" };
-        string[] arTenureB = new string[] { "AQ95", "AU95", "BG95", "BK95", "BS95", "BW95", "CA95", "CE95" };
+                                  "DW91","EA91","EE91","EI91","EM91","EQ91","EU91","EY91","FC91"};      
+        string[] arHouseB = new string[] { "AQ93", "AU93", "AY93", "BC93" };
+        string[] arKorpB = new string[] { "BS93", "BW93", "CA93", "CE93" };
+        string[] arStroB = new string[] { "CU93", "CY93", "DC93", "DG93" };
+        string[] arFlatB = new string[] { "DK93" };
+        string[] arTenureB = new string[] { "AQ97", "AU97", "BG97", "BK97", "BS97", "BW97", "CA97", "CE97" };
         //стр.2
         string[] arObl2 = new string[]{"AE14","AI14","AM14","AQ14","AU14","AY14","BC14","BG14","BK14","BO14",
                                   "BS14","BW14","CA14","CE14","CI14","CM14","CQ14","CU14","CY14","DC14","DG14","DK14","DO14","DS14",
@@ -2407,59 +2433,60 @@ namespace Mig
         string[] arStreet2 = new string[]{"W22","AA22","AE22","AI22","AM22","AQ22","AU22","AY22","BC22","BG22","BK22","BO22",
                                   "BS22","BW22","CA22","CE22","CI22","CM22","CQ22","CU22","CY22","DC22","DG22","DK22","DO22","DS22",
                                   "DW22","EA22","EE22","EI22","EM22","EQ22","EU22","EY22","FC22"};
-        string[] arHouse2 = new string[] { "S24", "W24", "AA24", "AE24" };
-        string[] arKorp2 = new string[] { "AQ24", "AU24", "AY24", "BC24" };
-        string[] arStro2 = new string[] { "BS24", "BW24", "CA24", "CE24" };
-        string[] arFlat2 = new string[] { "CU24", "CY24", "DC24", "DG24" };
-        string[] arPhone2 = new string[] { "DS24", "DW24", "EA24", "EE24", "EI24", "EM24", "EQ24", "EU24", "EY24", "FC24" };
+        string[] arHouse2 = new string[] { "AY24", "BC24", "BG24", "BK24" };
+        string[] arKorp2 = new string[] { "CA24", "CE24", "CI24", "CM24" };
+        string[] arStro2 = new string[] { "DC24", "DG24", "DK24", "DO24" };
+        string[] arFlat2 = new string[] { "DS24" };
+        string[] arPhone2 = new string[] { "W28", "AA28", "AE28", "AI28", "AM28", "AQ28", "AU28", "AY28", "BC28", "BG28" };
 
         //принимающая сторона
-        string[] arNameP = new string[]{"W28","AA28","AE28","AI28","AM28","AQ28","AU28","AY28","BC28","BG28","BK28","BO28",
-                                  "BS28","BW28","CA28","CE28","CI28","CM28","CQ28"};
-        string[] arLastNameP = new string[]{"W31","AA31","AE31","AI31","AM31","AQ31","AU31","AY31","BC31","BG31","BK31","BO31",
-                                  "BS31","BW31","CA31","CE31","CI31","CM31","CQ31","CU31","CY31","DC31","DG31","DK31","DO31","DS31",
-                                  "DW31","EA31","EE31","EI31","EM31","EQ31","EU31","EY31","FC31"};
-        string[] arDateBirthP = new string[] { "DO28", "DS28", "EE28", "EI28", "EQ28", "EU28", "EY28", "FC28" };
-        string[] arDocViewP = new string[] { "BC34", "BG34", "BK34", "BO34", "BS34", "BW34", "CA34", "CE34", "CI34", "CM34", "CQ34" };
-        string[] arDocSerP = new string[] { "DC34", "DG34", "DK34", "DO34" };
-        string[] arDocNumP = new string[] { "DW34", "EA34", "EE34", "EI34", "EM34", "EQ34", "EU34", "EY34", "FC34" };
-        string[] arDateVidP = new string[] { "AA36", "AE36", "AQ36", "AU36", "BC36", "BG36", "BK36", "BO36" };
-        string[] arDateExpiredP = new string[] { "CM36", "CQ36", "DC36", "DG36", "DO36", "DS36", "DW36", "EA36" };
-        string[] arOblP = new string[]{"AE39","AI39","AM39","AQ39","AU39","AY39","BC39","BG39","BK39","BO39",
-                                  "BS39","BW39","CA39","CE39","CI39","CM39","CQ39","CU39","CY39","DC39","DG39","DK39","DO39","DS39",
-                                  "DW39","EA39","EE39","EI39","EM39","EQ39","EU39","EY39","FC39"};
-        string[] arRayonP = new string[]{"W42","AA42","AE42","AI42","AM42","AQ42","AU42","AY42","BC42","BG42","BK42","BO42",
-                                  "BS42","BW42","CA42","CE42","CI42","CM42","CQ42","CU42","CY42","DC42","DG42","DK42","DO42","DS42",
-                                  "DW42","EA42","EE42","EI42","EM42","EQ42","EU42","EY42","FC42"};
-        string[] arTownP = new string[]{"AE44","AI44","AM44","AQ44","AU44","AY44","BC44","BG44","BK44","BO44",
-                                  "BS44","BW44","CA44","CE44","CI44","CM44","CQ44","CU44","CY44","DC44","DG44","DK44","DO44","DS44",
-                                  "DW44","EA44","EE44","EI44","EM44","EQ44","EU44","EY44","FC44"};
-        string[] arStreetP = new string[]{"W47","AA47","AE47","AI47","AM47","AQ47","AU47","AY47","BC47","BG47","BK47","BO47",
-                                  "BS47","BW47","CA47","CE47","CI47","CM47","CQ47","CU47","CY47","DC47","DG47","DK47","DO47","DS47",
-                                  "DW47","EA47","EE47","EI47","EM47","EQ47","EU47","EY47","FC47"};
-        string[] arHouseP = new string[] { "S49", "W49", "AA49", "AE49" };
-        string[] arKorpP = new string[] { "AQ49", "AU49", "AY49", "BC49" };
-        string[] arStroP = new string[] { "BS49", "BW49", "CA49", "CE49" };
-        string[] arFlatP = new string[] { "CU49", "CY49", "DC49", "DG49" };
-        string[] arPhoneP = new string[] { "DS49", "DW49", "EA49", "EE49", "EI49", "EM49", "EQ49", "EU49", "EY49", "FC49" };
-        string[] arOrgNameP = new string[]{"AA51","AE51","AI51","AM51","AQ51","AU51","AY51","BC51","BG51","BK51","BO51",
-                                  "BS51","BW51","CA51","CE51","CI51","CM51","CQ51","CU51","CY51","DC51","DG51","DK51","DO51" };
+        string[] arNameP = new string[]{"W32","AA32","AE32","AI32","AM32","AQ32","AU32","AY32","BC32","BG32","BK32","BO32",
+                                  "BS32","BW32","CA32","CE32","CI32","CM32","CQ32"};
+        string[] arLastNameP = new string[]{"W35","AA35","AE35","AI35","AM35","AQ35","AU35","AY35","BC35","BG35","BK35","BO35",
+                                  "BS35","BW35","CA35","CE35","CI35","CM35","CQ35","CU35","CY35","DC35","DG35","DK35","DO35","DS35",
+                                  "DW35","EA35","EE35","EI35","EM35","EQ35","EU35","EY35","FC35"};
+        string[] arDateBirthP = new string[] { "DO32", "DS32", "EE32", "EI32", "EQ32", "EU32", "EY32", "FC32" };
+        string[] arDocViewP = new string[] { "BC38", "BG38", "BK38", "BO38", "BS38", "BW38", "CA38", "CE38", "CI38", "CM38", "CQ38" };
+        string[] arDocSerP = new string[] { "DC38", "DG38", "DK38", "DO38" };
+        string[] arDocNumP = new string[] { "DW38", "EA38", "EE38", "EI38", "EM38", "EQ38", "EU38", "EY38", "FC38" };
+        string[] arDateVidP = new string[] { "AA40", "AE40", "AQ40", "AU40", "BC40", "BG40", "BK40", "BO40" };
+        string[] arDateExpiredP = new string[] { "CM40", "CQ40", "DC40", "DG40", "DO40", "DS40", "DW40", "EA40" };
+        string[] arOblP = new string[]{"AE43","AI43","AM43","AQ43","AU43","AY43","BC43","BG43","BK43","BO43",
+                                  "BS43","BW43","CA43","CE43","CI43","CM43","CQ43","CU43","CY43","DC43","DG43","DK43","DO43","DS43",
+                                  "DW43","EA43","EE43","EI43","EM43","EQ43","EU43","EY43","FC43"};
+        string[] arRayonP = new string[]{"W46","AA46","AE46","AI46","AM46","AQ46","AU46","AY46","BC46","BG46","BK46","BO46",
+                                  "BS46","BW46","CA46","CE46","CI46","CM46","CQ46","CU46","CY46","DC46","DG46","DK46","DO46","DS46",
+                                  "DW46","EA46","EE46","EI46","EM46","EQ46","EU46","EY46","FC46"};
+        string[] arTownP = new string[]{"AE48","AI48","AM48","AQ48","AU48","AY48","BC48","BG48","BK48","BO48",
+                                  "BS48","BW48","CA48","CE48","CI48","CM48","CQ48","CU48","CY48","DC48","DG48","DK48","DO48","DS48",
+                                  "DW48","EA48","EE48","EI48","EM48","EQ48","EU48","EY48","FC48"};
+        string[] arStreetP = new string[]{"W51","AA51","AE51","AI51","AM51","AQ51","AU51","AY51","BC51","BG51","BK51","BO51",
+                                  "BS51","BW51","CA51","CE51","CI51","CM51","CQ51","CU51","CY51","DC51","DG51","DK51","DO51","DS51",
+                                  "DW51","EA51","EE51","EI51","EM51","EQ51","EU51","EY51","FC51"};
+        string[] arHouseP = new string[] { "S53", "W53", "AA53", "AE53" };
+        string[] arKorpP = new string[] { "AQ53", "AU53", "AY53", "BC53" };
+        string[] arStroP = new string[] { "BS53", "BW53", "CA53", "CE53" };
+        string[] arFlatP = new string[] { "CU53", "CY53", "DC53", "DG53" };
+        string[] arPhoneP = new string[] { "DS53", "DW53", "EA53", "EE53", "EI53", "EM53", "EQ53", "EU53", "EY53", "FC53" };
+        string[] arOrgNameP = new string[]{"AA55","AE55","AI55","AM55","AQ55","AU55","AY55","BC55","BG55","BK55","BO55",
+                                  "BS55","BW55","CA55","CE55","CI55","CM55","CQ55","CU55","CY55","DC55","DG55","DK55","DO55"   };
 
-        string[] arOrgNameP2 = new string[]{"K54","O54","S54","W54","AA54","AE54","AI54","AM54","AQ54","AU54","AY54","BC54","BG54","BK54","BO54",
-                                  "BS54","BW54","CA54","CE54","CI54","CM54","CQ54","CU54","CY54","DC54","DG54","DK54","DO54"};
-        string[] arFactAdrP = new string[]{"AA56","AE56","AI56","AM56","AQ56","AU56","AY56","BC56","BG56","BK56","BO56",
-                                  "BS56","BW56","CA56","CE56","CI56","CM56","CQ56","CU56","CY56","DC56","DG56","DK56","DO56" };
-        string[] arFactAdrP2 = new string[]{"K58","O58","S58","W58","AA58","AE58","AI58","AM58","AQ58","AU58","AY58","BC58","BG58","BK58","BO58",
+        string[] arOrgNameP2 = new string[]{"K58","O58","S58","W58","AA58","AE58","AI58","AM58","AQ58","AU58","AY58","BC58","BG58","BK58","BO58",
                                   "BS58","BW58","CA58","CE58","CI58","CM58","CQ58","CU58","CY58","DC58","DG58","DK58","DO58"};
-        string[] arInnP = new string[] { "S60", "W60", "AA60", "AE60", "AI60", "AM60", "AQ60", "AU60", "AY60", "BC60", "BG60", "BK60" };
+        string[] arFactAdrP = new string[]{"AA60","AE60","AI60","AM60","AQ60","AU60","AY60","BC60","BG60","BK60","BO60",
+                                  "BS60","BW60","CA60","CE60","CI60","CM60","CQ60","CU60","CY60","DC60","DG60","DK60","DO60"
+                                  };
+        string[] arFactAdrP2 = new string[]{"K62","O62","S62","W62","AA62","AE62","AI62","AM62","AQ62","AU62","AY62","BC62","BG62","BK62","BO62",
+                                  "BS62","BW62","CA62","CE62","CI62","CM62","CQ62","CU62","CY62","DC62","DG62","DK62","DO62"};
+        string[] arInnP = new string[] { "S64", "W64", "AA64", "AE64", "AI64", "AM64", "AQ64", "AU64", "AY64", "BC64", "BG64", "BK64" };
         //отрыв
-        string[] arDateBirth2B = new string[] { "DO69", "DS69", "EE69", "EI69", "EQ69", "EU69", "EY69", "FC69" };
-        string[] arName2B = new string[]{"W71","AA71","AE71","AI71","AM71","AQ71","AU71","AY71","BC71","BG71","BK71","BO71",
-                                  "BS71","BW71","CA71","CE71","CI71","CM71","CQ71","CU71","CY71","DC71","DG71","DK71","DO71","DS71",
-                                  "DW71","EA71","EE71","EI71","EM71","EQ71","EU71","EY71","FC71"};
-        string[] arLastName2B = new string[]{"W73","AA73","AE73","AI73","AM73","AQ73","AU73","AY73","BC73","BG73","BK73","BO73",
-                                  "BS73","BW73","CA73","CE73","CI73","CM73","CQ73","CU73","CY73","DC73","DG73","DK73","DO73","DS73",
-                                  "DW73","EA73","EE73","EI73","EM73","EQ73","EU73","EY73","FC73"};
+        string[] arDateBirth2B = new string[] { "DO72", "DS72", "EE72", "EI72", "EQ72", "EU72", "EY72", "FC72" };
+        string[] arName2B = new string[]{"W74","AA74","AE74","AI74","AM74","AQ74","AU74","AY74","BC74","BG74","BK74","BO74",
+                                  "BS74","BW74","CA74","CE74","CI74","CM74","CQ74","CU74","CY74","DC74","DG74","DK74","DO74","DS74",
+                                  "DW74","EA74","EE74","EI74","EM74","EQ74","EU74","EY74","FC74"};
+        string[] arLastName2B = new string[]{"W76","AA76","AE76","AI76","AM76","AQ76","AU76","AY76","BC76","BG76","BK76","BO76",
+                                  "BS76","BW76","CA76","CE76","CI76","CM76","CQ76","CU76","CY76","DC76","DG76","DK76","DO76","DS76",
+                                  "DW76","EA76","EE76","EI76","EM76","EQ76","EU76","EY76","FC76"};
     }
 
    

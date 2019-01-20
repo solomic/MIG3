@@ -13,6 +13,8 @@ using Pref;
 using NpgsqlTypes;
 using System.Configuration;
 using System.Diagnostics;
+using pk = DocumentFormat.OpenXml.Packaging;
+using wp = DocumentFormat.OpenXml.Wordprocessing;
 
 namespace Mig
 {
@@ -1005,6 +1007,7 @@ namespace Mig
             Application.Exit();
         }
 
-       
+
+      
     }
 }

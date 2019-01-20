@@ -102,7 +102,12 @@ namespace Mig
                 int studday = Convert.ToDateTime(ContactTable.Rows[0]["birthday"]).Day;
                 int studyear = Convert.ToDateTime(ContactTable.Rows[0]["birthday"]).Year;
                 int studmonth = Convert.ToDateTime(ContactTable.Rows[0]["birthday"]).Month;
-                DateTime dd = new DateTime(DateTime.Now.Year, studmonth, studday);
+                //др в високосный год
+                DateTime dd;
+                if (studday == 29 && studmonth == 2)
+                    dd = new DateTime(DateTime.Now.Year, studmonth, 28);
+                else
+                    dd = new DateTime(DateTime.Now.Year, studmonth, studday);
                 int studfullyear = dd > DateTime.Now ? (curyear - studyear - 1) : (curyear - studyear);
                 lyear.Text = studfullyear < 18 ? "Нет 18 лет! (" + studfullyear.ToString() + ")" : "";
             }
