@@ -765,7 +765,7 @@ namespace Mig
            
             if (e.ColumnIndex == dataGridView1.Columns["warning"].Index && e.RowIndex != -1)
             {
-                
+                string warn = "";
                 Rectangle newRect = new Rectangle(e.CellBounds.X + 1,
                 e.CellBounds.Y + 1, e.CellBounds.Width - 4,
                 e.CellBounds.Height - 4);
@@ -792,47 +792,55 @@ namespace Mig
                         if (grd == "graduate")
                         {
                             e.Graphics.DrawImage(Mig.Properties.Resources.graduate, new Rectangle(e.CellBounds.X + dx, e.CellBounds.Y + 1, 16, 16));
+                            warn += "Выпускник.";
                             dx += 18;
                         }
                         //продолжение обучения
                         if (grd == "continue_teach")
                         {
                             e.Graphics.DrawImage(Mig.Properties.Resources.stairs_up, new Rectangle(e.CellBounds.X + dx, e.CellBounds.Y + 1, 16, 16));
+                            warn += "Продолжение обучения.";
                             dx += 18;
                         }
                         if (dataGridView1.Rows[e.RowIndex].Cells["deduct"].Value.ToString() == "1")
                         {
                             e.Graphics.DrawImage(Mig.Properties.Resources.deduct, new Rectangle(e.CellBounds.X + dx, e.CellBounds.Y + 1, 16, 16));
+                            warn += "На отчисление.";
                             dx += 18;
                         }
                         //документы сданы
                         if (dataGridView1.Rows[e.RowIndex].Cells["doc"].Value.ToString() == "1")
                         {
                             e.Graphics.DrawImage(Mig.Properties.Resources.doc, new Rectangle(e.CellBounds.X + dx, e.CellBounds.Y + 1, 16, 16));
+                            warn += "Документы сданы.";
                             dx += 18;
                         }
                         //если не въехал то костер
                         if (dataGridView1.Rows[e.RowIndex].Cells["rs_ent"].Value.ToString() == "-1")
                         {
                             e.Graphics.DrawImage(Mig.Properties.Resources.fire_red, new Rectangle(e.CellBounds.X + dx, e.CellBounds.Y + 1, 16, 16));
+                            warn += "Не выехал!";
                             dx += 18;
                         }
                         //истекла регистрация - красная лампа
                         if (rsten == "-1")
                         {
                             e.Graphics.DrawImage(Mig.Properties.Resources.red_lamp, new Rectangle(e.CellBounds.X + dx, e.CellBounds.Y + 1, 16, 16));
+                            warn += "Истекла регистрация!";
                             dx += 18;
                         }
                         //20 дней до истечения регистрации - желтая лампа
                         if (rsten == "-2")
                         {
                             e.Graphics.DrawImage(Mig.Properties.Resources.yellow_lamp, new Rectangle(e.CellBounds.X + dx, e.CellBounds.Y + 1, 16, 16));
+                            warn += "20 дней до истечения регистрации!";
                             dx += 18;
                         }
                         //30 дней до истечения регистрации - зеленая лампа
                         if (rsten == "-3")
                         {
                             e.Graphics.DrawImage(Mig.Properties.Resources.green_lamp, new Rectangle(e.CellBounds.X + dx, e.CellBounds.Y + 1, 16, 16));
+                            warn += "30 дней до истечения регистрации!";
                             dx += 18;
                         }
                         //паспорт менее 18 месяцев
@@ -841,6 +849,7 @@ namespace Mig
                             if (dataGridView1.Rows[e.RowIndex].Cells["pass_expire"].Value.ToString() == "1")
                             {
                                 e.Graphics.DrawImage(Mig.Properties.Resources.password, new Rectangle(e.CellBounds.X + dx, e.CellBounds.Y + 1, 16, 16));
+                                warn += "Паспорт дейст. менее 18 месяцев!";
                                 dx += 18;
                             }
                         }
@@ -850,17 +859,20 @@ namespace Mig
                             if (dataGridView1.Rows[e.RowIndex].Cells["reg_extend"].Value.ToString() == "1")
                             {
                                 dataGridView1["МК: срок пребывания по", e.RowIndex].Style.BackColor = Color.Silver;
+                                dataGridView1.Rows[e.RowIndex].Cells["reg_extend"].ToolTipText= "Продление регистрации.";
                                 //e.Graphics.DrawImage(Mig.Properties.Resources.doc, new Rectangle(e.CellBounds.X + dx, e.CellBounds.Y + 1, 16, 16));
                                 //dx += 18;
 
                             }
-                        }
+
+                        }    
                         catch (Exception err)
                         {
                             Logger.Log.Error(err.ToString());
                         }
                         // e.Graphics.DrawImage(Mig.Properties.Resources.Add_40971, new Rectangle(e.CellBounds.X + 34, e.CellBounds.Y + 1, 16, 16));
                         e.Handled = true;
+                        dataGridView1.Rows[e.RowIndex].Cells["warning"].ToolTipText = warn;
                     }
                 }
 

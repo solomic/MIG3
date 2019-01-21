@@ -54,7 +54,7 @@ namespace Mig
 
         private void btnActivate_Click(object sender, EventArgs e)
         {
-            if (dgHost.SelectedCells.Count == 0)
+            if (dgHost.SelectedRows.Count == 0)
             {
                 return;
             }
@@ -88,6 +88,46 @@ namespace Mig
                 if (transaction != null) transaction.Rollback();
                 Logger.Log.Error(msg.Message);
                 MessageBox.Show("Ошибка при активации", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            HostDelete();
+        }
+
+        private void HostDelete()
+        {
+            if (dgHost.SelectedRows.Count != 1)
+            {
+                return;
+            }
+            if (MessageBox.Show("Подтвердите удаление выбранной записи", "Удаление", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+                return;
+            NpgsqlTransaction transaction = null;
+            NpgsqlCommand cmd;
+            string sql = "";
+            try
+            {
+                transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
+                cmd = new NpgsqlCommand(sql, DB.conn);
+                cmd.Parameters.Clear();
+                sql = "DELETE FROM cmodb.host  WHERE id=:id; ";
+                cmd.CommandText = sql;
+                cmd.Parameters.AddWithValue("id", Convert.ToInt32(dgHost.CurrentRow.Cells["id"].Value));
+                cmd.ExecuteNonQuery();
+                transaction.Commit();
+                fHost_Load(this, null);
+
+                MessageBox.Show("Запись успешно удалена", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+
+            }
+            catch (Exception msg)
+            {
+                if (transaction != null) transaction.Rollback();
+                Logger.Log.Error(msg.Message);
+                MessageBox.Show("Ошибка при удалении", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }
