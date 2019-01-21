@@ -737,7 +737,7 @@ namespace Mig
 
             fContactDetail fContactDetailForm = new fContactDetail();
             fContactDetailForm.ShowDialog(this);
-            fContactDetailForm = null;
+            fContactDetailForm.Dispose();
 
             /*обновляем фильтр*/
 

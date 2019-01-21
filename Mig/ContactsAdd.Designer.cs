@@ -520,7 +520,6 @@
             this.cmbDulType.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
             this.cmbDulType.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.cmbDulType.DisplayMember = "value";
-            this.cmbDulType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbDulType.FormattingEnabled = true;
             this.cmbDulType.Location = new System.Drawing.Point(106, 20);
             this.cmbDulType.Name = "cmbDulType";
@@ -1082,7 +1081,6 @@
             this.cmbDocType.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
             this.cmbDocType.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.cmbDocType.DisplayMember = "value";
-            this.cmbDocType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbDocType.FormattingEnabled = true;
             this.cmbDocType.Location = new System.Drawing.Point(126, 25);
             this.cmbDocType.Name = "cmbDocType";
@@ -1740,7 +1738,6 @@
             // cmbFac
             // 
             this.cmbFac.DisplayMember = "name";
-            this.cmbFac.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbFac.FormattingEnabled = true;
             this.cmbFac.Location = new System.Drawing.Point(144, 110);
             this.cmbFac.Name = "cmbFac";
@@ -1789,7 +1786,6 @@
             // cmbPO
             // 
             this.cmbPO.DisplayMember = "value";
-            this.cmbPO.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbPO.FormattingEnabled = true;
             this.cmbPO.Location = new System.Drawing.Point(144, 83);
             this.cmbPO.Name = "cmbPO";
@@ -1811,7 +1807,6 @@
             // cmbFin
             // 
             this.cmbFin.DisplayMember = "value";
-            this.cmbFin.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbFin.FormattingEnabled = true;
             this.cmbFin.Location = new System.Drawing.Point(144, 55);
             this.cmbFin.Name = "cmbFin";
@@ -1841,7 +1836,6 @@
             // cmbFO
             // 
             this.cmbFO.DisplayMember = "value";
-            this.cmbFO.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbFO.FormattingEnabled = true;
             this.cmbFO.Location = new System.Drawing.Point(144, 28);
             this.cmbFO.Name = "cmbFO";
@@ -2092,7 +2086,6 @@
             this.cmbDelDul.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
             this.cmbDelDul.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.cmbDelDul.DisplayMember = "value";
-            this.cmbDelDul.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbDelDul.FormattingEnabled = true;
             this.cmbDelDul.Location = new System.Drawing.Point(400, 22);
             this.cmbDelDul.Name = "cmbDelDul";
@@ -2105,7 +2098,6 @@
             this.cmbDelNat.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
             this.cmbDelNat.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.cmbDelNat.DisplayMember = "name";
-            this.cmbDelNat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbDelNat.FormattingEnabled = true;
             this.cmbDelNat.Location = new System.Drawing.Point(99, 99);
             this.cmbDelNat.Name = "cmbDelNat";

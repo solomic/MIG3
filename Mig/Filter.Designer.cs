@@ -173,7 +173,7 @@
             this.tpRegExendSet,
             this.tpRegExendClear});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(250, 292);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(250, 314);
             this.contextMenuStrip1.Text = "Выпускник";
             // 
             // miGraduate
