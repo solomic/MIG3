@@ -244,6 +244,7 @@ namespace Mig
             dgTeach.Columns["period_total_p"].Visible = false;
             dgTeach.Columns["period_ind_p"].Visible = false;
             dgTeach.Columns["amount"].Visible = false;
+            dgTeach.Columns["code"].Visible = false;
 
             dgTeach.Columns["status"].HeaderText = "Основной";
             dgTeach.Columns["postup_year"].HeaderText = "Год поступления";

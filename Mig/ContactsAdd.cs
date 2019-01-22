@@ -223,7 +223,7 @@ namespace Mig
             string msg = "";
             //проверяем что заполнено хотя бы одно поле
             if (/*cmbFac.Text != "" ||*/ cmbSpec.Text != "" || cmbFO.Text != "" || /*cmbFin.Text != "" ||*/
-                cmbPO.Text != "" || tYear.Text != "" || tTeachTotal.Text != "" || tTeachInd.Text != "" || tYearAmount.Text != "")
+                cmbPO.Text != "" /*|| tYear.Text != "" || tTeachTotal.Text != "" || tTeachInd.Text != "" || tYearAmount.Text != ""*/)
             {
                 //if (cmbFac.Text == "")
                 //    Res += "Факультет\n";
@@ -233,8 +233,8 @@ namespace Mig
                 //    Res += "Финансирование\n";
                 if (cmbPO.Text.Trim() == "")
                     Res += "Программа обучения\n";
-                if (tYear.Text.Trim() == "")
-                    Res += "Год поступления\n";                
+                //if (tYear.Text.Trim() == "")
+                //    Res += "Год поступления\n";                
 
                 if (Res != "")
                     msg = "Заполните обязательные поля:\n ОБУЧЕНИЕ\n \n" + Res;
@@ -602,10 +602,18 @@ namespace Mig
                         cmd.Parameters.AddWithValue("spec_code", Convert.ToInt32(cmbSpec.SelectedValue.ToString()));
                     else
                         cmd.Parameters.AddWithValue("spec_code", DBNull.Value);
-                   // cmd.Parameters.AddWithValue("spec_code", cmbSpec.SelectedValue.ToString());
-                    cmd.Parameters.AddWithValue("form_teach_code", cmbFO.SelectedValue.ToString());
-                    cmd.Parameters.AddWithValue("form_pay_code", cmbFin.SelectedValue.ToString());
-                    cmd.Parameters.AddWithValue("prog_teach_code", cmbPO.SelectedValue.ToString());
+                    if (cmbFO.Text != "")
+                        cmd.Parameters.AddWithValue("form_teach_code", cmbFO.SelectedValue.ToString());
+                    else
+                        cmd.Parameters.AddWithValue("form_teach_code", DBNull.Value);
+                    if (cmbFin.Text != "")
+                        cmd.Parameters.AddWithValue("form_pay_code", cmbFin.SelectedValue.ToString());
+                    else
+                        cmd.Parameters.AddWithValue("form_pay_code", DBNull.Value);
+                    if(cmbPO.Text != "")
+                        cmd.Parameters.AddWithValue("prog_teach_code", cmbPO.SelectedValue.ToString());
+                    else
+                        cmd.Parameters.AddWithValue("prog_teach_code", DBNull.Value);
                     /*
                     cmd.Parameters.AddWithValue("period_total", Convert.ToInt16(tTeachTotal.Text));
                     cmd.Parameters.AddWithValue("period_ind", Convert.ToInt16(tTeachInd.Text));

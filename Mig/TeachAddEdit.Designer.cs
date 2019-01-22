@@ -114,12 +114,13 @@
             // 
             // tSpecCode
             // 
-            this.tSpecCode.Location = new System.Drawing.Point(146, 137);
+            this.tSpecCode.Location = new System.Drawing.Point(146, 190);
             this.tSpecCode.Margin = new System.Windows.Forms.Padding(2);
             this.tSpecCode.Name = "tSpecCode";
             this.tSpecCode.ReadOnly = true;
             this.tSpecCode.Size = new System.Drawing.Size(183, 20);
             this.tSpecCode.TabIndex = 32;
+            this.tSpecCode.Visible = false;
             // 
             // cmbIndSrok
             // 
@@ -186,7 +187,7 @@
             this.cmbSpec.DisplayMember = "name";
             this.cmbSpec.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbSpec.FormattingEnabled = true;
-            this.cmbSpec.Location = new System.Drawing.Point(146, 162);
+            this.cmbSpec.Location = new System.Drawing.Point(146, 138);
             this.cmbSpec.Name = "cmbSpec";
             this.cmbSpec.Size = new System.Drawing.Size(415, 21);
             this.cmbSpec.TabIndex = 25;
@@ -284,7 +285,7 @@
             // tYear
             // 
             this.tYear.BackColor = System.Drawing.SystemColors.Window;
-            this.tYear.Location = new System.Drawing.Point(146, 188);
+            this.tYear.Location = new System.Drawing.Point(146, 165);
             this.tYear.Name = "tYear";
             this.tYear.Size = new System.Drawing.Size(100, 20);
             this.tYear.TabIndex = 13;
@@ -292,7 +293,7 @@
             // label45
             // 
             this.label45.AutoSize = true;
-            this.label45.Location = new System.Drawing.Point(43, 189);
+            this.label45.Location = new System.Drawing.Point(43, 166);
             this.label45.Name = "label45";
             this.label45.Size = new System.Drawing.Size(95, 13);
             this.label45.TabIndex = 12;
@@ -328,7 +329,7 @@
             // label37
             // 
             this.label37.AutoSize = true;
-            this.label37.Location = new System.Drawing.Point(50, 164);
+            this.label37.Location = new System.Drawing.Point(50, 140);
             this.label37.Name = "label37";
             this.label37.Size = new System.Drawing.Size(88, 13);
             this.label37.TabIndex = 8;
@@ -337,11 +338,12 @@
             // label36
             // 
             this.label36.AutoSize = true;
-            this.label36.Location = new System.Drawing.Point(18, 139);
+            this.label36.Location = new System.Drawing.Point(18, 192);
             this.label36.Name = "label36";
             this.label36.Size = new System.Drawing.Size(119, 13);
             this.label36.TabIndex = 7;
             this.label36.Text = "Шифр специальности:";
+            this.label36.Visible = false;
             // 
             // label35
             // 

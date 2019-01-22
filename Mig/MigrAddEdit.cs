@@ -29,8 +29,8 @@ namespace Mig
         {
             if (tMigEntryDt.SelectedDate!="")
             {
-
-                l90d.Text = "+ 90 д. = "+Convert.ToDateTime(tMigEntryDt.SelectedDate).AddDays(90).ToString("dd.MM.yyyy");
+                //фича, для 90д мы должны прибавить 89!
+                l90d.Text = "+ 90 д. = "+Convert.ToDateTime(tMigEntryDt.SelectedDate).AddDays(89).ToString("dd.MM.yyyy");
             }
             else
             {

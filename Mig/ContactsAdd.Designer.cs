@@ -1639,6 +1639,7 @@
             this.label86.Size = new System.Drawing.Size(14, 25);
             this.label86.TabIndex = 54;
             this.label86.Text = "*";
+            this.label86.Visible = false;
             // 
             // label85
             // 
@@ -1653,12 +1654,13 @@
             // 
             // tSpecCode
             // 
-            this.tSpecCode.Location = new System.Drawing.Point(144, 136);
+            this.tSpecCode.Location = new System.Drawing.Point(144, 163);
             this.tSpecCode.Margin = new System.Windows.Forms.Padding(2);
             this.tSpecCode.Name = "tSpecCode";
             this.tSpecCode.ReadOnly = true;
             this.tSpecCode.Size = new System.Drawing.Size(183, 20);
             this.tSpecCode.TabIndex = 32;
+            this.tSpecCode.Visible = false;
             // 
             // cmbIndSrok
             // 
@@ -1702,7 +1704,7 @@
             this.cmbSpec.DisplayMember = "name";
             this.cmbSpec.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbSpec.FormattingEnabled = true;
-            this.cmbSpec.Location = new System.Drawing.Point(144, 161);
+            this.cmbSpec.Location = new System.Drawing.Point(144, 137);
             this.cmbSpec.Name = "cmbSpec";
             this.cmbSpec.Size = new System.Drawing.Size(333, 21);
             this.cmbSpec.TabIndex = 25;
@@ -1806,6 +1808,7 @@
             this.label50.Size = new System.Drawing.Size(34, 13);
             this.label50.TabIndex = 15;
             this.label50.Text = "Курс:";
+            this.label50.Visible = false;
             // 
             // cmbFO
             // 
@@ -1825,6 +1828,7 @@
             this.tKurs.ReadOnly = true;
             this.tKurs.Size = new System.Drawing.Size(100, 20);
             this.tKurs.TabIndex = 14;
+            this.tKurs.Visible = false;
             // 
             // tYear
             // 
@@ -1833,6 +1837,7 @@
             this.tYear.Name = "tYear";
             this.tYear.Size = new System.Drawing.Size(100, 20);
             this.tYear.TabIndex = 13;
+            this.tYear.Visible = false;
             // 
             // label45
             // 
@@ -1842,6 +1847,7 @@
             this.label45.Size = new System.Drawing.Size(95, 13);
             this.label45.TabIndex = 12;
             this.label45.Text = "Год поступления:";
+            this.label45.Visible = false;
             // 
             // label38
             // 
@@ -1855,7 +1861,7 @@
             // label37
             // 
             this.label37.AutoSize = true;
-            this.label37.Location = new System.Drawing.Point(50, 165);
+            this.label37.Location = new System.Drawing.Point(50, 141);
             this.label37.Name = "label37";
             this.label37.Size = new System.Drawing.Size(88, 13);
             this.label37.TabIndex = 8;
@@ -1873,11 +1879,12 @@
             // label36
             // 
             this.label36.AutoSize = true;
-            this.label36.Location = new System.Drawing.Point(17, 139);
+            this.label36.Location = new System.Drawing.Point(17, 166);
             this.label36.Name = "label36";
             this.label36.Size = new System.Drawing.Size(119, 13);
             this.label36.TabIndex = 7;
             this.label36.Text = "Шифр специальности:";
+            this.label36.Visible = false;
             // 
             // label40
             // 

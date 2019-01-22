@@ -979,6 +979,7 @@ namespace Mig
             { 
                 if (fAuthForm.ShowDialog(this) == DialogResult.OK)
                 {
+                    this.Text += " ("+pref.DBNAME+")";
                     DirectMenu(true);
                     FilterLoad();
                 }
