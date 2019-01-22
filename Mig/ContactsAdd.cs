@@ -266,25 +266,25 @@ namespace Mig
                 Res += "Пол\n";
 
             /*если начали заполнять представителя, то и продолжаемс*/
-            if (tDelLast.Text!="" ||tDelFirst.Text!="" || tDelSec.Text!=""||cmbDelNat.Text!="" ||cmbDelDul.Text!="" ||
-                tDelSer.Text!="" ||tDelNum.Text!=""||tDelIssue.SelectedDate!="" ||cmbDelCountry.Text!="")
+            if (tDelLast.Text!="" ||tDelFirst.Text!="" /*|| tDelSec.Text!=""||cmbDelNat.Text!="" ||cmbDelDul.Text!="" ||
+                tDelSer.Text!="" ||tDelNum.Text!=""||tDelIssue.SelectedDate!="" ||cmbDelCountry.Text!=""*/)
             {
                 if (tDelLast.Text.Trim() == "")
                     Del += "Фамилия\n";
                 if (tDelFirst.Text.Trim() == "")
                     Del += "Имя\n";
-                if (cmbDelNat.Text == "")
-                    Del += "Гражданство\n";
-                if (cmbDelDul.Text == "")
-                    Del += "Тип документа\n";
-                if (tDelSer.Text.Trim() == "")
-                    Del += "Серия\n";
-                if (tDelNum.Text.Trim() == "")
-                    Del += "Номер\n";
-                if (tDelIssue.SelectedDate == "")
-                    Del += "Дата выдачи\n";
-                if (cmbDelCountry.Text == "")
-                    Del += "Страна выдачи\n";
+                //if (cmbDelNat.Text == "")
+                //    Del += "Гражданство\n";
+                //if (cmbDelDul.Text == "")
+                //    Del += "Тип документа\n";
+                //if (tDelSer.Text.Trim() == "")
+                //    Del += "Серия\n";
+                //if (tDelNum.Text.Trim() == "")
+                //    Del += "Номер\n";
+                //if (tDelIssue.SelectedDate == "")
+                //    Del += "Дата выдачи\n";
+                //if (cmbDelCountry.Text == "")
+                //    Del += "Страна выдачи\n";
             }
             if (Res != "")
                 msg = "Заполните обязательные поля:\n\nКОНТАКТ\n \n" + Res;

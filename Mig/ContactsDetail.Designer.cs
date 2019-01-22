@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(fContactDetail));
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -216,7 +217,6 @@
             this.toolStripSeparator15 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButton12 = new System.Windows.Forms.ToolStripButton();
             this.tDelLast = new System.Windows.Forms.TextBox();
-            this.tDelIssue = new Mig.datetimepicker.myDatePicker();
             this.label56 = new System.Windows.Forms.Label();
             this.label55 = new System.Windows.Forms.Label();
             this.cmbDelNat = new System.Windows.Forms.ComboBox();
@@ -274,11 +274,16 @@
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.lyear = new System.Windows.Forms.Label();
-            this.dBirthDate = new Mig.datetimepicker.myDatePicker();
             this.tBirthTown = new System.Windows.Forms.ComboBox();
             this.cmbBirthCountry = new System.Windows.Forms.ComboBox();
             this.cmbNat = new System.Windows.Forms.ComboBox();
             this.cmbSex = new System.Windows.Forms.ComboBox();
+            this.toolStripSeparator16 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripButton22 = new System.Windows.Forms.ToolStripButton();
+            this.cPfDelete = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.miDelete = new System.Windows.Forms.ToolStripMenuItem();
+            this.dBirthDate = new Mig.datetimepicker.myDatePicker();
+            this.tDelIssue = new Mig.datetimepicker.myDatePicker();
             this.tabControl1.SuspendLayout();
             this.tabConInfo.SuspendLayout();
             this.toolStrip9.SuspendLayout();
@@ -325,6 +330,7 @@
             this.toolStrip4.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
+            this.cPfDelete.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -1815,6 +1821,7 @@
             this.dgPf.AllowUserToOrderColumns = true;
             this.dgPf.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.dgPf.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgPf.ContextMenuStrip = this.cPfDelete;
             this.dgPf.Location = new System.Drawing.Point(14, 354);
             this.dgPf.Margin = new System.Windows.Forms.Padding(2);
             this.dgPf.MultiSelect = false;
@@ -1983,6 +1990,7 @@
             this.cmbDelCountry.Size = new System.Drawing.Size(136, 21);
             this.cmbDelCountry.TabIndex = 24;
             this.cmbDelCountry.ValueMember = "code";
+            this.cmbDelCountry.Visible = false;
             // 
             // toolStrip5
             // 
@@ -2065,19 +2073,6 @@
             this.tDelLast.Size = new System.Drawing.Size(178, 20);
             this.tDelLast.TabIndex = 0;
             // 
-            // tDelIssue
-            // 
-            this.tDelIssue.AutoSize = true;
-            this.tDelIssue.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tDelIssue.BackColor = System.Drawing.Color.Transparent;
-            this.tDelIssue.Enabled = false;
-            this.tDelIssue.Location = new System.Drawing.Point(400, 116);
-            this.tDelIssue.Margin = new System.Windows.Forms.Padding(0);
-            this.tDelIssue.Name = "tDelIssue";
-            this.tDelIssue.SelectedDate = "";
-            this.tDelIssue.Size = new System.Drawing.Size(93, 20);
-            this.tDelIssue.TabIndex = 23;
-            // 
             // label56
             // 
             this.label56.AutoSize = true;
@@ -2109,6 +2104,7 @@
             this.cmbDelNat.Size = new System.Drawing.Size(178, 21);
             this.cmbDelNat.TabIndex = 21;
             this.cmbDelNat.ValueMember = "code";
+            this.cmbDelNat.Visible = false;
             // 
             // label57
             // 
@@ -2118,6 +2114,7 @@
             this.label57.Size = new System.Drawing.Size(77, 13);
             this.label57.TabIndex = 12;
             this.label57.Text = "Гражданство:";
+            this.label57.Visible = false;
             // 
             // label54
             // 
@@ -2141,6 +2138,7 @@
             this.cmbDelDul.Size = new System.Drawing.Size(136, 21);
             this.cmbDelDul.TabIndex = 20;
             this.cmbDelDul.ValueMember = "code";
+            this.cmbDelDul.Visible = false;
             // 
             // label58
             // 
@@ -2150,6 +2148,7 @@
             this.label58.Size = new System.Drawing.Size(61, 13);
             this.label58.TabIndex = 13;
             this.label58.Text = "Документ:";
+            this.label58.Visible = false;
             // 
             // tDelNum
             // 
@@ -2159,6 +2158,7 @@
             this.tDelNum.ReadOnly = true;
             this.tDelNum.Size = new System.Drawing.Size(136, 20);
             this.tDelNum.TabIndex = 6;
+            this.tDelNum.Visible = false;
             // 
             // label62
             // 
@@ -2168,6 +2168,7 @@
             this.label62.Size = new System.Drawing.Size(86, 13);
             this.label62.TabIndex = 17;
             this.label62.Text = "Страна выдачи:";
+            this.label62.Visible = false;
             // 
             // label59
             // 
@@ -2177,6 +2178,7 @@
             this.label59.Size = new System.Drawing.Size(41, 13);
             this.label59.TabIndex = 14;
             this.label59.Text = "Серия:";
+            this.label59.Visible = false;
             // 
             // tDelFirst
             // 
@@ -2195,6 +2197,7 @@
             this.tDelSer.ReadOnly = true;
             this.tDelSer.Size = new System.Drawing.Size(100, 20);
             this.tDelSer.TabIndex = 5;
+            this.tDelSer.Visible = false;
             // 
             // label61
             // 
@@ -2204,6 +2207,7 @@
             this.label61.Size = new System.Drawing.Size(76, 13);
             this.label61.TabIndex = 16;
             this.label61.Text = "Дата выдачи:";
+            this.label61.Visible = false;
             // 
             // label60
             // 
@@ -2213,6 +2217,7 @@
             this.label60.Size = new System.Drawing.Size(44, 13);
             this.label60.TabIndex = 15;
             this.label60.Text = "Номер:";
+            this.label60.Visible = false;
             // 
             // tDelSec
             // 
@@ -2489,7 +2494,9 @@
             this.toolContactEdit,
             this.toolStripSeparator1,
             this.btnSaveContact,
-            this.btnUndoContact});
+            this.btnUndoContact,
+            this.toolStripSeparator16,
+            this.toolStripButton22});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Padding = new System.Windows.Forms.Padding(0, 5, 1, 5);
@@ -2682,19 +2689,6 @@
             this.lyear.TabIndex = 71;
             this.lyear.Text = "year";
             // 
-            // dBirthDate
-            // 
-            this.dBirthDate.AutoSize = true;
-            this.dBirthDate.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.dBirthDate.BackColor = System.Drawing.Color.Transparent;
-            this.dBirthDate.Enabled = false;
-            this.dBirthDate.Location = new System.Drawing.Point(478, 105);
-            this.dBirthDate.Margin = new System.Windows.Forms.Padding(0);
-            this.dBirthDate.Name = "dBirthDate";
-            this.dBirthDate.SelectedDate = "";
-            this.dBirthDate.Size = new System.Drawing.Size(93, 20);
-            this.dBirthDate.TabIndex = 70;
-            // 
             // tBirthTown
             // 
             this.tBirthTown.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Append;
@@ -2749,6 +2743,64 @@
             this.cmbSex.Size = new System.Drawing.Size(121, 21);
             this.cmbSex.TabIndex = 66;
             this.cmbSex.ValueMember = "code";
+            // 
+            // toolStripSeparator16
+            // 
+            this.toolStripSeparator16.Name = "toolStripSeparator16";
+            this.toolStripSeparator16.Size = new System.Drawing.Size(6, 23);
+            // 
+            // toolStripButton22
+            // 
+            this.toolStripButton22.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripButton22.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton22.Image")));
+            this.toolStripButton22.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton22.Name = "toolStripButton22";
+            this.toolStripButton22.Size = new System.Drawing.Size(64, 20);
+            this.toolStripButton22.Text = "Удалить...";
+            this.toolStripButton22.Click += new System.EventHandler(this.toolStripButton22_Click);
+            // 
+            // cPfDelete
+            // 
+            this.cPfDelete.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.miDelete});
+            this.cPfDelete.Name = "cPfDelete";
+            this.cPfDelete.Size = new System.Drawing.Size(119, 26);
+            this.cPfDelete.Text = "Удаление";
+            this.cPfDelete.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
+            // 
+            // miDelete
+            // 
+            this.miDelete.Name = "miDelete";
+            this.miDelete.Size = new System.Drawing.Size(118, 22);
+            this.miDelete.Text = "Удалить";
+            this.miDelete.Click += new System.EventHandler(this.miDelete_Click);
+            // 
+            // dBirthDate
+            // 
+            this.dBirthDate.AutoSize = true;
+            this.dBirthDate.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.dBirthDate.BackColor = System.Drawing.Color.Transparent;
+            this.dBirthDate.Enabled = false;
+            this.dBirthDate.Location = new System.Drawing.Point(478, 105);
+            this.dBirthDate.Margin = new System.Windows.Forms.Padding(0);
+            this.dBirthDate.Name = "dBirthDate";
+            this.dBirthDate.SelectedDate = "";
+            this.dBirthDate.Size = new System.Drawing.Size(93, 20);
+            this.dBirthDate.TabIndex = 70;
+            // 
+            // tDelIssue
+            // 
+            this.tDelIssue.AutoSize = true;
+            this.tDelIssue.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.tDelIssue.BackColor = System.Drawing.Color.Transparent;
+            this.tDelIssue.Enabled = false;
+            this.tDelIssue.Location = new System.Drawing.Point(400, 116);
+            this.tDelIssue.Margin = new System.Windows.Forms.Padding(0);
+            this.tDelIssue.Name = "tDelIssue";
+            this.tDelIssue.SelectedDate = "";
+            this.tDelIssue.Size = new System.Drawing.Size(93, 20);
+            this.tDelIssue.TabIndex = 23;
+            this.tDelIssue.Visible = false;
             // 
             // fContactDetail
             // 
@@ -2839,6 +2891,7 @@
             this.toolStrip1.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            this.cPfDelete.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -3055,5 +3108,9 @@
         private System.Windows.Forms.TextBox tdelivery_dt;
         private System.Windows.Forms.Label label20;
         private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator16;
+        private System.Windows.Forms.ToolStripButton toolStripButton22;
+        private System.Windows.Forms.ContextMenuStrip cPfDelete;
+        private System.Windows.Forms.ToolStripMenuItem miDelete;
     }
 }

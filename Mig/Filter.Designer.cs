@@ -73,6 +73,7 @@
             this.tpSync = new System.Windows.Forms.ToolStripMenuItem();
             this.btnConnectPref = new System.Windows.Forms.ToolStripMenuItem();
             this.bindingSource1 = new System.Windows.Forms.BindingSource(this.components);
+            this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripSeparator();
             this.panel1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -171,9 +172,10 @@
             this.tpDocClear,
             this.toolStripMenuItem4,
             this.tpRegExendSet,
-            this.tpRegExendClear});
+            this.tpRegExendClear,
+            this.toolStripMenuItem5});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(250, 314);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(250, 320);
             this.contextMenuStrip1.Text = "Выпускник";
             // 
             // miGraduate
@@ -345,6 +347,7 @@
             this.menuStrip1.Size = new System.Drawing.Size(1077, 24);
             this.menuStrip1.TabIndex = 7;
             this.menuStrip1.Text = "menuStrip1";
+            this.menuStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.menuStrip1_ItemClicked);
             // 
             // бДToolStripMenuItem
             // 
@@ -453,6 +456,11 @@
             // 
             this.bindingSource1.ListChanged += new System.ComponentModel.ListChangedEventHandler(this.bindingSource1_ListChanged);
             // 
+            // toolStripMenuItem5
+            // 
+            this.toolStripMenuItem5.Name = "toolStripMenuItem5";
+            this.toolStripMenuItem5.Size = new System.Drawing.Size(246, 6);
+            // 
             // fFilter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -525,5 +533,6 @@
         private System.Windows.Forms.ToolStripMenuItem btnColDef;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.ToolStripStatusLabel tsFilterLoad;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem5;
     }
 }

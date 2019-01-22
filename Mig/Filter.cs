@@ -1019,7 +1019,16 @@ namespace Mig
             Application.Exit();
         }
 
+        private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
 
-      
+        }
+
+        private void удалениеСтудентаToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+           
+        }
+
+       
     }
 }

@@ -114,7 +114,7 @@ namespace Pref
                                                   " left join cmodb.facultet fac on fac.code= teach.facult_code" +
                                                   " where teach.deleted= 'N' and contact_id =:param1 order by teach.status DESC nulls last;";
         public static string GetEntryActiveSql = "SELECT entry_dt, leave_dt, txt, type FROM cmodb.entry where contact_id=:param1 and status='Y';";
-        public static string GetPfSql = "SELECT name, created, created_by FROM cmodb.pf WHERE contact_id=:param1 ORDER BY created DESC;";
+        public static string GetPfSql = "SELECT id,name, created, created_by FROM cmodb.pf WHERE contact_id=:param1 ORDER BY created DESC;";
         public static string GetStageSql = "SELECT id, stage, due_dt, amount, case when receipt='Y' then 'да' else 'нет' end receipt, pay_dt FROM cmodb.stage WHERE status='Y' and contact_id=:param1  ORDER BY stage;";
         public static string GetStageEditSql = "SELECT id, stage, due_dt, amount, case when receipt='Y' then 'да' else 'нет' end receipt, pay_dt FROM cmodb.stage WHERE status='Y' and contact_id=:param1 and id=:param2  ORDER BY stage;";
 

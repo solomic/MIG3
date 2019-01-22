@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using Pref;
 using Npgsql;
 using System.Diagnostics;
+using System.IO;
 
 namespace Mig
 {
@@ -275,6 +276,7 @@ namespace Mig
             dgPf.Columns["name"].HeaderText = "Наименование";
             dgPf.Columns["created"].HeaderText = "Дата создания";
             dgPf.Columns["created_by"].HeaderText = "Создал(а)";
+            dgPf.Columns["id"].Visible = false;
         }
 
        /* public void LoadStage()
@@ -2068,6 +2070,101 @@ namespace Mig
         private void tabDocMigr_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void toolStripButton22_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (MessageBox.Show("Подтвердите удаление студента!", "Удаление", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    StudDelete(pref.CONTACTID);
+                    MessageBox.Show("Успешно удален", "Инфо", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    this.Close();
+                }
+                
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show("Ошибка при удалении: \n" + ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        public void StudDelete(int conid)
+        {
+            NpgsqlTransaction transaction = null;
+            NpgsqlCommand cmd;
+            string sql = "";
+            try
+            {
+                transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
+                cmd = new NpgsqlCommand(sql, DB.conn);
+                sql = "UPDATE cmodb.contact SET " +
+                   " status='N',updated=now(),updated_by=CURRENT_USER " +
+                   "  WHERE contact_id = :contact_id; ";
+                cmd.CommandText = sql;
+                cmd.Parameters.Clear();
+                cmd.Parameters.AddWithValue("contact_id", conid);
+                cmd.ExecuteNonQuery();
+                transaction.Commit();
+            }
+            catch (Exception ex)
+            {
+                if (transaction != null) transaction.Rollback();
+                Logger.Log.Error(ClassName + "Function:StudDelete\n Error:" + ex);
+                throw new Exception("Ошибка:\n\n" + ex.Message);
+            }
+        }
+
+        private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
+        {
+
+        }
+
+        private void miDelete_Click(object sender, EventArgs e)
+        {
+            //удаление ПФ
+            try { 
+                if(dgPf.SelectedRows.Count==1)
+                {
+                    PfDelete(Convert.ToInt32(dgPf.CurrentRow.Cells["id"].Value));
+                    try
+                    {
+                        File.Delete(pref.FULLREPORTPATCH + pref.CONNAT + "\\" + pref.CONFIO + dgPf.CurrentRow.Cells["name"].Value);
+                    }
+                    catch (Exception ex) { }
+                    LoadPf();
+                    MessageBox.Show("Успешно удалено", "Инфо", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                 }
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show("Ошибка при удалении: \n" + ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        public void PfDelete(int pfid)
+        {
+            NpgsqlTransaction transaction = null;
+            NpgsqlCommand cmd;
+            string sql = "";
+            try
+            {
+                transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
+                cmd = new NpgsqlCommand(sql, DB.conn);
+                sql = "DELETE FROM cmodb.pf "+
+                   "  WHERE id = :id; ";
+                cmd.CommandText = sql;
+                cmd.Parameters.Clear();
+                cmd.Parameters.AddWithValue("id", pfid);
+                cmd.ExecuteNonQuery();
+                transaction.Commit();
+            }
+            catch (Exception ex)
+            {
+                if (transaction != null) transaction.Rollback();
+                Logger.Log.Error(ClassName + "Function:PfDelete\n Error:" + ex);
+                throw new Exception("Ошибка:\n\n" + ex.Message);
+            }
         }
     }
 }

@@ -1964,7 +1964,7 @@
             this.groupBox12.Controls.Add(this.tDelLast);
             this.groupBox12.Location = new System.Drawing.Point(19, 24);
             this.groupBox12.Name = "groupBox12";
-            this.groupBox12.Size = new System.Drawing.Size(725, 154);
+            this.groupBox12.Size = new System.Drawing.Size(303, 99);
             this.groupBox12.TabIndex = 41;
             this.groupBox12.TabStop = false;
             this.groupBox12.Text = "Сведения о представителе:";
