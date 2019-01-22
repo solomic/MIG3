@@ -153,9 +153,7 @@
             this.groupBox9 = new System.Windows.Forms.GroupBox();
             this.label86 = new System.Windows.Forms.Label();
             this.label85 = new System.Windows.Forms.Label();
-            this.label82 = new System.Windows.Forms.Label();
             this.tSpecCode = new System.Windows.Forms.TextBox();
-            this.label84 = new System.Windows.Forms.Label();
             this.cmbIndSrok = new System.Windows.Forms.ComboBox();
             this.cmbTotalSrok = new System.Windows.Forms.ComboBox();
             this.label83 = new System.Windows.Forms.Label();
@@ -1599,9 +1597,7 @@
             // 
             this.groupBox9.Controls.Add(this.label86);
             this.groupBox9.Controls.Add(this.label85);
-            this.groupBox9.Controls.Add(this.label82);
             this.groupBox9.Controls.Add(this.tSpecCode);
-            this.groupBox9.Controls.Add(this.label84);
             this.groupBox9.Controls.Add(this.cmbIndSrok);
             this.groupBox9.Controls.Add(this.cmbTotalSrok);
             this.groupBox9.Controls.Add(this.label83);
@@ -1655,17 +1651,6 @@
             this.label85.TabIndex = 53;
             this.label85.Text = "*";
             // 
-            // label82
-            // 
-            this.label82.BackColor = System.Drawing.Color.Transparent;
-            this.label82.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label82.ForeColor = System.Drawing.Color.Red;
-            this.label82.Location = new System.Drawing.Point(481, 109);
-            this.label82.Name = "label82";
-            this.label82.Size = new System.Drawing.Size(14, 25);
-            this.label82.TabIndex = 50;
-            this.label82.Text = "*";
-            // 
             // tSpecCode
             // 
             this.tSpecCode.Location = new System.Drawing.Point(144, 136);
@@ -1674,17 +1659,6 @@
             this.tSpecCode.ReadOnly = true;
             this.tSpecCode.Size = new System.Drawing.Size(183, 20);
             this.tSpecCode.TabIndex = 32;
-            // 
-            // label84
-            // 
-            this.label84.BackColor = System.Drawing.Color.Transparent;
-            this.label84.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label84.ForeColor = System.Drawing.Color.Red;
-            this.label84.Location = new System.Drawing.Point(333, 54);
-            this.label84.Name = "label84";
-            this.label84.Size = new System.Drawing.Size(14, 25);
-            this.label84.TabIndex = 52;
-            this.label84.Text = "*";
             // 
             // cmbIndSrok
             // 
@@ -2460,9 +2434,7 @@
         private System.Windows.Forms.Label label78;
         private System.Windows.Forms.Label label86;
         private System.Windows.Forms.Label label85;
-        private System.Windows.Forms.Label label84;
         private System.Windows.Forms.Label label83;
-        private System.Windows.Forms.Label label82;
         private System.Windows.Forms.Label label94;
         private System.Windows.Forms.Label label93;
         private System.Windows.Forms.Label label92;

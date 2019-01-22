@@ -222,15 +222,15 @@ namespace Mig
             string Res = "";
             string msg = "";
             //проверяем что заполнено хотя бы одно поле
-            if (cmbFac.Text != "" || cmbSpec.Text != "" || cmbFO.Text != "" || cmbFin.Text != "" ||
+            if (/*cmbFac.Text != "" ||*/ cmbSpec.Text != "" || cmbFO.Text != "" || /*cmbFin.Text != "" ||*/
                 cmbPO.Text != "" || tYear.Text != "" || tTeachTotal.Text != "" || tTeachInd.Text != "" || tYearAmount.Text != "")
             {
-                if (cmbFac.Text == "")
-                    Res += "Факультет\n";
+                //if (cmbFac.Text == "")
+                //    Res += "Факультет\n";
                 if (cmbFO.Text == "")
                     Res += "Форма обучение\n";
-                if (cmbFin.Text == "")
-                    Res += "Финансирование\n";
+                //if (cmbFin.Text == "")
+                //    Res += "Финансирование\n";
                 if (cmbPO.Text.Trim() == "")
                     Res += "Программа обучения\n";
                 if (tYear.Text.Trim() == "")
