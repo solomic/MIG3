@@ -779,7 +779,7 @@ namespace Mig
                 if (pfreq.Rows[0]["con_birth_town"].ToString() == "")
                     param.Add("brcon",pfreq.Rows[0]["con_birth_country"].ToString());
                 else
-                    param.Add("brcon", pfreq.Rows[0]["con_birth_town"].ToString()+", "+pfreq.Rows[0]["con_birth_country"].ToString());
+                    param.Add("brcon", pfreq.Rows[0]["con_birth_country"].ToString()+", " + pfreq.Rows[0]["con_birth_town"].ToString() );
 
                 param.Add("nat", Regex.Replace(pfreq.Rows[0]["con_nat"].ToString(), @"\w+", new MatchEvaluator(CapitalizeString)));
 
@@ -1056,6 +1056,7 @@ namespace Mig
                 param.Add("s2", GetMonthPad(doc_validity_to_dt_1.Substring(3, 2)));
                 param.Add("s3",doc_validity_to_dt_1.Substring(6, 4));
 
+                //проверить!
                 string card_tenure_to_dt = pfreq.Rows[0]["card_tenure_to_dt"].ToString();
                 param.Add("m1",card_tenure_to_dt.Substring(0, 2));
                 param.Add("m2", GetMonthPad(card_tenure_to_dt.Substring(3, 2)));
