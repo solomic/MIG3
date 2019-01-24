@@ -80,6 +80,7 @@ namespace Mig
 
             pref.CONFIO = ContactTable.Rows[0]["confio"].ToString().Trim() + "\\";
             pref.CONNAT = ContactTable.Rows[0]["nationality"].ToString();
+            pref.DELEGATE = "N";
 
             this.Text = "(" + ContactTable.Rows[0]["contact_id"].ToString() + ") Информация";
             /*контакт*/
@@ -110,7 +111,15 @@ namespace Mig
                 else
                     dd = new DateTime(DateTime.Now.Year, studmonth, studday);
                 int studfullyear = dd > DateTime.Now ? (curyear - studyear - 1) : (curyear - studyear);
-                lyear.Text = studfullyear < 18 ? "Нет 18 лет! (" + studfullyear.ToString() + ")" : "";
+                if (studfullyear < 18)
+                {
+                    lyear.Text = "Нет 18 лет! (" + studfullyear.ToString() + ")";
+                    pref.DELEGATE = "Y";
+                }
+                else
+                    lyear.Text = "";
+
+                
             }
 
             DULRefresh();
@@ -2130,7 +2139,8 @@ namespace Mig
                     PfDelete(Convert.ToInt32(dgPf.CurrentRow.Cells["id"].Value));
                     try
                     {
-                        File.Delete(pref.FULLREPORTPATCH + pref.CONNAT + "\\" + pref.CONFIO + dgPf.CurrentRow.Cells["name"].Value);
+                        //временно отключаю
+                        //File.Delete(pref.FULLREPORTPATCH + pref.CONNAT + "\\" + pref.CONFIO + dgPf.CurrentRow.Cells["name"].Value);
                     }
                     catch (Exception ex) { }
                     LoadPf();

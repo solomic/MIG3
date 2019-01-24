@@ -27,6 +27,7 @@ namespace Pref
         //public static string POSITION = "";
         public static string NOTIFYTEMPLATE = "";
         public static string CONSTR = "";
+        public static string DELEGATE = "N";
 
 
         /*СПРАВОЧНИКИ*/
@@ -167,6 +168,7 @@ namespace Pref
                     " b.purpose_entry card_purpose_entry, "+
                     " to_char (b.entry_dt,'DD.MM.YYYY') card_entry_dt, " +
                     " to_char (b.tenure_to_dt,'DD.MM.YYYY') card_tenure_to_dt, " +
+                    " to_char (b.tenure_from_dt,'DD.MM.YYYY') card_tenure_from_dt, " +            
                     " b.ser card_ser, "+
                     " b.num card_num, "+
                     " to_char (doc.issue_dt,'DD.MM.YYYY') doc_issue_dt, " +
@@ -197,7 +199,9 @@ namespace Pref
                     " a.phone con_phone ," +
                     " CASE WHEN a.sex='МУЖСКОЙ' THEN 'гражданина' else 'гражданки' END gr, " +
                     " CASE WHEN a.sex='МУЖСКОЙ' THEN 'его' else 'её' END p3, " +
-                    " CASE WHEN a.sex='МУЖСКОЙ' THEN 'им' else 'ею' END p4 " +
+                    " CASE WHEN a.sex='МУЖСКОЙ' THEN 'им' else 'ею' END p4, " +
+                    " a.delegate_last_name," +
+                    " a.delegate_first_name " +
                     " FROM cmodb.contact a " +
                     " LEFT JOIN cmodb.migr_card b ON (a.contact_id = b.contact_id AND b.status = 'Y') "+
                     " LEFT JOIN cmodb.entry c ON (a.contact_id = c.contact_id AND c.status = 'Y') "+

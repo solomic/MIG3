@@ -396,10 +396,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <None Include="Template\Anketa_byudzhet.docx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Template\Anketa_kontract.docx">
+    <None Include="Template\Anketa.docx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Template\ARRIVAL.LOST.docx">
@@ -438,10 +435,7 @@
     <None Include="Template\VISA.GUARANT.docx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Template\VISA.PETITION.BUDGET.docx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Template\VISA.PETITION.CONTRACT.docx">
+    <None Include="Template\VISA.PETITION.docx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

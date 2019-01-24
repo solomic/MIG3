@@ -995,13 +995,29 @@ namespace Mig
                 DataTable pfreq = DB.QueryTableMultipleParams(pref.PfRequest, new List<object> { pref.CONTACTID });
                 Directory.CreateDirectory(pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO);
                 string NewPath = pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO + ReportName;
-                
-                if (pfreq.Rows[0]["teach_fp"].ToString() == "НАПРАВЛЕНИЕ")
-                    TemplateName = "VISA.PETITION.BUDGET.docx";
-                else
-                    TemplateName = "VISA.PETITION.CONTRACT.docx";
+
+                TemplateName = "VISA.PETITION.docx";
+                //if (pfreq.Rows[0]["teach_fp"].ToString() == "НАПРАВЛЕНИЕ")
+                //    TemplateName = "VISA.PETITION.BUDGET.docx";
+                //else
+                //    TemplateName = "VISA.PETITION.CONTRACT.docx";
                 TemplatePath = Directory.GetCurrentDirectory() + @"\template\" + TemplateName;
                 File.Copy(TemplatePath, NewPath);
+
+                string teach_fp = pfreq.Rows[0]["teach_fp"].ToString();
+
+                if (teach_fp == "НАПРАВЛЕНИЕ")
+                {                   
+                    param.Add("docs", DB.GetTableValue("SELECT msg FROM cmodb.lov where type='VISA.PET.BUD' AND code='<param1>';", null));
+                }
+                if (teach_fp == "КОНТРАКТ")
+                {                   
+                    param.Add("docs", DB.GetTableValue("SELECT msg FROM cmodb.lov where type='VISA.PET.CONTR' AND code='<param1>';", null));
+                }
+                if (teach_fp == "ОБЩИЙ БЮДЖЕТ (ПРИКАЗ)")
+                {                    
+                    param.Add("docs", DB.GetTableValue("SELECT msg FROM cmodb.lov where type='VISA.PET.TOTAL.BUD' AND code='<param1>';", null));
+                }
 
                 param.Add("fio", FirstUpper(pfreq.Rows[0]["con_fio"].ToString()));
                 param.Add("p1",s1);
@@ -1196,7 +1212,8 @@ namespace Mig
                 param.Add("dul_num",pfreq.Rows[0]["dul_num"].ToString());
                 param.Add("dul_issue",pfreq.Rows[0]["dul_issue"].ToString());               
                 param.Add("full_address", pfreq.Rows[0]["ad_full_address"].ToString());
-                param.Add("card_entry_dt", pfreq.Rows[0]["card_entry_dt"].ToString());
+                //param.Add("card_entry_dt", pfreq.Rows[0]["card_entry_dt"].ToString());
+                param.Add("card_tenure_from_dt", pfreq.Rows[0]["card_tenure_from_dt"].ToString()); 
                 param.Add("card_tenure_to_dt",pfreq.Rows[0]["card_tenure_to_dt"].ToString());
                
 
@@ -1231,26 +1248,38 @@ namespace Mig
                 DataTable pfreq = DB.QueryTableMultipleParams(pref.PfRequest, new List<object> { pref.CONTACTID });
                 Directory.CreateDirectory(pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO);
                 string NewPath = pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO + ReportName;
-                
 
-                if (pfreq.Rows[0]["teach_fp"].ToString() == "НАПРАВЛЕНИЕ")
-                    TemplateName = "Anketa_byudzhet.docx";
-                else
-                    TemplateName = "Anketa_kontract.docx";
+                TemplateName = "Anketa.docx";
+                
                 TemplatePath = Directory.GetCurrentDirectory() + @"\template\" + TemplateName;
                 File.Copy(TemplatePath, NewPath);
 
+                string teach_fp = pfreq.Rows[0]["teach_fp"].ToString();
+                
+                if (teach_fp == "НАПРАВЛЕНИЕ")
+                {
+                    //TemplateName = "Anketa_byudzhet.docx";
+                    param.Add("inv1", DB.GetTableValue("SELECT value FROM cmodb.lov where type='ANK.BUD.INV' AND code='<param1>';", null));
+                    param.Add("inv2", DB.GetTableValue("SELECT value FROM cmodb.lov where type='ANK.BUD.INV' AND code='<param2>';", null));
+                    param.Add("inv3", DB.GetTableValue("SELECT msg FROM cmodb.lov where type='ANK.BUD.INV' AND code='<param3>';", null));
+                }
+                if (teach_fp == "КОНТРАКТ")
+                {
+                    //TemplateName = "Anketa_kontract.docx";
+                    param.Add("inv1", DB.GetTableValue("SELECT value FROM cmodb.lov where type='ANK.KONTR.INV' AND code='<param1>';", null));
+                    param.Add("inv2", DB.GetTableValue("SELECT value FROM cmodb.lov where type='ANK.KONTR.INV' AND code='<param2>';", null));
+                    param.Add("inv3", DB.GetTableValue("SELECT msg FROM cmodb.lov where type='ANK.KONTR.INV' AND code='<param3>';", null));
+                }
+                if (teach_fp == "ОБЩИЙ БЮДЖЕТ (ПРИКАЗ)")
+                {
+                    param.Add("inv1", DB.GetTableValue("SELECT value FROM cmodb.lov where type='ANK.TOTAL.BUD' AND code='<param1>';", null));
+                    param.Add("inv2", DB.GetTableValue("SELECT value FROM cmodb.lov where type='ANK.TOTAL.BUD' AND code='<param2>';", null));
+                    param.Add("inv3", DB.GetTableValue("SELECT msg FROM cmodb.lov where type='ANK.TOTAL.BUD' AND code='<param3>';", null));
+                }
+
                 switch (s1)
                 {   //оформить
-                    case "0":
-                        //oDoc.Bookmarks["p43"].Range.Text = string.Empty;
-                        //oDoc.Bookmarks["p44"].Range.Text = "оформить";
-                        //oDoc.Bookmarks["p45"].Range.Font.StrikeThrough = 1;
-                        //oDoc.Bookmarks["p45"].Range.Text = "продлить";
-                        //oDoc.Bookmarks["p46"].Range.Text = string.Empty;
-                        //oDoc.Bookmarks["p47"].Range.Font.StrikeThrough = 1;
-                        //oDoc.Bookmarks["p47"].Range.Text = "восстановить";
-                        //oDoc.Bookmarks["p48"].Range.Text = string.Empty;
+                    case "0":                       
                         param.Add("p43", string.Empty);
                         param.Add("p44", "оформить");                        
                         param.Add("p45", "продлить");
@@ -1259,15 +1288,7 @@ namespace Mig
                         param.Add("p48", string.Empty);
                         break;
                     //продлить
-                    case "1":
-                        //oDoc.Bookmarks["p43"].Range.Font.StrikeThrough = 1;
-                        //oDoc.Bookmarks["p43"].Range.Text = "оформить";
-                        //oDoc.Bookmarks["p44"].Range.Text = string.Empty;
-                        //oDoc.Bookmarks["p45"].Range.Text = string.Empty;
-                        //oDoc.Bookmarks["p46"].Range.Text = "продлить";
-                        //oDoc.Bookmarks["p47"].Range.Font.StrikeThrough = 1;
-                        //oDoc.Bookmarks["p47"].Range.Text = "восстановить";
-                        //oDoc.Bookmarks["p48"].Range.Text = string.Empty;
+                    case "1":                       
                         
                         param.Add("p43", "оформить");
                         param.Add("p44", string.Empty);
@@ -1277,15 +1298,7 @@ namespace Mig
                         param.Add("p48", string.Empty);
                         break;
                     //восстановить
-                    case "2":
-                        //oDoc.Bookmarks["p43"].Range.Font.StrikeThrough = 1;
-                        //oDoc.Bookmarks["p43"].Range.Text = "оформить";                       
-                        //oDoc.Bookmarks["p44"].Range.Text = string.Empty;
-                        //oDoc.Bookmarks["p45"].Range.Font.StrikeThrough = 1;
-                        //oDoc.Bookmarks["p45"].Range.Text = "продлить";                       
-                        //oDoc.Bookmarks["p46"].Range.Text = string.Empty;
-                        //oDoc.Bookmarks["p47"].Range.Text = string.Empty;
-                        //oDoc.Bookmarks["p48"].Range.Text = "восстановить";
+                    case "2":                       
                         
                         param.Add("p43", "оформить");
                         param.Add("p44", string.Empty);                       
@@ -1950,12 +1963,20 @@ namespace Mig
                 str = "";
 
                 //законный представитель
-                str = "";
-                for (int i = 0; i < str.Length; i++)
+                if (pref.DELEGATE == "Y")
                 {
-                    sheetExcel1XML.Range(arSved[i]).Value = str[i].ToString();
+                    str = pfreq.Rows[0]["delegate_last_name"].ToString().ToUpper();
+                    for (int i = 0; i < str.Length; i++)
+                    {
+                        sheetExcel1XML.Range(arSved[i]).Value = str[i].ToString();
+                    }
+                    str = pfreq.Rows[0]["delegate_first_name"].ToString().ToUpper();
+                    for (int i = 0; i < str.Length; i++)
+                    {
+                        sheetExcel1XML.Range(arSved2[i]).Value = str[i].ToString();
+                    }
+                    str = "";
                 }
-                str = "";
                 //прежний адрес
                 str = "";
                 for (int i = 0; i < str.Length; i++)
@@ -2379,8 +2400,8 @@ namespace Mig
         string[] arMigrSer = new string[] { "AQ49", "AU49", "AY49", "BC49" };
         string[] arMigrNum = new string[] { "BK49", "BO49", "BS49", "BW49", "CA49", "CE49", "CI49" };
         string[] arSved = new string[]{"AA51","AE51","AI51","AM51","AQ51","AU51","AY51","BC51","BG51",
-                                      "BK51","BO51","BS51","BW51","CA51","CE51","CI51","CM51","CQ51","CU51",
-                                      "AA53","AE53","AI53","AM53","AQ53","AU53","AY53","BC53","BG53",
+                                      "BK51","BO51","BS51","BW51","CA51","CE51","CI51","CM51","CQ51","CU51" };
+        string[] arSved2 = new string[]{"AA53","AE53","AI53","AM53","AQ53","AU53","AY53","BC53","BG53",
                                       "BK53","BO53","BS53","BW53","CA53","CE53","CI53","CM53","CQ53","CU53"};
         string[] arAdr = new string[]{"AA57","AE57","AI57","AM57","AQ57","AU57","AY57","BC57","BG57",
                                       "BK57","BO57","BS57","BW57","CA57","CE57","CI57","CM57","CQ57","CU57",
