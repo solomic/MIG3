@@ -189,15 +189,25 @@ namespace Mig
             {
                 tsFilterLoad.Text = "Загрузка данных...";
 
+                string OldFilter = bindingSource1.Filter;
                 bindingSource1.Filter = "";
-                dataGridView1.DataSource = null;
+                //dataGridView1.ClearFilter();
+                //dataGridView1.DataSource = null;
                 lFilter.ResetText();
 
                 int filter_code = DB.GetTableValueInt("SELECT code FROM cmodb.filters where filtername=:param1;", new List<object> { cmbFilter.Text });
                 String sql_text = DB.GetTableValue("SELECT filter_expr FROM cmodb.user_filter where filter_id=:param1 AND user_name=:param2;", new List<object> { filter_code, pref.USER });
 
                 bindingSource1.DataSource = DB.QueryTableMultipleParams(sql_text, null);
-                dataGridView1.DataSource = bindingSource1;
+                if (dataGridView1.DataSource == null)
+                    dataGridView1.DataSource = bindingSource1;
+                //если Фильтр остался прежний, то и подфильтры сохраняем 
+                if (pref.FLTCODE != 99 && pref.FLTCODE == filter_code)
+                {
+                    bindingSource1.Filter = OldFilter;                   
+                }
+                else
+                    pref.FLTCODE = filter_code;
                 stCnt.Text = "Количество записей: " + bindingSource1.Count;
 
                 /*применяем фильтр*/                

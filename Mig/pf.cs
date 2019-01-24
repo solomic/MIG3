@@ -1255,27 +1255,36 @@ namespace Mig
                 File.Copy(TemplatePath, NewPath);
 
                 string teach_fp = pfreq.Rows[0]["teach_fp"].ToString();
-                
+                string tp = "";
                 if (teach_fp == "НАПРАВЛЕНИЕ")
                 {
-                    //TemplateName = "Anketa_byudzhet.docx";
-                    param.Add("inv1", DB.GetTableValue("SELECT value FROM cmodb.lov where type='ANK.BUD.INV' AND code='<param1>';", null));
-                    param.Add("inv2", DB.GetTableValue("SELECT value FROM cmodb.lov where type='ANK.BUD.INV' AND code='<param2>';", null));
-                    param.Add("inv3", DB.GetTableValue("SELECT msg FROM cmodb.lov where type='ANK.BUD.INV' AND code='<param3>';", null));
+                    tp = "ANK.BUD.INV";
+                    //param.Add("inv1", DB.GetTableValue("SELECT value FROM cmodb.lov where type='ANK.BUD.INV' AND code='<param1>';", null));
+                    //param.Add("inv2", DB.GetTableValue("SELECT value FROM cmodb.lov where type='ANK.BUD.INV' AND code='<param2>';", null));
+                    //param.Add("inv3", DB.GetTableValue("SELECT msg FROM cmodb.lov where type='ANK.BUD.INV' AND code='<param3>';", null));
                 }
                 if (teach_fp == "КОНТРАКТ")
                 {
-                    //TemplateName = "Anketa_kontract.docx";
-                    param.Add("inv1", DB.GetTableValue("SELECT value FROM cmodb.lov where type='ANK.KONTR.INV' AND code='<param1>';", null));
-                    param.Add("inv2", DB.GetTableValue("SELECT value FROM cmodb.lov where type='ANK.KONTR.INV' AND code='<param2>';", null));
-                    param.Add("inv3", DB.GetTableValue("SELECT msg FROM cmodb.lov where type='ANK.KONTR.INV' AND code='<param3>';", null));
+                    tp = "ANK.KONTR.INV";
+                    //param.Add("inv1", DB.GetTableValue("SELECT value FROM cmodb.lov where type='ANK.KONTR.INV' AND code='<param1>';", null));
+                    //param.Add("inv2", DB.GetTableValue("SELECT value FROM cmodb.lov where type='ANK.KONTR.INV' AND code='<param2>';", null));
+                    //param.Add("inv3", DB.GetTableValue("SELECT msg FROM cmodb.lov where type='ANK.KONTR.INV' AND code='<param3>';", null));
                 }
                 if (teach_fp == "ОБЩИЙ БЮДЖЕТ (ПРИКАЗ)")
                 {
-                    param.Add("inv1", DB.GetTableValue("SELECT value FROM cmodb.lov where type='ANK.TOTAL.BUD' AND code='<param1>';", null));
-                    param.Add("inv2", DB.GetTableValue("SELECT value FROM cmodb.lov where type='ANK.TOTAL.BUD' AND code='<param2>';", null));
-                    param.Add("inv3", DB.GetTableValue("SELECT msg FROM cmodb.lov where type='ANK.TOTAL.BUD' AND code='<param3>';", null));
+                    tp = "ANK.TOTAL.BUD";
+                    //param.Add("inv1", DB.GetTableValue("SELECT value FROM cmodb.lov where type='ANK.TOTAL.BUD' AND code='<param1>';", null));
+                    //param.Add("inv2", DB.GetTableValue("SELECT value FROM cmodb.lov where type='ANK.TOTAL.BUD' AND code='<param2>';", null));
+                    //param.Add("inv3", DB.GetTableValue("SELECT msg FROM cmodb.lov where type='ANK.TOTAL.BUD' AND code='<param3>';", null));
                 }
+
+                param.Add("inv1", DB.GetTableValue("SELECT value FROM cmodb.lov where type='"+tp+"' AND code='<param1>';", null));
+                param.Add("inv2", DB.GetTableValue("SELECT value FROM cmodb.lov where type='" + tp + "' AND code='<param2>';", null));
+                param.Add("inv3", DB.GetTableValue("SELECT msg FROM cmodb.lov where type='" + tp + "' AND code='<param3>';", null));
+
+                //tp = DB.GetTableValue("SELECT msg FROM cmodb.lov where type='" + tp + "' AND code='<param3>';", null);
+                //tp = tp + new string(' ', 850 - tp.Length)+"_";
+                //param.Add("inv3", tp);
 
                 switch (s1)
                 {   //оформить
