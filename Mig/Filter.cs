@@ -15,6 +15,7 @@ using System.Configuration;
 using System.Diagnostics;
 using pk = DocumentFormat.OpenXml.Packaging;
 using wp = DocumentFormat.OpenXml.Wordprocessing;
+using System.Xml;
 
 namespace Mig
 {
@@ -54,8 +55,114 @@ namespace Mig
             public int ColumnIndex { get; set; }
             public String ColumnName { get; set; }
         }
+        public Dictionary<string, List<ColumnOrderItem>> ColumnOrderFlt;
 
-       
+        private void SaveColumnOrderXml(Dictionary<string, List<ColumnOrderItem>> dct)
+        {
+            XmlDocument xmlDoc = new XmlDocument();
+            XmlNode rootNode = xmlDoc.CreateElement("pref");            
+
+            xmlDoc.AppendChild(rootNode);
+            foreach (var dctitem in dct)
+            {
+                XmlNode userNode = xmlDoc.CreateElement("filter");
+                XmlAttribute attribute = xmlDoc.CreateAttribute("name");
+                attribute.Value = dctitem.Key;
+                userNode.Attributes.Append(attribute);
+                //userNode.InnerText = "John Doe";
+                rootNode.AppendChild(userNode);
+
+                foreach (var colitem in dctitem.Value)
+                {                
+                        XmlNode column = xmlDoc.CreateElement("column");
+                        XmlAttribute attribute1 = xmlDoc.CreateAttribute("ColumnName");
+                        attribute1.Value = colitem.ColumnName;
+                        XmlAttribute attribute2 = xmlDoc.CreateAttribute("ColumnIndex");
+                        attribute2.Value = colitem.ColumnIndex.ToString();
+                        XmlAttribute attribute3 = xmlDoc.CreateAttribute("Visible");
+                        attribute3.Value = colitem.Visible.ToString();
+                        XmlAttribute attribute4 = xmlDoc.CreateAttribute("Width");
+                        attribute4.Value = colitem.Width.ToString();
+                        XmlAttribute attribute5 = xmlDoc.CreateAttribute("DisplayIndex");
+                        attribute5.Value = colitem.DisplayIndex.ToString();
+                        column.Attributes.Append(attribute1);
+                        column.Attributes.Append(attribute2);
+                        column.Attributes.Append(attribute3);
+                        column.Attributes.Append(attribute4);
+                        column.Attributes.Append(attribute5);
+                        userNode.AppendChild(column);
+                }
+            }
+            XmlDeclaration dcl;
+            dcl = xmlDoc.CreateXmlDeclaration("1.0", "UTF-8", "yes");
+            xmlDoc.InsertBefore(dcl, rootNode);
+            xmlDoc.Save(Application.StartupPath+ @"\Pref\"+pref.USER+"_filters.xml");
+            
+        }
+        private Dictionary<string, List<ColumnOrderItem>> LoadColumnOrderXml()
+        {
+            Dictionary<string, List<ColumnOrderItem>> d = new Dictionary<string, List<ColumnOrderItem>>();
+
+            //XmlDocument xmlDoc = new XmlDocument();
+            //xmlDoc.Load(Application.StartupPath + @"\Pref\" + pref.USER + "_filters.xml");
+
+            //XmlNode rootNode = xmlDoc.FirstChild;
+            //foreach (XmlNode fltnode in rootNode.ChildNodes)
+            //{
+            //   // XmlNode userNode = fltnode.GetElementById("filter");
+            //}
+            //XmlNodeList nl = doc.GetElementsByTagName("DBNAME");
+            //tDB.Text = nl[0].InnerText;
+            //nl = doc.GetElementsByTagName("HOST");
+            //tHost.Text = nl[0].InnerText;
+            //nl = doc.GetElementsByTagName("DBPORT");
+            //tPort.Text = nl[0].InnerText;
+            //nl = doc.GetElementsByTagName("MIGDATA");
+            //tMig.Text = nl[0].InnerText;
+            //nl = doc.GetElementsByTagName("REPORTFOLDER");
+            //tRep.Text = nl[0].InnerText;
+
+            //XmlNode rootNode = xmlDoc.CreateElement("pref");
+
+            //xmlDoc.AppendChild(rootNode);
+            //foreach (var dctitem in dct)
+            //{
+            //    XmlNode userNode = xmlDoc.CreateElement("filter");
+            //    XmlAttribute attribute = xmlDoc.CreateAttribute("name");
+            //    attribute.Value = dctitem.Key;
+            //    userNode.Attributes.Append(attribute);
+            //    //userNode.InnerText = "John Doe";
+            //    rootNode.AppendChild(userNode);
+
+            //    foreach (var colitem in dctitem.Value)
+            //    {
+            //        XmlNode column = xmlDoc.CreateElement("column");
+            //        XmlAttribute attribute1 = xmlDoc.CreateAttribute("ColumnName");
+            //        attribute1.Value = colitem.ColumnName;
+            //        XmlAttribute attribute2 = xmlDoc.CreateAttribute("ColumnIndex");
+            //        attribute2.Value = colitem.ColumnIndex.ToString();
+            //        XmlAttribute attribute3 = xmlDoc.CreateAttribute("Visible");
+            //        attribute3.Value = colitem.Visible.ToString();
+            //        XmlAttribute attribute4 = xmlDoc.CreateAttribute("Width");
+            //        attribute4.Value = colitem.Width.ToString();
+            //        XmlAttribute attribute5 = xmlDoc.CreateAttribute("DisplayIndex");
+            //        attribute5.Value = colitem.DisplayIndex.ToString();
+            //        column.Attributes.Append(attribute1);
+            //        column.Attributes.Append(attribute2);
+            //        column.Attributes.Append(attribute3);
+            //        column.Attributes.Append(attribute4);
+            //        column.Attributes.Append(attribute5);
+            //        userNode.AppendChild(column);
+            //    }
+            //}
+            //XmlDeclaration dcl;
+            //dcl = xmlDoc.CreateXmlDeclaration("1.0", "UTF-8", "yes");
+            //xmlDoc.InsertBefore(dcl, rootNode);
+            //xmlDoc.Save(Application.StartupPath + @"\Pref\" + pref.USER + "_filters.xml");
+
+
+            return d;
+        }
 
         private void SetColumnOrder()
         {
@@ -102,6 +209,7 @@ namespace Mig
         {
             try
             {
+                
                 if (dataGridView1.AllowUserToResizeColumns)
                 {
                     List<ColumnOrderItem> columnOrder = new List<ColumnOrderItem>();
@@ -119,6 +227,8 @@ namespace Mig
                     }
 
                     gfDataGridViewSetting.Default.ColumnOrder[pref.USER + " " + cmbFilter.Text] = columnOrder;
+                    ColumnOrderFlt[cmbFilter.Text] = columnOrder;
+                    SaveColumnOrderXml(ColumnOrderFlt);
                     gfDataGridViewSetting.Default.Save();
 
 
@@ -143,6 +253,10 @@ namespace Mig
         {
             InitializeComponent();
             SetDoubleBuffered(dataGridView1, true);
+
+            //загружаем настройки фильтров
+            ColumnOrderFlt = new Dictionary<string, List<ColumnOrderItem>>();
+            ColumnOrderFlt = LoadColumnOrderXml();
         }
 
        
@@ -187,6 +301,7 @@ namespace Mig
         {
             try
             {
+                
                 tsFilterLoad.Text = "Загрузка данных...";
 
                 string OldFilter = bindingSource1.Filter;
@@ -984,6 +1099,8 @@ namespace Mig
 
         private void btnConnectDB_Click(object sender, EventArgs e)
         {
+            
+
             fAuth fAuthForm = new fAuth();
             try
             { 
