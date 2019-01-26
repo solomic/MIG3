@@ -181,30 +181,30 @@ namespace Mig
         }
         public void LoadDUL()
         {
-           
+            DULdataGridView.Columns["dulstatus"].DataPropertyName = "dulstatus";
             DULdataGridView.DataSource = DB.QueryTableMultipleParams(pref.GetDulAllSql, new List<object> { pref.CONTACTID });           
             DULdataGridView.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
             DULdataGridView.Columns["id"].Visible = false;
-
-
-
         }
         public void LoadExpell()
         {
-            dgExpellHist.DataSource = DB.QueryTableMultipleParams("SELECT id,case when status='Y' then 'Да' else '' end as status,expelled, expelled_num, expelled_dt  FROM cmodb.expell where contact_id=:param1 and deleted='N';", new List<object> { pref.CONTACTID });
+            dgExpellHist.Columns["status"].DataPropertyName = "status";
+            dgExpellHist.DataSource = DB.QueryTableMultipleParams("SELECT id,case when status='Y' then 'true' else 'false' end as status,expelled, expelled_num, expelled_dt,updated ,updated_by  FROM cmodb.expell where contact_id=:param1 and deleted='N';", new List<object> { pref.CONTACTID });
             dgExpellHist.Columns["id"].Visible = false;
             dgExpellHist.Columns["status"].HeaderText = "Основной";
             dgExpellHist.Columns["expelled"].HeaderText = "Основание";
             dgExpellHist.Columns["expelled_num"].HeaderText = "Номер приказа";
             dgExpellHist.Columns["expelled_dt"].HeaderText = "Дата";
+            dgExpellHist.Columns["updated"].HeaderText = "Обновлено";
+            dgExpellHist.Columns["updated_by"].HeaderText = "Обновил(а)";
         }
         public void LoadDoc()
         {
 
             string sql;
-            sql = "SELECT id, CASE WHEN status='Y' THEN 'Да' ELSE '' END as \"Основной\",cmodb.lookupvalue('MIGR.VIEW',type) as type, ser, num, issue_dt,validity_from_dt, validity_to_dt,ident, invite_num "+
-                " FROM cmodb.document where contact_id=:param1 AND deleted='N' ORDER BY status DESC,validity_to_dt DESC;";
-
+            sql = "SELECT id, CASE WHEN status='Y' THEN 'true' ELSE 'false' END as docstatus,cmodb.lookupvalue('MIGR.VIEW',type) as type, ser, num, issue_dt,validity_from_dt, validity_to_dt,ident, invite_num "+
+                ",updated,updated_by FROM cmodb.document where contact_id=:param1 AND deleted='N' ORDER BY status DESC,validity_to_dt DESC;";
+            dgDocSel.Columns["docstatus"].DataPropertyName = "docstatus";
             dgDocSel.DataSource = DB.QueryTableMultipleParams(sql, new List<object> { pref.CONTACTID });
             dgDocSel.Columns["id"].Visible = false;
             dgDocSel.Columns["type"].HeaderText = "Тип";
@@ -215,13 +215,15 @@ namespace Mig
             dgDocSel.Columns["validity_to_dt"].HeaderText = "Срок действия по";
             dgDocSel.Columns["ident"].HeaderText = "Идентификатор";
             dgDocSel.Columns["invite_num"].HeaderText = "Номер приглашения";
-
+            dgDocSel.Columns["updated"].HeaderText = "Обновлено";
+            dgDocSel.Columns["updated_by"].HeaderText = "Обновил(а)";
         }
         public void LoadMigr()
         {
             
-            string sql = "SELECT id,CASE WHEN status='Y' THEN 'Да' ELSE '' END as \"Основной\",ser, num, kpp_code, entry_dt, tenure_from_dt, tenure_to_dt,purpose_entry " +
-                " FROM cmodb.migr_card where contact_id=:param1 AND deleted='N' ORDER BY status desc,tenure_to_dt DESC;";
+            string sql = "SELECT id,CASE WHEN status='Y' THEN 'true' ELSE 'false' END as migrstatus,ser, num, kpp_code, entry_dt, tenure_from_dt, tenure_to_dt,purpose_entry " +
+                ",updated,updated_by FROM cmodb.migr_card where contact_id=:param1 AND deleted='N' ORDER BY status desc,tenure_to_dt DESC;";
+            dgMigrHist.Columns["migrstatus"].DataPropertyName = "migrstatus";
             dgMigrHist.DataSource = DB.QueryTableMultipleParams(sql, new List<object> { pref.CONTACTID });
             dgMigrHist.Columns["id"].Visible = false;
             dgMigrHist.Columns["ser"].HeaderText = "Серия";
@@ -231,6 +233,8 @@ namespace Mig
             dgMigrHist.Columns["tenure_from_dt"].HeaderText = "Срок пребывания с";
             dgMigrHist.Columns["tenure_to_dt"].HeaderText = "Срок пребывания по";
             dgMigrHist.Columns["purpose_entry"].HeaderText = "Цель въезда";
+            dgMigrHist.Columns["updated"].HeaderText = "Обновлено";
+            dgMigrHist.Columns["updated_by"].HeaderText = "Обновил(а)";
         }
         public void LoadChild()
         {
@@ -984,8 +988,13 @@ namespace Mig
 
         private void toolStripButton25_Click(object sender, EventArgs e)
         {
-            
-                /*РЕДАКТИРОВАНИЕ ДОКУМЕНТА*/
+            /*РЕДАКТИРОВАНИЕ ДОКУМЕНТА*/
+            if (dgDocSel.CurrentRow.Cells["Основной"].Value.ToString() != "Да")
+            {
+                MessageBox.Show("Разрешено редактирование только активного документа!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             fDocAddEdit fDocAddEditForm = new fDocAddEdit("Edit");
             if (fDocAddEditForm.ShowDialog(this) == DialogResult.OK)
             {

@@ -296,7 +296,7 @@ namespace Mig
         {
             try
             {
-                
+                dataGridView1.AllowUserToResizeColumns = false;
                 tsFilterLoad.Text = "Загрузка данных...";
 
                 string OldFilter = bindingSource1.Filter;
@@ -339,6 +339,8 @@ namespace Mig
                 if (dataGridView1.Columns.Contains("pass_expire"))
                     dataGridView1.Columns["pass_expire"].Visible = false;
 
+
+                
                 SetColumnOrder();
                 tsFilterLoad.Text = "Данные успешно загружены";
             }
@@ -346,6 +348,10 @@ namespace Mig
             {
                 Logger.Log.Error(ClassName + "Function:FilterChange\n Error:" + err);
                 throw new Exception("Ошибка фильтра:\n\n" + err.Message);
+            }
+            finally
+            {
+                dataGridView1.AllowUserToResizeColumns = true;
             }
         }
 
@@ -1143,16 +1149,18 @@ namespace Mig
             Application.Exit();
         }
 
-        private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
-        {
-
-        }
-
-        private void удалениеСтудентаToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-           
-        }
-
        
+
+        private void dataGridView1_ColumnDisplayIndexChanged(object sender, DataGridViewColumnEventArgs e)
+        {
+            try
+            {
+                SaveColumnOrder();
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ClassName + "Function:dataGridView1_ColumnDisplayIndexChanged\n Error:" + ex);
+            }
+        }
     }
 }

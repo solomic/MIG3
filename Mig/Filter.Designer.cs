@@ -53,6 +53,7 @@
             this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripSeparator();
             this.tpRegExendSet = new System.Windows.Forms.ToolStripMenuItem();
             this.tpRegExendClear = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripSeparator();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.stCnt = new System.Windows.Forms.ToolStripStatusLabel();
             this.tsFilterLoad = new System.Windows.Forms.ToolStripStatusLabel();
@@ -73,7 +74,6 @@
             this.tpSync = new System.Windows.Forms.ToolStripMenuItem();
             this.btnConnectPref = new System.Windows.Forms.ToolStripMenuItem();
             this.bindingSource1 = new System.Windows.Forms.BindingSource(this.components);
-            this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripSeparator();
             this.panel1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -175,7 +175,7 @@
             this.tpRegExendClear,
             this.toolStripMenuItem5});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(250, 320);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(250, 298);
             this.contextMenuStrip1.Text = "Выпускник";
             // 
             // miGraduate
@@ -282,6 +282,11 @@
             this.tpRegExendClear.Text = "Регистрация: снять выделение";
             this.tpRegExendClear.Click += new System.EventHandler(this.tpRegExendClear_Click);
             // 
+            // toolStripMenuItem5
+            // 
+            this.toolStripMenuItem5.Name = "toolStripMenuItem5";
+            this.toolStripMenuItem5.Size = new System.Drawing.Size(246, 6);
+            // 
             // statusStrip1
             // 
             this.statusStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
@@ -333,6 +338,7 @@
             this.dataGridView1.FilterStringChanged += new System.EventHandler(this.dataGridView1_FilterStringChanged);
             this.dataGridView1.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.advancedDataGridView1_CellDoubleClick);
             this.dataGridView1.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.advancedDataGridView1_CellPainting);
+            this.dataGridView1.ColumnDisplayIndexChanged += new System.Windows.Forms.DataGridViewColumnEventHandler(this.dataGridView1_ColumnDisplayIndexChanged);
             this.dataGridView1.ColumnWidthChanged += new System.Windows.Forms.DataGridViewColumnEventHandler(this.dataGridView1_ColumnWidthChanged);
             // 
             // menuStrip1
@@ -347,7 +353,7 @@
             this.menuStrip1.Size = new System.Drawing.Size(1077, 24);
             this.menuStrip1.TabIndex = 7;
             this.menuStrip1.Text = "menuStrip1";
-            this.menuStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.menuStrip1_ItemClicked);
+            
             // 
             // бДToolStripMenuItem
             // 
@@ -455,11 +461,6 @@
             // bindingSource1
             // 
             this.bindingSource1.ListChanged += new System.ComponentModel.ListChangedEventHandler(this.bindingSource1_ListChanged);
-            // 
-            // toolStripMenuItem5
-            // 
-            this.toolStripMenuItem5.Name = "toolStripMenuItem5";
-            this.toolStripMenuItem5.Size = new System.Drawing.Size(246, 6);
             // 
             // fFilter
             // 

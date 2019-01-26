@@ -197,6 +197,8 @@
             this.cmbPetitionOut = new System.Windows.Forms.ComboBox();
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.dgPf = new System.Windows.Forms.DataGridView();
+            this.cPfDelete = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.miDelete = new System.Windows.Forms.ToolStripMenuItem();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.dgEntryHist = new System.Windows.Forms.DataGridView();
             this.toolStrip7 = new System.Windows.Forms.ToolStrip();
@@ -262,6 +264,8 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.btnSaveContact = new System.Windows.Forms.ToolStripButton();
             this.btnUndoContact = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator16 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripButton22 = new System.Windows.Forms.ToolStripButton();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label13 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
@@ -278,12 +282,12 @@
             this.cmbBirthCountry = new System.Windows.Forms.ComboBox();
             this.cmbNat = new System.Windows.Forms.ComboBox();
             this.cmbSex = new System.Windows.Forms.ComboBox();
-            this.toolStripSeparator16 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripButton22 = new System.Windows.Forms.ToolStripButton();
-            this.cPfDelete = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.miDelete = new System.Windows.Forms.ToolStripMenuItem();
             this.dBirthDate = new Mig.datetimepicker.myDatePicker();
             this.tDelIssue = new Mig.datetimepicker.myDatePicker();
+            this.status = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.dulstatus = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.docstatus = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.migrstatus = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.tabControl1.SuspendLayout();
             this.tabConInfo.SuspendLayout();
             this.toolStrip9.SuspendLayout();
@@ -320,6 +324,7 @@
             this.tabParam7.SuspendLayout();
             this.tabParam8.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgPf)).BeginInit();
+            this.cPfDelete.SuspendLayout();
             this.tabPage3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgEntryHist)).BeginInit();
             this.toolStrip7.SuspendLayout();
@@ -330,7 +335,6 @@
             this.toolStrip4.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
-            this.cPfDelete.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -591,7 +595,10 @@
             this.dgMigrHist.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.dgMigrHist.BackgroundColor = System.Drawing.SystemColors.Control;
             this.dgMigrHist.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgMigrHist.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.migrstatus});
             this.dgMigrHist.Location = new System.Drawing.Point(8, 28);
+            this.dgMigrHist.MultiSelect = false;
             this.dgMigrHist.Name = "dgMigrHist";
             this.dgMigrHist.ReadOnly = true;
             this.dgMigrHist.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToDisplayedHeaders;
@@ -750,7 +757,10 @@
             this.dgDocSel.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.dgDocSel.BackgroundColor = System.Drawing.SystemColors.Control;
             this.dgDocSel.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgDocSel.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.docstatus});
             this.dgDocSel.Location = new System.Drawing.Point(7, 28);
+            this.dgDocSel.MultiSelect = false;
             this.dgDocSel.Name = "dgDocSel";
             this.dgDocSel.ReadOnly = true;
             this.dgDocSel.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToDisplayedHeaders;
@@ -862,7 +872,10 @@
             this.DULdataGridView.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.DULdataGridView.BackgroundColor = System.Drawing.SystemColors.Control;
             this.DULdataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.DULdataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dulstatus});
             this.DULdataGridView.Location = new System.Drawing.Point(6, 31);
+            this.DULdataGridView.MultiSelect = false;
             this.DULdataGridView.Name = "DULdataGridView";
             this.DULdataGridView.ReadOnly = true;
             dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.YellowGreen;
@@ -1033,6 +1046,8 @@
             this.dgExpellHist.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.dgExpellHist.BackgroundColor = System.Drawing.SystemColors.Control;
             this.dgExpellHist.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgExpellHist.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.status});
             dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
             dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
@@ -1042,6 +1057,7 @@
             dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.dgExpellHist.DefaultCellStyle = dataGridViewCellStyle4;
             this.dgExpellHist.Location = new System.Drawing.Point(8, 28);
+            this.dgExpellHist.MultiSelect = false;
             this.dgExpellHist.Name = "dgExpellHist";
             this.dgExpellHist.ReadOnly = true;
             this.dgExpellHist.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
@@ -1081,6 +1097,7 @@
             dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.dgAgreeHist.DefaultCellStyle = dataGridViewCellStyle5;
             this.dgAgreeHist.Location = new System.Drawing.Point(8, 28);
+            this.dgAgreeHist.MultiSelect = false;
             this.dgAgreeHist.Name = "dgAgreeHist";
             this.dgAgreeHist.ReadOnly = true;
             this.dgAgreeHist.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
@@ -1175,6 +1192,7 @@
             this.dgTeach.BackgroundColor = System.Drawing.SystemColors.Control;
             this.dgTeach.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgTeach.Location = new System.Drawing.Point(13, 30);
+            this.dgTeach.MultiSelect = false;
             this.dgTeach.Name = "dgTeach";
             this.dgTeach.ReadOnly = true;
             this.dgTeach.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToDisplayedHeaders;
@@ -1833,6 +1851,22 @@
             this.dgPf.TabIndex = 0;
             this.dgPf.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgPf_CellDoubleClick);
             // 
+            // cPfDelete
+            // 
+            this.cPfDelete.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.miDelete});
+            this.cPfDelete.Name = "cPfDelete";
+            this.cPfDelete.Size = new System.Drawing.Size(119, 26);
+            this.cPfDelete.Text = "Удаление";
+            this.cPfDelete.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
+            // 
+            // miDelete
+            // 
+            this.miDelete.Name = "miDelete";
+            this.miDelete.Size = new System.Drawing.Size(118, 22);
+            this.miDelete.Text = "Удалить";
+            this.miDelete.Click += new System.EventHandler(this.miDelete_Click);
+            // 
             // tabPage3
             // 
             this.tabPage3.BackColor = System.Drawing.SystemColors.Control;
@@ -1867,6 +1901,7 @@
             dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.dgEntryHist.DefaultCellStyle = dataGridViewCellStyle8;
             this.dgEntryHist.Location = new System.Drawing.Point(7, 31);
+            this.dgEntryHist.MultiSelect = false;
             this.dgEntryHist.Name = "dgEntryHist";
             this.dgEntryHist.ReadOnly = true;
             this.dgEntryHist.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToDisplayedHeaders;
@@ -2249,6 +2284,7 @@
             dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.dgChild.DefaultCellStyle = dataGridViewCellStyle9;
             this.dgChild.Location = new System.Drawing.Point(7, 31);
+            this.dgChild.MultiSelect = false;
             this.dgChild.Name = "dgChild";
             this.dgChild.ReadOnly = true;
             this.dgChild.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToDisplayedHeaders;
@@ -2538,6 +2574,21 @@
             this.btnUndoContact.Text = "Отменить";
             this.btnUndoContact.Click += new System.EventHandler(this.toolStripButton31_Click);
             // 
+            // toolStripSeparator16
+            // 
+            this.toolStripSeparator16.Name = "toolStripSeparator16";
+            this.toolStripSeparator16.Size = new System.Drawing.Size(6, 23);
+            // 
+            // toolStripButton22
+            // 
+            this.toolStripButton22.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripButton22.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton22.Image")));
+            this.toolStripButton22.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton22.Name = "toolStripButton22";
+            this.toolStripButton22.Size = new System.Drawing.Size(64, 20);
+            this.toolStripButton22.Text = "Удалить...";
+            this.toolStripButton22.Click += new System.EventHandler(this.toolStripButton22_Click);
+            // 
             // panel1
             // 
             this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -2744,37 +2795,6 @@
             this.cmbSex.TabIndex = 66;
             this.cmbSex.ValueMember = "code";
             // 
-            // toolStripSeparator16
-            // 
-            this.toolStripSeparator16.Name = "toolStripSeparator16";
-            this.toolStripSeparator16.Size = new System.Drawing.Size(6, 23);
-            // 
-            // toolStripButton22
-            // 
-            this.toolStripButton22.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.toolStripButton22.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton22.Image")));
-            this.toolStripButton22.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton22.Name = "toolStripButton22";
-            this.toolStripButton22.Size = new System.Drawing.Size(64, 20);
-            this.toolStripButton22.Text = "Удалить...";
-            this.toolStripButton22.Click += new System.EventHandler(this.toolStripButton22_Click);
-            // 
-            // cPfDelete
-            // 
-            this.cPfDelete.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.miDelete});
-            this.cPfDelete.Name = "cPfDelete";
-            this.cPfDelete.Size = new System.Drawing.Size(119, 26);
-            this.cPfDelete.Text = "Удаление";
-            this.cPfDelete.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
-            // 
-            // miDelete
-            // 
-            this.miDelete.Name = "miDelete";
-            this.miDelete.Size = new System.Drawing.Size(118, 22);
-            this.miDelete.Text = "Удалить";
-            this.miDelete.Click += new System.EventHandler(this.miDelete_Click);
-            // 
             // dBirthDate
             // 
             this.dBirthDate.AutoSize = true;
@@ -2801,6 +2821,34 @@
             this.tDelIssue.Size = new System.Drawing.Size(93, 20);
             this.tDelIssue.TabIndex = 23;
             this.tDelIssue.Visible = false;
+            // 
+            // status
+            // 
+            this.status.HeaderText = "Column1";
+            this.status.Name = "status";
+            this.status.ReadOnly = true;
+            this.status.Width = 54;
+            // 
+            // dulstatus
+            // 
+            this.dulstatus.HeaderText = "Основной";
+            this.dulstatus.Name = "dulstatus";
+            this.dulstatus.ReadOnly = true;
+            this.dulstatus.Width = 63;
+            // 
+            // docstatus
+            // 
+            this.docstatus.HeaderText = "Основной";
+            this.docstatus.Name = "docstatus";
+            this.docstatus.ReadOnly = true;
+            this.docstatus.Width = 63;
+            // 
+            // migrstatus
+            // 
+            this.migrstatus.HeaderText = "Основной";
+            this.migrstatus.Name = "migrstatus";
+            this.migrstatus.ReadOnly = true;
+            this.migrstatus.Width = 63;
             // 
             // fContactDetail
             // 
@@ -2873,6 +2921,7 @@
             this.tabParam7.PerformLayout();
             this.tabParam8.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgPf)).EndInit();
+            this.cPfDelete.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgEntryHist)).EndInit();
@@ -2891,7 +2940,6 @@
             this.toolStrip1.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            this.cPfDelete.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -3112,5 +3160,9 @@
         private System.Windows.Forms.ToolStripButton toolStripButton22;
         private System.Windows.Forms.ContextMenuStrip cPfDelete;
         private System.Windows.Forms.ToolStripMenuItem miDelete;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn status;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn dulstatus;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn docstatus;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn migrstatus;
     }
 }

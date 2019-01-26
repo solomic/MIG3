@@ -53,7 +53,7 @@
             this.dgAllAddress.ReadOnly = true;
             this.dgAllAddress.RowTemplate.Height = 24;
             this.dgAllAddress.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgAllAddress.Size = new System.Drawing.Size(556, 257);
+            this.dgAllAddress.Size = new System.Drawing.Size(626, 257);
             this.dgAllAddress.TabIndex = 0;
             this.dgAllAddress.VirtualMode = true;
             this.dgAllAddress.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgAllAddress_CellDoubleClick);
@@ -61,7 +61,7 @@
             // 
             // btnNew
             // 
-            this.btnNew.Location = new System.Drawing.Point(352, 306);
+            this.btnNew.Location = new System.Drawing.Point(422, 303);
             this.btnNew.Margin = new System.Windows.Forms.Padding(2);
             this.btnNew.Name = "btnNew";
             this.btnNew.Size = new System.Drawing.Size(56, 21);
@@ -73,7 +73,7 @@
             // btnSelect
             // 
             this.btnSelect.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnSelect.Location = new System.Drawing.Point(434, 306);
+            this.btnSelect.Location = new System.Drawing.Point(504, 303);
             this.btnSelect.Margin = new System.Windows.Forms.Padding(2);
             this.btnSelect.Name = "btnSelect";
             this.btnSelect.Size = new System.Drawing.Size(62, 21);
@@ -84,7 +84,7 @@
             // btnCancel
             // 
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(500, 306);
+            this.btnCancel.Location = new System.Drawing.Point(570, 303);
             this.btnCancel.Margin = new System.Windows.Forms.Padding(2);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(65, 21);
@@ -115,13 +115,14 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(574, 335);
+            this.ClientSize = new System.Drawing.Size(646, 335);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnSelect);
             this.Controls.Add(this.btnNew);
             this.Controls.Add(this.dgAllAddress);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Margin = new System.Windows.Forms.Padding(2);
             this.MaximizeBox = false;
             this.MinimizeBox = false;

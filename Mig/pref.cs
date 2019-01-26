@@ -69,10 +69,10 @@ namespace Pref
         " (last_name ||case when first_name is not null then ' '||first_name else '' end||case when second_name is not null then ' '||second_name else '' end) confio"+
         " FROM cmodb.contact where contact_id=:param1 and status='Y';";
         public static string GetDulIdSql = "SELECT cmodb.lookupvalue('DUL',type) as type, ser, num, issue, validity FROM cmodb.dul where id=:param1;";
-        public static string GetDulAllSql = "SELECT id, CASE WHEN status='Y' THEN 'Да' else null END as \"Основной\",cmodb.lookupvalue('DUL',type) as \"Тип\", ser as \"Серия\", num as \"Номер\", issue as \"Выдан\", " +
+        public static string GetDulAllSql = "SELECT id, CASE WHEN status='Y' THEN 'true' else 'false' END as dulstatus,cmodb.lookupvalue('DUL',type) as \"Тип\", ser as \"Серия\", num as \"Номер\", issue as \"Выдан\", " +
             " validity as \"Годен до\", "+
             " CASE WHEN status='Y' AND validity IS NOT NULL THEN validity-interval '6 month' END \"Действие с визой\"  "
-            + " FROM cmodb.dul where contact_id=:param1 AND deleted='N' ORDER BY status DESC nulls last;";
+            + ",updated \"Обновлено\",updated_by \"Обновил(а)\" FROM cmodb.dul where contact_id=:param1 AND deleted='N' ORDER BY status DESC nulls last;";
 
         public static string GetMigrCardSql = "SELECT id, document_id,contact_id, ser, num, kpp_code, entry_dt, tenure_from_dt, " +
        "tenure_to_dt, status, purpose_entry/*, created, created_by, updated, "+
