@@ -94,6 +94,7 @@
             this.tabDocMigr = new System.Windows.Forms.TabPage();
             this.panel4 = new System.Windows.Forms.Panel();
             this.dgMigrHist = new System.Windows.Forms.DataGridView();
+            this.migrstatus = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.toolStrip12 = new System.Windows.Forms.ToolStrip();
             this.toolStripLabel3 = new System.Windows.Forms.ToolStripLabel();
             this.toolStripButton34 = new System.Windows.Forms.ToolStripButton();
@@ -109,6 +110,7 @@
             this.label20 = new System.Windows.Forms.Label();
             this.label19 = new System.Windows.Forms.Label();
             this.dgDocSel = new System.Windows.Forms.DataGridView();
+            this.docstatus = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.toolStrip10 = new System.Windows.Forms.ToolStrip();
             this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
             this.toolStripButton23 = new System.Windows.Forms.ToolStripButton();
@@ -119,6 +121,7 @@
             this.toolStripButton26 = new System.Windows.Forms.ToolStripButton();
             this.tabDUL = new System.Windows.Forms.TabPage();
             this.DULdataGridView = new System.Windows.Forms.DataGridView();
+            this.dulstatus = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.toolStrip6 = new System.Windows.Forms.ToolStrip();
             this.toolStripLabel4 = new System.Windows.Forms.ToolStripLabel();
             this.btnDULAdd = new System.Windows.Forms.ToolStripButton();
@@ -136,6 +139,7 @@
             this.toolStripButton28 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton29 = new System.Windows.Forms.ToolStripButton();
             this.dgExpellHist = new System.Windows.Forms.DataGridView();
+            this.status = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.panel2 = new System.Windows.Forms.Panel();
             this.dgAgreeHist = new System.Windows.Forms.DataGridView();
             this.toolStrip13 = new System.Windows.Forms.ToolStrip();
@@ -284,10 +288,10 @@
             this.cmbSex = new System.Windows.Forms.ComboBox();
             this.dBirthDate = new Mig.datetimepicker.myDatePicker();
             this.tDelIssue = new Mig.datetimepicker.myDatePicker();
-            this.status = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.dulstatus = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.docstatus = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.migrstatus = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.teachstatus = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.agreestatus = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.addrstatus = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.entrystatus = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.tabControl1.SuspendLayout();
             this.tabConInfo.SuspendLayout();
             this.toolStrip9.SuspendLayout();
@@ -612,7 +616,15 @@
             this.dgMigrHist.ShowRowErrors = false;
             this.dgMigrHist.Size = new System.Drawing.Size(984, 202);
             this.dgMigrHist.TabIndex = 43;
+            this.dgMigrHist.VirtualMode = true;
             this.dgMigrHist.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgMigrHist_CellDoubleClick);
+            // 
+            // migrstatus
+            // 
+            this.migrstatus.HeaderText = "Основной";
+            this.migrstatus.Name = "migrstatus";
+            this.migrstatus.ReadOnly = true;
+            this.migrstatus.Width = 63;
             // 
             // toolStrip12
             // 
@@ -774,7 +786,15 @@
             this.dgDocSel.ShowRowErrors = false;
             this.dgDocSel.Size = new System.Drawing.Size(984, 172);
             this.dgDocSel.TabIndex = 43;
+            this.dgDocSel.VirtualMode = true;
             this.dgDocSel.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgDocSel_CellDoubleClick);
+            // 
+            // docstatus
+            // 
+            this.docstatus.HeaderText = "Основной";
+            this.docstatus.Name = "docstatus";
+            this.docstatus.ReadOnly = true;
+            this.docstatus.Width = 63;
             // 
             // toolStrip10
             // 
@@ -884,6 +904,13 @@
             this.DULdataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.DULdataGridView.Size = new System.Drawing.Size(995, 174);
             this.DULdataGridView.TabIndex = 42;
+            // 
+            // dulstatus
+            // 
+            this.dulstatus.HeaderText = "Основной";
+            this.dulstatus.Name = "dulstatus";
+            this.dulstatus.ReadOnly = true;
+            this.dulstatus.Width = 63;
             // 
             // toolStrip6
             // 
@@ -1069,6 +1096,13 @@
             this.dgExpellHist.Size = new System.Drawing.Size(989, 145);
             this.dgExpellHist.TabIndex = 44;
             // 
+            // status
+            // 
+            this.status.HeaderText = "Column1";
+            this.status.Name = "status";
+            this.status.ReadOnly = true;
+            this.status.Width = 54;
+            // 
             // panel2
             // 
             this.panel2.Controls.Add(this.dgAgreeHist);
@@ -1088,6 +1122,8 @@
             this.dgAgreeHist.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.dgAgreeHist.BackgroundColor = System.Drawing.SystemColors.Control;
             this.dgAgreeHist.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgAgreeHist.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.agreestatus});
             dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window;
             dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
@@ -1172,7 +1208,7 @@
             // 
             // toolStripButton32
             // 
-            this.toolStripButton32.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton32.Image")));
+            this.toolStripButton32.Image = global::Mig.Properties.Resources.Delete;
             this.toolStripButton32.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton32.Name = "toolStripButton32";
             this.toolStripButton32.Size = new System.Drawing.Size(71, 22);
@@ -1191,6 +1227,8 @@
             this.dgTeach.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.dgTeach.BackgroundColor = System.Drawing.SystemColors.Control;
             this.dgTeach.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgTeach.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.teachstatus});
             this.dgTeach.Location = new System.Drawing.Point(13, 30);
             this.dgTeach.MultiSelect = false;
             this.dgTeach.Name = "dgTeach";
@@ -1302,6 +1340,8 @@
             this.dgAddrHist.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.dgAddrHist.BackgroundColor = System.Drawing.SystemColors.Control;
             this.dgAddrHist.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgAddrHist.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.addrstatus});
             dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Window;
             dataGridViewCellStyle7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
@@ -1892,6 +1932,8 @@
             this.dgEntryHist.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.dgEntryHist.BackgroundColor = System.Drawing.SystemColors.Control;
             this.dgEntryHist.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgEntryHist.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.entrystatus});
             dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Window;
             dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
@@ -2822,33 +2864,35 @@
             this.tDelIssue.TabIndex = 23;
             this.tDelIssue.Visible = false;
             // 
-            // status
+            // teachstatus
             // 
-            this.status.HeaderText = "Column1";
-            this.status.Name = "status";
-            this.status.ReadOnly = true;
-            this.status.Width = 54;
+            this.teachstatus.HeaderText = "Основной";
+            this.teachstatus.Name = "teachstatus";
+            this.teachstatus.ReadOnly = true;
+            this.teachstatus.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.teachstatus.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.teachstatus.Width = 82;
             // 
-            // dulstatus
+            // agreestatus
             // 
-            this.dulstatus.HeaderText = "Основной";
-            this.dulstatus.Name = "dulstatus";
-            this.dulstatus.ReadOnly = true;
-            this.dulstatus.Width = 63;
+            this.agreestatus.HeaderText = "Основной";
+            this.agreestatus.Name = "agreestatus";
+            this.agreestatus.ReadOnly = true;
+            this.agreestatus.Width = 63;
             // 
-            // docstatus
+            // addrstatus
             // 
-            this.docstatus.HeaderText = "Основной";
-            this.docstatus.Name = "docstatus";
-            this.docstatus.ReadOnly = true;
-            this.docstatus.Width = 63;
+            this.addrstatus.HeaderText = "Основной";
+            this.addrstatus.Name = "addrstatus";
+            this.addrstatus.ReadOnly = true;
+            this.addrstatus.Width = 63;
             // 
-            // migrstatus
+            // entrystatus
             // 
-            this.migrstatus.HeaderText = "Основной";
-            this.migrstatus.Name = "migrstatus";
-            this.migrstatus.ReadOnly = true;
-            this.migrstatus.Width = 63;
+            this.entrystatus.HeaderText = "Основной";
+            this.entrystatus.Name = "entrystatus";
+            this.entrystatus.ReadOnly = true;
+            this.entrystatus.Width = 63;
             // 
             // fContactDetail
             // 
@@ -3164,5 +3208,9 @@
         private System.Windows.Forms.DataGridViewCheckBoxColumn dulstatus;
         private System.Windows.Forms.DataGridViewCheckBoxColumn docstatus;
         private System.Windows.Forms.DataGridViewCheckBoxColumn migrstatus;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn teachstatus;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn agreestatus;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn addrstatus;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn entrystatus;
     }
 }

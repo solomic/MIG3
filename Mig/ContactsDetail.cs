@@ -199,8 +199,7 @@ namespace Mig
             dgExpellHist.Columns["updated_by"].HeaderText = "Обновил(а)";
         }
         public void LoadDoc()
-        {
-
+        {            
             string sql;
             sql = "SELECT id, CASE WHEN status='Y' THEN 'true' ELSE 'false' END as docstatus,cmodb.lookupvalue('MIGR.VIEW',type) as type, ser, num, issue_dt,validity_from_dt, validity_to_dt,ident, invite_num "+
                 ",updated,updated_by FROM cmodb.document where contact_id=:param1 AND deleted='N' ORDER BY status DESC,validity_to_dt DESC;";
@@ -217,6 +216,7 @@ namespace Mig
             dgDocSel.Columns["invite_num"].HeaderText = "Номер приглашения";
             dgDocSel.Columns["updated"].HeaderText = "Обновлено";
             dgDocSel.Columns["updated_by"].HeaderText = "Обновил(а)";
+           
         }
         public void LoadMigr()
         {
@@ -249,6 +249,7 @@ namespace Mig
         }
         public void LoadTeach()
         {
+            dgTeach.Columns["teachstatus"].DataPropertyName = "teachstatus";
             dgTeach.DataSource= DB.QueryTableMultipleParams(pref.GetTeachAllSql, new List<object> { pref.CONTACTID });
             dgTeach.Columns["id"].Visible = false;
             dgTeach.Columns["facult_code"].Visible = false;
@@ -259,7 +260,7 @@ namespace Mig
             dgTeach.Columns["amount"].Visible = false;
             dgTeach.Columns["code"].Visible = false;
 
-            dgTeach.Columns["status"].HeaderText = "Основной";
+            dgTeach.Columns["teachstatus"].HeaderText = "Основной";
             dgTeach.Columns["postup_year"].HeaderText = "Год поступления";
             dgTeach.Columns["deduct_year"].HeaderText = "Год отчисления";
             dgTeach.Columns["spec_name"].HeaderText = "Специальность";
@@ -274,9 +275,10 @@ namespace Mig
         }
         public void LoadAgree()
         {
-            dgAgreeHist.DataSource = DB.QueryTableMultipleParams("SELECT id,case when status='Y' then 'Да' Else '' end as status,num, dt, from_dt,to_dt  FROM cmodb.agree where contact_id=:param1 and deleted='N' order by status desc nulls last,to_dt desc;", new List<object> { pref.CONTACTID });
+            dgAgreeHist.Columns["agreestatus"].DataPropertyName = "agreestatus";
+            dgAgreeHist.DataSource = DB.QueryTableMultipleParams("SELECT id,case when status='Y' then 'true' Else 'false' end as agreestatus,num, dt, from_dt,to_dt  FROM cmodb.agree where contact_id=:param1 and deleted='N' order by status desc nulls last,to_dt desc;", new List<object> { pref.CONTACTID });
             dgAgreeHist.Columns["id"].Visible = false;
-            dgAgreeHist.Columns["status"].HeaderText = "Основной";
+            dgAgreeHist.Columns["agreestatus"].HeaderText = "Основной";
             dgAgreeHist.Columns["num"].HeaderText = "Договор/Направление";
             dgAgreeHist.Columns["dt"].HeaderText = "От";
             dgAgreeHist.Columns["from_dt"].HeaderText = "С";
@@ -989,7 +991,7 @@ namespace Mig
         private void toolStripButton25_Click(object sender, EventArgs e)
         {
             /*РЕДАКТИРОВАНИЕ ДОКУМЕНТА*/
-            if (dgDocSel.CurrentRow.Cells["Основной"].Value.ToString() != "Да")
+            if (dgDocSel.CurrentRow.Cells["docstatus"].Value.ToString() != "true")
             {
                 MessageBox.Show("Разрешено редактирование только активного документа!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -1345,10 +1347,11 @@ namespace Mig
         public void LoadAddr()
         {
 
-            string sql = "select ai.id, CASE WHEN ai.status='Y' THEN 'Да' ELSE '' END as \"Основной\",full_address as \"Адрес регистрации\" from cmodb.address ad " +
+            string sql = "select ai.id, CASE WHEN ai.status='Y' THEN 'true' ELSE 'false' END as addrstatus,full_address as \"Адрес регистрации\" from cmodb.address ad " +
              " left join cmodb.addr_inter ai on ai.address_code = ad.code " +
              " where ai.contact_id =:param1 AND ai.deleted='N' " +
               " order by ai.status desc nulls last, ai.created DESC";
+            dgAddrHist.Columns["addrstatus"].DataPropertyName = "addrstatus";
             dgAddrHist.DataSource = DB.QueryTableMultipleParams(sql, new List<object> { pref.CONTACTID });
             dgAddrHist.Columns["id"].Visible = false;
            
@@ -1611,13 +1614,17 @@ namespace Mig
 
         public void LoadEntry()
         {
-            dgEntryHist.DataSource = DB.QueryTableMultipleParams("SELECT  id,case when status='Y' then 'Да' else null end as status,leave_dt,entry_dt, txt, type FROM cmodb.entry where contact_id=:param1 and deleted='N' ORDER BY status asc nulls last,leave_dt DESC;", new List<object> { pref.CONTACTID });
+            dgEntryHist.SuspendLayout();
+            dgEntryHist.Columns["entrystatus"].DataPropertyName = "entrystatus";
+            dgEntryHist.DataSource = DB.QueryTableMultipleParams("SELECT  id,case when status='Y' then 'true' else 'false' end as entrystatus,leave_dt,entry_dt, txt, type "+
+                " FROM cmodb.entry where contact_id=:param1 and deleted='N' ORDER BY case when status='Y' then '1' else '0' end desc nulls last,leave_dt DESC;", new List<object> { pref.CONTACTID });
             dgEntryHist.Columns["id"].Visible = false;
-            dgEntryHist.Columns["status"].HeaderText = "Активен";
+            dgEntryHist.Columns["entrystatus"].HeaderText = "Основной";
             dgEntryHist.Columns["type"].HeaderText = "Тип";
             dgEntryHist.Columns["entry_dt"].HeaderText = "Дата въезда";
             dgEntryHist.Columns["leave_dt"].HeaderText = "Дата выезда";
             dgEntryHist.Columns["txt"].HeaderText = "Описание";
+            dgEntryHist.ResumeLayout();
         }
 
         private void toolStripButton17_Click(object sender, EventArgs e)

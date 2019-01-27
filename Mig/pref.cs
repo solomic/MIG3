@@ -108,7 +108,7 @@ namespace Pref
                                                   " left join cmodb.speciality spec on spec.spec_code=teach.spec_code"+
                                                   " left join cmodb.facultet fac on fac.code= teach.facult_code"+
                                                   " where teach.id =:param1;";
-        public static string GetTeachAllSql = "SELECT case when teach.status='Y' then 'Да' else null end as status,teach.id,postup_year, deduct_year,cmodb.lookupvalue('FO', form_teach_code) AS form_teach , cmodb.lookupvalue('FIN', form_pay_code)  as form_pay, " +
+        public static string GetTeachAllSql = "SELECT case when teach.status='Y' then 'true' else 'false' end as teachstatus,teach.id,postup_year, deduct_year,cmodb.lookupvalue('FO', form_teach_code) AS form_teach , cmodb.lookupvalue('FIN', form_pay_code)  as form_pay, " +
                                                   " cmodb.lookupvalue('PTEACH', teach.prog_teach_code) AS prog_teach, period_total, period_ind, period_total_p, period_ind_p, " +
                                                     " amount, facult_code ,spec.code, spec.name spec_name, fac.name fac_name" +
                                                   " FROM cmodb.teach_info teach" +
