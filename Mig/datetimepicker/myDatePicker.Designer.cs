@@ -40,8 +40,7 @@
             this.maskedTextBox1.Name = "maskedTextBox1";
             this.maskedTextBox1.Size = new System.Drawing.Size(73, 20);
             this.maskedTextBox1.TabIndex = 0;
-            this.maskedTextBox1.Enter += new System.EventHandler(this.maskedTextBox1_Enter);
-            this.maskedTextBox1.Leave += new System.EventHandler(this.maskedTextBox1_Leave);
+           
             // 
             // button1
             // 
@@ -66,7 +65,7 @@
             this.Margin = new System.Windows.Forms.Padding(0);
             this.Name = "myDatePicker";
             this.Size = new System.Drawing.Size(93, 20);
-            this.Load += new System.EventHandler(this.myDatePicker_Load);
+          
             this.ResumeLayout(false);
             this.PerformLayout();
 

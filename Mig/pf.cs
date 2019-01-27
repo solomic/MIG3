@@ -1213,7 +1213,10 @@ namespace Mig
                 param.Add("dul_issue",pfreq.Rows[0]["dul_issue"].ToString());               
                 param.Add("full_address", pfreq.Rows[0]["ad_full_address"].ToString());
                 //param.Add("card_entry_dt", pfreq.Rows[0]["card_entry_dt"].ToString());
-                param.Add("card_tenure_from_dt", pfreq.Rows[0]["card_tenure_from_dt"].ToString()); 
+                if(pfreq.Rows[0]["card_tenure_from_dt"].ToString()!="")
+                    param.Add("card_tenure_from_dt", pfreq.Rows[0]["card_tenure_from_dt"].ToString()); 
+                else
+                    param.Add("card_tenure_from_dt", "Укажите <Срок пребывания с>");
                 param.Add("card_tenure_to_dt",pfreq.Rows[0]["card_tenure_to_dt"].ToString());
                
 

@@ -114,19 +114,6 @@ namespace Mig.datetimepicker
 
        
 
-        private void maskedTextBox1_Enter(object sender, EventArgs e)
-        {
-           
-        }
-
-        private void myDatePicker_Load(object sender, EventArgs e)
-        {
-            
-        }
-
-        private void maskedTextBox1_Leave(object sender, EventArgs e)
-        {
-           
-        }
+      
     }
 }

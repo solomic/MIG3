@@ -1019,6 +1019,12 @@ namespace Mig
         private void toolStripButton35_Click(object sender, EventArgs e)
         {
             /*РЕДАКТИРОВАНИЕ МИГРАЦИОНКИ*/
+            if (dgMigrHist.CurrentRow.Cells["migrstatus"].Value.ToString() != "true")
+            {
+                MessageBox.Show("Разрешено редактирование только активной миграционки!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
 
             fMigrAddEdit fMigrAddEditForm = new fMigrAddEdit("Edit");
             if (fMigrAddEditForm.ShowDialog(this) == DialogResult.OK)
