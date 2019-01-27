@@ -18,99 +18,17 @@ using wp = DocumentFormat.OpenXml.Wordprocessing;
 using System.Xml;
 using System.IO;
 
+
 namespace Mig
 {
     public partial class fFilter : Form
     {
         public string ClassName = "Class: Filter.cs\n";
-        //internal sealed class gfDataGridViewSetting : ApplicationSettingsBase
-        //{
-        //    private static gfDataGridViewSetting _defaultInstace =
-        //        (gfDataGridViewSetting)ApplicationSettingsBase
-        //        .Synchronized(new gfDataGridViewSetting());
-        //    //---------------------------------------------------------------------
-        //    public static gfDataGridViewSetting Default
-        //    {
-        //        get { return _defaultInstace; }
-        //    }
-        //    //---------------------------------------------------------------------
-        //    // Because there can be more than one DGV in the user-application
-        //    // a dictionary is used to save the settings for this DGV.
-        //    // As key the name of the control is used.
-        //    [UserScopedSetting]
-        //    [SettingsSerializeAs(SettingsSerializeAs.Binary)]
-        //    [DefaultSettingValue("")]
-        //    public Dictionary<string, List<ColumnOrderItem>> ColumnOrder
-        //    {
-        //        get { return this["ColumnOrder"] as Dictionary<string, List<ColumnOrderItem>>; }
-        //        set { this["ColumnOrder"] = value; }
-        //    }
-        //}
-        //-------------------------------------------------------------------------
-        [Serializable]
-        public sealed class ColumnOrderItem
-        {
-            public int DisplayIndex { get; set; }
-            public int Width { get; set; }
-            public bool Visible { get; set; }
-            public int ColumnIndex { get; set; }
-            public String ColumnName { get; set; }
-        }
+      
         public Dictionary<string, List<ColumnOrderItem>> ColumnOrderFlt;
 
-        private void SaveColumnOrderXml(Dictionary<string, List<ColumnOrderItem>> dct)
-        {
-            XmlDocument xmlDoc = new XmlDocument();
-            try { 
-            XmlNode rootNode = xmlDoc.CreateElement("pref");            
-
-            xmlDoc.AppendChild(rootNode);
-            foreach (var dctitem in dct)
-            {
-                XmlNode userNode = xmlDoc.CreateElement("filter");
-                XmlAttribute attribute = xmlDoc.CreateAttribute("name");
-                attribute.Value = dctitem.Key;
-                userNode.Attributes.Append(attribute);
-                //userNode.InnerText = "John Doe";
-                rootNode.AppendChild(userNode);
-
-                    if (dctitem.Value != null)
-                    {
-                        foreach (var colitem in dctitem.Value)
-                        {
-                            XmlNode column = xmlDoc.CreateElement("column");
-                            XmlAttribute attribute1 = xmlDoc.CreateAttribute("ColumnName");
-                            attribute1.Value = colitem.ColumnName;
-                            XmlAttribute attribute2 = xmlDoc.CreateAttribute("ColumnIndex");
-                            attribute2.Value = colitem.ColumnIndex.ToString();
-                            XmlAttribute attribute3 = xmlDoc.CreateAttribute("Visible");
-                            attribute3.Value = colitem.Visible.ToString();
-                            XmlAttribute attribute4 = xmlDoc.CreateAttribute("Width");
-                            attribute4.Value = colitem.Width.ToString();
-                            XmlAttribute attribute5 = xmlDoc.CreateAttribute("DisplayIndex");
-                            attribute5.Value = colitem.DisplayIndex.ToString();
-                            column.Attributes.Append(attribute1);
-                            column.Attributes.Append(attribute2);
-                            column.Attributes.Append(attribute3);
-                            column.Attributes.Append(attribute4);
-                            column.Attributes.Append(attribute5);
-                            userNode.AppendChild(column);
-                        }
-                    }
-            }
-            XmlDeclaration dcl;
-            dcl = xmlDoc.CreateXmlDeclaration("1.0", "UTF-8", "yes");
-            xmlDoc.InsertBefore(dcl, rootNode);
-            xmlDoc.Save(Application.StartupPath+ @"\Pref\"+pref.USER+"_filters.xml");
-            }
-            catch(Exception ex)
-            {
-                Logger.Log.Error(ClassName + "Function:SaveColumnOrderXml\n Error:" + ex.ToString());
-            }
-
-
-        }
-        private Dictionary<string, List<ColumnOrderItem>> LoadColumnOrderXml()
+        
+        public Dictionary<string, List<ColumnOrderItem>> LoadColumnOrderXml()
         {
             Dictionary<string, List<ColumnOrderItem>> d = new Dictionary<string, List<ColumnOrderItem>>();
             XmlDocument xmlDoc = new XmlDocument();
@@ -122,13 +40,13 @@ namespace Mig
                         xmlDoc.Load(filename);
                         foreach (XmlNode childnode in xmlDoc.ChildNodes)
                         {
-                            Console.WriteLine(childnode.Name);
+                            //Console.WriteLine(childnode.Name);
                             if (childnode.Name == "pref")
                             {
                                 //цикл по фильтрам <filter>
                                 foreach (XmlNode cn1 in childnode.ChildNodes)
                                 {
-                                    Console.WriteLine(cn1.Name);
+                                    //Console.WriteLine(cn1.Name);
                                     List<ColumnOrderItem> columnOrder = new List<ColumnOrderItem>();
                                     foreach (XmlNode colitems in cn1.ChildNodes)
                                     {
@@ -139,6 +57,7 @@ namespace Mig
                                             Visible = Convert.ToBoolean(colitems.Attributes["Visible"].Value),
                                             Width = Convert.ToInt16(colitems.Attributes["Width"].Value),
                                             ColumnName = colitems.Attributes["ColumnName"].Value
+                                            
                                         });
                                     }
                                     d.Add(cn1.Attributes["name"].Value, columnOrder);
@@ -220,13 +139,9 @@ namespace Mig
                             ColumnName = columns[i].Name
                         });
                     }
-
-                    //gfDataGridViewSetting.Default.ColumnOrder[pref.USER + " " + cmbFilter.Text] = columnOrder;
                     ColumnOrderFlt[cmbFilter.Text] = columnOrder;
-                    SaveColumnOrderXml(ColumnOrderFlt);
-                   // gfDataGridViewSetting.Default.Save();
-
-
+                    XMLMeth.SaveColumnOrderXml(ColumnOrderFlt);
+                  
                 }
             }
             catch(Exception ex)
@@ -251,7 +166,7 @@ namespace Mig
 
             //загружаем настройки фильтров
             ColumnOrderFlt = new Dictionary<string, List<ColumnOrderItem>>();
-            ColumnOrderFlt = LoadColumnOrderXml();
+            
         }
 
        
@@ -296,6 +211,13 @@ namespace Mig
         {
             try
             {
+                if (cmbFilter.Text == "")
+                    return;
+                if(!ColumnOrderFlt.ContainsKey(cmbFilter.Text))
+                {
+                    MessageBox.Show("Колонки фильтра не определены!\n Редактировать-Колонки фильтров...", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
                 dataGridView1.AllowUserToResizeColumns = false;
                 tsFilterLoad.Text = "Загрузка данных...";
 
@@ -322,8 +244,8 @@ namespace Mig
 
                 /*применяем фильтр*/                
                 FilterTextChange();
+                SetColumnOrder();
 
-                //  dataGridView1.Columns[0].Width = 50;
                 dataGridView1.Columns["warning"].HeaderText = "Предупреждения";
                 dataGridView1.Columns["warning"].DisplayIndex = 0;
                 dataGridView1.Columns["contact_id"].Visible = false;
@@ -338,10 +260,6 @@ namespace Mig
                 dataGridView1.Columns["rs_ent"].Visible = false;
                 if (dataGridView1.Columns.Contains("pass_expire"))
                     dataGridView1.Columns["pass_expire"].Visible = false;
-
-
-                
-                SetColumnOrder();
                 tsFilterLoad.Text = "Данные успешно загружены";
             }
             catch (Exception err)
@@ -1047,9 +965,15 @@ namespace Mig
         private void tpColumns_Click(object sender, EventArgs e)
         {
             /*редактирование колонок фильтров*/
-            fFilterColumnEdit fFilterColumnEditForm = new fFilterColumnEdit();
+            fFilterColumnEdit fFilterColumnEditForm = new fFilterColumnEdit(ColumnOrderFlt);
             fFilterColumnEditForm.ShowDialog(this);
             fFilterColumnEditForm = null;
+
+
+            ColumnOrderFlt = LoadColumnOrderXml();
+            comboBox1_SelectedValueChanged(this, null);
+            SetColumnOrder();
+            
         }
 
         private void tpBackup_Click(object sender, EventArgs e)
@@ -1109,6 +1033,7 @@ namespace Mig
                 {
                     this.Text += " ("+pref.DBNAME+")";
                     DirectMenu(true);
+                    ColumnOrderFlt = LoadColumnOrderXml();
                     FilterLoad();
                 }
             }
@@ -1130,7 +1055,7 @@ namespace Mig
             if (!ColumnOrderFlt.ContainsKey(cmbFilter.Text))
                 return;
             ColumnOrderFlt[cmbFilter.Text] = null;
-            SaveColumnOrderXml(ColumnOrderFlt);
+            XMLMeth.SaveColumnOrderXml(ColumnOrderFlt);
             FilterRefresh();
         }
 

@@ -154,6 +154,7 @@
     <Compile Include="ChildAddEdit.Designer.cs">
       <DependentUpon>ChildAddEdit.cs</DependentUpon>
     </Compile>
+    <Compile Include="ColumnOrderItems.cs" />
     <Compile Include="DB.cs" />
     <Compile Include="DULAddEdit.cs">
       <SubType>Form</SubType>

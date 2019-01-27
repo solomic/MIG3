@@ -53,7 +53,7 @@
             // 
             // btnSave
             // 
-            this.btnSave.Location = new System.Drawing.Point(577, 537);
+            this.btnSave.Location = new System.Drawing.Point(495, 529);
             this.btnSave.Margin = new System.Windows.Forms.Padding(2);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(72, 22);
@@ -64,7 +64,7 @@
             // 
             // btnClose
             // 
-            this.btnClose.Location = new System.Drawing.Point(666, 537);
+            this.btnClose.Location = new System.Drawing.Point(584, 529);
             this.btnClose.Margin = new System.Windows.Forms.Padding(2);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(65, 22);
@@ -88,7 +88,7 @@
             this.dgAllColumn.ShowCellToolTips = false;
             this.dgAllColumn.ShowEditingIcon = false;
             this.dgAllColumn.ShowRowErrors = false;
-            this.dgAllColumn.Size = new System.Drawing.Size(325, 439);
+            this.dgAllColumn.Size = new System.Drawing.Size(290, 439);
             this.dgAllColumn.TabIndex = 5;
             this.dgAllColumn.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgAllColumn_CellDoubleClick);
             this.dgAllColumn.DoubleClick += new System.EventHandler(this.dgAllColumn_DoubleClick);
@@ -100,7 +100,7 @@
             this.dgMyColumn.AllowUserToResizeRows = false;
             this.dgMyColumn.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.dgMyColumn.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgMyColumn.Location = new System.Drawing.Point(388, 76);
+            this.dgMyColumn.Location = new System.Drawing.Point(353, 76);
             this.dgMyColumn.MultiSelect = false;
             this.dgMyColumn.Name = "dgMyColumn";
             this.dgMyColumn.ReadOnly = true;
@@ -109,7 +109,7 @@
             this.dgMyColumn.ShowCellToolTips = false;
             this.dgMyColumn.ShowEditingIcon = false;
             this.dgMyColumn.ShowRowErrors = false;
-            this.dgMyColumn.Size = new System.Drawing.Size(345, 439);
+            this.dgMyColumn.Size = new System.Drawing.Size(296, 439);
             this.dgMyColumn.TabIndex = 6;
             this.dgMyColumn.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgMyColumn_CellDoubleClick);
             // 
@@ -126,7 +126,7 @@
             // 
             this.button1.ForeColor = System.Drawing.SystemColors.ControlText;
             this.button1.Image = global::Mig.Properties.Resources.arrow_upp;
-            this.button1.Location = new System.Drawing.Point(347, 76);
+            this.button1.Location = new System.Drawing.Point(312, 76);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(35, 30);
             this.button1.TabIndex = 7;
@@ -136,7 +136,7 @@
             // button2
             // 
             this.button2.Image = global::Mig.Properties.Resources.arrow_down;
-            this.button2.Location = new System.Drawing.Point(347, 122);
+            this.button2.Location = new System.Drawing.Point(312, 122);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(35, 30);
             this.button2.TabIndex = 8;
@@ -147,7 +147,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(742, 573);
+            this.ClientSize = new System.Drawing.Size(673, 573);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
@@ -156,7 +156,7 @@
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.cmbAllFilter);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Margin = new System.Windows.Forms.Padding(2);
             this.MaximizeBox = false;
             this.MinimizeBox = false;

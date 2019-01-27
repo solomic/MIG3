@@ -14,10 +14,18 @@ namespace Mig
 {
     public partial class fFilterColumnEdit : Form
     {
+        Dictionary<string, List<ColumnOrderItem>> dct;
+
         public fFilterColumnEdit()
         {
             InitializeComponent();
         }
+        public fFilterColumnEdit(Dictionary<string, List<ColumnOrderItem>> dct_in)
+        {
+            dct = dct_in;
+            InitializeComponent();
+        }
+        
 
         private void fFilterColumnEdit_Load(object sender, EventArgs e)
         {
@@ -30,7 +38,7 @@ namespace Mig
                         cmbAllFilter.Items.Add(row.ItemArray[0].ToString());
 
                     /*Все колонки*/
-                    dgAllColumn.DataSource = DB.QueryTableMultipleParams("SELECT name,id FROM cmodb.mflt ORDER BY column_order;", null);
+                    dgAllColumn.DataSource = DB.QueryTableMultipleParams("SELECT name,id FROM cmodb.mflt WHERE vis='Y' ORDER BY column_order;", null);
                     dgAllColumn.Columns["id"].Visible = false;
                     dgAllColumn.Columns["name"].HeaderText = "Наименование";
 
@@ -49,8 +57,8 @@ namespace Mig
             /*выбрали фильтр*/
             dgMyColumn.Rows.Clear();
             dgMyColumn.Columns.Clear();
-            dgMyColumn.Refresh();  
-
+            dgMyColumn.Refresh();
+           
             if (DB.conn.State == ConnectionState.Open)
             {
                 try
@@ -64,15 +72,54 @@ namespace Mig
                     int filter_code = Convert.ToInt32(cmd.ExecuteScalar());
 
                     /*колонки пользователя*/
-                    sql = "SELECT name,column_id FROM cmodb.user_filter_column fil "+
-                    " LEFT JOIN cmodb.mflt col on col.id = fil.column_id"+
-                    " where fil.filter_id =:param1 AND fil.user_name =:param2 ORDER BY fil.column_ord; ";
-
-                     dgMyColumn.Columns.Add("name", "Наименование");
-                    dgMyColumn.Columns.Add("column_id", "column_id");                    
-                    foreach (DataRow row in DB.QueryTableMultipleParams(sql, new List<object> { filter_code, pref.USER }).Rows)
-                        dgMyColumn.Rows.Add(row.ItemArray[0].ToString(), row.ItemArray[1].ToString());
+                    dgMyColumn.Columns.Add("name", "Наименование");
+                    dgMyColumn.Columns.Add("column_id", "column_id");
                     dgMyColumn.Columns["column_id"].Visible = false;
+                    //если порядок колонок уже сохранен в файле настроек, то загружаем его
+                    if (dct.ContainsKey(cmbAllFilter.Text))
+                    {
+                        List<ColumnOrderItem> columnOrder = dct[cmbAllFilter.Text];
+
+                        if (columnOrder != null)
+                        {
+                            var sorted = columnOrder.OrderBy(i => i.DisplayIndex);
+                            int rw;
+                            foreach (var item in sorted)
+                            {
+
+                                if (item.ColumnName == "warning")
+                                {
+                                    //rw = dgMyColumn.Rows.Add(item.ColumnName, DB.GetTableValue("SELECT id FROM cmodb.mflt where name=:param1;", new List<object> { "Предупреждения" }));
+                                    //dgMyColumn.Rows[rw].Visible = false;
+                                }
+                                else
+                                {
+                                    if (item.Visible)
+                                    {
+                                        rw = dgMyColumn.Rows.Add(item.ColumnName, DB.GetTableValue("SELECT id FROM cmodb.mflt where name=:param1;", new List<object> { item.ColumnName }));
+                                        dgMyColumn.Rows[rw].Visible = item.Visible;
+                                    }
+                                }
+                                                            
+
+                            }
+                        }
+                    }
+                    else
+                    {
+                        //иначе пользователь первый раз заходит с этим фильтром, добавляем пару колонок по умолчанию
+                        //sql = "SELECT name,column_id FROM cmodb.user_filter_column fil " +
+                        //" LEFT JOIN cmodb.mflt col on col.id = fil.column_id" +
+                        //" where fil.filter_id =:param1 AND fil.user_name =:param2 ORDER BY fil.column_ord; ";                                          
+                        //foreach (DataRow row in DB.QueryTableMultipleParams(sql, new List<object> { filter_code, pref.USER }).Rows)
+                        //    dgMyColumn.Rows.Add(row.ItemArray[0].ToString(), row.ItemArray[1].ToString());
+
+                        //dgMyColumn.Rows.Add("warning", DB.GetTableValue("SELECT id FROM cmodb.mflt where name=:param1;", new List<object> { "Предупреждения" }));
+                        //dgMyColumn.Rows[0].Visible = false;
+                        dgMyColumn.Rows.Add("Фамилия", DB.GetTableValue("SELECT id FROM cmodb.mflt where name=:param1;", new List<object> { "Фамилия" }));
+
+                    }
+                    
   
                 }
                 catch (Exception msg)
@@ -111,7 +158,7 @@ namespace Mig
 
         private void dgMyColumn_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (dgMyColumn.SelectedRows.Count != 0)
+            if (dgMyColumn.SelectedRows.Count != 0 && dgMyColumn.CurrentRow.Cells["name"].Value.ToString()!="Фамилия")
             {
                 dgMyColumn.Rows.RemoveAt(e.RowIndex);
             }
@@ -150,7 +197,26 @@ namespace Mig
                     cmd.Parameters.AddWithValue("filter_id", filter_code);
                     cmd.ExecuteNonQuery();
 
+                    //удаляем прежние настройки
+                    dct[cmbAllFilter.Text] = null;
+                    //создаем колонки
+                    List<ColumnOrderItem> columnOrder = new List<ColumnOrderItem>();
+                    DataGridViewColumnCollection columns = dgMyColumn.Columns;
+                    for (int ii = 0; ii < dgMyColumn.RowCount; ii++)
+                    {
+                        columnOrder.Add(new ColumnOrderItem
+                        {
+                            ColumnIndex = ii,
+                            DisplayIndex = ii,
+                            Visible = true,
+                            Width = 70,
+                            ColumnName = dgMyColumn.Rows[ii].Cells["name"].Value.ToString()  
+                        });
+                    }
+                    dct[cmbAllFilter.Text] = columnOrder;
+                    XMLMeth.SaveColumnOrderXml(dct);
 
+                    //----------
                     string expr = "";
                     int i = 1;
                     foreach (DataGridViewRow row in dgMyColumn.Rows)
