@@ -46,7 +46,7 @@ namespace Mig
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
                 cmd = new NpgsqlCommand(sql, DB.conn);
 
-                if (Action == "ADD")
+                if (Action == "ADD" && cmbTarget.Text == "зарубеж")
                 {
                     sql = "UPDATE cmodb.entry SET status='N' where contact_id=:contact_id and status='Y';";
                     cmd.CommandText = sql;

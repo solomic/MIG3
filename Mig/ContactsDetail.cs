@@ -1465,8 +1465,11 @@ namespace Mig
 
         private void toolStripButton15_Click(object sender, EventArgs e)
         {
-            /*выбираем карту*/
-            if (dgMigrHist.SelectedRows.Count != 0)
+            //Активация в данном случае нужна только при отчислении
+            if (MessageBox.Show("Активация записи нужна только при ОТЧИСЛЕНИИ, подтвердите действие", "Активация", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                return;
+                /*выбираем карту*/
+                if (dgMigrHist.SelectedRows.Count != 0)
             {
                 MigrActive(Convert.ToInt32(dgMigrHist.CurrentRow.Cells["id"].Value));
                 LoadMigr();
@@ -2066,7 +2069,7 @@ namespace Mig
 
         private void toolStripButton2_Click_1(object sender, EventArgs e)
         {
-            
+            //отключено
             if (dgEntryHist.SelectedRows.Count != 0 )
             {
                 if (dgEntryHist.CurrentRow.Cells["type"].Value.ToString()!= "зарубеж")

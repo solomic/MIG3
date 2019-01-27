@@ -29,51 +29,51 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle16 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle17 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle18 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle19 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle20 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle21 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle22 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle23 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.TreeNode treeNode19 = new System.Windows.Forms.TreeNode("Уведомление о прибытии");
+            System.Windows.Forms.TreeNode treeNode20 = new System.Windows.Forms.TreeNode("Обычное");
+            System.Windows.Forms.TreeNode treeNode21 = new System.Windows.Forms.TreeNode("Смена визы");
+            System.Windows.Forms.TreeNode treeNode22 = new System.Windows.Forms.TreeNode("Смена паспорта");
+            System.Windows.Forms.TreeNode treeNode23 = new System.Windows.Forms.TreeNode("Утеря уведомления");
+            System.Windows.Forms.TreeNode treeNode24 = new System.Windows.Forms.TreeNode("Ходатайства", new System.Windows.Forms.TreeNode[] {
+            treeNode20,
+            treeNode21,
+            treeNode22,
+            treeNode23});
+            System.Windows.Forms.TreeNode treeNode25 = new System.Windows.Forms.TreeNode("Регистрация", new System.Windows.Forms.TreeNode[] {
+            treeNode19,
+            treeNode24});
+            System.Windows.Forms.TreeNode treeNode26 = new System.Windows.Forms.TreeNode("Анкета");
+            System.Windows.Forms.TreeNode treeNode27 = new System.Windows.Forms.TreeNode("Гарантия");
+            System.Windows.Forms.TreeNode treeNode28 = new System.Windows.Forms.TreeNode("Ходатайство на визу");
+            System.Windows.Forms.TreeNode treeNode29 = new System.Windows.Forms.TreeNode("Визовая анкета", new System.Windows.Forms.TreeNode[] {
+            treeNode26,
+            treeNode27,
+            treeNode28});
+            System.Windows.Forms.TreeNode treeNode30 = new System.Windows.Forms.TreeNode("Уведомление о прибытии");
+            System.Windows.Forms.TreeNode treeNode31 = new System.Windows.Forms.TreeNode("Уведомление на отчисление");
+            System.Windows.Forms.TreeNode treeNode32 = new System.Windows.Forms.TreeNode("Ходатайство на отчисление в ДО");
+            System.Windows.Forms.TreeNode treeNode33 = new System.Windows.Forms.TreeNode("Ходатайство на отчисление в УФМС");
+            System.Windows.Forms.TreeNode treeNode34 = new System.Windows.Forms.TreeNode("Уведомления", new System.Windows.Forms.TreeNode[] {
+            treeNode30,
+            treeNode31,
+            treeNode32,
+            treeNode33});
+            System.Windows.Forms.TreeNode treeNode35 = new System.Windows.Forms.TreeNode("в банк");
+            System.Windows.Forms.TreeNode treeNode36 = new System.Windows.Forms.TreeNode("Справки", new System.Windows.Forms.TreeNode[] {
+            treeNode35});
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(fContactDetail));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Уведомление о прибытии");
-            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Обычное");
-            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Смена визы");
-            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Смена паспорта");
-            System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("Утеря уведомления");
-            System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("Ходатайства", new System.Windows.Forms.TreeNode[] {
-            treeNode2,
-            treeNode3,
-            treeNode4,
-            treeNode5});
-            System.Windows.Forms.TreeNode treeNode7 = new System.Windows.Forms.TreeNode("Регистрация", new System.Windows.Forms.TreeNode[] {
-            treeNode1,
-            treeNode6});
-            System.Windows.Forms.TreeNode treeNode8 = new System.Windows.Forms.TreeNode("Анкета");
-            System.Windows.Forms.TreeNode treeNode9 = new System.Windows.Forms.TreeNode("Гарантия");
-            System.Windows.Forms.TreeNode treeNode10 = new System.Windows.Forms.TreeNode("Ходатайство на визу");
-            System.Windows.Forms.TreeNode treeNode11 = new System.Windows.Forms.TreeNode("Визовая анкета", new System.Windows.Forms.TreeNode[] {
-            treeNode8,
-            treeNode9,
-            treeNode10});
-            System.Windows.Forms.TreeNode treeNode12 = new System.Windows.Forms.TreeNode("Уведомление о прибытии");
-            System.Windows.Forms.TreeNode treeNode13 = new System.Windows.Forms.TreeNode("Уведомление на отчисление");
-            System.Windows.Forms.TreeNode treeNode14 = new System.Windows.Forms.TreeNode("Ходатайство на отчисление в ДО");
-            System.Windows.Forms.TreeNode treeNode15 = new System.Windows.Forms.TreeNode("Ходатайство на отчисление в УФМС");
-            System.Windows.Forms.TreeNode treeNode16 = new System.Windows.Forms.TreeNode("Уведомления", new System.Windows.Forms.TreeNode[] {
-            treeNode12,
-            treeNode13,
-            treeNode14,
-            treeNode15});
-            System.Windows.Forms.TreeNode treeNode17 = new System.Windows.Forms.TreeNode("в банк");
-            System.Windows.Forms.TreeNode treeNode18 = new System.Windows.Forms.TreeNode("Справки", new System.Windows.Forms.TreeNode[] {
-            treeNode17});
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle24 = new System.Windows.Forms.DataGridViewCellStyle();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabConInfo = new System.Windows.Forms.TabPage();
             this.toolStrip9 = new System.Windows.Forms.ToolStrip();
@@ -609,9 +609,9 @@
             this.dgMigrHist.Name = "dgMigrHist";
             this.dgMigrHist.ReadOnly = true;
             this.dgMigrHist.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToDisplayedHeaders;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.ScrollBar;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.Black;
-            this.dgMigrHist.RowsDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle14.SelectionBackColor = System.Drawing.SystemColors.ScrollBar;
+            dataGridViewCellStyle14.SelectionForeColor = System.Drawing.Color.Black;
+            this.dgMigrHist.RowsDefaultCellStyle = dataGridViewCellStyle14;
             this.dgMigrHist.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgMigrHist.ShowCellErrors = false;
             this.dgMigrHist.ShowCellToolTips = false;
@@ -779,9 +779,9 @@
             this.dgDocSel.Name = "dgDocSel";
             this.dgDocSel.ReadOnly = true;
             this.dgDocSel.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToDisplayedHeaders;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.ScrollBar;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.Black;
-            this.dgDocSel.RowsDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle15.SelectionBackColor = System.Drawing.SystemColors.ScrollBar;
+            dataGridViewCellStyle15.SelectionForeColor = System.Drawing.Color.Black;
+            this.dgDocSel.RowsDefaultCellStyle = dataGridViewCellStyle15;
             this.dgDocSel.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgDocSel.ShowCellErrors = false;
             this.dgDocSel.ShowCellToolTips = false;
@@ -901,9 +901,9 @@
             this.DULdataGridView.MultiSelect = false;
             this.DULdataGridView.Name = "DULdataGridView";
             this.DULdataGridView.ReadOnly = true;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.ScrollBar;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.Black;
-            this.DULdataGridView.RowsDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle16.SelectionBackColor = System.Drawing.SystemColors.ScrollBar;
+            dataGridViewCellStyle16.SelectionForeColor = System.Drawing.Color.Black;
+            this.DULdataGridView.RowsDefaultCellStyle = dataGridViewCellStyle16;
             this.DULdataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.DULdataGridView.Size = new System.Drawing.Size(995, 174);
             this.DULdataGridView.TabIndex = 42;
@@ -1078,22 +1078,22 @@
             this.dgExpellHist.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgExpellHist.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.status});
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.Color.YellowGreen;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgExpellHist.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle17.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle17.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle17.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle17.SelectionBackColor = System.Drawing.Color.YellowGreen;
+            dataGridViewCellStyle17.SelectionForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle17.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgExpellHist.DefaultCellStyle = dataGridViewCellStyle17;
             this.dgExpellHist.Location = new System.Drawing.Point(8, 28);
             this.dgExpellHist.MultiSelect = false;
             this.dgExpellHist.Name = "dgExpellHist";
             this.dgExpellHist.ReadOnly = true;
             this.dgExpellHist.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.ScrollBar;
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.Color.Black;
-            this.dgExpellHist.RowsDefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle18.SelectionBackColor = System.Drawing.SystemColors.ScrollBar;
+            dataGridViewCellStyle18.SelectionForeColor = System.Drawing.Color.Black;
+            this.dgExpellHist.RowsDefaultCellStyle = dataGridViewCellStyle18;
             this.dgExpellHist.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgExpellHist.ShowCellErrors = false;
             this.dgExpellHist.ShowCellToolTips = false;
@@ -1130,22 +1130,22 @@
             this.dgAgreeHist.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgAgreeHist.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.agreestatus});
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.Color.YellowGreen;
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgAgreeHist.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle19.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle19.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle19.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle19.SelectionBackColor = System.Drawing.Color.YellowGreen;
+            dataGridViewCellStyle19.SelectionForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle19.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgAgreeHist.DefaultCellStyle = dataGridViewCellStyle19;
             this.dgAgreeHist.Location = new System.Drawing.Point(8, 28);
             this.dgAgreeHist.MultiSelect = false;
             this.dgAgreeHist.Name = "dgAgreeHist";
             this.dgAgreeHist.ReadOnly = true;
             this.dgAgreeHist.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
-            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.ScrollBar;
-            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.Color.Black;
-            this.dgAgreeHist.RowsDefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle20.SelectionBackColor = System.Drawing.SystemColors.ScrollBar;
+            dataGridViewCellStyle20.SelectionForeColor = System.Drawing.Color.Black;
+            this.dgAgreeHist.RowsDefaultCellStyle = dataGridViewCellStyle20;
             this.dgAgreeHist.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgAgreeHist.ShowCellErrors = false;
             this.dgAgreeHist.ShowCellToolTips = false;
@@ -1243,9 +1243,9 @@
             this.dgTeach.Name = "dgTeach";
             this.dgTeach.ReadOnly = true;
             this.dgTeach.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToDisplayedHeaders;
-            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.ScrollBar;
-            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.Color.Black;
-            this.dgTeach.RowsDefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle21.SelectionBackColor = System.Drawing.SystemColors.ScrollBar;
+            dataGridViewCellStyle21.SelectionForeColor = System.Drawing.Color.Black;
+            this.dgTeach.RowsDefaultCellStyle = dataGridViewCellStyle21;
             this.dgTeach.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgTeach.ShowCellErrors = false;
             this.dgTeach.ShowCellToolTips = false;
@@ -1351,22 +1351,22 @@
             this.dgAddrHist.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgAddrHist.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.addrstatus});
-            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.Color.YellowGreen;
-            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgAddrHist.DefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle22.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle22.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle22.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle22.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle22.SelectionBackColor = System.Drawing.Color.YellowGreen;
+            dataGridViewCellStyle22.SelectionForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle22.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgAddrHist.DefaultCellStyle = dataGridViewCellStyle22;
             this.dgAddrHist.EnableHeadersVisualStyles = false;
             this.dgAddrHist.Location = new System.Drawing.Point(14, 31);
             this.dgAddrHist.MultiSelect = false;
             this.dgAddrHist.Name = "dgAddrHist";
             this.dgAddrHist.ReadOnly = true;
-            dataGridViewCellStyle10.SelectionBackColor = System.Drawing.SystemColors.ScrollBar;
-            dataGridViewCellStyle10.SelectionForeColor = System.Drawing.Color.Black;
-            this.dgAddrHist.RowsDefaultCellStyle = dataGridViewCellStyle10;
+            dataGridViewCellStyle23.SelectionBackColor = System.Drawing.SystemColors.ScrollBar;
+            dataGridViewCellStyle23.SelectionForeColor = System.Drawing.Color.Black;
+            this.dgAddrHist.RowsDefaultCellStyle = dataGridViewCellStyle23;
             this.dgAddrHist.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgAddrHist.ShowCellErrors = false;
             this.dgAddrHist.ShowCellToolTips = false;
@@ -1816,70 +1816,70 @@
             this.treeView1.Location = new System.Drawing.Point(13, 24);
             this.treeView1.Margin = new System.Windows.Forms.Padding(2);
             this.treeView1.Name = "treeView1";
-            treeNode1.Name = "NodeNotify";
-            treeNode1.Tag = "1";
-            treeNode1.Text = "Уведомление о прибытии";
-            treeNode2.Name = "Node5";
-            treeNode2.Tag = "1";
-            treeNode2.Text = "Обычное";
-            treeNode3.Name = "Node6";
-            treeNode3.Tag = "1";
-            treeNode3.Text = "Смена визы";
-            treeNode4.Name = "Node7";
-            treeNode4.Tag = "1";
-            treeNode4.Text = "Смена паспорта";
-            treeNode5.Name = "Node8";
-            treeNode5.Tag = "1";
-            treeNode5.Text = "Утеря уведомления";
-            treeNode6.Name = "Node4";
-            treeNode6.NodeFont = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            treeNode6.Tag = "0";
-            treeNode6.Text = "Ходатайства";
-            treeNode7.Name = "Node0";
-            treeNode7.NodeFont = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            treeNode7.Tag = "0";
-            treeNode7.Text = "Регистрация";
-            treeNode8.Name = "Node9";
-            treeNode8.Tag = "1";
-            treeNode8.Text = "Анкета";
-            treeNode9.Name = "Node10";
-            treeNode9.Tag = "1";
-            treeNode9.Text = "Гарантия";
-            treeNode10.Name = "Node11";
-            treeNode10.Tag = "1";
-            treeNode10.Text = "Ходатайство на визу";
-            treeNode11.Name = "Node1";
-            treeNode11.NodeFont = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            treeNode11.Tag = "0";
-            treeNode11.Text = "Визовая анкета";
-            treeNode12.Name = "Node12";
-            treeNode12.Tag = "1";
-            treeNode12.Text = "Уведомление о прибытии";
-            treeNode13.Name = "Node13";
-            treeNode13.Tag = "1";
-            treeNode13.Text = "Уведомление на отчисление";
-            treeNode14.Name = "Node14";
-            treeNode14.Tag = "1";
-            treeNode14.Text = "Ходатайство на отчисление в ДО";
-            treeNode15.Name = "Node15";
-            treeNode15.Tag = "1";
-            treeNode15.Text = "Ходатайство на отчисление в УФМС";
-            treeNode16.Name = "Node2";
-            treeNode16.NodeFont = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            treeNode16.Tag = "0";
-            treeNode16.Text = "Уведомления";
-            treeNode17.Name = "Node1";
-            treeNode17.Tag = "1";
-            treeNode17.Text = "в банк";
-            treeNode18.Name = "Node0";
-            treeNode18.NodeFont = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            treeNode18.Tag = "0";
-            treeNode18.Text = "Справки";
+            treeNode19.Name = "NodeNotify";
+            treeNode19.Tag = "1";
+            treeNode19.Text = "Уведомление о прибытии";
+            treeNode20.Name = "Node5";
+            treeNode20.Tag = "1";
+            treeNode20.Text = "Обычное";
+            treeNode21.Name = "Node6";
+            treeNode21.Tag = "1";
+            treeNode21.Text = "Смена визы";
+            treeNode22.Name = "Node7";
+            treeNode22.Tag = "1";
+            treeNode22.Text = "Смена паспорта";
+            treeNode23.Name = "Node8";
+            treeNode23.Tag = "1";
+            treeNode23.Text = "Утеря уведомления";
+            treeNode24.Name = "Node4";
+            treeNode24.NodeFont = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            treeNode24.Tag = "0";
+            treeNode24.Text = "Ходатайства";
+            treeNode25.Name = "Node0";
+            treeNode25.NodeFont = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            treeNode25.Tag = "0";
+            treeNode25.Text = "Регистрация";
+            treeNode26.Name = "Node9";
+            treeNode26.Tag = "1";
+            treeNode26.Text = "Анкета";
+            treeNode27.Name = "Node10";
+            treeNode27.Tag = "1";
+            treeNode27.Text = "Гарантия";
+            treeNode28.Name = "Node11";
+            treeNode28.Tag = "1";
+            treeNode28.Text = "Ходатайство на визу";
+            treeNode29.Name = "Node1";
+            treeNode29.NodeFont = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            treeNode29.Tag = "0";
+            treeNode29.Text = "Визовая анкета";
+            treeNode30.Name = "Node12";
+            treeNode30.Tag = "1";
+            treeNode30.Text = "Уведомление о прибытии";
+            treeNode31.Name = "Node13";
+            treeNode31.Tag = "1";
+            treeNode31.Text = "Уведомление на отчисление";
+            treeNode32.Name = "Node14";
+            treeNode32.Tag = "1";
+            treeNode32.Text = "Ходатайство на отчисление в ДО";
+            treeNode33.Name = "Node15";
+            treeNode33.Tag = "1";
+            treeNode33.Text = "Ходатайство на отчисление в УФМС";
+            treeNode34.Name = "Node2";
+            treeNode34.NodeFont = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            treeNode34.Tag = "0";
+            treeNode34.Text = "Уведомления";
+            treeNode35.Name = "Node1";
+            treeNode35.Tag = "1";
+            treeNode35.Text = "в банк";
+            treeNode36.Name = "Node0";
+            treeNode36.NodeFont = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            treeNode36.Tag = "0";
+            treeNode36.Text = "Справки";
             this.treeView1.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode7,
-            treeNode11,
-            treeNode16,
-            treeNode18});
+            treeNode25,
+            treeNode29,
+            treeNode34,
+            treeNode36});
             this.treeView1.Size = new System.Drawing.Size(411, 326);
             this.treeView1.TabIndex = 1;
             this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
@@ -1946,14 +1946,14 @@
             this.dgEntryHist.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgEntryHist.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.entrystatus});
-            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle11.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle11.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle11.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle11.SelectionBackColor = System.Drawing.SystemColors.ScrollBar;
-            dataGridViewCellStyle11.SelectionForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgEntryHist.DefaultCellStyle = dataGridViewCellStyle11;
+            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle13.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle13.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle13.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle13.SelectionBackColor = System.Drawing.SystemColors.ScrollBar;
+            dataGridViewCellStyle13.SelectionForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle13.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgEntryHist.DefaultCellStyle = dataGridViewCellStyle13;
             this.dgEntryHist.Location = new System.Drawing.Point(7, 31);
             this.dgEntryHist.MultiSelect = false;
             this.dgEntryHist.Name = "dgEntryHist";
@@ -2005,6 +2005,7 @@
             this.toolStripButton2.Name = "toolStripButton2";
             this.toolStripButton2.Size = new System.Drawing.Size(103, 22);
             this.toolStripButton2.Text = "Активировать";
+            this.toolStripButton2.Visible = false;
             this.toolStripButton2.Click += new System.EventHandler(this.toolStripButton2_Click_1);
             // 
             // toolStripButton18
@@ -2329,14 +2330,14 @@
             this.dgChild.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.dgChild.BackgroundColor = System.Drawing.SystemColors.Control;
             this.dgChild.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle12.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle12.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle12.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle12.SelectionBackColor = System.Drawing.SystemColors.ScrollBar;
-            dataGridViewCellStyle12.SelectionForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgChild.DefaultCellStyle = dataGridViewCellStyle12;
+            dataGridViewCellStyle24.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle24.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle24.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle24.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle24.SelectionBackColor = System.Drawing.SystemColors.ScrollBar;
+            dataGridViewCellStyle24.SelectionForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle24.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgChild.DefaultCellStyle = dataGridViewCellStyle24;
             this.dgChild.Location = new System.Drawing.Point(7, 31);
             this.dgChild.MultiSelect = false;
             this.dgChild.Name = "dgChild";
