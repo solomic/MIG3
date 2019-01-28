@@ -972,7 +972,7 @@ namespace Mig
 
             ColumnOrderFlt = LoadColumnOrderXml();
             comboBox1_SelectedValueChanged(this, null);
-            SetColumnOrder();
+            //SetColumnOrder();
             
         }
 
