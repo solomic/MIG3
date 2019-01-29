@@ -2410,7 +2410,7 @@ namespace Mig
         string[] arEnt = new string[] { "AI47", "AM47", "AY47", "BC47", "BK47", "BO47", "BS47", "BW47" };
         string[] arTenure = new string[] { "DO47", "DS47", "EE47", "EI47", "EQ47", "EU47", "EY47", "FC47" };
         string[] arMigrSer = new string[] { "AQ49", "AU49", "AY49", "BC49" };
-        string[] arMigrNum = new string[] { "BK49", "BO49", "BS49", "BW49", "CA49", "CE49", "CI49" };
+        string[] arMigrNum = new string[] { "BK49", "BO49", "BS49", "BW49", "CA49", "CE49", "CI49","CM49" };
         string[] arSved = new string[]{"AA51","AE51","AI51","AM51","AQ51","AU51","AY51","BC51","BG51",
                                       "BK51","BO51","BS51","BW51","CA51","CE51","CI51","CM51","CQ51","CU51" };
         string[] arSved2 = new string[]{"AA53","AE53","AI53","AM53","AQ53","AU53","AY53","BC53","BG53",
