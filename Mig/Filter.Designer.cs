@@ -74,6 +74,8 @@
             this.tpSync = new System.Windows.Forms.ToolStripMenuItem();
             this.btnConnectPref = new System.Windows.Forms.ToolStripMenuItem();
             this.bindingSource1 = new System.Windows.Forms.BindingSource(this.components);
+            this.mHoly = new System.Windows.Forms.ToolStripMenuItem();
+            this.mSpr = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -353,7 +355,6 @@
             this.menuStrip1.Size = new System.Drawing.Size(1077, 24);
             this.menuStrip1.TabIndex = 7;
             this.menuStrip1.Text = "menuStrip1";
-            
             // 
             // бДToolStripMenuItem
             // 
@@ -385,7 +386,9 @@
             this.tpAddress,
             this.tpColumns,
             this.tpInvite,
-            this.btnColDef});
+            this.btnColDef,
+            this.mHoly,
+            this.mSpr});
             this.btnSpr.Name = "btnSpr";
             this.btnSpr.Size = new System.Drawing.Size(99, 20);
             this.btnSpr.Text = "Редактировать";
@@ -462,6 +465,18 @@
             // 
             this.bindingSource1.ListChanged += new System.ComponentModel.ListChangedEventHandler(this.bindingSource1_ListChanged);
             // 
+            // mHoly
+            // 
+            this.mHoly.Name = "mHoly";
+            this.mHoly.Size = new System.Drawing.Size(280, 22);
+            this.mHoly.Text = "Праздники...";
+            // 
+            // mSpr
+            // 
+            this.mSpr.Name = "mSpr";
+            this.mSpr.Size = new System.Drawing.Size(280, 22);
+            this.mSpr.Text = "Справочники...";
+            // 
             // fFilter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -535,5 +550,7 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.ToolStripStatusLabel tsFilterLoad;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem5;
+        private System.Windows.Forms.ToolStripMenuItem mHoly;
+        private System.Windows.Forms.ToolStripMenuItem mSpr;
     }
 }

@@ -34,7 +34,11 @@ namespace Mig
             {
                 MessageBox.Show("И куда он поехал?!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
-
+            }
+            if (tText.Text.Trim() == "")
+            {
+                MessageBox.Show("Введите комментарий!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
 
             NpgsqlTransaction transaction = null;

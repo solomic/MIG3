@@ -991,6 +991,9 @@ namespace Mig
         private void toolStripButton25_Click(object sender, EventArgs e)
         {
             /*РЕДАКТИРОВАНИЕ ДОКУМЕНТА*/
+            if (dgDocSel.SelectedRows.Count == 0)
+                return;
+
             if (dgDocSel.CurrentRow.Cells["docstatus"].Value.ToString() != "true")
             {
                 MessageBox.Show("Разрешено редактирование только активного документа!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);

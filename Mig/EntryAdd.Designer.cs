@@ -72,6 +72,7 @@
             // 
             // cmbTarget
             // 
+            this.cmbTarget.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbTarget.FormattingEnabled = true;
             this.cmbTarget.Items.AddRange(new object[] {
             "по России",
@@ -116,7 +117,7 @@
             // label65
             // 
             this.label65.AutoSize = true;
-            this.label65.Location = new System.Drawing.Point(51, 85);
+            this.label65.Location = new System.Drawing.Point(49, 87);
             this.label65.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label65.Name = "label65";
             this.label65.Size = new System.Drawing.Size(34, 13);

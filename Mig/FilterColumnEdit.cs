@@ -197,8 +197,9 @@ namespace Mig
                     cmd.Parameters.AddWithValue("filter_id", filter_code);
                     cmd.ExecuteNonQuery();
 
-                    //удаляем прежние настройки
-                    dct[cmbAllFilter.Text] = null;
+                    //временно сохраняем прежние настройки
+                    List<ColumnOrderItem> columnOrderOld = new List<ColumnOrderItem>(dct[cmbAllFilter.Text]);
+                    //dct[cmbAllFilter.Text] = null;
                     //создаем колонки
                     List<ColumnOrderItem> columnOrder = new List<ColumnOrderItem>();
                     DataGridViewColumnCollection columns = dgMyColumn.Columns;
@@ -212,6 +213,16 @@ namespace Mig
                             Width = 70,
                             ColumnName = dgMyColumn.Rows[ii].Cells["name"].Value.ToString()  
                         });
+                    }
+                    //из старых настроек берем размер столбцов
+                    int k = 0;
+                    foreach (ColumnOrderItem NewItem in columnOrder)
+                    {
+                       
+                        var w = columnOrderOld.Find(x => x.ColumnName == NewItem.ColumnName);
+                        if (w != null)
+                            columnOrder[k].Width = w.Width;
+                        k++;
                     }
                     dct[cmbAllFilter.Text] = columnOrder;
                     XMLMeth.SaveColumnOrderXml(dct);
