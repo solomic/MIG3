@@ -30,7 +30,6 @@
         {
             this.components = new System.ComponentModel.Container();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.button1 = new System.Windows.Forms.Button();
             this.lFilter = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.cmbFilter = new System.Windows.Forms.ComboBox();
@@ -76,6 +75,7 @@
             this.tpBackup = new System.Windows.Forms.ToolStripMenuItem();
             this.tpSync = new System.Windows.Forms.ToolStripMenuItem();
             this.btnConnectPref = new System.Windows.Forms.ToolStripMenuItem();
+            this.button1 = new System.Windows.Forms.Button();
             this.bindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             this.panel1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
@@ -99,16 +99,6 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1057, 40);
             this.panel1.TabIndex = 2;
-            // 
-            // button1
-            // 
-            this.button1.Image = global::Mig.Properties.Resources.add_icon_icons_com_52393;
-            this.button1.Location = new System.Drawing.Point(0, 5);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(32, 32);
-            this.button1.TabIndex = 6;
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // lFilter
             // 
@@ -419,6 +409,7 @@
             this.mHoly.Name = "mHoly";
             this.mHoly.Size = new System.Drawing.Size(280, 22);
             this.mHoly.Text = "Праздники...";
+            this.mHoly.Click += new System.EventHandler(this.mHoly_Click);
             // 
             // mSpr
             // 
@@ -481,6 +472,16 @@
             this.btnConnectPref.Size = new System.Drawing.Size(184, 22);
             this.btnConnectPref.Text = "Подключение";
             this.btnConnectPref.Click += new System.EventHandler(this.allViewToolStripMenuItem_Click);
+            // 
+            // button1
+            // 
+            this.button1.Image = global::Mig.Properties.Resources.add_icon_icons_com_52393;
+            this.button1.Location = new System.Drawing.Point(0, 5);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(32, 32);
+            this.button1.TabIndex = 6;
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // bindingSource1
             // 

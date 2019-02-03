@@ -234,6 +234,12 @@
     <Compile Include="FindAddress.Designer.cs">
       <DependentUpon>FindAddress.cs</DependentUpon>
     </Compile>
+    <Compile Include="Holy.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Holy.Designer.cs">
+      <DependentUpon>Holy.cs</DependentUpon>
+    </Compile>
     <Compile Include="Host.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -352,6 +358,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FindAddress.resx">
       <DependentUpon>FindAddress.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Holy.resx">
+      <DependentUpon>Holy.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Host.resx">
       <DependentUpon>Host.cs</DependentUpon>

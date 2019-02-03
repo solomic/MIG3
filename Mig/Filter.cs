@@ -1090,5 +1090,11 @@ namespace Mig
             XMLMeth.SaveColumnOrderXml(ColumnOrderFlt);
             FilterRefresh();
         }
+
+        private void mHoly_Click(object sender, EventArgs e)
+        {
+            fHolyForm fHoly = new fHolyForm();
+            fHoly.ShowDialog();
+        }
     }
 }
