@@ -115,7 +115,7 @@ namespace Mig
             cmbFilter.Enabled = Key;
             tpBackup.Enabled = Key;
             tpSync.Enabled = Key;
-            btnColDef.Enabled = Key;
+            miColumn.Enabled = Key;
             //  btnConnectDB.Enabled = !Key;
 
         }
@@ -962,19 +962,7 @@ namespace Mig
             fPrefDBForm.ShowDialog(this);
         }
 
-        private void tpColumns_Click(object sender, EventArgs e)
-        {
-            /*редактирование колонок фильтров*/
-            fFilterColumnEdit fFilterColumnEditForm = new fFilterColumnEdit(ColumnOrderFlt);
-            fFilterColumnEditForm.ShowDialog(this);
-            fFilterColumnEditForm = null;
-
-
-            ColumnOrderFlt = LoadColumnOrderXml();
-            comboBox1_SelectedValueChanged(this, null);
-            //SetColumnOrder();
-            
-        }
+       
 
         private void tpBackup_Click(object sender, EventArgs e)
         {
@@ -1049,15 +1037,7 @@ namespace Mig
             fSpecEditForm.ShowDialog(this);
         }
 
-        private void btnColDef_Click(object sender, EventArgs e)
-        {
-            //сбросить настройки отображения столбцов
-            if (!ColumnOrderFlt.ContainsKey(cmbFilter.Text))
-                return;
-            ColumnOrderFlt[cmbFilter.Text] = null;
-            XMLMeth.SaveColumnOrderXml(ColumnOrderFlt);
-            FilterRefresh();
-        }
+       
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -1086,6 +1066,29 @@ namespace Mig
             {
                 Logger.Log.Error(ClassName + "Function:dataGridView1_ColumnDisplayIndexChanged\n Error:" + ex);
             }
+        }
+
+        private void miColumnEdit_Click(object sender, EventArgs e)
+        {
+            /*редактирование колонок фильтров*/
+            fFilterColumnEdit fFilterColumnEditForm = new fFilterColumnEdit(ColumnOrderFlt);
+            fFilterColumnEditForm.ShowDialog(this);
+            fFilterColumnEditForm = null;
+
+
+            ColumnOrderFlt = LoadColumnOrderXml();
+            comboBox1_SelectedValueChanged(this, null);
+            
+        }
+
+        private void miColumnReset_Click(object sender, EventArgs e)
+        {
+            //сбросить настройки отображения столбцов
+            if (!ColumnOrderFlt.ContainsKey(cmbFilter.Text))
+                return;
+            ColumnOrderFlt[cmbFilter.Text] = null;
+            XMLMeth.SaveColumnOrderXml(ColumnOrderFlt);
+            FilterRefresh();
         }
     }
 }

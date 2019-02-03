@@ -66,16 +66,17 @@
             this.btnSpr = new System.Windows.Forms.ToolStripMenuItem();
             this.tpSpec = new System.Windows.Forms.ToolStripMenuItem();
             this.tpAddress = new System.Windows.Forms.ToolStripMenuItem();
-            this.tpColumns = new System.Windows.Forms.ToolStripMenuItem();
             this.tpInvite = new System.Windows.Forms.ToolStripMenuItem();
-            this.btnColDef = new System.Windows.Forms.ToolStripMenuItem();
+            this.mHoly = new System.Windows.Forms.ToolStripMenuItem();
+            this.mSpr = new System.Windows.Forms.ToolStripMenuItem();
+            this.miColumn = new System.Windows.Forms.ToolStripMenuItem();
+            this.miColumnEdit = new System.Windows.Forms.ToolStripMenuItem();
+            this.miColumnReset = new System.Windows.Forms.ToolStripMenuItem();
             this.tpData = new System.Windows.Forms.ToolStripMenuItem();
             this.tpBackup = new System.Windows.Forms.ToolStripMenuItem();
             this.tpSync = new System.Windows.Forms.ToolStripMenuItem();
             this.btnConnectPref = new System.Windows.Forms.ToolStripMenuItem();
             this.bindingSource1 = new System.Windows.Forms.BindingSource(this.components);
-            this.mHoly = new System.Windows.Forms.ToolStripMenuItem();
-            this.mSpr = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -384,11 +385,10 @@
             this.btnSpr.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tpSpec,
             this.tpAddress,
-            this.tpColumns,
             this.tpInvite,
-            this.btnColDef,
             this.mHoly,
-            this.mSpr});
+            this.mSpr,
+            this.miColumn});
             this.btnSpr.Name = "btnSpr";
             this.btnSpr.Size = new System.Drawing.Size(99, 20);
             this.btnSpr.Text = "Редактировать";
@@ -407,13 +407,6 @@
             this.tpAddress.Text = "Адреса...";
             this.tpAddress.Click += new System.EventHandler(this.tpAddress_Click);
             // 
-            // tpColumns
-            // 
-            this.tpColumns.Name = "tpColumns";
-            this.tpColumns.Size = new System.Drawing.Size(280, 22);
-            this.tpColumns.Text = "Колонки фильтров...";
-            this.tpColumns.Click += new System.EventHandler(this.tpColumns_Click);
-            // 
             // tpInvite
             // 
             this.tpInvite.Name = "tpInvite";
@@ -421,12 +414,40 @@
             this.tpInvite.Text = "Сведения о принимающей стороне...";
             this.tpInvite.Click += new System.EventHandler(this.tpInvite_Click);
             // 
-            // btnColDef
+            // mHoly
             // 
-            this.btnColDef.Name = "btnColDef";
-            this.btnColDef.Size = new System.Drawing.Size(280, 22);
-            this.btnColDef.Text = "Порядок колонок по умолчанию";
-            this.btnColDef.Click += new System.EventHandler(this.btnColDef_Click);
+            this.mHoly.Name = "mHoly";
+            this.mHoly.Size = new System.Drawing.Size(280, 22);
+            this.mHoly.Text = "Праздники...";
+            // 
+            // mSpr
+            // 
+            this.mSpr.Name = "mSpr";
+            this.mSpr.Size = new System.Drawing.Size(280, 22);
+            this.mSpr.Text = "Справочники...";
+            // 
+            // miColumn
+            // 
+            this.miColumn.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.miColumnEdit,
+            this.miColumnReset});
+            this.miColumn.Name = "miColumn";
+            this.miColumn.Size = new System.Drawing.Size(280, 22);
+            this.miColumn.Text = "Колонки";
+            // 
+            // miColumnEdit
+            // 
+            this.miColumnEdit.Name = "miColumnEdit";
+            this.miColumnEdit.Size = new System.Drawing.Size(213, 22);
+            this.miColumnEdit.Text = "Редактировать...";
+            this.miColumnEdit.Click += new System.EventHandler(this.miColumnEdit_Click);
+            // 
+            // miColumnReset
+            // 
+            this.miColumnReset.Name = "miColumnReset";
+            this.miColumnReset.Size = new System.Drawing.Size(213, 22);
+            this.miColumnReset.Text = "Сбросить по умолчанию";
+            this.miColumnReset.Click += new System.EventHandler(this.miColumnReset_Click);
             // 
             // tpData
             // 
@@ -464,18 +485,6 @@
             // bindingSource1
             // 
             this.bindingSource1.ListChanged += new System.ComponentModel.ListChangedEventHandler(this.bindingSource1_ListChanged);
-            // 
-            // mHoly
-            // 
-            this.mHoly.Name = "mHoly";
-            this.mHoly.Size = new System.Drawing.Size(280, 22);
-            this.mHoly.Text = "Праздники...";
-            // 
-            // mSpr
-            // 
-            this.mSpr.Name = "mSpr";
-            this.mSpr.Size = new System.Drawing.Size(280, 22);
-            this.mSpr.Text = "Справочники...";
             // 
             // fFilter
             // 
@@ -537,7 +546,6 @@
         private System.Windows.Forms.ToolStripMenuItem btnSpr;
         private System.Windows.Forms.ToolStripMenuItem tpSpec;
         private System.Windows.Forms.ToolStripMenuItem tpAddress;
-        private System.Windows.Forms.ToolStripMenuItem tpColumns;
         private System.Windows.Forms.ToolStripMenuItem tpInvite;
         private System.Windows.Forms.ToolStripMenuItem tpData;
         private System.Windows.Forms.ToolStripMenuItem tpBackup;
@@ -546,11 +554,13 @@
         private System.Windows.Forms.ToolStripMenuItem бДToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem btnConnectDB;
         private System.Windows.Forms.ToolStripMenuItem btnExit;
-        private System.Windows.Forms.ToolStripMenuItem btnColDef;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.ToolStripStatusLabel tsFilterLoad;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem5;
         private System.Windows.Forms.ToolStripMenuItem mHoly;
         private System.Windows.Forms.ToolStripMenuItem mSpr;
+        private System.Windows.Forms.ToolStripMenuItem miColumn;
+        private System.Windows.Forms.ToolStripMenuItem miColumnEdit;
+        private System.Windows.Forms.ToolStripMenuItem miColumnReset;
     }
 }
