@@ -116,6 +116,9 @@ namespace Mig
                 tOutput.SelectedDate = d.Rows[0]["leave_dt"].ToString();
                 tInput.SelectedDate = d.Rows[0]["entry_dt"].ToString();
                 tText.Text = d.Rows[0]["txt"].ToString();
+
+                //отключаем возможность изменить тип
+                cmbTarget.Enabled = false;
                 
             }
             else
