@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -39,9 +40,9 @@ namespace Mig
                 try
                 {
                     string sql;
-                    NpgsqlCommand cmd;
+                    SqlCommand cmd;
                     sql = "SELECT cmodb.getfulladdress(:kladr,:house,:corp,:str,:flat);";
-                    cmd = new NpgsqlCommand(sql, DB.conn);
+                    cmd = new SqlCommand(sql, DB.conn);
                     cmd.Parameters.AddWithValue("kladr", comboBox4.SelectedValue.ToString());
                     cmd.Parameters.AddWithValue("house", cmbHouse.Text);
                     cmd.Parameters.AddWithValue("corp", cmbCorp.Text);
@@ -222,13 +223,13 @@ namespace Mig
 
         private void btnSaveNewAddr_Click(object sender, EventArgs e)
         {
-            NpgsqlTransaction transaction = null;
-            NpgsqlCommand cmd;
+            SqlTransaction transaction = null;
+            SqlCommand cmd;
             try
             {
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
                 string sql = "SELECT cmodb.addaddress(:kladr_code,:house,:corp,:stroenie,:flat,:fulladdress) ; ";
-                cmd = new NpgsqlCommand(sql, DB.conn);
+                cmd = new SqlCommand(sql, DB.conn);
                 cmd.Transaction = transaction;
                 cmd.Parameters.Clear();
                 cmd.Parameters.AddWithValue("kladr_code", textBox2.Text);

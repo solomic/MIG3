@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Pref;
 using Npgsql;
+using System.Data.SqlClient;
 
 namespace Mig
 {
@@ -69,13 +70,13 @@ namespace Mig
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            NpgsqlTransaction transaction = null;
-            NpgsqlCommand cmd;
+            SqlTransaction transaction = null;
+            SqlCommand cmd;
             string sql="";
             try
             {
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
-                cmd = new NpgsqlCommand(sql, DB.conn);
+                cmd = new SqlCommand(sql, DB.conn);
                 if (Action == "Add")
                 { 
                     sql = "UPDATE cmodb.teach_info set status='N' where contact_id=:contact_id and status='Y'";                    

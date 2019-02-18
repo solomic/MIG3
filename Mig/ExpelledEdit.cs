@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Pref;
 using Npgsql;
+using System.Data.SqlClient;
 
 namespace Mig
 {
@@ -45,14 +46,14 @@ namespace Mig
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            NpgsqlTransaction transaction = null;
+            SqlTransaction transaction = null;
 
-            NpgsqlCommand cmd;
+            SqlCommand cmd;
             string sql="";
             try
             {
                 int Contact_id = pref.CONTACTID;
-                cmd = new NpgsqlCommand(sql, DB.conn);
+                cmd = new SqlCommand(sql, DB.conn);
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
                 cmd.Transaction = transaction;
                 if (Action == "ADD")

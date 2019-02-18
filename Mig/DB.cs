@@ -3,28 +3,28 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Npgsql;
+//using Npgsql;
 using Pref;
 using System.Data;
 using System.Windows.Forms;
 using Npgsql.Logging;
-
+using System.Data.SqlClient;
 
 namespace Mig
 {
     static class DB
     {
         public static string ClassName = "Class: DB.cs\n";
-        static public NpgsqlConnection conn;
+        static public SqlConnection conn;
        
         static public DataTable QueryTableMultipleParams(string comm, List<object> param)
         {
             DataSet ds = new DataSet();
             DataTable dt = new DataTable();
-            NpgsqlCommand cmd;
+            SqlCommand cmd;
             try
             {
-                cmd = new NpgsqlCommand(comm, DB.conn);
+                cmd = new SqlCommand(comm, DB.conn);
                 cmd.Parameters.Clear();
                 if (param != null)
                 {
@@ -37,7 +37,7 @@ namespace Mig
                     }
                 }
                 ds.Reset();
-                NpgsqlDataAdapter da = new NpgsqlDataAdapter();
+                SqlDataAdapter da = new SqlDataAdapter();
                 da.SelectCommand = cmd;
                 ds.Reset();
                 da.Fill(ds);
@@ -58,10 +58,10 @@ namespace Mig
             string StrRes="";
             DataSet ds = new DataSet();
             DataTable dt = new DataTable();
-            NpgsqlCommand cmd;
+            SqlCommand cmd;
             try
             {
-                cmd = new NpgsqlCommand(comm, DB.conn);
+                cmd = new SqlCommand(comm, DB.conn);
                 cmd.Parameters.Clear();
                 if (param != null)
                 {
@@ -91,11 +91,11 @@ namespace Mig
             int StrRes ;
             DataSet ds = new DataSet();
             DataTable dt = new DataTable();
-            NpgsqlCommand cmd;
+            SqlCommand cmd;
             try
             {
 
-                cmd = new NpgsqlCommand(comm, DB.conn);
+                cmd = new SqlCommand(comm, DB.conn);
                 cmd.Parameters.Clear();
                 if (param != null)
                 {
@@ -124,10 +124,10 @@ namespace Mig
             DateTime? StrRes=null;
             DataSet ds = new DataSet();
             DataTable dt = new DataTable();
-            NpgsqlCommand cmd;
+            SqlCommand cmd;
             try
             {
-                cmd = new NpgsqlCommand(comm, DB.conn);
+                cmd = new SqlCommand(comm, DB.conn);
                 cmd.Parameters.Clear();
                 if (param != null)
                 {
@@ -154,12 +154,14 @@ namespace Mig
 
         }
 
-        static public void Open(string pUser,string pPassword,string pHost, string pPort,string pDatabase)
+        static public void Open(string pUser,string pPassword,string pDS, string pIC,string pDatabase)
         {
             try
             {
-                string connstring = String.Format("Server={0};Port={1};User Id={2};Password={3};Database={4};", pHost, pPort, pUser, pPassword, pDatabase);
-                conn = new NpgsqlConnection(connstring);
+                //string connstring = String.Format("Server={0};Port={1};User Id={2};Password={3};Database={4};", pHost, pPort, pUser, pPassword, pDatabase);
+                string connstring = String.Format("Server={0};Database={1};User ID={2};Password={3}", pDS, pDatabase, pUser, pPassword);
+                //Data Source=MYPC\SQLEXPRESS;Initial Catalog=cmodb;User ID=sa;Password=***********
+                conn = new SqlConnection (connstring);
                 conn.Open();
             }
             catch (Exception ex)

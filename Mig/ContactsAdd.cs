@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Pref;
 using Npgsql;
-
+using System.Data.SqlClient;
 
 namespace Mig
 {
@@ -369,14 +369,14 @@ namespace Mig
             /*==============================*/
 
 
-            NpgsqlTransaction transaction = null;
-            NpgsqlCommand cmd;
+            SqlTransaction transaction = null;
+            SqlCommand cmd;
             string sql;
             try
             {
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
                 sql = "select nextval('cmodb.con_id')";
-                cmd = new NpgsqlCommand(sql, DB.conn);                
+                cmd = new SqlCommand(sql, DB.conn);                
                 int Contact_id =  Convert.ToInt32(cmd.ExecuteScalar());
                 /*==========================================================*/
                 sql = "INSERT INTO cmodb.contact("+
@@ -394,7 +394,7 @@ namespace Mig
                " :delegate_last_name, :delegate_first_name, :delegate_second_name, "+
               "  :delegate_ser, :delegate_num, :delegate_dul_issue_dt, :delegate_country_code, "+
                " :delegate_nationality_code, :delegate_dul_code, :status) ; ";
-                cmd = new NpgsqlCommand(sql, DB.conn);
+                cmd = new SqlCommand(sql, DB.conn);
                 cmd.Transaction = transaction;
                 cmd.Parameters.Clear();
 

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Pref;
 using Npgsql;
+using System.Data.SqlClient;
 
 namespace Mig
 {
@@ -64,10 +65,10 @@ namespace Mig
                 try
                 {
                     string sql;
-                    NpgsqlCommand cmd;
+                    SqlCommand cmd;
 
                     sql = "SELECT code FROM cmodb.filters where filtername=:_filtername;";
-                    cmd = new NpgsqlCommand(sql, DB.conn);
+                    cmd = new SqlCommand(sql, DB.conn);
                     cmd.Parameters.AddWithValue("_filtername", cmbAllFilter.Text);
                     int filter_code = Convert.ToInt32(cmd.ExecuteScalar());
 
@@ -175,8 +176,8 @@ namespace Mig
             if (DB.conn.State == ConnectionState.Open)
             {
 
-                NpgsqlTransaction transaction = null;
-                NpgsqlCommand cmd;
+                SqlTransaction transaction = null;
+                SqlCommand cmd;
                 try
                 {
                     
@@ -185,12 +186,12 @@ namespace Mig
                     string sql;
 
                     sql = "SELECT code FROM cmodb.filters where filtername=:_filtername;";
-                    cmd = new NpgsqlCommand(sql, DB.conn);
+                    cmd = new SqlCommand(sql, DB.conn);
                     cmd.Parameters.AddWithValue("_filtername", cmbAllFilter.Text);
                     int filter_code = Convert.ToInt32(cmd.ExecuteScalar());
 
                     sql = "DELETE FROM cmodb.user_filter_column where user_name=:user_name AND filter_id=:filter_id;";
-                    cmd = new NpgsqlCommand(sql, DB.conn);
+                    cmd = new SqlCommand(sql, DB.conn);
                     cmd.Transaction = transaction;
                     cmd.Parameters.Clear();
                     cmd.Parameters.AddWithValue("user_name", pref.USER);

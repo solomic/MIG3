@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -73,14 +74,14 @@ namespace Mig
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            NpgsqlTransaction transaction = null;
-            NpgsqlCommand cmd;
+            SqlTransaction transaction = null;
+            SqlCommand cmd;
             string sql = "";
             try
             {
               //  int Contact_id = pref.CONTACTID;
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
-                cmd = new NpgsqlCommand(sql, DB.conn);
+                cmd = new SqlCommand(sql, DB.conn);
                 cmd.Parameters.Clear();
                 if (Action == "Add")
                 {

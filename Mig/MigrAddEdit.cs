@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Pref;
 using Npgsql;
+using System.Data.SqlClient;
 
 namespace Mig
 {
@@ -40,14 +41,14 @@ namespace Mig
         public string EntryClear()
         {
             string res = "";
-            NpgsqlTransaction transaction = null;
-            NpgsqlCommand cmd;
+            SqlTransaction transaction = null;
+            SqlCommand cmd;
             string sql = "";
             try
             {
                 int Contact_id = pref.CONTACTID;
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
-                cmd = new NpgsqlCommand(sql, DB.conn);               
+                cmd = new SqlCommand(sql, DB.conn);               
                 sql = "UPDATE cmodb.entry SET " +
                    " status='N',updated=now(),updated_by=CURRENT_USER " +
                    "  WHERE contact_id=:contact_id and status=:status; ";
@@ -71,14 +72,14 @@ namespace Mig
             if (!tMigEntryDt.ValidateDate() || !tMigTenureFrom.ValidateDate() || !tMigTenureTo.ValidateDate())
                 return;
 
-            NpgsqlTransaction transaction = null;
-            NpgsqlCommand cmd;
+            SqlTransaction transaction = null;
+            SqlCommand cmd;
             string sql="";
             try
             {
                 int Contact_id = pref.CONTACTID;
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
-                cmd = new NpgsqlCommand(sql, DB.conn);
+                cmd = new SqlCommand(sql, DB.conn);
                 if (Action == "Add" || Action == "Extend")
                 {
                     sql = "UPDATE cmodb.migr_card SET status='N', updated=now(),updated_by=CURRENT_USER where contact_id=:contact_id and status='Y';";

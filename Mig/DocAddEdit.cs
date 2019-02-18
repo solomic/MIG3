@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Pref;
 using Npgsql;
+using System.Data.SqlClient;
 
 namespace Mig
 {
@@ -64,14 +65,14 @@ namespace Mig
             if (!tDocIssue.ValidateDate() || !tDocValidFrom.ValidateDate() || !tDocValidTo.ValidateDate())
                 return;
 
-            NpgsqlTransaction transaction = null;
-            NpgsqlCommand cmd;
+            SqlTransaction transaction = null;
+            SqlCommand cmd;
             string sql="";
             try
             {
                 int Contact_id = pref.CONTACTID;
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
-                cmd = new NpgsqlCommand(sql, DB.conn);
+                cmd = new SqlCommand(sql, DB.conn);
                 if (Action == "Add")
                 {
                     sql = "UPDATE cmodb.document SET status='N',updated=now(),updated_by=CURRENT_USER where contact_id=:contact_id and status='Y';";

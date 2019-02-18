@@ -69,6 +69,7 @@ namespace Mig
             try
             {
                 pref.USER = comboBox1.Text;
+                pref.PASS = tPass.Text;
                 Auth();
             }
             catch(Exception ex)

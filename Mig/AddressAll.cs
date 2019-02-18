@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -98,14 +99,14 @@ namespace Mig
         private string DeSelect(int oldcode,int newcode, int[] ids)
         {
             string mes = "";
-            NpgsqlTransaction transaction = null;
-            NpgsqlCommand cmd;
+            SqlTransaction transaction = null;
+            SqlCommand cmd;
             string sql = "";
             try
             {
 
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
-                cmd = new NpgsqlCommand(sql, DB.conn);
+                cmd = new SqlCommand(sql, DB.conn);
                 sql = "UPDATE cmodb.addr_inter "+
                     "SET  address_code =:newcode "+
                   " WHERE contact_id = ANY(:contact_id) AND address_code =:oldcode; ";
@@ -132,14 +133,14 @@ namespace Mig
         public string SetAddrPin(int addrcode,char pin)
         {
             string mes = "";
-            NpgsqlTransaction transaction = null;
-            NpgsqlCommand cmd;
+            SqlTransaction transaction = null;
+            SqlCommand cmd;
             string sql = "";
             try
             {
 
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
-                cmd = new NpgsqlCommand(sql, DB.conn);
+                cmd = new SqlCommand(sql, DB.conn);
                 sql = "UPDATE cmodb.address " +
                     "SET  pin =:pin " +
                   " WHERE code = :code; ";
@@ -163,8 +164,8 @@ namespace Mig
         public string DeleteAddr(int addrcode)
         {
             string mes = "";
-            NpgsqlTransaction transaction = null;
-            NpgsqlCommand cmd;
+            SqlTransaction transaction = null;
+            SqlCommand cmd;
             string sql = "";
             try
             {
@@ -176,7 +177,7 @@ namespace Mig
                 if (cnt == 0)
                 {
                     transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
-                    cmd = new NpgsqlCommand(sql, DB.conn);
+                    cmd = new SqlCommand(sql, DB.conn);
                     sql = "DELETE FROM cmodb.address " +
                          " WHERE code = :code; ";
                     cmd.CommandText = sql;

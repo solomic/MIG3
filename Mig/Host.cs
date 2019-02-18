@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -58,13 +59,13 @@ namespace Mig
             {
                 return;
             }
-            NpgsqlTransaction transaction = null;
-            NpgsqlCommand cmd;
+            SqlTransaction transaction = null;
+            SqlCommand cmd;
             string sql = "";
             try
             {                
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
-                cmd = new NpgsqlCommand(sql, DB.conn);
+                cmd = new SqlCommand(sql, DB.conn);
                 cmd.Parameters.Clear();
                 sql = "UPDATE cmodb.host  SET status = 'N'; ";
                 cmd.CommandText = sql;
@@ -104,13 +105,13 @@ namespace Mig
             }
             if (MessageBox.Show("Подтвердите удаление выбранной записи", "Удаление", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                 return;
-            NpgsqlTransaction transaction = null;
-            NpgsqlCommand cmd;
+            SqlTransaction transaction = null;
+            SqlCommand cmd;
             string sql = "";
             try
             {
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
-                cmd = new NpgsqlCommand(sql, DB.conn);
+                cmd = new SqlCommand(sql, DB.conn);
                 cmd.Parameters.Clear();
                 sql = "DELETE FROM cmodb.host  WHERE id=:id; ";
                 cmd.CommandText = sql;

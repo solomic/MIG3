@@ -17,7 +17,7 @@ using pk = DocumentFormat.OpenXml.Packaging;
 using wp = DocumentFormat.OpenXml.Wordprocessing;
 using System.Xml;
 using System.IO;
-
+using System.Data.SqlClient;
 
 namespace Mig
 {
@@ -377,14 +377,14 @@ namespace Mig
 
         private void SetContactType(string type, int[] ids)
         {           
-            NpgsqlTransaction transaction = null;
-            NpgsqlCommand cmd;
+            SqlTransaction transaction = null;
+            SqlCommand cmd;
             string sql = "";
             try
             {
 
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
-                cmd = new NpgsqlCommand(sql, DB.conn);
+                cmd = new SqlCommand(sql, DB.conn);
                 sql = "UPDATE cmodb.contact SET " +
                    " type=:type,updated=now(),updated_by=CURRENT_USER " +
                    "  WHERE contact_id = ANY(:contact_id); ";
@@ -409,13 +409,13 @@ namespace Mig
         }
         private void SetRegExtend(int type, int[] ids)
         {           
-            NpgsqlTransaction transaction = null;
-            NpgsqlCommand cmd;
+            SqlTransaction transaction = null;
+            SqlCommand cmd;
             string sql = "";
             try
             {
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
-                cmd = new NpgsqlCommand(sql, DB.conn);
+                cmd = new SqlCommand(sql, DB.conn);
                 sql = "UPDATE cmodb.contact SET " +
                    " reg_extend=:reg_extend,updated=now(),updated_by=CURRENT_USER " +
                    "  WHERE contact_id = ANY(:contact_id); ";
@@ -441,14 +441,14 @@ namespace Mig
 
         private void SetDeduct(string type, int[] ids)
         {            
-            NpgsqlTransaction transaction = null;
-            NpgsqlCommand cmd;
+            SqlTransaction transaction = null;
+            SqlCommand cmd;
             string sql = "";
             try
             {
 
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
-                cmd = new NpgsqlCommand(sql, DB.conn);
+                cmd = new SqlCommand(sql, DB.conn);
                 sql = "UPDATE cmodb.contact SET " +
                    " deduct=:type,updated=now(),updated_by=CURRENT_USER " +
                    "  WHERE contact_id = ANY(:contact_id); ";
@@ -473,14 +473,14 @@ namespace Mig
         }
         private void SetRF(string type, int[] ids)
         {            
-            NpgsqlTransaction transaction = null;
-            NpgsqlCommand cmd;
+            SqlTransaction transaction = null;
+            SqlCommand cmd;
             string sql = "";
             try
             {
 
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
-                cmd = new NpgsqlCommand(sql, DB.conn);
+                cmd = new SqlCommand(sql, DB.conn);
                 sql = "UPDATE cmodb.contact SET " +
                    " rf=:type,updated=now(),updated_by=CURRENT_USER " +
                    "  WHERE contact_id = ANY(:contact_id); ";
@@ -506,14 +506,14 @@ namespace Mig
         private void SetDoc(int type, string dt, int[] ids)
         {
            
-            NpgsqlTransaction transaction = null;
-            NpgsqlCommand cmd;
+            SqlTransaction transaction = null;
+            SqlCommand cmd;
             string sql = "";
             try
             {
 
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
-                cmd = new NpgsqlCommand(sql, DB.conn);
+                cmd = new SqlCommand(sql, DB.conn);
                 sql = "UPDATE cmodb.contact SET " +
                    " doc_state=:doc,date_entry_future=:date_entry_future,updated=now(),updated_by=CURRENT_USER " +
                    "  WHERE contact_id = ANY(:contact_id); ";

@@ -15,7 +15,7 @@ using ClosedXML.Excel;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using DocumentFormat.OpenXml;
-
+using System.Data.SqlClient;
 
 namespace Mig
 {
@@ -64,14 +64,14 @@ namespace Mig
         public void InsertPf(string name)
         { 
             
-            NpgsqlTransaction transaction = null;
-            NpgsqlCommand cmd;
+            SqlTransaction transaction = null;
+            SqlCommand cmd;
             string sql = "";
             try
             {
                 int Contact_id = pref.CONTACTID;
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
-                cmd = new NpgsqlCommand(sql, DB.conn);     
+                cmd = new SqlCommand(sql, DB.conn);     
                 sql = "INSERT INTO cmodb.pf(name, contact_id, created, created_by)VALUES(:name, :contact_id, now(), CURRENT_USER);";
 
                 cmd.CommandText = sql;

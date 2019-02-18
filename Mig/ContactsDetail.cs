@@ -11,6 +11,7 @@ using Pref;
 using Npgsql;
 using System.Diagnostics;
 using System.IO;
+using System.Data.SqlClient;
 
 namespace Mig
 {
@@ -560,14 +561,14 @@ namespace Mig
 
                 if (MessageBox.Show("Точно удаляем?", "Удаление", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
-                    NpgsqlTransaction transaction = null;
-                    NpgsqlCommand cmd;
+                    SqlTransaction transaction = null;
+                    SqlCommand cmd;
                     string sql = "";
                     try
                     {
                         int Contact_id = pref.CONTACTID;
                         transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
-                        cmd = new NpgsqlCommand(sql, DB.conn);
+                        cmd = new SqlCommand(sql, DB.conn);
                         sql = "UPDATE cmodb.stage SET status=:status where id=:id;";
                         cmd.CommandText = sql;
                         cmd.Parameters.Clear();
@@ -628,9 +629,9 @@ namespace Mig
         private void toolStripButton30_Click(object sender, EventArgs e)
         {
             /*сохраняем изменения контакта*/
-            NpgsqlTransaction transaction = null;
+            SqlTransaction transaction = null;
 
-            NpgsqlCommand cmd;
+            SqlCommand cmd;
             string sql;
             try
             {
@@ -644,7 +645,7 @@ namespace Mig
                     " second_enu= :second_enu,  " +
                     " nationality= :nationality_code, birth_country = :birth_country_code, " +
                      " status = :status where contact_id =:contact_id;";
-                cmd = new NpgsqlCommand(sql, DB.conn);
+                cmd = new SqlCommand(sql, DB.conn);
                 cmd.Transaction = transaction;
 
                 cmd.CommandText = sql;
@@ -774,9 +775,9 @@ namespace Mig
             + убираем пробелы
             + проверка при сохранении
             */
-            NpgsqlTransaction transaction = null;
+            SqlTransaction transaction = null;
 
-            NpgsqlCommand cmd;
+            SqlCommand cmd;
             string sql;
             try
             {
@@ -789,7 +790,7 @@ namespace Mig
                          " phone= :phone  " +
                          " WHERE contact_id =:contact_id and status = 'Y';";
 
-                cmd = new NpgsqlCommand(sql, DB.conn);
+                cmd = new SqlCommand(sql, DB.conn);
                 cmd.Transaction = transaction;
                 cmd.Parameters.Clear();
                 cmd.Parameters.AddWithValue("contact_id", Contact_id);
@@ -879,15 +880,15 @@ namespace Mig
 
         public void SetDulPrimary(int DULid)
         {
-            NpgsqlTransaction transaction = null;
-            NpgsqlCommand cmd;
+            SqlTransaction transaction = null;
+            SqlCommand cmd;
             string sql;
             try
             {
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
 
                 sql = "UPDATE  cmodb.dul SET status='N',updated=now(),updated_by=CURRENT_USER where contact_id=:contact_id ;";
-                cmd = new NpgsqlCommand(sql, DB.conn);
+                cmd = new SqlCommand(sql, DB.conn);
                 cmd.Transaction = transaction;
                 cmd.CommandText = sql;
                 cmd.Parameters.Clear();
@@ -919,15 +920,15 @@ namespace Mig
             if (MessageBox.Show("Удалить выбранный паспорт?", "Удаление", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
 
-                NpgsqlTransaction transaction = null;
-                NpgsqlCommand cmd;
+                SqlTransaction transaction = null;
+                SqlCommand cmd;
                 string sql;
                 try
                 {
                     transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
 
                     sql = "UPDATE  cmodb.dul SET status='N', deleted='Y',updated=now(),updated_by=CURRENT_USER where id=:dulid ;";
-                    cmd = new NpgsqlCommand(sql, DB.conn);
+                    cmd = new SqlCommand(sql, DB.conn);
                     cmd.Transaction = transaction;
                     cmd.CommandText = sql;
                     cmd.Parameters.Clear();
@@ -1076,15 +1077,15 @@ namespace Mig
 
         private void DocActive(int id)
         {
-            NpgsqlTransaction transaction = null;
-            NpgsqlCommand cmd;
+            SqlTransaction transaction = null;
+            SqlCommand cmd;
             try
             {
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
 
                 string sql;
                 sql = "UPDATE cmodb.document SET status='N' where id<>:id and contact_id=:contact_id;";
-                cmd = new NpgsqlCommand(sql, DB.conn);
+                cmd = new SqlCommand(sql, DB.conn);
                 cmd.Transaction = transaction;
                 cmd.Parameters.Clear();
                 cmd.Parameters.AddWithValue("id", id); //берем id
@@ -1138,14 +1139,14 @@ namespace Mig
 
         private static void DocDel(int docid)
         {
-            NpgsqlTransaction transaction = null;
-            NpgsqlCommand cmd;
+            SqlTransaction transaction = null;
+            SqlCommand cmd;
             string sql = "";
             try
             {
                 int Contact_id = pref.CONTACTID;
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
-                cmd = new NpgsqlCommand(sql, DB.conn);
+                cmd = new SqlCommand(sql, DB.conn);
 
                 sql = "UPDATE cmodb.document SET deleted='Y',status='N',updated=now(),updated_by=CURRENT_USER where id=:docid ;";
                 cmd.CommandText = sql;
@@ -1168,14 +1169,14 @@ namespace Mig
         }
         private static void MigrDel(int migrid)
         {
-            NpgsqlTransaction transaction = null;
-            NpgsqlCommand cmd;
+            SqlTransaction transaction = null;
+            SqlCommand cmd;
             string sql = "";
             try
             {
                 int Contact_id = pref.CONTACTID;
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
-                cmd = new NpgsqlCommand(sql, DB.conn);
+                cmd = new SqlCommand(sql, DB.conn);
 
                 sql = "UPDATE cmodb.migr_card SET deleted='Y',status='N',updated=now(),updated_by=CURRENT_USER where id=:migrid ;";
                 cmd.CommandText = sql;
@@ -1238,14 +1239,14 @@ namespace Mig
 
                 if (MessageBox.Show("Точно удаляем?", "Удаление", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
-                    NpgsqlTransaction transaction = null;
-                    NpgsqlCommand cmd;
+                    SqlTransaction transaction = null;
+                    SqlCommand cmd;
                     string sql = "";
                     try
                     {
                         int Contact_id = pref.CONTACTID;
                         transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
-                        cmd = new NpgsqlCommand(sql, DB.conn);
+                        cmd = new SqlCommand(sql, DB.conn);
                         sql = "DELETE FROM cmodb.children where id=:id;";
                         cmd.CommandText = sql;
                         cmd.Parameters.Clear();
@@ -1315,13 +1316,13 @@ namespace Mig
 
         public void TeachDel(int id)
         {
-            NpgsqlTransaction transaction = null;
-            NpgsqlCommand cmd;
+            SqlTransaction transaction = null;
+            SqlCommand cmd;
             string sql = "";
             try
             {
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
-                cmd = new NpgsqlCommand(sql, DB.conn);
+                cmd = new SqlCommand(sql, DB.conn);
                
                 sql = "UPDATE cmodb.teach_info set deleted='Y',status='N' where id=:id";
                 cmd.CommandText = sql;
@@ -1376,8 +1377,8 @@ namespace Mig
                 SelAddrCode = fSelectAddressForm.SelectedAddressCode;
                 //tFullAddress.Text = fSelectAddressForm.SelectedFullAddress;
 
-                NpgsqlTransaction transaction = null;
-                NpgsqlCommand cmd;
+                SqlTransaction transaction = null;
+                SqlCommand cmd;
                 string sql;
                 try
                 {
@@ -1385,7 +1386,7 @@ namespace Mig
                     transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
 
                     sql = "UPDATE cmodb.addr_inter SET status='N' WHERE contact_id=:contact_id;";
-                    cmd = new NpgsqlCommand(sql, DB.conn);
+                    cmd = new SqlCommand(sql, DB.conn);
                     cmd.Transaction = transaction;
                     cmd.Parameters.Clear();
                    // cmd.Parameters.AddWithValue("status", "Y");
@@ -1439,8 +1440,8 @@ namespace Mig
 
         private static void DelAddr(int id)
         {
-            NpgsqlTransaction transaction = null;
-            NpgsqlCommand cmd;
+            SqlTransaction transaction = null;
+            SqlCommand cmd;
             string sql;
             try
             {
@@ -1448,7 +1449,7 @@ namespace Mig
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
 
                 sql = "UPDATE cmodb.addr_inter SET status='N', deleted='Y' WHERE id=:id;";
-                cmd = new NpgsqlCommand(sql, DB.conn);
+                cmd = new SqlCommand(sql, DB.conn);
                 cmd.Transaction = transaction;
                 cmd.Parameters.Clear();               
                 cmd.Parameters.AddWithValue("id", id);
@@ -1481,15 +1482,15 @@ namespace Mig
 
         public void TeachActive(int id)
         {
-            NpgsqlTransaction transaction = null;
-            NpgsqlCommand cmd;
+            SqlTransaction transaction = null;
+            SqlCommand cmd;
             try
             {
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
 
                 string sql;
                 sql = "UPDATE cmodb.teach_info SET status='N' where id<>:id and contact_id=:contact_id;";
-                cmd = new NpgsqlCommand(sql, DB.conn);
+                cmd = new SqlCommand(sql, DB.conn);
                 cmd.Transaction = transaction;
                 cmd.Parameters.Clear();
                 cmd.Parameters.AddWithValue("id", id); //берем id
@@ -1518,15 +1519,15 @@ namespace Mig
 
         private void MigrActive(int id)
         {
-            NpgsqlTransaction transaction = null;
-            NpgsqlCommand cmd;
+            SqlTransaction transaction = null;
+            SqlCommand cmd;
             try
             {
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
 
                 string sql;
                 sql = "UPDATE cmodb.migr_card SET status='N' where id<>:id and contact_id=:contact_id;";
-                cmd = new NpgsqlCommand(sql, DB.conn);
+                cmd = new SqlCommand(sql, DB.conn);
                 cmd.Transaction = transaction;
                 cmd.Parameters.Clear();
                 cmd.Parameters.AddWithValue("id", id); //берем id
@@ -1554,15 +1555,15 @@ namespace Mig
         }
         private void MigrDeActive(int contactid)
         {
-            NpgsqlTransaction transaction = null;
-            NpgsqlCommand cmd;
+            SqlTransaction transaction = null;
+            SqlCommand cmd;
             try
             {
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
 
                 string sql;
                 sql = "UPDATE cmodb.migr_card SET status='N' where contact_id=:contact_id and deleted<>'Y';";
-                cmd = new NpgsqlCommand(sql, DB.conn);
+                cmd = new SqlCommand(sql, DB.conn);
                 cmd.Transaction = transaction;
                 cmd.Parameters.Clear();               
                 cmd.Parameters.AddWithValue("contact_id", contactid);
@@ -1581,15 +1582,15 @@ namespace Mig
         }
         private void EntryActive(int id)
         {
-            NpgsqlTransaction transaction = null;
-            NpgsqlCommand cmd;
+            SqlTransaction transaction = null;
+            SqlCommand cmd;
             try
             {
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
 
                 string sql;
                 sql = "UPDATE cmodb.entry SET status='N' where id<>:id and contact_id=:contact_id;";
-                cmd = new NpgsqlCommand(sql, DB.conn);
+                cmd = new SqlCommand(sql, DB.conn);
                 cmd.Transaction = transaction;
                 cmd.Parameters.Clear();
                 cmd.Parameters.AddWithValue("id", id); //берем id
@@ -1675,14 +1676,14 @@ namespace Mig
 
         private static void EntryDel(int id)
         {
-            NpgsqlTransaction transaction = null;
-            NpgsqlCommand cmd;
+            SqlTransaction transaction = null;
+            SqlCommand cmd;
             string sql = "";
             try
             {
                 int Contact_id = pref.CONTACTID;
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
-                cmd = new NpgsqlCommand(sql, DB.conn);
+                cmd = new SqlCommand(sql, DB.conn);
                 sql = "UPDATE cmodb.entry SET status='N', deleted='Y' where id=:id;";
                 cmd.CommandText = sql;
                 cmd.Parameters.Clear();
@@ -1757,14 +1758,14 @@ namespace Mig
 
         public void AgreeActive(int id)
         {
-            NpgsqlTransaction transaction = null;
-            NpgsqlCommand cmd;
+            SqlTransaction transaction = null;
+            SqlCommand cmd;
             string sql = "";
             try
             {
                 int Contact_id = pref.CONTACTID;
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
-                cmd = new NpgsqlCommand(sql, DB.conn);
+                cmd = new SqlCommand(sql, DB.conn);
                
                 sql = "UPDATE cmodb.agree SET status='N' where contact_id=:contact_id and status='Y';";
                 cmd.CommandText = sql;
@@ -1800,14 +1801,14 @@ namespace Mig
 
         public void AgreDel(int id)
         {
-            NpgsqlTransaction transaction = null;
-            NpgsqlCommand cmd;
+            SqlTransaction transaction = null;
+            SqlCommand cmd;
             string sql = "";
             try
             {
                 int Contact_id = pref.CONTACTID;
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
-                cmd = new NpgsqlCommand(sql, DB.conn);
+                cmd = new SqlCommand(sql, DB.conn);
 
                 sql = "UPDATE cmodb.agree SET status='N',deleted='Y' where id=:id;";
                 cmd.CommandText = sql;
@@ -1874,14 +1875,14 @@ namespace Mig
         }
         public void ExpellDel(int id)
         {
-            NpgsqlTransaction transaction = null;
+            SqlTransaction transaction = null;
 
-            NpgsqlCommand cmd;
+            SqlCommand cmd;
             string sql = "";
             try
             {
 
-                cmd = new NpgsqlCommand(sql, DB.conn);
+                cmd = new SqlCommand(sql, DB.conn);
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
                 cmd.Transaction = transaction;
 
@@ -1920,9 +1921,9 @@ namespace Mig
 
         public void DelegateSave()
         {
-            NpgsqlTransaction transaction = null;
+            SqlTransaction transaction = null;
 
-            NpgsqlCommand cmd;
+            SqlCommand cmd;
             string sql;
             try
             {
@@ -1935,7 +1936,7 @@ namespace Mig
                          " delegate_country = :delegate_country_code, delegate_nationality = :delegate_nationality_code, delegate_dul_code = :delegate_dul_code " +                       
                          " WHERE contact_id =:contact_id and status = 'Y';";
 
-                cmd = new NpgsqlCommand(sql, DB.conn);
+                cmd = new SqlCommand(sql, DB.conn);
                 cmd.Transaction = transaction;
                 cmd.Parameters.Clear();
                 cmd.Parameters.AddWithValue("contact_id", Contact_id);               
@@ -1978,9 +1979,9 @@ namespace Mig
         }
         public void DelegateClear()
         {
-            NpgsqlTransaction transaction = null;
+            SqlTransaction transaction = null;
 
-            NpgsqlCommand cmd;
+            SqlCommand cmd;
             string sql;
             try
             {
@@ -1993,7 +1994,7 @@ namespace Mig
                          " delegate_country = null, delegate_nationality = null, delegate_dul_code = null " +
                          " WHERE contact_id =:contact_id and status = 'Y';";
 
-                cmd = new NpgsqlCommand(sql, DB.conn);
+                cmd = new SqlCommand(sql, DB.conn);
                 cmd.Transaction = transaction;
                 cmd.Parameters.Clear();
                 cmd.Parameters.AddWithValue("contact_id", Contact_id);             
@@ -2129,13 +2130,13 @@ namespace Mig
         }
         public void StudDelete(int conid)
         {
-            NpgsqlTransaction transaction = null;
-            NpgsqlCommand cmd;
+            SqlTransaction transaction = null;
+            SqlCommand cmd;
             string sql = "";
             try
             {
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
-                cmd = new NpgsqlCommand(sql, DB.conn);
+                cmd = new SqlCommand(sql, DB.conn);
                 sql = "UPDATE cmodb.contact SET " +
                    " status='N',updated=now(),updated_by=CURRENT_USER " +
                    "  WHERE contact_id = :contact_id; ";
@@ -2183,13 +2184,13 @@ namespace Mig
 
         public void PfDelete(int pfid)
         {
-            NpgsqlTransaction transaction = null;
-            NpgsqlCommand cmd;
+            SqlTransaction transaction = null;
+            SqlCommand cmd;
             string sql = "";
             try
             {
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
-                cmd = new NpgsqlCommand(sql, DB.conn);
+                cmd = new SqlCommand(sql, DB.conn);
                 sql = "DELETE FROM cmodb.pf "+
                    "  WHERE id = :id; ";
                 cmd.CommandText = sql;

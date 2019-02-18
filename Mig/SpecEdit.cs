@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -21,9 +22,9 @@ namespace Mig
         public int GetStudFacCnt(int code)
         {
             string sql;
-            NpgsqlCommand cmd;
+            SqlCommand cmd;
             sql = "SELECT COUNT(*) FROM cmodb.teach_info where  status='Y' and deleted='N' and facult_code=:facult_code;";
-            cmd = new NpgsqlCommand(sql, DB.conn);
+            cmd = new SqlCommand(sql, DB.conn);
             cmd.Parameters.AddWithValue("facult_code", code);
             return Convert.ToInt32(cmd.ExecuteScalar());
             
@@ -31,10 +32,10 @@ namespace Mig
         public int GetStudSpecCnt(string code)
         {
             string sql;
-            NpgsqlCommand cmd;
+            SqlCommand cmd;
 
             sql = "SELECT COUNT(*) FROM cmodb.teach_info where  status='Y' and deleted='N' and spec_code=:spec_code;";
-            cmd = new NpgsqlCommand(sql, DB.conn);
+            cmd = new SqlCommand(sql, DB.conn);
             cmd.Parameters.AddWithValue("spec_code", code);
             return Convert.ToInt32(cmd.ExecuteScalar());
 
@@ -79,13 +80,13 @@ namespace Mig
                 {
                     DataSet ds = new DataSet();
                     DataTable dt = new DataTable();
-                    NpgsqlCommand cmd;
+                    SqlCommand cmd;
                     string sql = "SELECT code, name, cmodb.lookupvalue('PTEACH',prog_teach_code) prog_teach_code, id FROM cmodb.speciality where par_code=:code and status='Y' and deleted='N';";                    
-                    cmd = new NpgsqlCommand(sql, DB.conn);
+                    cmd = new SqlCommand(sql, DB.conn);
                     cmd.Parameters.Clear();                    
                     cmd.Parameters.AddWithValue("code", dataGridView1.CurrentRow.Cells["code"].Value);
                     ds.Reset();
-                    NpgsqlDataAdapter da = new NpgsqlDataAdapter();
+                    SqlDataAdapter da = new SqlDataAdapter();
                     da.SelectCommand = cmd;
                     ds.Reset();
                     da.Fill(ds);
@@ -125,13 +126,13 @@ namespace Mig
                 if (DB.conn.State == ConnectionState.Open)
                 {
 
-                    NpgsqlTransaction transaction = null;
-                    NpgsqlCommand cmd;
+                    SqlTransaction transaction = null;
+                    SqlCommand cmd;
                     try
                     {
                         transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
                         string sql = "INSERT INTO cmodb.facultet(code, name, short_name, status) VALUES ((select MAX(code)+1 from cmodb.facultet), :name, :shortname, 'Y');";
-                        cmd = new NpgsqlCommand(sql, DB.conn);
+                        cmd = new SqlCommand(sql, DB.conn);
                         cmd.Transaction = transaction;//???????
                         cmd.Parameters.Clear();
                         cmd.Parameters.AddWithValue("name", facname);
@@ -174,15 +175,15 @@ namespace Mig
                 if (DB.conn.State == ConnectionState.Open)
                 {
 
-                    NpgsqlTransaction transaction = null;
-                    NpgsqlCommand cmd;
+                    SqlTransaction transaction = null;
+                    SqlCommand cmd;
                     try
                     {
                         transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
 
                         string sql;
                         sql = "UPDATE cmodb.facultet SET status='N',deleted='N' where id=:id;";
-                        cmd = new NpgsqlCommand(sql, DB.conn);
+                        cmd = new SqlCommand(sql, DB.conn);
                         cmd.Transaction = transaction;
                         cmd.Parameters.Clear();
                         cmd.Parameters.AddWithValue("id", dataGridView1.CurrentRow.Cells["id"].Value); //берем id
@@ -228,13 +229,13 @@ namespace Mig
                 string facshortname = fFacAddEditForm.FacShortName;
                 string facname = fFacAddEditForm.FacName;
 
-                NpgsqlTransaction transaction = null;
-                NpgsqlCommand cmd;
+                SqlTransaction transaction = null;
+                SqlCommand cmd;
                 try
                 {
                     transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
                     string sql = "UPDATE cmodb.facultet SET name=:name,short_name = :short_name where id=:id;";
-                    cmd = new NpgsqlCommand(sql, DB.conn);
+                    cmd = new SqlCommand(sql, DB.conn);
                     cmd.Parameters.Clear();
                     cmd.Parameters.AddWithValue("name", facname);
                     cmd.Parameters.AddWithValue("short_name", facshortname);
@@ -276,13 +277,13 @@ namespace Mig
                 if (DB.conn.State == ConnectionState.Open)
                 {
 
-                    NpgsqlTransaction transaction = null;
-                    NpgsqlCommand cmd;
+                    SqlTransaction transaction = null;
+                    SqlCommand cmd;
                     try
                     {
                         transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
                         string sql = "INSERT INTO cmodb.speciality(code, name, status, par_code,prog_teach_code,spec_code) VALUES (:code, :name,'Y', :par_code,:prog_teach_code,(select COALESCE(MAX(spec_code),0)+1 from cmodb.speciality));";
-                        cmd = new NpgsqlCommand(sql, DB.conn);
+                        cmd = new SqlCommand(sql, DB.conn);
                         cmd.Parameters.Clear();
                         cmd.Parameters.AddWithValue("code", SpecCode);
                         cmd.Parameters.AddWithValue("name", SpecName);
@@ -333,13 +334,13 @@ namespace Mig
                 string SpecName = fSpecAddEditForm.SpecName;
                 string POCode = fSpecAddEditForm.POCode;
 
-                NpgsqlTransaction transaction = null;
-                NpgsqlCommand cmd;
+                SqlTransaction transaction = null;
+                SqlCommand cmd;
                 try
                 {
                     transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
                     string sql = "UPDATE cmodb.speciality SET code=:code,name = :name,prog_teach_code=:prog_teach_code where id=:id;";
-                    cmd = new NpgsqlCommand(sql, DB.conn);
+                    cmd = new SqlCommand(sql, DB.conn);
                     cmd.Parameters.Clear();
                     cmd.Parameters.AddWithValue("code", SpecCode);
                     cmd.Parameters.AddWithValue("name", SpecName);
@@ -378,14 +379,14 @@ namespace Mig
 
                 if (DB.conn.State == ConnectionState.Open)
                 {
-                    NpgsqlTransaction transaction = null;
-                    NpgsqlCommand cmd;
+                    SqlTransaction transaction = null;
+                    SqlCommand cmd;
                     try
                     {                        
                         transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
                         string sql;
                         sql = "UPDATE cmodb.speciality SET status='N' where id=:id;";                        
-                        cmd = new NpgsqlCommand(sql, DB.conn);
+                        cmd = new SqlCommand(sql, DB.conn);
                         cmd.Parameters.Clear();
                         cmd.Parameters.AddWithValue("id", dataGridView2.CurrentRow.Cells["id"].Value); //берем id
                         cmd.ExecuteNonQuery();
