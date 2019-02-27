@@ -41,7 +41,7 @@ namespace Mig
 
             /*ДУЛ*/
 
-            tDulType.DataSource = DB.QueryTableMultipleParams("SELECT code, value FROM cmodb.lov where type=:param1 order by ord;", new List<object> { "DUL" });
+            tDulType.DataSource = DB.QueryTableMultipleParams("SELECT code, value FROM cmodb.lov where type=@param1 order by ord;", new List<object> { "DUL" });
             tDulType.SelectedIndex = -1;
 
 

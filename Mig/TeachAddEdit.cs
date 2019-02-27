@@ -164,7 +164,7 @@ namespace Mig
                 string POCode;
                 if (cmbPO.Text != "")
                 {
-                    POCode = DB.GetTableValue("select code from cmodb.lov where type='PTEACH' AND value = :param1;", new List<object> { cmbPO.Text });
+                    POCode = DB.GetTableValue("select code from cmodb.lov where type='PTEACH' AND value = @param1;", new List<object> { cmbPO.Text });
                     cmbSpec.DataSource = DB.QueryTableMultipleParams(pref.SPECLOAD, new List<object> { Convert.ToInt16(cmbFac.SelectedValue), POCode });
                 }
                 else
@@ -181,7 +181,7 @@ namespace Mig
 
         private void cmbSpec_SelectedValueChanged(object sender, EventArgs e)
         {
-            tSpecCode.Text = cmbSpec.SelectedValue == null ? "" : DB.GetTableValue("select code from cmodb.speciality where spec_code=:param1;",new List<object> {Convert.ToInt32( cmbSpec.SelectedValue) }) ;
+            tSpecCode.Text = cmbSpec.SelectedValue == null ? "" : DB.GetTableValue("select code from cmodb.speciality where spec_code=@param1;",new List<object> {Convert.ToInt32( cmbSpec.SelectedValue) }) ;
         }
 
         private void cmbPO_SelectedValueChanged(object sender, EventArgs e)

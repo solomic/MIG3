@@ -67,7 +67,7 @@ namespace Mig
                     string sql;
                     SqlCommand cmd;
 
-                    sql = "SELECT code FROM cmodb.filters where filtername=:_filtername;";
+                    sql = "SELECT code FROM cmodb.filters where filtername=@_filtername;";
                     cmd = new SqlCommand(sql, DB.conn);
                     cmd.Parameters.AddWithValue("_filtername", cmbAllFilter.Text);
                     int filter_code = Convert.ToInt32(cmd.ExecuteScalar());
@@ -90,14 +90,14 @@ namespace Mig
 
                                 if (item.ColumnName == "warning")
                                 {
-                                    //rw = dgMyColumn.Rows.Add(item.ColumnName, DB.GetTableValue("SELECT id FROM cmodb.mflt where name=:param1;", new List<object> { "Предупреждения" }));
+                                    //rw = dgMyColumn.Rows.Add(item.ColumnName, DB.GetTableValue("SELECT id FROM cmodb.mflt where name=@param1;", new List<object> { "Предупреждения" }));
                                     //dgMyColumn.Rows[rw].Visible = false;
                                 }
                                 else
                                 {
                                     if (item.Visible)
                                     {
-                                        rw = dgMyColumn.Rows.Add(item.ColumnName, DB.GetTableValue("SELECT id FROM cmodb.mflt where name=:param1;", new List<object> { item.ColumnName }));
+                                        rw = dgMyColumn.Rows.Add(item.ColumnName, DB.GetTableValue("SELECT id FROM cmodb.mflt where name=@param1;", new List<object> { item.ColumnName }));
                                         dgMyColumn.Rows[rw].Visible = item.Visible;
                                     }
                                 }
@@ -111,13 +111,13 @@ namespace Mig
                         //иначе пользователь первый раз заходит с этим фильтром, добавляем пару колонок по умолчанию
                         //sql = "SELECT name,column_id FROM cmodb.user_filter_column fil " +
                         //" LEFT JOIN cmodb.mflt col on col.id = fil.column_id" +
-                        //" where fil.filter_id =:param1 AND fil.user_name =:param2 ORDER BY fil.column_ord; ";                                          
+                        //" where fil.filter_id =@param1 AND fil.user_name =@param2 ORDER BY fil.column_ord; ";                                          
                         //foreach (DataRow row in DB.QueryTableMultipleParams(sql, new List<object> { filter_code, pref.USER }).Rows)
                         //    dgMyColumn.Rows.Add(row.ItemArray[0].ToString(), row.ItemArray[1].ToString());
 
-                        //dgMyColumn.Rows.Add("warning", DB.GetTableValue("SELECT id FROM cmodb.mflt where name=:param1;", new List<object> { "Предупреждения" }));
+                        //dgMyColumn.Rows.Add("warning", DB.GetTableValue("SELECT id FROM cmodb.mflt where name=@param1;", new List<object> { "Предупреждения" }));
                         //dgMyColumn.Rows[0].Visible = false;
-                        dgMyColumn.Rows.Add("Фамилия", DB.GetTableValue("SELECT id FROM cmodb.mflt where name=:param1;", new List<object> { "Фамилия" }));
+                        dgMyColumn.Rows.Add("Фамилия", DB.GetTableValue("SELECT id FROM cmodb.mflt where name=@param1;", new List<object> { "Фамилия" }));
 
                     }
                     
@@ -180,26 +180,30 @@ namespace Mig
                 SqlCommand cmd;
                 try
                 {
-                    
+                 
                     transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
 
                     string sql;
 
-                    sql = "SELECT code FROM cmodb.filters where filtername=:_filtername;";
-                    cmd = new SqlCommand(sql, DB.conn);
+                    sql = "SELECT code FROM cmodb.filters where filtername=@_filtername;";
+                    cmd = new SqlCommand(sql, DB.conn,transaction);
                     cmd.Parameters.AddWithValue("_filtername", cmbAllFilter.Text);
                     int filter_code = Convert.ToInt32(cmd.ExecuteScalar());
 
-                    sql = "DELETE FROM cmodb.user_filter_column where user_name=:user_name AND filter_id=:filter_id;";
-                    cmd = new SqlCommand(sql, DB.conn);
-                    cmd.Transaction = transaction;
+                    sql = "DELETE FROM cmodb.user_filter_column where user_name=@user_name AND filter_id=@filter_id;";
+                    cmd = new SqlCommand(sql, DB.conn, transaction);
+                   // cmd.Transaction = transaction;
                     cmd.Parameters.Clear();
                     cmd.Parameters.AddWithValue("user_name", pref.USER);
                     cmd.Parameters.AddWithValue("filter_id", filter_code);
                     cmd.ExecuteNonQuery();
 
                     //временно сохраняем прежние настройки
-                    List<ColumnOrderItem> columnOrderOld = new List<ColumnOrderItem>(dct[cmbAllFilter.Text]);
+                    List<ColumnOrderItem> columnOrderOld;
+                    if (dct.ContainsKey(cmbAllFilter.Text))
+                            columnOrderOld = new List<ColumnOrderItem>(dct[cmbAllFilter.Text]);
+                    else
+                        columnOrderOld = new List<ColumnOrderItem>();
                     //dct[cmbAllFilter.Text] = null;
                     //создаем колонки
                     List<ColumnOrderItem> columnOrder = new List<ColumnOrderItem>();
@@ -234,9 +238,9 @@ namespace Mig
                     foreach (DataGridViewRow row in dgMyColumn.Rows)
                     {
                         if (i == 1)
-                            expr += "SELECT :filter_id,:user_name," + row.Cells["column_id"].Value.ToString()+","+i.ToString();
+                            expr += "SELECT @filter_id,@user_name," + row.Cells["column_id"].Value.ToString()+","+i.ToString();
                         else
-                            expr += " UNION SELECT :filter_id,:user_name," + row.Cells["column_id"].Value.ToString() + "," + i.ToString();
+                            expr += " UNION SELECT @filter_id,@user_name," + row.Cells["column_id"].Value.ToString() + "," + i.ToString();
                         i++;
                     }
                     sql = "INSERT INTO cmodb.user_filter_column(filter_id,user_name,column_id,column_ord) "+ expr+";";
@@ -247,7 +251,7 @@ namespace Mig
                     cmd.ExecuteNonQuery();
 
 
-                    sql = "SELECT cmodb.\"GenerateUserFilter\"(:user_name, :filter_id);";
+                    sql = "EXECUTE cmodb.\"GenerateUserFilter\" @user_name, @filter_id;";
                     cmd.CommandText = sql;
                     cmd.Parameters.Clear();
                     cmd.Parameters.AddWithValue("filter_id", filter_code);

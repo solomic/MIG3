@@ -1573,7 +1573,7 @@ namespace Mig
                 param.Add("p38", pfreq.Rows[0]["doc_validity_to_dt"].ToString());
                 param.Add("p39", pfreq.Rows[0]["doc_invite_num"].ToString());
 
-                if (DB.GetTableValue("select count(*) from cmodb.children where contact_id=:param1;", new List<object> { pref.CONTACTID }) != "0")
+                if (DB.GetTableValue("select count(*) from cmodb.children where contact_id=@param1;", new List<object> { pref.CONTACTID }) != "0")
                 {
 
                     int ii = 0;

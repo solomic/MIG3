@@ -227,8 +227,8 @@ namespace Mig
                 //dataGridView1.DataSource = null;
                 lFilter.ResetText();
 
-                int filter_code = DB.GetTableValueInt("SELECT code FROM cmodb.filters where filtername=:param1;", new List<object> { cmbFilter.Text });
-                String sql_text = DB.GetTableValue("SELECT filter_expr FROM cmodb.user_filter where filter_id=:param1 AND user_name=:param2;", new List<object> { filter_code, pref.USER });
+                int filter_code = DB.GetTableValueInt("SELECT code FROM cmodb.filters where filtername=@param1;", new List<object> { cmbFilter.Text });
+                String sql_text = DB.GetTableValue("SELECT filter_expr FROM cmodb.user_filter where filter_id=@param1 AND user_name=@param2;", new List<object> { filter_code, pref.USER });
 
                 bindingSource1.DataSource = DB.QueryTableMultipleParams(sql_text, null);
                 if (dataGridView1.DataSource == null)
@@ -386,8 +386,8 @@ namespace Mig
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
                 cmd = new SqlCommand(sql, DB.conn);
                 sql = "UPDATE cmodb.contact SET " +
-                   " type=:type,updated=now(),updated_by=CURRENT_USER " +
-                   "  WHERE contact_id = ANY(:contact_id); ";
+                   " type=@type,updated=now(),updated_by=CURRENT_USER " +
+                   "  WHERE contact_id = ANY(@contact_id); ";
                 cmd.CommandText = sql;
                 cmd.Parameters.Clear();
                 NpgsqlParameter arpar = new NpgsqlParameter();
@@ -417,8 +417,8 @@ namespace Mig
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
                 cmd = new SqlCommand(sql, DB.conn);
                 sql = "UPDATE cmodb.contact SET " +
-                   " reg_extend=:reg_extend,updated=now(),updated_by=CURRENT_USER " +
-                   "  WHERE contact_id = ANY(:contact_id); ";
+                   " reg_extend=@reg_extend,updated=now(),updated_by=CURRENT_USER " +
+                   "  WHERE contact_id = ANY(@contact_id); ";
                 cmd.CommandText = sql;
                 cmd.Parameters.Clear();
                 NpgsqlParameter arpar = new NpgsqlParameter();
@@ -450,8 +450,8 @@ namespace Mig
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
                 cmd = new SqlCommand(sql, DB.conn);
                 sql = "UPDATE cmodb.contact SET " +
-                   " deduct=:type,updated=now(),updated_by=CURRENT_USER " +
-                   "  WHERE contact_id = ANY(:contact_id); ";
+                   " deduct=@type,updated=now(),updated_by=CURRENT_USER " +
+                   "  WHERE contact_id = ANY(@contact_id); ";
                 cmd.CommandText = sql;
                 cmd.Parameters.Clear();
                 NpgsqlParameter arpar = new NpgsqlParameter();
@@ -482,8 +482,8 @@ namespace Mig
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
                 cmd = new SqlCommand(sql, DB.conn);
                 sql = "UPDATE cmodb.contact SET " +
-                   " rf=:type,updated=now(),updated_by=CURRENT_USER " +
-                   "  WHERE contact_id = ANY(:contact_id); ";
+                   " rf=@type,updated=now(),updated_by=CURRENT_USER " +
+                   "  WHERE contact_id = ANY(@contact_id); ";
                 cmd.CommandText = sql;
                 cmd.Parameters.Clear();
                 NpgsqlParameter arpar = new NpgsqlParameter();
@@ -515,8 +515,8 @@ namespace Mig
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
                 cmd = new SqlCommand(sql, DB.conn);
                 sql = "UPDATE cmodb.contact SET " +
-                   " doc_state=:doc,date_entry_future=:date_entry_future,updated=now(),updated_by=CURRENT_USER " +
-                   "  WHERE contact_id = ANY(:contact_id); ";
+                   " doc_state=@doc,date_entry_future=@date_entry_future,updated=now(),updated_by=CURRENT_USER " +
+                   "  WHERE contact_id = ANY(@contact_id); ";
                 cmd.CommandText = sql;
                 cmd.Parameters.Clear();
                 NpgsqlParameter arpar = new NpgsqlParameter();

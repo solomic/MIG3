@@ -140,8 +140,8 @@ namespace Mig
                 {
                    
                     DateTime Tenure = Convert.ToDateTime(tMigTenureTo.SelectedDate);
-                    DateTime? DulDt = DB.GetTableValueDt("select validity from cmodb.dul where contact_id=:param1 and status='Y'", new List<object> { pref.CONTACTID });
-                    DateTime? AgreeDt = DB.GetTableValueDt("select to_dt from cmodb.agree where contact_id=:param1 and status='Y'", new List<object> { pref.CONTACTID });
+                    DateTime? DulDt = DB.GetTableValueDt("select validity from cmodb.dul where contact_id=@param1 and status='Y'", new List<object> { pref.CONTACTID });
+                    DateTime? AgreeDt = DB.GetTableValueDt("select to_dt from cmodb.agree where contact_id=@param1 and status='Y'", new List<object> { pref.CONTACTID });
 
                     if(DulDt!=null)
                     {

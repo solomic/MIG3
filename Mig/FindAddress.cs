@@ -97,8 +97,8 @@ namespace Mig
 
                     string sql = "SELECT kl.name || ' ' || kl.socr || '., '||klrn.name as name, kl.code  , klrn.name as rn" +
                     " FROM kladr.kladr kl " +
-                    " LEFT JOIN (SELECT name || ' ' || socr as name, code FROM kladr.kladr where code like (:param1||'___00000000')) klrn on rpad(substring(kl.code, 1, 5), 13, '0') = klrn.code " +
-                    " where kl.code like (:param1||'_________00') and kl.code <> (:param1||'00000000000') and not(kl.code LIKE (:param1||'___00000000'))";
+                    " LEFT JOIN (SELECT name || ' ' || socr as name, code FROM kladr.kladr where code like (@param1||'___00000000')) klrn on rpad(substring(kl.code, 1, 5), 13, '0') = klrn.code " +
+                    " where kl.code like (@param1||'_________00') and kl.code <> (@param1||'00000000000') and not(kl.code LIKE (@param1||'___00000000'))";
 
 
                     comboBox3.DataSource = DB.QueryTableMultipleParams(sql, new List<object> { region_code });
@@ -122,7 +122,7 @@ namespace Mig
                 else
                 {
                     this.comboBox4.SelectedIndexChanged -= this.comboBox4_SelectedIndexChanged;
-                    comboBox4.DataSource = DB.QueryTableMultipleParams("SELECT name||' '|| socr AS name, code  FROM kladr.street where code like (:param1||'%')  order by name ;", new List<object> { comboBox1.SelectedValue.ToString().Substring(0, 11) });
+                    comboBox4.DataSource = DB.QueryTableMultipleParams("SELECT name||' '|| socr AS name, code  FROM kladr.street where code like (@param1||'%')  order by name ;", new List<object> { comboBox1.SelectedValue.ToString().Substring(0, 11) });
                     comboBox4.DisplayMember = "name";
                     comboBox4.ValueMember = "code";
 
@@ -151,7 +151,7 @@ namespace Mig
             {
 
                 this.comboBox4.SelectedIndexChanged -= this.comboBox4_SelectedIndexChanged;
-                comboBox4.DataSource = DB.QueryTableMultipleParams("SELECT name||' '|| socr AS name, code  FROM kladr.street where code like (:param1||'%')  order by name ;", new List<object> { comboBox3.SelectedValue.ToString().Substring(0, 11) });
+                comboBox4.DataSource = DB.QueryTableMultipleParams("SELECT name||' '|| socr AS name, code  FROM kladr.street where code like (@param1||'%')  order by name ;", new List<object> { comboBox3.SelectedValue.ToString().Substring(0, 11) });
                 comboBox4.DisplayMember = "name";
                 comboBox4.ValueMember = "code";
 

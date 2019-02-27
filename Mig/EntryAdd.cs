@@ -112,7 +112,7 @@ namespace Mig
         {
             if(Action=="EDIT")
             {
-                DataTable d = DB.QueryTableMultipleParams("SELECT leave_dt,entry_dt, txt, type FROM cmodb.entry where id=:param1;", new List<object> { Id });
+                DataTable d = DB.QueryTableMultipleParams("SELECT leave_dt,entry_dt, txt, type FROM cmodb.entry where id=@param1;", new List<object> { Id });
                 cmbTarget.Text = d.Rows[0]["type"].ToString();
                 tOutput.SelectedDate = d.Rows[0]["leave_dt"].ToString();
                 tInput.SelectedDate = d.Rows[0]["entry_dt"].ToString();

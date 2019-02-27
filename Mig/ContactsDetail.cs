@@ -48,7 +48,7 @@ namespace Mig
 
             /*контакт*/
 
-            cmbSex.DataSource = DB.QueryTableMultipleParams("SELECT code, value FROM cmodb.lov where type=:param1 order by ord;", new List<object> { "SEX" });
+            cmbSex.DataSource = DB.QueryTableMultipleParams("SELECT code, value FROM cmodb.lov where type=@param1 order by ord;", new List<object> { "SEX" });
             cmbSex.SelectedIndex = -1;
             //"SELECT name, code  FROM cmodb.nationality order by name;"
             cmbNat.DataSource = DB.QueryTableMultipleParams(pref.NAT, null);
@@ -59,12 +59,12 @@ namespace Mig
             tBirthTown.DataSource = DB.QueryTableMultipleParams(pref.BIRTHTOWN, null);
             tBirthTown.SelectedIndex = -1;
 
-            cmbPosition.DataSource = DB.QueryTableMultipleParams("SELECT code, value FROM cmodb.lov where type=:param1 order by ord;", new List<object> { "POS" });
+            cmbPosition.DataSource = DB.QueryTableMultipleParams("SELECT code, value FROM cmodb.lov where type=@param1 order by ord;", new List<object> { "POS" });
             cmbPosition.SelectedIndex = -1;
 
 
             /*Представитель*/
-            cmbDelDul.DataSource = DB.QueryTableMultipleParams("SELECT code, value FROM cmodb.lov where type=:param1 order by ord;", new List<object> { "DUL" });
+            cmbDelDul.DataSource = DB.QueryTableMultipleParams("SELECT code, value FROM cmodb.lov where type=@param1 order by ord;", new List<object> { "DUL" });
             cmbDelDul.SelectedIndex = -1;
             cmbDelCountry.DataSource = DB.QueryTableMultipleParams("SELECT name, code  FROM cmodb.nationality order by name;", null);
             cmbDelCountry.SelectedIndex = -1;
@@ -132,7 +132,7 @@ namespace Mig
             string GetDul = "SELECT cmodb.lookupvalue('DUL',type) as \"Тип\", ser as \"Серия\", num as \"Номер\", to_char(issue,'DD.MM.YYYY') as \"Выдан\", " +
             " to_char(validity,'DD.MM.YYYY') as \"Годен до\", " +
             " CASE WHEN validity IS NOT NULL THEN to_char(validity-interval '6 month','DD.MM.YYYY') END \"Действие с визой\"  "
-            + " FROM cmodb.dul where contact_id=:param1 AND status='Y' ;";
+            + " FROM cmodb.dul where contact_id=@param1 AND status='Y' ;";
             DataTable DULTable = DB.QueryTableMultipleParams(GetDul, new List<object> { pref.CONTACTID });
             if (DULTable.Rows.Count != 0)
             {
@@ -190,7 +190,7 @@ namespace Mig
         public void LoadExpell()
         {
             dgExpellHist.Columns["status"].DataPropertyName = "status";
-            dgExpellHist.DataSource = DB.QueryTableMultipleParams("SELECT id,case when status='Y' then 'true' else 'false' end as status,expelled, expelled_num, expelled_dt,updated ,updated_by  FROM cmodb.expell where contact_id=:param1 and deleted='N';", new List<object> { pref.CONTACTID });
+            dgExpellHist.DataSource = DB.QueryTableMultipleParams("SELECT id,case when status='Y' then 'true' else 'false' end as status,expelled, expelled_num, expelled_dt,updated ,updated_by  FROM cmodb.expell where contact_id=@param1 and deleted='N';", new List<object> { pref.CONTACTID });
             dgExpellHist.Columns["id"].Visible = false;
             dgExpellHist.Columns["status"].HeaderText = "Основной";
             dgExpellHist.Columns["expelled"].HeaderText = "Основание";
@@ -203,7 +203,7 @@ namespace Mig
         {            
             string sql;
             sql = "SELECT id, CASE WHEN status='Y' THEN 'true' ELSE 'false' END as docstatus,cmodb.lookupvalue('MIGR.VIEW',type) as type, ser, num, issue_dt,validity_from_dt, validity_to_dt,ident, invite_num "+
-                ",updated,updated_by FROM cmodb.document where contact_id=:param1 AND deleted='N' ORDER BY status DESC,validity_to_dt DESC;";
+                ",updated,updated_by FROM cmodb.document where contact_id=@param1 AND deleted='N' ORDER BY status DESC,validity_to_dt DESC;";
             dgDocSel.Columns["docstatus"].DataPropertyName = "docstatus";
             dgDocSel.DataSource = DB.QueryTableMultipleParams(sql, new List<object> { pref.CONTACTID });
             dgDocSel.Columns["id"].Visible = false;
@@ -223,7 +223,7 @@ namespace Mig
         {
             
             string sql = "SELECT id,CASE WHEN status='Y' THEN 'true' ELSE 'false' END as migrstatus,ser, num, kpp_code, entry_dt, tenure_from_dt, tenure_to_dt,purpose_entry " +
-                ",updated,updated_by FROM cmodb.migr_card where contact_id=:param1 AND deleted='N' ORDER BY status desc,tenure_to_dt DESC;";
+                ",updated,updated_by FROM cmodb.migr_card where contact_id=@param1 AND deleted='N' ORDER BY status desc,tenure_to_dt DESC;";
             dgMigrHist.Columns["migrstatus"].DataPropertyName = "migrstatus";
             dgMigrHist.DataSource = DB.QueryTableMultipleParams(sql, new List<object> { pref.CONTACTID });
             dgMigrHist.Columns["id"].Visible = false;
@@ -277,7 +277,7 @@ namespace Mig
         public void LoadAgree()
         {
             dgAgreeHist.Columns["agreestatus"].DataPropertyName = "agreestatus";
-            dgAgreeHist.DataSource = DB.QueryTableMultipleParams("SELECT id,case when status='Y' then 'true' Else 'false' end as agreestatus,num, dt, from_dt,to_dt  FROM cmodb.agree where contact_id=:param1 and deleted='N' order by status desc nulls last,to_dt desc;", new List<object> { pref.CONTACTID });
+            dgAgreeHist.DataSource = DB.QueryTableMultipleParams("SELECT id,case when status='Y' then 'true' Else 'false' end as agreestatus,num, dt, from_dt,to_dt  FROM cmodb.agree where contact_id=@param1 and deleted='N' order by status desc nulls last,to_dt desc;", new List<object> { pref.CONTACTID });
             dgAgreeHist.Columns["id"].Visible = false;
             dgAgreeHist.Columns["agreestatus"].HeaderText = "Основной";
             dgAgreeHist.Columns["num"].HeaderText = "Договор/Направление";
@@ -322,7 +322,7 @@ namespace Mig
 
                
                 /*Дней в РФ*/
-                tDays.Text = DB.GetTableValue("SELECT allday FROM cmodb.\"Resident\" where contact_id=:param1;", new List<object> { pref.CONTACTID });
+                tDays.Text = DB.GetTableValue("SELECT allday FROM cmodb.\"Resident\" where contact_id=@param1;", new List<object> { pref.CONTACTID });
 
                 /*ИНИЦИАЛИЗАЦИЯ ПАРАМЕТРОВ ОТЧЕТОВ*/
                 //ходатайство обычное
@@ -975,8 +975,8 @@ namespace Mig
         }
         public void LoadVisaExtDate()
         {
-            tdelivery_dt.Text = DB.GetTableValue("select TO_CHAR(a.delivery_dt,'DD.MM.YYYY') from \"cmodb\".\"contact\" a where a.contact_id=:param1", new List<object> {pref.CONTACTID });
-            tdate_entry_future.Text = DB.GetTableValue("select TO_CHAR(a.date_entry_future,'DD.MM.YYYY') from \"cmodb\".\"contact\" a where a.contact_id=:param1", new List<object> { pref.CONTACTID });
+            tdelivery_dt.Text = DB.GetTableValue("select TO_CHAR(a.delivery_dt,'DD.MM.YYYY') from \"cmodb\".\"contact\" a where a.contact_id=@param1", new List<object> {pref.CONTACTID });
+            tdate_entry_future.Text = DB.GetTableValue("select TO_CHAR(a.date_entry_future,'DD.MM.YYYY') from \"cmodb\".\"contact\" a where a.contact_id=@param1", new List<object> { pref.CONTACTID });
         }
 
         private void toolStripButton23_Click(object sender, EventArgs e)
@@ -1034,7 +1034,7 @@ namespace Mig
             if (fMigrAddEditForm.ShowDialog(this) == DialogResult.OK)
             {
                 LoadMigr();
-                int cnt = Convert.ToInt32(DB.GetTableValue("SELECT COUNT(1) FROM cmodb.entry where contact_id=:param1 and status='Y';", new List<object> { pref.CONTACTID }));
+                int cnt = Convert.ToInt32(DB.GetTableValue("SELECT COUNT(1) FROM cmodb.entry where contact_id=@param1 and status='Y';", new List<object> { pref.CONTACTID }));
                 if (cnt != 0)
                 {
                     if (MessageBox.Show("Очистить поля въезд/выезд?", "Инфо", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
@@ -1359,7 +1359,7 @@ namespace Mig
 
             string sql = "select ai.id, CASE WHEN ai.status='Y' THEN 'true' ELSE 'false' END as addrstatus,full_address as \"Адрес регистрации\" from cmodb.address ad " +
              " left join cmodb.addr_inter ai on ai.address_code = ad.code " +
-             " where ai.contact_id =:param1 AND ai.deleted='N' " +
+             " where ai.contact_id =@param1 AND ai.deleted='N' " +
               " order by ai.status desc nulls last, ai.created DESC";
             dgAddrHist.Columns["addrstatus"].DataPropertyName = "addrstatus";
             dgAddrHist.DataSource = DB.QueryTableMultipleParams(sql, new List<object> { pref.CONTACTID });
@@ -1630,7 +1630,7 @@ namespace Mig
             dgEntryHist.SuspendLayout();
             dgEntryHist.Columns["entrystatus"].DataPropertyName = "entrystatus";
             dgEntryHist.DataSource = DB.QueryTableMultipleParams("SELECT  id,case when status='Y' then 'true' else 'false' end as entrystatus,leave_dt,entry_dt, txt, type "+
-                " FROM cmodb.entry where contact_id=:param1 and deleted='N' ORDER BY case when status='Y' then '1' else '0' end desc nulls last,leave_dt DESC;", new List<object> { pref.CONTACTID });
+                " FROM cmodb.entry where contact_id=@param1 and deleted='N' ORDER BY case when status='Y' then '1' else '0' end desc nulls last,leave_dt DESC;", new List<object> { pref.CONTACTID });
             dgEntryHist.Columns["id"].Visible = false;
             dgEntryHist.Columns["entrystatus"].HeaderText = "Основной";
             dgEntryHist.Columns["type"].HeaderText = "Тип";

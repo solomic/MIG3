@@ -32,7 +32,7 @@ namespace Mig
         {
             try {
                 /*тип документа*/
-                cmbDocType.DataSource = DB.QueryTableMultipleParams("SELECT code, value FROM cmodb.lov where type=:param1 order by ord;", new List<object> { "MIGR.VIEW" });
+                cmbDocType.DataSource = DB.QueryTableMultipleParams("SELECT code, value FROM cmodb.lov where type=@param1 order by ord;", new List<object> { "MIGR.VIEW" });
                 cmbDocType.SelectedIndex = -1;
 
                 if (Action == "Edit")

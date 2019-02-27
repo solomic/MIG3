@@ -37,8 +37,8 @@ namespace Pref
         public static string PO = "SELECT  code, value FROM cmodb.lov where type='PTEACH'  ORDER BY ord;";
 
         public static string FAC = "SELECT code, name FROM cmodb.facultet where status = 'Y' ORDER BY name;";
-        public static string SPECLOAD = "SELECT  spec_code, name FROM cmodb.speciality where status='Y' and par_code=:param1 AND prog_teach_code=:param2 ORDER BY name;";
-        public static string SEX = "SELECT code, value FROM cmodb.lov where type=:param1 order by ord;";
+        public static string SPECLOAD = "SELECT  spec_code, name FROM cmodb.speciality where status='Y' and par_code=@param1 AND prog_teach_code=@param2 ORDER BY name;";
+        public static string SEX = "SELECT code, value FROM cmodb.lov where type=@param1 order by ord;";
         //public static string NAT = "SELECT name, code  FROM cmodb.nationality order by name;";
         public static string BIRTHTOWN = "SELECT DISTINCT(birth_town) as name , 0 as code from cmodb.contact where birth_town<>'' order by name;";
         public static string NAT = "select DISTINCT(t.name) as name , 0 as code from ( " +
@@ -49,9 +49,9 @@ namespace Pref
                 " SELECT nationality  FROM cmodb.contact " +
                 " ) t order by t.name ;";
 
-        public static string POS = "SELECT code, value FROM cmodb.lov where type=:param1 order by ord;";
-        public static string DUL = "SELECT code, value FROM cmodb.lov where type=:param1 order by ord;";
-        public static string DOCTYPE = "SELECT code, value FROM cmodb.lov where type=:param1 order by ord;";
+        public static string POS = "SELECT code, value FROM cmodb.lov where type=@param1 order by ord;";
+        public static string DUL = "SELECT code, value FROM cmodb.lov where type=@param1 order by ord;";
+        public static string DOCTYPE = "SELECT code, value FROM cmodb.lov where type=@param1 order by ord;";
         public static string KPP = "SELECT  distinct kpp_code FROM cmodb.migr_card where kpp_code is not null and kpp_code <>'' order by kpp_code";
 
         //ходатайство обычное
@@ -67,64 +67,64 @@ namespace Pref
        " cmodb.lookupvalue('DUL',delegate_dul_code) as delegate_dul, delegate_ser, delegate_num, delegate_dul_issue_dt, " +
        " delegate_country, delegate_nationality  , "+
         " (last_name ||case when first_name is not null then ' '||first_name else '' end||case when second_name is not null then ' '||second_name else '' end) confio"+
-        " FROM cmodb.contact where contact_id=:param1 and status='Y';";
-        public static string GetDulIdSql = "SELECT cmodb.lookupvalue('DUL',type) as type, ser, num, issue, validity FROM cmodb.dul where id=:param1;";
+        " FROM cmodb.contact where contact_id=@param1 and status='Y';";
+        public static string GetDulIdSql = "SELECT cmodb.lookupvalue('DUL',type) as type, ser, num, issue, validity FROM cmodb.dul where id=@param1;";
         public static string GetDulAllSql = "SELECT id, CASE WHEN status='Y' THEN 'true' else 'false' END as dulstatus,cmodb.lookupvalue('DUL',type) as \"Тип\", ser as \"Серия\", num as \"Номер\", issue as \"Выдан\", " +
             " validity as \"Годен до\", "+
             " CASE WHEN status='Y' AND validity IS NOT NULL THEN validity-interval '6 month' END \"Действие с визой\"  "
-            + ",updated \"Обновлено\",updated_by \"Обновил(а)\" FROM cmodb.dul where contact_id=:param1 AND deleted='N' ORDER BY status DESC nulls last;";
+            + ",updated \"Обновлено\",updated_by \"Обновил(а)\" FROM cmodb.dul where contact_id=@param1 AND deleted='N' ORDER BY status DESC nulls last;";
 
         public static string GetMigrCardSql = "SELECT id, document_id,contact_id, ser, num, kpp_code, entry_dt, tenure_from_dt, " +
        "tenure_to_dt, status, purpose_entry/*, created, created_by, updated, "+
-       "updated_by */ FROM cmodb.migr_card WHERE contact_id=:param1 ORDER BY status DESC, entry_dt DESC;";
+       "updated_by */ FROM cmodb.migr_card WHERE contact_id=@param1 ORDER BY status DESC, entry_dt DESC;";
 
         public static string GetDocSql = "SELECT id, code, contact_id, cmodb.lookupvalue('MIGR.VIEW',type) as type,ident,  invite_num, ser, num, issue_dt, " +
        "validity_from_dt, validity_to_dt, status/*, created, created_by, "+
-       "updated, updated_by*/  FROM cmodb.document where contact_id=:param1 ORDER BY status DESC;";
+       "updated, updated_by*/  FROM cmodb.document where contact_id=@param1 ORDER BY status DESC;";
 
         public static string GetMigrCardActiveSql = "SELECT id, contact_id, ser, num, kpp_code, entry_dt, tenure_from_dt, " +
        "tenure_to_dt, status, purpose_entry/*, created, created_by, updated, " +
-       "updated_by */ FROM cmodb.migr_card WHERE contact_id=:param1 AND status='Y' ORDER BY status DESC, entry_dt DESC;";
+       "updated_by */ FROM cmodb.migr_card WHERE contact_id=@param1 AND status='Y' ORDER BY status DESC, entry_dt DESC;";
 
         public static string GetDocActiveSql = "SELECT id, contact_id, cmodb.lookupvalue('MIGR.VIEW',type) as type,ident,  invite_num, ser, num, issue_dt, " +
        "validity_from_dt, validity_to_dt, status/*, created, created_by, " +
-       "updated, updated_by*/  FROM cmodb.document where contact_id=:param1 AND status='Y'  ORDER BY status DESC;";
+       "updated, updated_by*/  FROM cmodb.document where contact_id=@param1 AND status='Y'  ORDER BY status DESC;";
 
 
-        public static string GetExpellActiveSql = "SELECT expelled, expelled_num, expelled_dt FROM cmodb.expell where id=:param1;";
-        public static string GetExpellSql = "SELECT id, contact_id, expelled, expelled_num, expelled_dt, status  FROM cmodb.expell where contact_id=:param1 ORDER BY status DESC;";
+        public static string GetExpellActiveSql = "SELECT expelled, expelled_num, expelled_dt FROM cmodb.expell where id=@param1;";
+        public static string GetExpellSql = "SELECT id, contact_id, expelled, expelled_num, expelled_dt, status  FROM cmodb.expell where contact_id=@param1 ORDER BY status DESC;";
 
         public static string GetAddressActiveSql = "SELECT full_address"+
                                                      " FROM cmodb.address adr"+
                                                     "  JOIN cmodb.addr_inter adrintr on (adr.code= adrintr.address_code AND adrintr.status= 'Y')"+
-                                                    "  where contact_id=:param1;";
-        public static string GetChildSql = "SELECT fio, to_char(birthday,'DD.MM.YYYY') birthday, address, id, nationality  FROM cmodb.children where contact_id=:param1;";
-        public static string GetChildEditSql = "SELECT fio, birthday, address, id, nationality  FROM cmodb.children where id=:param1;";
-        public static string GetAgreeActiveSql = "SELECT num, dt, from_dt, to_dt FROM cmodb.agree where id=:param1;";
+                                                    "  where contact_id=@param1;";
+        public static string GetChildSql = "SELECT fio, to_char(birthday,'DD.MM.YYYY') birthday, address, id, nationality  FROM cmodb.children where contact_id=@param1;";
+        public static string GetChildEditSql = "SELECT fio, birthday, address, id, nationality  FROM cmodb.children where id=@param1;";
+        public static string GetAgreeActiveSql = "SELECT num, dt, from_dt, to_dt FROM cmodb.agree where id=@param1;";
         public static string GetTeachActiveSql = "SELECT postup_year,spec.code, spec.name spec_name, fac.name fac_name, cmodb.lookupvalue('FO', form_teach_code) AS form_teach , cmodb.lookupvalue('FIN', form_pay_code)  as form_pay, " +
                                                   " cmodb.lookupvalue('PTEACH', teach.prog_teach_code) AS prog_teach, period_total, period_ind, period_total_p, period_ind_p, " +
                                                     " amount, facult_code " +
                                                   " FROM cmodb.teach_info teach"+
                                                   " left join cmodb.speciality spec on spec.spec_code=teach.spec_code"+
                                                   " left join cmodb.facultet fac on fac.code= teach.facult_code"+
-                                                  " where teach.id =:param1;";
+                                                  " where teach.id =@param1;";
         public static string GetTeachAllSql = "SELECT case when teach.status='Y' then 'true' else 'false' end as teachstatus,teach.id,postup_year, deduct_year,cmodb.lookupvalue('FO', form_teach_code) AS form_teach , cmodb.lookupvalue('FIN', form_pay_code)  as form_pay, " +
                                                   " cmodb.lookupvalue('PTEACH', teach.prog_teach_code) AS prog_teach, period_total, period_ind, period_total_p, period_ind_p, " +
                                                     " amount, facult_code ,spec.code, spec.name spec_name, fac.name fac_name" +
                                                   " FROM cmodb.teach_info teach" +
                                                   " left join cmodb.speciality spec on spec.spec_code=teach.spec_code" +
                                                   " left join cmodb.facultet fac on fac.code= teach.facult_code" +
-                                                  " where teach.deleted= 'N' and contact_id =:param1 order by teach.status DESC nulls last;";
-        public static string GetEntryActiveSql = "SELECT entry_dt, leave_dt, txt, type FROM cmodb.entry where contact_id=:param1 and status='Y';";
-        public static string GetPfSql = "SELECT id,name, created, created_by FROM cmodb.pf WHERE contact_id=:param1 ORDER BY created DESC;";
-        public static string GetStageSql = "SELECT id, stage, due_dt, amount, case when receipt='Y' then 'да' else 'нет' end receipt, pay_dt FROM cmodb.stage WHERE status='Y' and contact_id=:param1  ORDER BY stage;";
-        public static string GetStageEditSql = "SELECT id, stage, due_dt, amount, case when receipt='Y' then 'да' else 'нет' end receipt, pay_dt FROM cmodb.stage WHERE status='Y' and contact_id=:param1 and id=:param2  ORDER BY stage;";
+                                                  " where teach.deleted= 'N' and contact_id =@param1 order by teach.status DESC nulls last;";
+        public static string GetEntryActiveSql = "SELECT entry_dt, leave_dt, txt, type FROM cmodb.entry where contact_id=@param1 and status='Y';";
+        public static string GetPfSql = "SELECT id,name, created, created_by FROM cmodb.pf WHERE contact_id=@param1 ORDER BY created DESC;";
+        public static string GetStageSql = "SELECT id, stage, due_dt, amount, case when receipt='Y' then 'да' else 'нет' end receipt, pay_dt FROM cmodb.stage WHERE status='Y' and contact_id=@param1  ORDER BY stage;";
+        public static string GetStageEditSql = "SELECT id, stage, due_dt, amount, case when receipt='Y' then 'да' else 'нет' end receipt, pay_dt FROM cmodb.stage WHERE status='Y' and contact_id=@param1 and id=@param2  ORDER BY stage;";
 
         public static string GetHostActiveSql = "SELECT last_name, first_name, second_name, doc, doc_num, date_issue, "+
                            " date_valid, obl, rayon, town, street, house, korp, stro, flat,  "+
                            " phone, org_name, address, org_phis, inn, created, created_by,  " +
                            " updated, updated_by, doc_ser, birthday, status " +
-                                " FROM cmodb.host where id=:param1;";
+                                " FROM cmodb.host where id=@param1;";
 
         /*ПФ - общий запрос*/
         public static string PfRequest = "select "+
@@ -213,7 +213,7 @@ namespace Pref
                     " LEFT JOIN cmodb.dul dul ON (a.contact_id = dul.contact_id AND dul.status = 'Y') "+
                     " LEFT JOIN cmodb.expell exp ON (a.contact_id = exp.contact_id AND exp.status = 'Y') "+
                     " LEFT JOIN cmodb.host host ON 1=1 AND host.status='Y'" +
-                    " WHERE a.status= 'Y' and a.contact_id= :param1;";
+                    " WHERE a.status= 'Y' and a.contact_id= @param1;";
         public static string PfHost = "SELECT last_name, first_name, second_name, doc, doc_num,  to_char (date_issue,'DD.MM.YYYY') date_issue, " +
                                       "  to_char (date_valid,'DD.MM.YYYY') date_valid, obl, rayon, town, street, house, korp, stro, flat,  " +
                                      "  phone, org_name, address, org_phis, inn, created, created_by,  " +

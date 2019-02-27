@@ -46,7 +46,7 @@ namespace Mig
             string sql = "select c.contact_id,c.contact_id as \"Код\",fio as \"ФИО\",nationality as \"Гражданство\",birthday as \"Дата рождения\",cmodb.lookupvalue('CON.TYPE',c.type) as \"Статус студента\", CASE WHEN ai.status='Y' then 'Текущий адрес' else 'Архив' end as \"Статус адреса\" from cmodb.contact c " +
             "left join cmodb.addr_inter ai on c.contact_id = ai.contact_id "+
             "left join cmodb.address addr on addr.code = ai.address_code "+
-            "where  addr.code =:param1 "+
+            "where  addr.code =@param1 "+
              "  order by c.last_name ASC";
             dgAddrStud.DataSource = DB.QueryTableMultipleParams(sql, new List<object> { dgAddrAll.CurrentRow.Cells["Код"].Value });
             dgAddrStud.Columns["contact_id"].Visible = false;
@@ -172,7 +172,7 @@ namespace Mig
                 sql = " select count(1) from cmodb.contact c " +
                        " left join cmodb.addr_inter ai on c.contact_id = ai.contact_id " +
                        " left join cmodb.address addr on addr.code = ai.address_code " +
-                       " where  addr.code =:param1 ";
+                       " where  addr.code =@param1 ";
                 int cnt = DB.GetTableValueInt(sql, new List<object> { dgAddrAll.CurrentRow.Cells["Код"].Value });
                 if (cnt == 0)
                 {
