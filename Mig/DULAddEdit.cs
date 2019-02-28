@@ -95,13 +95,13 @@ namespace Mig
                 cmd.Parameters.Clear();
                 if (action == "EDIT")
                 {
-                    sql = "UPDATE  cmodb.dul SET type=:type,updated=now(),updated_by=CURRENT_USER,ser=:ser,num=:num,issue=:issue,validity=:validity where id=:id ;";
+                    sql = "UPDATE  cmodb.dul SET type=@type,updated=GETDATE(),updated_by=CURRENT_USER,ser=@ser,num=@num,issue=@issue,validity=@validity where id=@id ;";
                     cmd.Parameters.AddWithValue("id", id);
                 }
                 if (action == "ADD")
                 {
                     sql = "INSERT INTO cmodb.dul(type, ser, num, issue, validity, status, contact_id, updated, updated_by) " +
-                    " VALUES(:type, :ser, :num, :issue, :validity, :status, :contact_id, now(), CURRENT_USER); ";
+                    " VALUES(@type, @ser, @num, @issue, @validity, @status, @contact_id, GETDATE(), CURRENT_USER); ";
                     cmd.Parameters.AddWithValue("contact_id", Contact_id);
                     cmd.Parameters.AddWithValue("status", "N");
                 }

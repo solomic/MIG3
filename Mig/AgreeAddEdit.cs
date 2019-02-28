@@ -55,7 +55,7 @@ namespace Mig
                 cmd = new SqlCommand(sql, DB.conn);
                 if (Action == "Add")
                 {
-                    sql = "UPDATE cmodb.agree SET status='N' where contact_id=:contact_id and status='Y';";
+                    sql = "UPDATE cmodb.agree SET status='N' where contact_id=@contact_id and status='Y';";
                     cmd.CommandText = sql;
                     cmd.Parameters.Clear();
                     cmd.Parameters.AddWithValue("contact_id", Contact_id);
@@ -65,14 +65,14 @@ namespace Mig
                 {
                     sql = "INSERT INTO cmodb.agree( " +
                     "  contact_id,num, dt, from_dt, to_dt,status ) " +
-                     " VALUES(:contact_id, :num, :dt, :from_dt, :to_dt, " +
-                    " :status); ";
+                     " VALUES(@contact_id, @num, @dt, @from_dt, @to_dt, " +
+                    " @status); ";
                 }
                 else
                 {
                     sql = "UPDATE cmodb.agree SET " +
-                       "num=:num, dt=:dt, from_dt=:from_dt, to_dt=:to_dt,status=:status  " +                   
-                       "  WHERE contact_id=:contact_id and status=:status; ";
+                       "num=@num, dt=@dt, from_dt=@from_dt, to_dt=@to_dt,status=@status  " +                   
+                       "  WHERE contact_id=@contact_id and status=@status; ";
 
                 }
                 cmd.CommandText = sql;

@@ -88,19 +88,19 @@ namespace Mig
                     sql = "INSERT INTO cmodb.host(last_name, first_name, second_name, doc, doc_num, date_issue, "+
                         " date_valid, obl, rayon, town, street, house, korp, stro, flat, "+
                        " phone, org_name, address, org_phis, inn, doc_ser, birthday, status) "+
-                       "  VALUES(:last_name, :first_name, :second_name, :doc, :doc_num, :date_issue, "+
-                       " :date_valid, :obl, :rayon, :town, :street, :house, :korp, :stro, :flat, "+
-                       " :phone, :org_name, :address, :org_phis, :inn, :doc_ser, :birthday, :status); ";
+                       "  VALUES(@last_name, @first_name, @second_name, @doc, @doc_num, @date_issue, "+
+                       " @date_valid, @obl, @rayon, @town, @street, @house, @korp, @stro, @flat, "+
+                       " @phone, @org_name, @address, @org_phis, @inn, @doc_ser, @birthday, @status); ";
                     cmd.Parameters.AddWithValue("status", "N");  /*+-*/
                 }
                 else
                 {
                     sql = "UPDATE cmodb.host "+
-                       " SET last_name =:last_name, first_name =:first_name, second_name =:second_name, doc =:doc, doc_num =:doc_num, date_issue =:date_issue,  " +
-                           " date_valid =:date_valid, obl =:obl, rayon =:rayon, town =:town, street =:street, house =:house, korp =:korp,  " +
-                           " stro =:stro, flat =:flat, phone =:phone, org_name =:org_name, address =:address, org_phis =:org_phis, inn =:inn,  " +
-                           " doc_ser =:doc_ser,birthday =:birthday,status = status " +
-                            "  WHERE id =:id; ";
+                       " SET last_name =@last_name, first_name =@first_name, second_name =@second_name, doc =@doc, doc_num =@doc_num, date_issue =@date_issue,  " +
+                           " date_valid =@date_valid, obl =@obl, rayon =@rayon, town =@town, street =@street, house =@house, korp =@korp,  " +
+                           " stro =@stro, flat =@flat, phone =@phone, org_name =@org_name, address =@address, org_phis =@org_phis, inn =@inn,  " +
+                           " doc_ser =@doc_ser,birthday =@birthday,status = status " +
+                            "  WHERE id =@id; ";
                     cmd.Parameters.AddWithValue("id", Id); /*+-*/
                 }
                 cmd.CommandText = sql;

@@ -129,9 +129,9 @@ namespace Mig
 
         private void DULRefresh()
         {
-            string GetDul = "SELECT cmodb.lookupvalue('DUL',type) as \"Тип\", ser as \"Серия\", num as \"Номер\", to_char(issue,'DD.MM.YYYY') as \"Выдан\", " +
-            " to_char(validity,'DD.MM.YYYY') as \"Годен до\", " +
-            " CASE WHEN validity IS NOT NULL THEN to_char(validity-interval '6 month','DD.MM.YYYY') END \"Действие с визой\"  "
+            string GetDul = "SELECT cmodb.LookupValue('DUL',type) as \"Тип\", ser as \"Серия\", num as \"Номер\", CONVERT(varchar(10),issue,104) as \"Выдан\", " +
+            " CONVERT(varchar(10),validity,104) as \"Годен до\", " +
+            " CASE WHEN validity IS NOT NULL THEN CONVERT(varchar(10),DATEADD(MONTH,-6,validity),104) END \"Действие с визой\"  "
             + " FROM cmodb.dul where contact_id=@param1 AND status='Y' ;";
             DataTable DULTable = DB.QueryTableMultipleParams(GetDul, new List<object> { pref.CONTACTID });
             if (DULTable.Rows.Count != 0)
@@ -202,7 +202,7 @@ namespace Mig
         public void LoadDoc()
         {            
             string sql;
-            sql = "SELECT id, CASE WHEN status='Y' THEN 'true' ELSE 'false' END as docstatus,cmodb.lookupvalue('MIGR.VIEW',type) as type, ser, num, issue_dt,validity_from_dt, validity_to_dt,ident, invite_num "+
+            sql = "SELECT id, CASE WHEN status='Y' THEN 'true' ELSE 'false' END as docstatus,cmodb.LookupValue('MIGR.VIEW',type) as type, ser, num, issue_dt,validity_from_dt, validity_to_dt,ident, invite_num "+
                 ",updated,updated_by FROM cmodb.document where contact_id=@param1 AND deleted='N' ORDER BY status DESC,validity_to_dt DESC;";
             dgDocSel.Columns["docstatus"].DataPropertyName = "docstatus";
             dgDocSel.DataSource = DB.QueryTableMultipleParams(sql, new List<object> { pref.CONTACTID });
@@ -277,7 +277,7 @@ namespace Mig
         public void LoadAgree()
         {
             dgAgreeHist.Columns["agreestatus"].DataPropertyName = "agreestatus";
-            dgAgreeHist.DataSource = DB.QueryTableMultipleParams("SELECT id,case when status='Y' then 'true' Else 'false' end as agreestatus,num, dt, from_dt,to_dt  FROM cmodb.agree where contact_id=@param1 and deleted='N' order by status desc nulls last,to_dt desc;", new List<object> { pref.CONTACTID });
+            dgAgreeHist.DataSource = DB.QueryTableMultipleParams("SELECT id,case when status='Y' then 'true' Else 'false' end as agreestatus,num, dt, from_dt,to_dt  FROM cmodb.agree where contact_id=@param1 and deleted='N' order by CASE WHEN status IS NULL THEN 1 ELSE 0 END DESC,status desc,to_dt desc;", new List<object> { pref.CONTACTID });
             dgAgreeHist.Columns["id"].Visible = false;
             dgAgreeHist.Columns["agreestatus"].HeaderText = "Основной";
             dgAgreeHist.Columns["num"].HeaderText = "Договор/Направление";
@@ -322,7 +322,7 @@ namespace Mig
 
                
                 /*Дней в РФ*/
-                tDays.Text = DB.GetTableValue("SELECT allday FROM cmodb.\"Resident\" where contact_id=@param1;", new List<object> { pref.CONTACTID });
+                tDays.Text = DB.GetTableValue("SELECT allday FROM cmodb.\"ResidentView\" where contact_id=@param1;", new List<object> { pref.CONTACTID });
 
                 /*ИНИЦИАЛИЗАЦИЯ ПАРАМЕТРОВ ОТЧЕТОВ*/
                 //ходатайство обычное
@@ -639,12 +639,12 @@ namespace Mig
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
                 // sql = "UPDATE cmodb.contact SET status='N' where contact_id=:contact_id and status='Y' returning id;";
                 sql = "UPDATE cmodb.contact SET " +
-                    " last_name= :last_name, second_name= :second_name, birthday= :birthday, birth_town= :birth_town, updated=now(), updated_by= CURRENT_USER,  " +
-                    " sex= :sex, first_name= :first_name, " +
-                    "last_enu= :last_enu, first_enu= :first_enu, " +
-                    " second_enu= :second_enu,  " +
-                    " nationality= :nationality_code, birth_country = :birth_country_code, " +
-                     " status = :status where contact_id =:contact_id;";
+                    " last_name= @last_name, second_name= @second_name, birthday= @birthday, birth_town= @birth_town, updated=GETDATE(), updated_by= CURRENT_USER,  " +
+                    " sex= @sex, first_name= @first_name, " +
+                    "last_enu= @last_enu, first_enu= @first_enu, " +
+                    " second_enu= @second_enu,  " +
+                    " nationality=@nationality_code, birth_country = @birth_country_code, " +
+                     " status = @status where contact_id =@contact_id;";
                 cmd = new SqlCommand(sql, DB.conn);
                 cmd.Transaction = transaction;
 
@@ -784,11 +784,11 @@ namespace Mig
                 int Contact_id = pref.CONTACTID;
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
                 sql = "UPDATE cmodb.contact " +
-                   " SET address_home =:address_home, position_code =:position_code, relatives =:relatives, med =:med,updated=now(),updated_by=CURRENT_USER, " +
+                   " SET address_home =@address_home, position_code =@position_code, relatives =@relatives, med =@med,updated=GETDATE(),updated_by=CURRENT_USER, " +
 
-                        " comments= :comments, " +
-                         " phone= :phone  " +
-                         " WHERE contact_id =:contact_id and status = 'Y';";
+                        " comments= @comments, " +
+                         " phone= @phone  " +
+                         " WHERE contact_id =@contact_id and status = 'Y';";
 
                 cmd = new SqlCommand(sql, DB.conn);
                 cmd.Transaction = transaction;
@@ -887,7 +887,7 @@ namespace Mig
             {
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
 
-                sql = "UPDATE  cmodb.dul SET status='N',updated=now(),updated_by=CURRENT_USER where contact_id=:contact_id ;";
+                sql = "UPDATE  cmodb.dul SET status='N',updated=GETDATE(),updated_by=CURRENT_USER where contact_id=@contact_id ;";
                 cmd = new SqlCommand(sql, DB.conn);
                 cmd.Transaction = transaction;
                 cmd.CommandText = sql;
@@ -895,7 +895,7 @@ namespace Mig
                 cmd.Parameters.AddWithValue("contact_id", pref.CONTACTID);
                 cmd.ExecuteNonQuery();
 
-                sql = "UPDATE cmodb.dul SET status='Y',updated=now(),updated_by=CURRENT_USER where id=:dulid ;";
+                sql = "UPDATE cmodb.dul SET status='Y',updated=GETDATE(),updated_by=CURRENT_USER where id=@dulid ;";
 
                 cmd.CommandText = sql;
                 cmd.Parameters.Clear();
@@ -927,7 +927,7 @@ namespace Mig
                 {
                     transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
 
-                    sql = "UPDATE  cmodb.dul SET status='N', deleted='Y',updated=now(),updated_by=CURRENT_USER where id=:dulid ;";
+                    sql = "UPDATE  cmodb.dul SET status='N', deleted='Y',updated=GETDATE(),updated_by=CURRENT_USER where id=@dulid ;";
                     cmd = new SqlCommand(sql, DB.conn);
                     cmd.Transaction = transaction;
                     cmd.CommandText = sql;
@@ -975,8 +975,8 @@ namespace Mig
         }
         public void LoadVisaExtDate()
         {
-            tdelivery_dt.Text = DB.GetTableValue("select TO_CHAR(a.delivery_dt,'DD.MM.YYYY') from \"cmodb\".\"contact\" a where a.contact_id=@param1", new List<object> {pref.CONTACTID });
-            tdate_entry_future.Text = DB.GetTableValue("select TO_CHAR(a.date_entry_future,'DD.MM.YYYY') from \"cmodb\".\"contact\" a where a.contact_id=@param1", new List<object> { pref.CONTACTID });
+            tdelivery_dt.Text = DB.GetTableValue("select CONVERT(varchar(10),a.delivery_dt,104) from \"cmodb\".\"contact\" a where a.contact_id=@param1", new List<object> {pref.CONTACTID });
+            tdate_entry_future.Text = DB.GetTableValue("select CONVERT(varchar(10),a.date_entry_future,104) from \"cmodb\".\"contact\" a where a.contact_id=@param1", new List<object> { pref.CONTACTID });
         }
 
         private void toolStripButton23_Click(object sender, EventArgs e)
@@ -1084,7 +1084,7 @@ namespace Mig
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
 
                 string sql;
-                sql = "UPDATE cmodb.document SET status='N' where id<>:id and contact_id=:contact_id;";
+                sql = "UPDATE cmodb.document SET status='N' where id<>@id and contact_id=@contact_id;";
                 cmd = new SqlCommand(sql, DB.conn);
                 cmd.Transaction = transaction;
                 cmd.Parameters.Clear();
@@ -1148,7 +1148,7 @@ namespace Mig
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
                 cmd = new SqlCommand(sql, DB.conn);
 
-                sql = "UPDATE cmodb.document SET deleted='Y',status='N',updated=now(),updated_by=CURRENT_USER where id=:docid ;";
+                sql = "UPDATE cmodb.document SET deleted='Y',status='N',updated=GETDATE(),updated_by=CURRENT_USER where id=@docid ;";
                 cmd.CommandText = sql;
                 cmd.Parameters.Clear();
                 cmd.Parameters.AddWithValue("docid", docid);
@@ -1178,7 +1178,7 @@ namespace Mig
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
                 cmd = new SqlCommand(sql, DB.conn);
 
-                sql = "UPDATE cmodb.migr_card SET deleted='Y',status='N',updated=now(),updated_by=CURRENT_USER where id=:migrid ;";
+                sql = "UPDATE cmodb.migr_card SET deleted='Y',status='N',updated=GETDATE(),updated_by=CURRENT_USER where id=@migrid ;";
                 cmd.CommandText = sql;
                 cmd.Parameters.Clear();
                 cmd.Parameters.AddWithValue("migrid", migrid);
@@ -1247,7 +1247,7 @@ namespace Mig
                         int Contact_id = pref.CONTACTID;
                         transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
                         cmd = new SqlCommand(sql, DB.conn);
-                        sql = "DELETE FROM cmodb.children where id=:id;";
+                        sql = "DELETE FROM cmodb.children where id=@id;";
                         cmd.CommandText = sql;
                         cmd.Parameters.Clear();
                         cmd.Parameters.AddWithValue("id", Convert.ToInt32(dgChild.CurrentRow.Cells["id"].Value));
@@ -1324,7 +1324,7 @@ namespace Mig
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
                 cmd = new SqlCommand(sql, DB.conn);
                
-                sql = "UPDATE cmodb.teach_info set deleted='Y',status='N' where id=:id";
+                sql = "UPDATE cmodb.teach_info set deleted='Y',status='N' where id=@id";
                 cmd.CommandText = sql;
                 cmd.Parameters.Clear();
                 cmd.Parameters.AddWithValue("id",id);
@@ -1360,7 +1360,7 @@ namespace Mig
             string sql = "select ai.id, CASE WHEN ai.status='Y' THEN 'true' ELSE 'false' END as addrstatus,full_address as \"Адрес регистрации\" from cmodb.address ad " +
              " left join cmodb.addr_inter ai on ai.address_code = ad.code " +
              " where ai.contact_id =@param1 AND ai.deleted='N' " +
-              " order by ai.status desc nulls last, ai.created DESC";
+              " order by CASE WHEN ai.status IS NULL THEN 1 ELSE 0 END desc,ai.status desc , ai.created DESC";
             dgAddrHist.Columns["addrstatus"].DataPropertyName = "addrstatus";
             dgAddrHist.DataSource = DB.QueryTableMultipleParams(sql, new List<object> { pref.CONTACTID });
             dgAddrHist.Columns["id"].Visible = false;
@@ -1385,7 +1385,7 @@ namespace Mig
                     int Contact_id = pref.CONTACTID;
                     transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
 
-                    sql = "UPDATE cmodb.addr_inter SET status='N' WHERE contact_id=:contact_id;";
+                    sql = "UPDATE cmodb.addr_inter SET status='N' WHERE contact_id=@contact_id;";
                     cmd = new SqlCommand(sql, DB.conn);
                     cmd.Transaction = transaction;
                     cmd.Parameters.Clear();
@@ -1393,7 +1393,7 @@ namespace Mig
                     cmd.Parameters.AddWithValue("contact_id", Contact_id);
                     cmd.ExecuteNonQuery();
 
-                    sql = "INSERT INTO cmodb.addr_inter(contact_id, status, address_code) VALUES (:contact_id, :status,:address_code);";
+                    sql = "INSERT INTO cmodb.addr_inter(contact_id, status, address_code) VALUES (@contact_id, @status,@address_code);";
                     cmd.CommandText = sql;
                     cmd.Parameters.Clear();
                     cmd.Parameters.AddWithValue("status", "Y");
@@ -1448,7 +1448,7 @@ namespace Mig
                 int Contact_id = pref.CONTACTID;
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
 
-                sql = "UPDATE cmodb.addr_inter SET status='N', deleted='Y' WHERE id=:id;";
+                sql = "UPDATE cmodb.addr_inter SET status='N', deleted='Y' WHERE id=@id;";
                 cmd = new SqlCommand(sql, DB.conn);
                 cmd.Transaction = transaction;
                 cmd.Parameters.Clear();               
@@ -1489,7 +1489,7 @@ namespace Mig
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
 
                 string sql;
-                sql = "UPDATE cmodb.teach_info SET status='N' where id<>:id and contact_id=:contact_id;";
+                sql = "UPDATE cmodb.teach_info SET status='N' where id<>@id and contact_id=@contact_id;";
                 cmd = new SqlCommand(sql, DB.conn);
                 cmd.Transaction = transaction;
                 cmd.Parameters.Clear();
@@ -1497,7 +1497,7 @@ namespace Mig
                 cmd.Parameters.AddWithValue("contact_id", pref.CONTACTID);
                 cmd.ExecuteNonQuery();
 
-                sql = "UPDATE cmodb.teach_info SET status='Y' where id=:id;";
+                sql = "UPDATE cmodb.teach_info SET status='Y' where id=@id;";
                 cmd.CommandText = sql;
                 cmd.Parameters.Clear();
                 cmd.Parameters.AddWithValue("id", id); //берем id
@@ -1526,7 +1526,7 @@ namespace Mig
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
 
                 string sql;
-                sql = "UPDATE cmodb.migr_card SET status='N' where id<>:id and contact_id=:contact_id;";
+                sql = "UPDATE cmodb.migr_card SET status='N' where id<>@id and contact_id=@contact_id;";
                 cmd = new SqlCommand(sql, DB.conn);
                 cmd.Transaction = transaction;
                 cmd.Parameters.Clear();
@@ -1562,7 +1562,7 @@ namespace Mig
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
 
                 string sql;
-                sql = "UPDATE cmodb.migr_card SET status='N' where contact_id=:contact_id and deleted<>'Y';";
+                sql = "UPDATE cmodb.migr_card SET status='N' where contact_id=@contact_id and deleted<>'Y';";
                 cmd = new SqlCommand(sql, DB.conn);
                 cmd.Transaction = transaction;
                 cmd.Parameters.Clear();               
@@ -1589,7 +1589,7 @@ namespace Mig
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
 
                 string sql;
-                sql = "UPDATE cmodb.entry SET status='N' where id<>:id and contact_id=:contact_id;";
+                sql = "UPDATE cmodb.entry SET status='N' where id<>@id and contact_id=@contact_id;";
                 cmd = new SqlCommand(sql, DB.conn);
                 cmd.Transaction = transaction;
                 cmd.Parameters.Clear();
@@ -1630,7 +1630,7 @@ namespace Mig
             dgEntryHist.SuspendLayout();
             dgEntryHist.Columns["entrystatus"].DataPropertyName = "entrystatus";
             dgEntryHist.DataSource = DB.QueryTableMultipleParams("SELECT  id,case when status='Y' then 'true' else 'false' end as entrystatus,leave_dt,entry_dt, txt, type "+
-                " FROM cmodb.entry where contact_id=@param1 and deleted='N' ORDER BY case when status='Y' then '1' else '0' end desc nulls last,leave_dt DESC;", new List<object> { pref.CONTACTID });
+                " FROM cmodb.entry where contact_id=@param1 and deleted='N' ORDER BY case when status='Y' then '1' else '0' end desc,leave_dt DESC;", new List<object> { pref.CONTACTID });//nulls
             dgEntryHist.Columns["id"].Visible = false;
             dgEntryHist.Columns["entrystatus"].HeaderText = "Основной";
             dgEntryHist.Columns["type"].HeaderText = "Тип";
@@ -1930,7 +1930,7 @@ namespace Mig
                 int Contact_id = pref.CONTACTID;
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
                 sql = "UPDATE cmodb.contact " +
-                   " SET updated=now(),updated_by=CURRENT_USER, " +
+                   " SET updated=GETDATE(),updated_by=CURRENT_USER, " +
                    "delegate_last_name = :delegate_last_name, delegate_first_name = :delegate_first_name, " +
                          " delegate_second_name = :delegate_second_name, delegate_ser = :delegate_ser, delegate_num = :delegate_num, delegate_dul_issue_dt = :delegate_dul_issue_dt, " +
                          " delegate_country = :delegate_country_code, delegate_nationality = :delegate_nationality_code, delegate_dul_code = :delegate_dul_code " +                       
@@ -1988,7 +1988,7 @@ namespace Mig
                 int Contact_id = pref.CONTACTID;
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
                 sql = "UPDATE cmodb.contact " +
-                   " SET updated=now(),updated_by=CURRENT_USER, " +
+                   " SET updated=GETDATE(),updated_by=CURRENT_USER, " +
                    "delegate_last_name = null, delegate_first_name = null, " +
                          " delegate_second_name = null, delegate_ser = null, delegate_num = null, delegate_dul_issue_dt = null, " +
                          " delegate_country = null, delegate_nationality = null, delegate_dul_code = null " +
@@ -2138,7 +2138,7 @@ namespace Mig
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
                 cmd = new SqlCommand(sql, DB.conn);
                 sql = "UPDATE cmodb.contact SET " +
-                   " status='N',updated=now(),updated_by=CURRENT_USER " +
+                   " status='N',updated=GETDATE(),updated_by=CURRENT_USER " +
                    "  WHERE contact_id = :contact_id; ";
                 cmd.CommandText = sql;
                 cmd.Parameters.Clear();

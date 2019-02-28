@@ -56,13 +56,13 @@ namespace Mig
 
                 if (Action == "Add")
                 {
-                    sql = "INSERT INTO cmodb.children(contact_id, fio, birthday, address, nationality) VALUES (:contact_id, :fio, :birthday, :address, :nationality);";
+                    sql = "INSERT INTO cmodb.children(contact_id, fio, birthday, address, nationality) VALUES (@contact_id, @fio, @birthday, @address, @nationality);";
                 }
                 else
                 {
                     sql = "UPDATE cmodb.children SET " +
-                       " contact_id=:contact_id, fio=:fio, birthday=:birthday, address=:address, nationality=:nationality " +
-                       "  WHERE contact_id=:contact_id and id=:id; ";
+                       " contact_id=@contact_id, fio=@fio, birthday=@birthday, address=@address, nationality=@nationality " +
+                       "  WHERE contact_id=@contact_id and id=@id; ";
 
                 }
                 cmd.CommandText = sql;

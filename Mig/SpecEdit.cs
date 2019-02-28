@@ -23,7 +23,7 @@ namespace Mig
         {
             string sql;
             SqlCommand cmd;
-            sql = "SELECT COUNT(*) FROM cmodb.teach_info where  status='Y' and deleted='N' and facult_code=:facult_code;";
+            sql = "SELECT COUNT(*) FROM cmodb.teach_info where  status='Y' and deleted='N' and facult_code=@facult_code;";
             cmd = new SqlCommand(sql, DB.conn);
             cmd.Parameters.AddWithValue("facult_code", code);
             return Convert.ToInt32(cmd.ExecuteScalar());
@@ -34,7 +34,7 @@ namespace Mig
             string sql;
             SqlCommand cmd;
 
-            sql = "SELECT COUNT(*) FROM cmodb.teach_info where  status='Y' and deleted='N' and spec_code=:spec_code;";
+            sql = "SELECT COUNT(*) FROM cmodb.teach_info where  status='Y' and deleted='N' and spec_code=@spec_code;";
             cmd = new SqlCommand(sql, DB.conn);
             cmd.Parameters.AddWithValue("spec_code", code);
             return Convert.ToInt32(cmd.ExecuteScalar());
@@ -81,7 +81,7 @@ namespace Mig
                     DataSet ds = new DataSet();
                     DataTable dt = new DataTable();
                     SqlCommand cmd;
-                    string sql = "SELECT code, name, cmodb.lookupvalue('PTEACH',prog_teach_code) prog_teach_code, id FROM cmodb.speciality where par_code=:code and status='Y' and deleted='N';";                    
+                    string sql = "SELECT code, name, cmodb.LookupValue('PTEACH',prog_teach_code) prog_teach_code, id FROM cmodb.speciality where par_code=@code and status='Y' and deleted='N';";                    
                     cmd = new SqlCommand(sql, DB.conn);
                     cmd.Parameters.Clear();                    
                     cmd.Parameters.AddWithValue("code", dataGridView1.CurrentRow.Cells["code"].Value);
@@ -131,7 +131,7 @@ namespace Mig
                     try
                     {
                         transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
-                        string sql = "INSERT INTO cmodb.facultet(code, name, short_name, status) VALUES ((select MAX(code)+1 from cmodb.facultet), :name, :shortname, 'Y');";
+                        string sql = "INSERT INTO cmodb.facultet(code, name, short_name, status) VALUES (NEXT VALUE FOR [cmodb].[FacCode], @name, @shortname, 'Y');";
                         cmd = new SqlCommand(sql, DB.conn);
                         cmd.Transaction = transaction;//???????
                         cmd.Parameters.Clear();
@@ -182,7 +182,7 @@ namespace Mig
                         transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
 
                         string sql;
-                        sql = "UPDATE cmodb.facultet SET status='N',deleted='N' where id=:id;";
+                        sql = "UPDATE cmodb.facultet SET status='N',deleted='N' where id=@id;";
                         cmd = new SqlCommand(sql, DB.conn);
                         cmd.Transaction = transaction;
                         cmd.Parameters.Clear();
@@ -190,7 +190,7 @@ namespace Mig
                         cmd.ExecuteNonQuery();
                                                 
 
-                        sql = "UPDATE cmodb.speciality SET status='N',deleted='N' where par_code=:code;";
+                        sql = "UPDATE cmodb.speciality SET status='N',deleted='N' where par_code=@code;";
                         cmd.CommandText = sql;
                         cmd.Parameters.Clear();
                         cmd.Parameters.AddWithValue("code", dataGridView1.CurrentRow.Cells["code"].Value); //берем code
@@ -234,7 +234,7 @@ namespace Mig
                 try
                 {
                     transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
-                    string sql = "UPDATE cmodb.facultet SET name=:name,short_name = :short_name where id=:id;";
+                    string sql = "UPDATE cmodb.facultet SET name=@name,short_name = @short_name where id=@id;";
                     cmd = new SqlCommand(sql, DB.conn);
                     cmd.Parameters.Clear();
                     cmd.Parameters.AddWithValue("name", facname);
@@ -282,7 +282,7 @@ namespace Mig
                     try
                     {
                         transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
-                        string sql = "INSERT INTO cmodb.speciality(code, name, status, par_code,prog_teach_code,spec_code) VALUES (:code, :name,'Y', :par_code,:prog_teach_code,(select COALESCE(MAX(spec_code),0)+1 from cmodb.speciality));";
+                        string sql = "INSERT INTO cmodb.speciality(code, name, status, par_code,prog_teach_code,spec_code) VALUES (@code, @name,'Y', @par_code,@prog_teach_code,NEXT VALUE FOR [cmodb].[SpecCode]);";
                         cmd = new SqlCommand(sql, DB.conn);
                         cmd.Parameters.Clear();
                         cmd.Parameters.AddWithValue("code", SpecCode);
@@ -339,7 +339,7 @@ namespace Mig
                 try
                 {
                     transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
-                    string sql = "UPDATE cmodb.speciality SET code=:code,name = :name,prog_teach_code=:prog_teach_code where id=:id;";
+                    string sql = "UPDATE cmodb.speciality SET code=@code,name = @name,prog_teach_code=@prog_teach_code where id=@id;";
                     cmd = new SqlCommand(sql, DB.conn);
                     cmd.Parameters.Clear();
                     cmd.Parameters.AddWithValue("code", SpecCode);
@@ -385,7 +385,7 @@ namespace Mig
                     {                        
                         transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
                         string sql;
-                        sql = "UPDATE cmodb.speciality SET status='N' where id=:id;";                        
+                        sql = "UPDATE cmodb.speciality SET status='N' where id=@id;";                        
                         cmd = new SqlCommand(sql, DB.conn);
                         cmd.Parameters.Clear();
                         cmd.Parameters.AddWithValue("id", dataGridView2.CurrentRow.Cells["id"].Value); //берем id

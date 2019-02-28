@@ -75,7 +75,7 @@ namespace Mig
                 cmd = new SqlCommand(sql, DB.conn);
                 if (Action == "Add")
                 {
-                    sql = "UPDATE cmodb.document SET status='N',updated=now(),updated_by=CURRENT_USER where contact_id=:contact_id and status='Y';";
+                    sql = "UPDATE cmodb.document SET status='N',updated=GETDATE(),updated_by=CURRENT_USER where contact_id=@contact_id and status='Y';";
                     cmd.CommandText = sql;
                     cmd.Parameters.Clear();
                     cmd.Parameters.AddWithValue("contact_id", Contact_id);
@@ -86,15 +86,15 @@ namespace Mig
                     sql = "INSERT INTO cmodb.document( " +
                     " contact_id, ident, type, invite_num, ser, num, issue_dt,  " +
                     " validity_from_dt, validity_to_dt, status,code,updated,updated_by) " +
-                     " VALUES(:contact_id, :ident, :type, :invite_num, :ser, :num, :issue_dt, " +
-                    " :validity_from_dt, :validity_to_dt, :status, (select MAX(code)+1 from cmodb.document),now(),CURRENT_USER); ";
+                     " VALUES(@contact_id, @ident, @type, @invite_num, @ser, @num, @issue_dt, " +
+                    " @validity_from_dt, @validity_to_dt, @status, NEXT VALUE FOR [cmodb].[DocCode],GETDATE(),CURRENT_USER); ";
                 }
                 else
                 {
                     sql = "UPDATE cmodb.document SET " +
-                    "  ident=:ident, type=:type, invite_num=:invite_num, ser=:ser, num=:num, issue_dt=:issue_dt,  " +
-                    " validity_from_dt=:validity_from_dt, validity_to_dt=:validity_to_dt,updated=now(),updated_by=CURRENT_USER " +                     
-                    " WHERE contact_id=:contact_id and status=:status; ";
+                    "  ident=@ident, type=@type, invite_num=@invite_num, ser=@ser, num=@num, issue_dt=@issue_dt,  " +
+                    " validity_from_dt=@validity_from_dt, validity_to_dt=@validity_to_dt,updated=GETDATE(),updated_by=CURRENT_USER " +                     
+                    " WHERE contact_id=@contact_id and status=@status; ";
 
                 }
                 cmd.CommandText = sql;                

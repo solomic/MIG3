@@ -71,7 +71,7 @@ namespace Mig
                 cmd.CommandText = sql;
                 cmd.ExecuteNonQuery();
 
-                sql = "UPDATE cmodb.host  SET status = 'Y'  WHERE id =:id; ";
+                sql = "UPDATE cmodb.host  SET status = 'Y'  WHERE id =@id; ";
                 cmd.Parameters.AddWithValue("id", Convert.ToInt32(dgHost.CurrentRow.Cells["id"].Value));
               
                 cmd.CommandText = sql;                
@@ -113,7 +113,7 @@ namespace Mig
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
                 cmd = new SqlCommand(sql, DB.conn);
                 cmd.Parameters.Clear();
-                sql = "DELETE FROM cmodb.host  WHERE id=:id; ";
+                sql = "DELETE FROM cmodb.host  WHERE id=@id; ";
                 cmd.CommandText = sql;
                 cmd.Parameters.AddWithValue("id", Convert.ToInt32(dgHost.CurrentRow.Cells["id"].Value));
                 cmd.ExecuteNonQuery();

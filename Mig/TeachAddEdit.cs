@@ -79,7 +79,7 @@ namespace Mig
                 cmd = new SqlCommand(sql, DB.conn);
                 if (Action == "Add")
                 { 
-                    sql = "UPDATE cmodb.teach_info set status='N' where contact_id=:contact_id and status='Y'";                    
+                    sql = "UPDATE cmodb.teach_info set status='N' where contact_id=@contact_id and status='Y'";                    
                     cmd.CommandText = sql;
                     cmd.Parameters.Clear();
                     cmd.Parameters.AddWithValue("contact_id", pref.CONTACTID);
@@ -89,18 +89,18 @@ namespace Mig
                            " postup_year, contact_id, status, spec_code, form_teach_code,  " +
                            "  form_pay_code, prog_teach_code, period_total, period_ind, period_total_p,  " +
                            "   period_ind_p, facult_code, amount) " +
-                           "   VALUES(:postup_year, :contact_id, :status, :spec_code, :form_teach_code, " +
-                           "  :form_pay_code, :prog_teach_code, :period_total, :period_ind, :period_total_p, " +
-                           "  :period_ind_p, :facult_code, :amount);";
+                           "   VALUES(@postup_year, @contact_id, @status, @spec_code, @form_teach_code, " +
+                           "  @form_pay_code, @prog_teach_code, @period_total, @period_ind, @period_total_p, " +
+                           "  @period_ind_p, @facult_code, @amount);";
                 
                 }
                 if (Action == "Edit")
                 {
                     sql = "UPDATE cmodb.teach_info SET " +
-                      " postup_year=:postup_year, spec_code=:spec_code, form_teach_code=:form_teach_code,  " +
-                      "  form_pay_code=:form_pay_code, prog_teach_code=:prog_teach_code, period_total=:period_total, period_ind=:period_ind, period_total_p=:period_total_p,  " +
-                      "   period_ind_p=:period_ind_p, facult_code=:facult_code, amount=:amount " +
-                      "  WHERE contact_id=:contact_id and status=:status;";
+                      " postup_year=@postup_year, spec_code=@spec_code, form_teach_code=@form_teach_code,  " +
+                      "  form_pay_code=@form_pay_code, prog_teach_code=@prog_teach_code, period_total=@period_total, period_ind=@period_ind, period_total_p=@period_total_p,  " +
+                      "   period_ind_p=@period_ind_p, facult_code=@facult_code, amount=@amount " +
+                      "  WHERE contact_id=@contact_id and status=@status;";
                 }
                 cmd.CommandText = sql;
                 cmd.Parameters.Clear();

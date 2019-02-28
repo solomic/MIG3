@@ -50,8 +50,8 @@ namespace Mig
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
                 cmd = new SqlCommand(sql, DB.conn);               
                 sql = "UPDATE cmodb.entry SET " +
-                   " status='N',updated=now(),updated_by=CURRENT_USER " +
-                   "  WHERE contact_id=:contact_id and status=:status; ";
+                   " status='N',updated=GETDATE(),updated_by=CURRENT_USER " +
+                   "  WHERE contact_id=@contact_id and status=@status; ";
                 cmd.CommandText = sql;
                 cmd.Parameters.Clear();
                 cmd.Parameters.AddWithValue("contact_id", Contact_id);                
@@ -82,14 +82,14 @@ namespace Mig
                 cmd = new SqlCommand(sql, DB.conn);
                 if (Action == "Add" || Action == "Extend")
                 {
-                    sql = "UPDATE cmodb.migr_card SET status='N', updated=now(),updated_by=CURRENT_USER where contact_id=:contact_id and status='Y';";
+                    sql = "UPDATE cmodb.migr_card SET status='N', updated=GETDATE(),updated_by=CURRENT_USER where contact_id=@contact_id and status='Y';";
                     cmd.CommandText = sql;
                     cmd.Parameters.Clear();
                     cmd.Parameters.AddWithValue("contact_id", Contact_id);
                     cmd.ExecuteNonQuery();
 
                     /*чистим въезд выезд*/
-                    sql = "UPDATE cmodb.entry SET status='N', updated=now(),updated_by=CURRENT_USER where contact_id=:contact_id and status='Y';";
+                    sql = "UPDATE cmodb.entry SET status='N', updated=GETDATE(),updated_by=CURRENT_USER where contact_id=@contact_id and status='Y';";
                     cmd.CommandText = sql;
                     cmd.Parameters.Clear();
                     cmd.Parameters.AddWithValue("contact_id", Contact_id);
@@ -100,15 +100,15 @@ namespace Mig
                     sql = "INSERT INTO cmodb.migr_card( " +
                     " contact_id, ser, num, kpp_code, entry_dt, tenure_from_dt,  " +
                     " tenure_to_dt, status, purpose_entry,updated,updated_by) " +
-                     " VALUES(:contact_id, :ser, :num, :kpp_code, :entry_dt, :tenure_from_dt, " +
-                    " :tenure_to_dt, :status, :purpose_entry,now(),CURRENT_USER); ";
+                     " VALUES(@contact_id, @ser, @num, @kpp_code, @entry_dt, @tenure_from_dt, " +
+                    " @tenure_to_dt, @status, @purpose_entry,GETDATE(),CURRENT_USER); ";
                 }
                 else
                 {
                     sql = "UPDATE cmodb.migr_card SET " +
-                   " ser=:ser, num=:num, kpp_code=:kpp_code, entry_dt=:entry_dt, tenure_from_dt=:tenure_from_dt,  " +
-                   " tenure_to_dt=:tenure_to_dt, purpose_entry=:purpose_entry,updated=now(),updated_by=CURRENT_USER " +
-                   "  WHERE contact_id=:contact_id and status=:status; ";
+                   " ser=@ser, num=@num, kpp_code=@kpp_code, entry_dt=@entry_dt, tenure_from_dt=@tenure_from_dt,  " +
+                   " tenure_to_dt=@tenure_to_dt, purpose_entry=@purpose_entry,updated=GETDATE(),updated_by=CURRENT_USER " +
+                   "  WHERE contact_id=@contact_id and status=@status; ";
 
                 }
                 cmd.CommandText = sql;

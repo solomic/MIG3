@@ -375,7 +375,7 @@ namespace Mig
             try
             {
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
-                sql = "select nextval('cmodb.con_id')";
+                sql = "select NEXT VALUE FOR [cmodb].[ConId]";
                 cmd = new SqlCommand(sql, DB.conn);                
                 int Contact_id =  Convert.ToInt32(cmd.ExecuteScalar());
                 /*==========================================================*/
@@ -387,13 +387,13 @@ namespace Mig
               "  delegate_last_name, delegate_first_name, delegate_second_name, "+
               "  delegate_ser, delegate_num, delegate_dul_issue_dt, delegate_country, "+
               "  delegate_nationality, delegate_dul_code,status)" +
-             "  VALUES(:last_name, :second_name, :birthday, :birth_town, :sex, :first_name, :comments, "+
-               " :last_enu, :first_enu, :address_home, "+
-               " :position_code, :relatives, :med, :second_enu, "+
-              "  :phone, :nationality_code, :type, :contact_id, :birth_country_code, " +
-               " :delegate_last_name, :delegate_first_name, :delegate_second_name, "+
-              "  :delegate_ser, :delegate_num, :delegate_dul_issue_dt, :delegate_country_code, "+
-               " :delegate_nationality_code, :delegate_dul_code, :status) ; ";
+             "  VALUES(@last_name, @second_name, @birthday, @birth_town, @sex, @first_name,@comments, "+
+               " @last_enu, @first_enu, @address_home, "+
+               " @position_code, @relatives, @med, @second_enu, "+
+              "  @phone, @nationality_code, @type, @contact_id, @birth_country_code, " +
+               " @delegate_last_name, @delegate_first_name, @delegate_second_name, "+
+              "  @delegate_ser, @delegate_num, @delegate_dul_issue_dt, @delegate_country_code, "+
+               " @delegate_nationality_code, @delegate_dul_code, @status) ; ";
                 cmd = new SqlCommand(sql, DB.conn);
                 cmd.Transaction = transaction;
                 cmd.Parameters.Clear();
@@ -466,9 +466,9 @@ namespace Mig
                 {
                     sql = "INSERT INTO cmodb.document( " +
                     " contact_id, ident, type, invite_num, ser, num, issue_dt,  " +
-                    " validity_from_dt, validity_to_dt, status,code) " +
-                     " VALUES(:contact_id, :ident, :type, :invite_num, :ser, :num, :issue_dt, " +
-                    " :validity_from_dt, :validity_to_dt, :status, (select MAX(code)+1 from cmodb.document)) RETURNING code; ";
+                    " validity_from_dt, validity_to_dt, status,code) OUTPUT code " +
+                     " VALUES(@contact_id, @ident, @type, @invite_num, @ser, @num, @issue_dt, " +
+                    " @validity_from_dt, @validity_to_dt, @status, NEXT VALUE FOR [cmodb].[DocCode]) ; ";/*RETURNING code*/
                     cmd.CommandText = sql;
                     cmd.Parameters.Clear();
 
@@ -491,7 +491,7 @@ namespace Mig
                     else
                         cmd.Parameters.AddWithValue("validity_to_dt", Convert.ToDateTime(tDocValidTo.SelectedDate));
                     cmd.Parameters.AddWithValue("status", "Y");
-                    NpgsqlParameter pr = new NpgsqlParameter("code", DbType.Int16);
+                    SqlParameter pr = new SqlParameter("code", DbType.Int16);
                     pr.Direction = ParameterDirection.Output;
 
                     cmd.Parameters.Add(pr);
@@ -506,8 +506,8 @@ namespace Mig
                     sql = "INSERT INTO cmodb.migr_card( " +
                         " contact_id, ser, num, kpp_code, entry_dt, tenure_from_dt,  " +
                         " tenure_to_dt, status, purpose_entry) " +
-                         " VALUES(:contact_id, :ser, :num, :kpp_code, :entry_dt, :tenure_from_dt, " +
-                        " :tenure_to_dt, :status, :purpose_entry); ";
+                         " VALUES(@contact_id, @ser, @num, @kpp_code, @entry_dt, @tenure_from_dt, " +
+                        " @tenure_to_dt, @status, @purpose_entry); ";
                     cmd.CommandText = sql;
 
                     cmd.Parameters.Clear();
@@ -539,7 +539,7 @@ namespace Mig
                 {
                     sql = "INSERT INTO cmodb.dul( " +
                     " contact_id,type, ser, num, issue, validity, status) " +
-                    " VALUES(:contact_id,:type, :ser, :num, :issue, :validity, :status); ";
+                    " VALUES(@contact_id,@type, @ser, @num, @issue, @validity, @status); ";
                     cmd.CommandText = sql;
                     cmd.Parameters.Clear();
                     cmd.Parameters.AddWithValue("contact_id", Contact_id);
@@ -563,7 +563,7 @@ namespace Mig
                 {
                     sql = "INSERT INTO cmodb.agree( " +
                     " contact_id, num, dt, from_dt, to_dt, status) " +
-                   " VALUES(:contact_id, :num, :dt, :from_dt, :to_dt, :status); ";
+                   " VALUES(@contact_id, @num, @dt, @from_dt, @to_dt, @status); ";
                     cmd.CommandText = sql;
                     cmd.Parameters.Clear();
                     cmd.Parameters.AddWithValue("contact_id", Contact_id);
@@ -590,9 +590,9 @@ namespace Mig
                     " postup_year, contact_id, status, spec_code, form_teach_code,  " +
                     "  form_pay_code, prog_teach_code, period_total, period_ind, period_total_p,  " +
                     "   period_ind_p, facult_code, amount) " +
-                    "   VALUES(:postup_year, :contact_id, :status, :spec_code, :form_teach_code, " +
-                    "  :form_pay_code, :prog_teach_code, :period_total, :period_ind, :period_total_p, " +
-                    "  :period_ind_p, :facult_code, :amount);";
+                    "   VALUES(@postup_year, @contact_id, @status, @spec_code, @form_teach_code, " +
+                    "  @form_pay_code, @prog_teach_code, @period_total, @period_ind, @period_total_p, " +
+                    "  @period_ind_p, @facult_code, @amount);";
                     cmd.CommandText = sql;
                     cmd.Parameters.Clear();
                     cmd.Parameters.AddWithValue("contact_id", Contact_id);
@@ -652,7 +652,7 @@ namespace Mig
 
                 if (SelAddr != 0)
                 {
-                    sql = "INSERT INTO cmodb.addr_inter(contact_id,status,address_code)VALUES (:contact_id,:status,:address_code);";
+                    sql = "INSERT INTO cmodb.addr_inter(contact_id,status,address_code)VALUES (@contact_id,@status,@address_code);";
                     cmd.CommandText = sql;
                     cmd.Parameters.Clear();
                     cmd.Parameters.AddWithValue("contact_id", Contact_id);

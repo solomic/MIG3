@@ -53,7 +53,7 @@ namespace Mig
 
                 if (Action == "ADD" && cmbTarget.Text == "зарубеж")
                 {
-                    sql = "UPDATE cmodb.entry SET status='N' where contact_id=:contact_id and status='Y';";
+                    sql = "UPDATE cmodb.entry SET status='N' where contact_id=@contact_id and status='Y';";
                     cmd.CommandText = sql;
                     cmd.Parameters.Clear();
                     cmd.Parameters.AddWithValue("contact_id", Contact_id);
@@ -66,7 +66,7 @@ namespace Mig
                 {
                     sql = "INSERT INTO cmodb.entry( " +
                     " contact_id, entry_dt, leave_dt, txt,status,type  )" +
-                    " VALUES(:contact_id, :entry_dt, :leave_dt, :txt,:status,:type) ;";
+                    " VALUES(@contact_id, @entry_dt, @leave_dt, @txt,@status,@type) ;";
                     cmd.Parameters.AddWithValue("contact_id", Contact_id);
                     if (cmbTarget.Text == "зарубеж")
                         cmd.Parameters.AddWithValue("status", "Y");
@@ -76,8 +76,8 @@ namespace Mig
                 if (Action == "EDIT")
                 {
                     sql = "UPDATE cmodb.entry SET " +
-                        " entry_dt=:entry_dt, leave_dt=:leave_dt, txt=:txt,type=:type " +
-                        " where id=:id ;";
+                        " entry_dt=@entry_dt, leave_dt=@leave_dt, txt=@txt,type=@type " +
+                        " where id=@id ;";
                     cmd.Parameters.AddWithValue("id", Id);
                 }
                 cmd.CommandText = sql;

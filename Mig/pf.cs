@@ -72,7 +72,7 @@ namespace Mig
                 int Contact_id = pref.CONTACTID;
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
                 cmd = new SqlCommand(sql, DB.conn);     
-                sql = "INSERT INTO cmodb.pf(name, contact_id, created, created_by)VALUES(:name, :contact_id, now(), CURRENT_USER);";
+                sql = "INSERT INTO cmodb.pf(name, contact_id, created, created_by)VALUES(@name, @contact_id, GETDATE(), CURRENT_USER);";
 
                 cmd.CommandText = sql;
                 cmd.Parameters.Clear();

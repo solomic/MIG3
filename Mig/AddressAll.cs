@@ -43,7 +43,7 @@ namespace Mig
             {
                 return;
             }           
-            string sql = "select c.contact_id,c.contact_id as \"Код\",fio as \"ФИО\",nationality as \"Гражданство\",birthday as \"Дата рождения\",cmodb.lookupvalue('CON.TYPE',c.type) as \"Статус студента\", CASE WHEN ai.status='Y' then 'Текущий адрес' else 'Архив' end as \"Статус адреса\" from cmodb.contact c " +
+            string sql = "select c.contact_id,c.contact_id as \"Код\",fio as \"ФИО\",nationality as \"Гражданство\",birthday as \"Дата рождения\",cmodb.LookupValue('CON.TYPE',c.type) as \"Статус студента\", CASE WHEN ai.status='Y' then 'Текущий адрес' else 'Архив' end as \"Статус адреса\" from cmodb.contact c " +
             "left join cmodb.addr_inter ai on c.contact_id = ai.contact_id "+
             "left join cmodb.address addr on addr.code = ai.address_code "+
             "where  addr.code =@param1 "+
@@ -108,8 +108,8 @@ namespace Mig
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
                 cmd = new SqlCommand(sql, DB.conn);
                 sql = "UPDATE cmodb.addr_inter "+
-                    "SET  address_code =:newcode "+
-                  " WHERE contact_id = ANY(:contact_id) AND address_code =:oldcode; ";
+                    "SET  address_code =@newcode "+
+                  " WHERE contact_id = ANY(@contact_id) AND address_code =@oldcode; ";
                 cmd.CommandText = sql;
                 cmd.Parameters.Clear();
                 NpgsqlParameter arpar = new NpgsqlParameter();
@@ -142,8 +142,8 @@ namespace Mig
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
                 cmd = new SqlCommand(sql, DB.conn);
                 sql = "UPDATE cmodb.address " +
-                    "SET  pin =:pin " +
-                  " WHERE code = :code; ";
+                    "SET  pin =@pin " +
+                  " WHERE code = @code; ";
                 cmd.CommandText = sql;
                 cmd.Parameters.Clear();
                
@@ -179,7 +179,7 @@ namespace Mig
                     transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
                     cmd = new SqlCommand(sql, DB.conn);
                     sql = "DELETE FROM cmodb.address " +
-                         " WHERE code = :code; ";
+                         " WHERE code = @code; ";
                     cmd.CommandText = sql;
                     cmd.Parameters.Clear();
                     cmd.Parameters.AddWithValue("code", addrcode);

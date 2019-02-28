@@ -59,13 +59,13 @@ namespace Mig
                 if (Action == "Add")
                 {
                     sql = "INSERT INTO cmodb.stage(contact_id, stage, due_dt, amount, receipt, pay_dt, status) "+
-                        " VALUES(:contact_id, :stage, :due_dt, :amount, :receipt, :pay_dt, :status); ";
+                        " VALUES(@contact_id, @stage, @due_dt, @amount, @receipt, @pay_dt, @status); ";
                 }
                 else
                 {
                     sql = "UPDATE cmodb.stage SET " +
-                       " stage=:stage, due_dt=:due_dt, amount=:amount, receipt=:receipt, pay_dt=:pay_dt, status=:status  " +
-                       "  WHERE contact_id=:contact_id and status=:status and id=:id; ";
+                       " stage=@stage, due_dt=@due_dt, amount=@amount, receipt=@receipt, pay_dt=@pay_dt, status=@status  " +
+                       "  WHERE contact_id=@contact_id and status=@status and id=@id; ";
 
                 }
                 cmd.CommandText = sql;
