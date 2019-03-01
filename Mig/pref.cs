@@ -174,7 +174,7 @@ namespace Pref
                     " b.num card_num, "+
                     " CONVERT(varchar(10),doc.issue_dt,104) doc_issue_dt, " +
                     " CONVERT(varchar(10),doc.validity_to_dt,104) doc_validity_to_dt, " +
-                    " CONVERT (varchar(10),DATEADD(DAY,1,doc.validity_to_dt)',104) doc_validity_to_dt_1, " +
+                    " CONVERT (varchar(10),DATEADD(DAY,1,doc.validity_to_dt),104) doc_validity_to_dt_1, " +
                     " doc.num doc_num, " +
                     " doc.ser doc_ser, "+
                     " doc.ident doc_ident, "+

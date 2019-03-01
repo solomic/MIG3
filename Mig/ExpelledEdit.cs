@@ -66,13 +66,13 @@ namespace Mig
                 cmd.Parameters.Clear();
                 if (Action == "ADD")
                 {
-                    sql = "INSERT INTO cmodb.expell(contact_id, expelled, expelled_num, expelled_dt, status,updated,updated_by) VALUES (@contact_id, @expelled, @expelled_num, @expelled_dt, @status, GETDATE(),CURRENT_USER);";
+                    sql = "INSERT INTO cmodb.expell(contact_id, expelled, expelled_num, expelled_dt, status,updated,updated_by) VALUES (@contact_id, @expelled, @expelled_num, @expelled_dt, @status, GETDATE(),SYSTEM_USER);";
                     cmd.Parameters.AddWithValue("contact_id", Contact_id);
                     cmd.Parameters.AddWithValue("status", "Y");
                 }
                 else
                 {
-                    sql = "UPDATE cmodb.expell SET expelled=@expelled, expelled_num=@expelled_num, expelled_dt=@expelled_dt,updated=GETDATE(),updated_by=CURRENT_USER where id=@id;";
+                    sql = "UPDATE cmodb.expell SET expelled=@expelled, expelled_num=@expelled_num, expelled_dt=@expelled_dt,updated=GETDATE(),updated_by=SYSTEM_USER where id=@id;";
                     cmd.Parameters.AddWithValue("id", id);
 
                 }

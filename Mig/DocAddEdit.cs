@@ -75,7 +75,7 @@ namespace Mig
                 cmd = new SqlCommand(sql, DB.conn);
                 if (Action == "Add")
                 {
-                    sql = "UPDATE cmodb.document SET status='N',updated=GETDATE(),updated_by=CURRENT_USER where contact_id=@contact_id and status='Y';";
+                    sql = "UPDATE cmodb.document SET status='N',updated=GETDATE(),updated_by=SYSTEM_USER where contact_id=@contact_id and status='Y';";
                     cmd.CommandText = sql;
                     cmd.Parameters.Clear();
                     cmd.Parameters.AddWithValue("contact_id", Contact_id);
@@ -87,13 +87,13 @@ namespace Mig
                     " contact_id, ident, type, invite_num, ser, num, issue_dt,  " +
                     " validity_from_dt, validity_to_dt, status,code,updated,updated_by) " +
                      " VALUES(@contact_id, @ident, @type, @invite_num, @ser, @num, @issue_dt, " +
-                    " @validity_from_dt, @validity_to_dt, @status, NEXT VALUE FOR [cmodb].[DocCode],GETDATE(),CURRENT_USER); ";
+                    " @validity_from_dt, @validity_to_dt, @status, NEXT VALUE FOR [cmodb].[DocCode],GETDATE(),SYSTEM_USER); ";
                 }
                 else
                 {
                     sql = "UPDATE cmodb.document SET " +
                     "  ident=@ident, type=@type, invite_num=@invite_num, ser=@ser, num=@num, issue_dt=@issue_dt,  " +
-                    " validity_from_dt=@validity_from_dt, validity_to_dt=@validity_to_dt,updated=GETDATE(),updated_by=CURRENT_USER " +                     
+                    " validity_from_dt=@validity_from_dt, validity_to_dt=@validity_to_dt,updated=GETDATE(),updated_by=SYSTEM_USER " +                     
                     " WHERE contact_id=@contact_id and status=@status; ";
 
                 }

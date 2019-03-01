@@ -639,7 +639,7 @@ namespace Mig
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
                 // sql = "UPDATE cmodb.contact SET status='N' where contact_id=:contact_id and status='Y' returning id;";
                 sql = "UPDATE cmodb.contact SET " +
-                    " last_name= @last_name, second_name= @second_name, birthday= @birthday, birth_town= @birth_town, updated=GETDATE(), updated_by= CURRENT_USER,  " +
+                    " last_name= @last_name, second_name= @second_name, birthday= @birthday, birth_town= @birth_town, updated=GETDATE(), updated_by= SYSTEM_USER,  " +
                     " sex= @sex, first_name= @first_name, " +
                     "last_enu= @last_enu, first_enu= @first_enu, " +
                     " second_enu= @second_enu,  " +
@@ -784,7 +784,7 @@ namespace Mig
                 int Contact_id = pref.CONTACTID;
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
                 sql = "UPDATE cmodb.contact " +
-                   " SET address_home =@address_home, position_code =@position_code, relatives =@relatives, med =@med,updated=GETDATE(),updated_by=CURRENT_USER, " +
+                   " SET address_home =@address_home, position_code =@position_code, relatives =@relatives, med =@med,updated=GETDATE(),updated_by=SYSTEM_USER, " +
 
                         " comments= @comments, " +
                          " phone= @phone  " +
@@ -887,7 +887,7 @@ namespace Mig
             {
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
 
-                sql = "UPDATE  cmodb.dul SET status='N',updated=GETDATE(),updated_by=CURRENT_USER where contact_id=@contact_id ;";
+                sql = "UPDATE  cmodb.dul SET status='N',updated=GETDATE(),updated_by=SYSTEM_USER where contact_id=@contact_id ;";
                 cmd = new SqlCommand(sql, DB.conn);
                 cmd.Transaction = transaction;
                 cmd.CommandText = sql;
@@ -895,7 +895,7 @@ namespace Mig
                 cmd.Parameters.AddWithValue("contact_id", pref.CONTACTID);
                 cmd.ExecuteNonQuery();
 
-                sql = "UPDATE cmodb.dul SET status='Y',updated=GETDATE(),updated_by=CURRENT_USER where id=@dulid ;";
+                sql = "UPDATE cmodb.dul SET status='Y',updated=GETDATE(),updated_by=SYSTEM_USER where id=@dulid ;";
 
                 cmd.CommandText = sql;
                 cmd.Parameters.Clear();
@@ -927,7 +927,7 @@ namespace Mig
                 {
                     transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
 
-                    sql = "UPDATE  cmodb.dul SET status='N', deleted='Y',updated=GETDATE(),updated_by=CURRENT_USER where id=@dulid ;";
+                    sql = "UPDATE  cmodb.dul SET status='N', deleted='Y',updated=GETDATE(),updated_by=SYSTEM_USER where id=@dulid ;";
                     cmd = new SqlCommand(sql, DB.conn);
                     cmd.Transaction = transaction;
                     cmd.CommandText = sql;
@@ -1148,7 +1148,7 @@ namespace Mig
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
                 cmd = new SqlCommand(sql, DB.conn);
 
-                sql = "UPDATE cmodb.document SET deleted='Y',status='N',updated=GETDATE(),updated_by=CURRENT_USER where id=@docid ;";
+                sql = "UPDATE cmodb.document SET deleted='Y',status='N',updated=GETDATE(),updated_by=SYSTEM_USER where id=@docid ;";
                 cmd.CommandText = sql;
                 cmd.Parameters.Clear();
                 cmd.Parameters.AddWithValue("docid", docid);
@@ -1178,7 +1178,7 @@ namespace Mig
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
                 cmd = new SqlCommand(sql, DB.conn);
 
-                sql = "UPDATE cmodb.migr_card SET deleted='Y',status='N',updated=GETDATE(),updated_by=CURRENT_USER where id=@migrid ;";
+                sql = "UPDATE cmodb.migr_card SET deleted='Y',status='N',updated=GETDATE(),updated_by=SYSTEM_USER where id=@migrid ;";
                 cmd.CommandText = sql;
                 cmd.Parameters.Clear();
                 cmd.Parameters.AddWithValue("migrid", migrid);
@@ -1930,7 +1930,7 @@ namespace Mig
                 int Contact_id = pref.CONTACTID;
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
                 sql = "UPDATE cmodb.contact " +
-                   " SET updated=GETDATE(),updated_by=CURRENT_USER, " +
+                   " SET updated=GETDATE(),updated_by=SYSTEM_USER, " +
                    "delegate_last_name = :delegate_last_name, delegate_first_name = :delegate_first_name, " +
                          " delegate_second_name = :delegate_second_name, delegate_ser = :delegate_ser, delegate_num = :delegate_num, delegate_dul_issue_dt = :delegate_dul_issue_dt, " +
                          " delegate_country = :delegate_country_code, delegate_nationality = :delegate_nationality_code, delegate_dul_code = :delegate_dul_code " +                       
@@ -1988,7 +1988,7 @@ namespace Mig
                 int Contact_id = pref.CONTACTID;
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
                 sql = "UPDATE cmodb.contact " +
-                   " SET updated=GETDATE(),updated_by=CURRENT_USER, " +
+                   " SET updated=GETDATE(),updated_by=SYSTEM_USER, " +
                    "delegate_last_name = null, delegate_first_name = null, " +
                          " delegate_second_name = null, delegate_ser = null, delegate_num = null, delegate_dul_issue_dt = null, " +
                          " delegate_country = null, delegate_nationality = null, delegate_dul_code = null " +
@@ -2138,7 +2138,7 @@ namespace Mig
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
                 cmd = new SqlCommand(sql, DB.conn);
                 sql = "UPDATE cmodb.contact SET " +
-                   " status='N',updated=GETDATE(),updated_by=CURRENT_USER " +
+                   " status='N',updated=GETDATE(),updated_by=SYSTEM_USER " +
                    "  WHERE contact_id = :contact_id; ";
                 cmd.CommandText = sql;
                 cmd.Parameters.Clear();
