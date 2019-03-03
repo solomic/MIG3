@@ -58,9 +58,9 @@ namespace Mig
             string StrRes="";
             DataSet ds = new DataSet();
             DataTable dt = new DataTable();
-            SqlCommand cmd;
+            SqlCommand cmd;            
             try
-            {
+            {                
                 cmd = new SqlCommand(comm, DB.conn);
                 cmd.Parameters.Clear();
                 if (param != null)
@@ -92,9 +92,10 @@ namespace Mig
             DataSet ds = new DataSet();
             DataTable dt = new DataTable();
             SqlCommand cmd;
+           // SqlTransaction transaction;
             try
-            {
-
+            {                
+                //transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
                 cmd = new SqlCommand(comm, DB.conn);
                 cmd.Parameters.Clear();
                 if (param != null)
@@ -124,9 +125,9 @@ namespace Mig
             DateTime? StrRes=null;
             DataSet ds = new DataSet();
             DataTable dt = new DataTable();
-            SqlCommand cmd;
+            SqlCommand cmd;           
             try
-            {
+            {               
                 cmd = new SqlCommand(comm, DB.conn);
                 cmd.Parameters.Clear();
                 if (param != null)

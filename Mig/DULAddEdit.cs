@@ -90,8 +90,8 @@ namespace Mig
             {
                 int Contact_id = pref.CONTACTID;
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
-                cmd = new SqlCommand(sql, DB.conn);
-                cmd.Transaction = transaction;
+                cmd = new SqlCommand(sql, DB.conn, transaction);
+                //cmd.Transaction = transaction;
                 cmd.Parameters.Clear();
                 if (action == "EDIT")
                 {

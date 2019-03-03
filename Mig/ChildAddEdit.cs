@@ -52,7 +52,7 @@ namespace Mig
             {
                 int Contact_id = pref.CONTACTID;
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
-                cmd = new SqlCommand(sql, DB.conn);
+                cmd = new SqlCommand(sql, DB.conn, transaction);
 
                 if (Action == "Add")
                 {

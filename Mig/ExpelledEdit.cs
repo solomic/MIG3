@@ -53,9 +53,9 @@ namespace Mig
             try
             {
                 int Contact_id = pref.CONTACTID;
-                cmd = new SqlCommand(sql, DB.conn);
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
-                cmd.Transaction = transaction;
+                cmd = new SqlCommand(sql, DB.conn, transaction);                
+                //cmd.Transaction = transaction;
                 if (Action == "ADD")
                 {
                     sql = "UPDATE cmodb.expell SET status='N' where  contact_id=@contact_id;";
@@ -93,7 +93,8 @@ namespace Mig
                 /*если дата заполнена, то обновим активное обучение*/
                 if (tExpelledDt.SelectedDate != "")
                 {
-                    sql = "UPDATE cmodb.teach_info set deduct_year=:year where contact_id=:contact_id and status='Y';";
+                    sql = "UPDATE cmodb.teach_info set deduct_year=@year where contact_id=@contact_id and status='Y';";
+                    cmd.Parameters.Clear();
                     cmd.CommandText = sql;
                     cmd.Parameters.AddWithValue("contact_id", Contact_id);
                     cmd.Parameters.AddWithValue("year", tExpelledDt.SelectedDate.Substring(6));

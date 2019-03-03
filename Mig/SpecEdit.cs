@@ -132,8 +132,8 @@ namespace Mig
                     {
                         transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
                         string sql = "INSERT INTO cmodb.facultet(code, name, short_name, status) VALUES (NEXT VALUE FOR [cmodb].[FacCode], @name, @shortname, 'Y');";
-                        cmd = new SqlCommand(sql, DB.conn);
-                        cmd.Transaction = transaction;//???????
+                        cmd = new SqlCommand(sql, DB.conn, transaction);
+                       // cmd.Transaction = transaction;//???????
                         cmd.Parameters.Clear();
                         cmd.Parameters.AddWithValue("name", facname);
                         cmd.Parameters.AddWithValue("shortname", facshortname);
@@ -183,8 +183,8 @@ namespace Mig
 
                         string sql;
                         sql = "UPDATE cmodb.facultet SET status='N',deleted='N' where id=@id;";
-                        cmd = new SqlCommand(sql, DB.conn);
-                        cmd.Transaction = transaction;
+                        cmd = new SqlCommand(sql, DB.conn, transaction);
+                       // cmd.Transaction = transaction;
                         cmd.Parameters.Clear();
                         cmd.Parameters.AddWithValue("id", dataGridView1.CurrentRow.Cells["id"].Value); //берем id
                         cmd.ExecuteNonQuery();
@@ -235,13 +235,13 @@ namespace Mig
                 {
                     transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
                     string sql = "UPDATE cmodb.facultet SET name=@name,short_name = @short_name where id=@id;";
-                    cmd = new SqlCommand(sql, DB.conn);
+                    cmd = new SqlCommand(sql, DB.conn, transaction);
                     cmd.Parameters.Clear();
                     cmd.Parameters.AddWithValue("name", facname);
                     cmd.Parameters.AddWithValue("short_name", facshortname);
                     cmd.Parameters.AddWithValue("id", dataGridView1.CurrentRow.Cells["id"].Value);
                     cmd.ExecuteNonQuery();
-                    cmd.Transaction = transaction;
+                    //cmd.Transaction = transaction;
                     transaction.Commit();
 
                     dataGridView1.CurrentRow.Cells[2].Value = facshortname;
@@ -283,14 +283,14 @@ namespace Mig
                     {
                         transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
                         string sql = "INSERT INTO cmodb.speciality(code, name, status, par_code,prog_teach_code,spec_code) VALUES (@code, @name,'Y', @par_code,@prog_teach_code,NEXT VALUE FOR [cmodb].[SpecCode]);";
-                        cmd = new SqlCommand(sql, DB.conn);
+                        cmd = new SqlCommand(sql, DB.conn, transaction);
                         cmd.Parameters.Clear();
                         cmd.Parameters.AddWithValue("code", SpecCode);
                         cmd.Parameters.AddWithValue("name", SpecName);
                         cmd.Parameters.AddWithValue("par_code", dataGridView1.CurrentRow.Cells["code"].Value);
                         cmd.Parameters.AddWithValue("prog_teach_code", POCode);
                         cmd.ExecuteNonQuery();
-                        cmd.Transaction = transaction;
+                       // cmd.Transaction = transaction;
                         transaction.Commit();
 
                         dataGridView1_MouseClick(this, null);
@@ -340,14 +340,14 @@ namespace Mig
                 {
                     transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
                     string sql = "UPDATE cmodb.speciality SET code=@code,name = @name,prog_teach_code=@prog_teach_code where id=@id;";
-                    cmd = new SqlCommand(sql, DB.conn);
+                    cmd = new SqlCommand(sql, DB.conn, transaction);
                     cmd.Parameters.Clear();
                     cmd.Parameters.AddWithValue("code", SpecCode);
                     cmd.Parameters.AddWithValue("name", SpecName);
                     cmd.Parameters.AddWithValue("prog_teach_code", POCode);
                     cmd.Parameters.AddWithValue("id", dataGridView2.CurrentRow.Cells["id"].Value);
                     cmd.ExecuteNonQuery();
-                    cmd.Transaction = transaction;
+                   // cmd.Transaction = transaction;
                     transaction.Commit();
 
                     dataGridView2.CurrentRow.Cells["code"].Value = SpecCode;
@@ -386,11 +386,11 @@ namespace Mig
                         transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
                         string sql;
                         sql = "UPDATE cmodb.speciality SET status='N' where id=@id;";                        
-                        cmd = new SqlCommand(sql, DB.conn);
+                        cmd = new SqlCommand(sql, DB.conn, transaction);
                         cmd.Parameters.Clear();
                         cmd.Parameters.AddWithValue("id", dataGridView2.CurrentRow.Cells["id"].Value); //берем id
                         cmd.ExecuteNonQuery();
-                        cmd.Transaction = transaction;
+                       // cmd.Transaction = transaction;
                         transaction.Commit();
 
                         dataGridView2.Rows.Remove(dataGridView2.CurrentRow);

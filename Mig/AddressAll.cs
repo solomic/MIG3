@@ -106,7 +106,7 @@ namespace Mig
             {
 
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
-                cmd = new SqlCommand(sql, DB.conn);
+                cmd = new SqlCommand(sql, DB.conn, transaction);
                 sql = "UPDATE cmodb.addr_inter "+
                     "SET  address_code =@newcode "+
                   " WHERE contact_id = ANY(@contact_id) AND address_code =@oldcode; ";
@@ -140,7 +140,7 @@ namespace Mig
             {
 
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
-                cmd = new SqlCommand(sql, DB.conn);
+                cmd = new SqlCommand(sql, DB.conn, transaction);
                 sql = "UPDATE cmodb.address " +
                     "SET  pin =@pin " +
                   " WHERE code = @code; ";
@@ -177,7 +177,7 @@ namespace Mig
                 if (cnt == 0)
                 {
                     transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
-                    cmd = new SqlCommand(sql, DB.conn);
+                    cmd = new SqlCommand(sql, DB.conn, transaction);
                     sql = "DELETE FROM cmodb.address " +
                          " WHERE code = @code; ";
                     cmd.CommandText = sql;

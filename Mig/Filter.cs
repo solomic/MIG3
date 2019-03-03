@@ -384,7 +384,7 @@ namespace Mig
             {
 
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
-                cmd = new SqlCommand(sql, DB.conn);
+                cmd = new SqlCommand(sql, DB.conn, transaction);
                 sql = "UPDATE cmodb.contact SET " +
                    " type=@type,updated=GETDATE(),updated_by=SYSTEM_USER " +
                    "  WHERE contact_id = ANY(@contact_id); ";
@@ -415,7 +415,7 @@ namespace Mig
             try
             {
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
-                cmd = new SqlCommand(sql, DB.conn);
+                cmd = new SqlCommand(sql, DB.conn, transaction);
                 sql = "UPDATE cmodb.contact SET " +
                    " reg_extend=@reg_extend,updated=GETDATE(),updated_by=SYSTEM_USER " +
                    "  WHERE contact_id = ANY(@contact_id); ";
@@ -448,7 +448,7 @@ namespace Mig
             {
 
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
-                cmd = new SqlCommand(sql, DB.conn);
+                cmd = new SqlCommand(sql, DB.conn, transaction);
                 sql = "UPDATE cmodb.contact SET " +
                    " deduct=@type,updated=GETDATE(),updated_by=SYSTEM_USER " +
                    "  WHERE contact_id = ANY(@contact_id); ";
@@ -480,7 +480,7 @@ namespace Mig
             {
 
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
-                cmd = new SqlCommand(sql, DB.conn);
+                cmd = new SqlCommand(sql, DB.conn, transaction);
                 sql = "UPDATE cmodb.contact SET " +
                    " rf=@type,updated=GETDATE(),updated_by=SYSTEM_USER " +
                    "  WHERE contact_id = ANY(@contact_id); ";
@@ -513,7 +513,7 @@ namespace Mig
             {
 
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
-                cmd = new SqlCommand(sql, DB.conn);
+                cmd = new SqlCommand(sql, DB.conn, transaction);
                 sql = "UPDATE cmodb.contact SET " +
                    " doc_state=@doc,date_entry_future=@date_entry_future,updated=GETDATE(),updated_by=SYSTEM_USER " +
                    "  WHERE contact_id = ANY(@contact_id); ";

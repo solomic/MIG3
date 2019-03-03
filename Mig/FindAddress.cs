@@ -229,8 +229,8 @@ namespace Mig
             {
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
                 string sql = "SELECT [cmodb].[AddressCalc](@kladr_code,@house,@corp,@stroenie,@flat,@fulladdress) ; ";
-                cmd = new SqlCommand(sql, DB.conn);
-                cmd.Transaction = transaction;
+                cmd = new SqlCommand(sql, DB.conn, transaction);
+                //cmd.Transaction = transaction;
                 cmd.Parameters.Clear();
                 cmd.Parameters.AddWithValue("kladr_code", textBox2.Text);
                 cmd.Parameters.AddWithValue("house", cmbHouse.Text);

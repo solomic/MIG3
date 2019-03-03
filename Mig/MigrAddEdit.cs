@@ -48,7 +48,7 @@ namespace Mig
             {
                 int Contact_id = pref.CONTACTID;
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
-                cmd = new SqlCommand(sql, DB.conn);               
+                cmd = new SqlCommand(sql, DB.conn, transaction);               
                 sql = "UPDATE cmodb.entry SET " +
                    " status='N',updated=GETDATE(),updated_by=SYSTEM_USER " +
                    "  WHERE contact_id=@contact_id and status=@status; ";
@@ -77,9 +77,35 @@ namespace Mig
             string sql="";
             try
             {
+                string err = "";
+                if (tMigTenureTo.SelectedDate != "")
+                {
+
+                    DateTime Tenure = Convert.ToDateTime(tMigTenureTo.SelectedDate);
+                    DateTime? DulDt = DB.GetTableValueDt("select validity from cmodb.dul where contact_id=@param1 and status='Y'", new List<object> { pref.CONTACTID });
+                    DateTime? AgreeDt = DB.GetTableValueDt("select to_dt from cmodb.agree where contact_id=@param1 and status='Y'", new List<object> { pref.CONTACTID });
+
+                    if (DulDt != null)
+                    {
+                        if (Tenure > DulDt)
+                        {
+                            err = "'Срок пребывания до' больше срока действия паспорта!\n";
+                        }
+                    }
+                    if (AgreeDt != null)
+                    {
+                        if (Tenure > AgreeDt)
+                        {
+                            err += "'Срок пребывания до' больше срока действия договора!\n";
+                        }
+                    }
+
+                }
+
+
                 int Contact_id = pref.CONTACTID;
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
-                cmd = new SqlCommand(sql, DB.conn);
+                cmd = new SqlCommand(sql, DB.conn, transaction);
                 if (Action == "Add" || Action == "Extend")
                 {
                     sql = "UPDATE cmodb.migr_card SET status='N', updated=GETDATE(),updated_by=SYSTEM_USER where contact_id=@contact_id and status='Y';";
@@ -134,33 +160,7 @@ namespace Mig
 
                 cmd.ExecuteNonQuery();
 
-
-                string err = "";
-                if (tMigTenureTo.SelectedDate != "")
-                {
-                   
-                    DateTime Tenure = Convert.ToDateTime(tMigTenureTo.SelectedDate);
-                    DateTime? DulDt = DB.GetTableValueDt("select validity from cmodb.dul where contact_id=@param1 and status='Y'", new List<object> { pref.CONTACTID });
-                    DateTime? AgreeDt = DB.GetTableValueDt("select to_dt from cmodb.agree where contact_id=@param1 and status='Y'", new List<object> { pref.CONTACTID });
-
-                    if(DulDt!=null)
-                    {
-                        if(Tenure> DulDt)
-                        {
-                            err = "'Срок пребывания до' больше срока действия паспорта!\n";
-                        }
-                    }
-                    if(AgreeDt != null)
-                    {
-                        if (Tenure > AgreeDt)
-                        {
-                            err += "'Срок пребывания до' больше срока действия договора!\n";
-                        }
-                    }
-
-                   
-
-                }
+                
                 if (err != "")
                 {
                     err += "Продолжить?";

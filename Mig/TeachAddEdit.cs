@@ -76,7 +76,7 @@ namespace Mig
             try
             {
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
-                cmd = new SqlCommand(sql, DB.conn);
+                cmd = new SqlCommand(sql, DB.conn, transaction);
                 if (Action == "Add")
                 { 
                     sql = "UPDATE cmodb.teach_info set status='N' where contact_id=@contact_id and status='Y'";                    

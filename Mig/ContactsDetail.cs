@@ -645,8 +645,8 @@ namespace Mig
                     " second_enu= @second_enu,  " +
                     " nationality=@nationality_code, birth_country = @birth_country_code, " +
                      " status = @status where contact_id =@contact_id;";
-                cmd = new SqlCommand(sql, DB.conn);
-                cmd.Transaction = transaction;
+                cmd = new SqlCommand(sql, DB.conn, transaction);
+              //  cmd.Transaction = transaction;
 
                 cmd.CommandText = sql;
                 cmd.Parameters.Clear();
@@ -790,8 +790,8 @@ namespace Mig
                          " phone= @phone  " +
                          " WHERE contact_id =@contact_id and status = 'Y';";
 
-                cmd = new SqlCommand(sql, DB.conn);
-                cmd.Transaction = transaction;
+                cmd = new SqlCommand(sql, DB.conn, transaction);
+               // cmd.Transaction = transaction;
                 cmd.Parameters.Clear();
                 cmd.Parameters.AddWithValue("contact_id", Contact_id);
                 cmd.Parameters.AddWithValue("address_home", tPersAddress.Text.Trim());
@@ -888,8 +888,8 @@ namespace Mig
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
 
                 sql = "UPDATE  cmodb.dul SET status='N',updated=GETDATE(),updated_by=SYSTEM_USER where contact_id=@contact_id ;";
-                cmd = new SqlCommand(sql, DB.conn);
-                cmd.Transaction = transaction;
+                cmd = new SqlCommand(sql, DB.conn, transaction);
+              //  cmd.Transaction = transaction;
                 cmd.CommandText = sql;
                 cmd.Parameters.Clear();
                 cmd.Parameters.AddWithValue("contact_id", pref.CONTACTID);
@@ -928,8 +928,8 @@ namespace Mig
                     transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
 
                     sql = "UPDATE  cmodb.dul SET status='N', deleted='Y',updated=GETDATE(),updated_by=SYSTEM_USER where id=@dulid ;";
-                    cmd = new SqlCommand(sql, DB.conn);
-                    cmd.Transaction = transaction;
+                    cmd = new SqlCommand(sql, DB.conn, transaction);
+                    //cmd.Transaction = transaction;
                     cmd.CommandText = sql;
                     cmd.Parameters.Clear();
                     cmd.Parameters.AddWithValue("dulid", DULid);
@@ -1085,14 +1085,14 @@ namespace Mig
 
                 string sql;
                 sql = "UPDATE cmodb.document SET status='N' where id<>@id and contact_id=@contact_id;";
-                cmd = new SqlCommand(sql, DB.conn);
-                cmd.Transaction = transaction;
+                cmd = new SqlCommand(sql, DB.conn, transaction);
+               // cmd.Transaction = transaction;
                 cmd.Parameters.Clear();
                 cmd.Parameters.AddWithValue("id", id); //берем id
                 cmd.Parameters.AddWithValue("contact_id", pref.CONTACTID);
                 cmd.ExecuteNonQuery();
 
-                sql = "UPDATE cmodb.document SET status='Y' where id=:id;";
+                sql = "UPDATE cmodb.document SET status='Y' where id=@id;";
                 cmd.CommandText = sql;
                 cmd.Parameters.Clear();
                 cmd.Parameters.AddWithValue("id", id); //берем id
@@ -1146,7 +1146,7 @@ namespace Mig
             {
                 int Contact_id = pref.CONTACTID;
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
-                cmd = new SqlCommand(sql, DB.conn);
+                cmd = new SqlCommand(sql, DB.conn, transaction);
 
                 sql = "UPDATE cmodb.document SET deleted='Y',status='N',updated=GETDATE(),updated_by=SYSTEM_USER where id=@docid ;";
                 cmd.CommandText = sql;
@@ -1176,7 +1176,7 @@ namespace Mig
             {
                 int Contact_id = pref.CONTACTID;
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
-                cmd = new SqlCommand(sql, DB.conn);
+                cmd = new SqlCommand(sql, DB.conn, transaction);
 
                 sql = "UPDATE cmodb.migr_card SET deleted='Y',status='N',updated=GETDATE(),updated_by=SYSTEM_USER where id=@migrid ;";
                 cmd.CommandText = sql;
@@ -1246,7 +1246,7 @@ namespace Mig
                     {
                         int Contact_id = pref.CONTACTID;
                         transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
-                        cmd = new SqlCommand(sql, DB.conn);
+                        cmd = new SqlCommand(sql, DB.conn, transaction);
                         sql = "DELETE FROM cmodb.children where id=@id;";
                         cmd.CommandText = sql;
                         cmd.Parameters.Clear();
@@ -1322,7 +1322,7 @@ namespace Mig
             try
             {
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
-                cmd = new SqlCommand(sql, DB.conn);
+                cmd = new SqlCommand(sql, DB.conn, transaction);
                
                 sql = "UPDATE cmodb.teach_info set deleted='Y',status='N' where id=@id";
                 cmd.CommandText = sql;
@@ -1386,8 +1386,8 @@ namespace Mig
                     transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
 
                     sql = "UPDATE cmodb.addr_inter SET status='N' WHERE contact_id=@contact_id;";
-                    cmd = new SqlCommand(sql, DB.conn);
-                    cmd.Transaction = transaction;
+                    cmd = new SqlCommand(sql, DB.conn, transaction);
+                    //cmd.Transaction = transaction;
                     cmd.Parameters.Clear();
                    // cmd.Parameters.AddWithValue("status", "Y");
                     cmd.Parameters.AddWithValue("contact_id", Contact_id);
@@ -1449,8 +1449,8 @@ namespace Mig
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
 
                 sql = "UPDATE cmodb.addr_inter SET status='N', deleted='Y' WHERE id=@id;";
-                cmd = new SqlCommand(sql, DB.conn);
-                cmd.Transaction = transaction;
+                cmd = new SqlCommand(sql, DB.conn, transaction);
+                //cmd.Transaction = transaction;
                 cmd.Parameters.Clear();               
                 cmd.Parameters.AddWithValue("id", id);
                 cmd.ExecuteNonQuery();
@@ -1490,8 +1490,8 @@ namespace Mig
 
                 string sql;
                 sql = "UPDATE cmodb.teach_info SET status='N' where id<>@id and contact_id=@contact_id;";
-                cmd = new SqlCommand(sql, DB.conn);
-                cmd.Transaction = transaction;
+                cmd = new SqlCommand(sql, DB.conn, transaction);
+               // cmd.Transaction = transaction;
                 cmd.Parameters.Clear();
                 cmd.Parameters.AddWithValue("id", id); //берем id
                 cmd.Parameters.AddWithValue("contact_id", pref.CONTACTID);
@@ -1527,14 +1527,14 @@ namespace Mig
 
                 string sql;
                 sql = "UPDATE cmodb.migr_card SET status='N' where id<>@id and contact_id=@contact_id;";
-                cmd = new SqlCommand(sql, DB.conn);
-                cmd.Transaction = transaction;
+                cmd = new SqlCommand(sql, DB.conn, transaction);
+               // cmd.Transaction = transaction;
                 cmd.Parameters.Clear();
                 cmd.Parameters.AddWithValue("id", id); //берем id
                 cmd.Parameters.AddWithValue("contact_id", pref.CONTACTID);
                 cmd.ExecuteNonQuery();
 
-                sql = "UPDATE cmodb.migr_card SET status='Y' where id=:id;";
+                sql = "UPDATE cmodb.migr_card SET status='Y' where id=@id;";
                 cmd.CommandText = sql;
                 cmd.Parameters.Clear();
                 cmd.Parameters.AddWithValue("id", id); //берем id
@@ -1563,8 +1563,8 @@ namespace Mig
 
                 string sql;
                 sql = "UPDATE cmodb.migr_card SET status='N' where contact_id=@contact_id and deleted<>'Y';";
-                cmd = new SqlCommand(sql, DB.conn);
-                cmd.Transaction = transaction;
+                cmd = new SqlCommand(sql, DB.conn, transaction);
+                //cmd.Transaction = transaction;
                 cmd.Parameters.Clear();               
                 cmd.Parameters.AddWithValue("contact_id", contactid);
                 cmd.ExecuteNonQuery();
@@ -1590,14 +1590,14 @@ namespace Mig
 
                 string sql;
                 sql = "UPDATE cmodb.entry SET status='N' where id<>@id and contact_id=@contact_id;";
-                cmd = new SqlCommand(sql, DB.conn);
-                cmd.Transaction = transaction;
+                cmd = new SqlCommand(sql, DB.conn, transaction);
+               // cmd.Transaction = transaction;
                 cmd.Parameters.Clear();
                 cmd.Parameters.AddWithValue("id", id); //берем id
                 cmd.Parameters.AddWithValue("contact_id", pref.CONTACTID);
                 cmd.ExecuteNonQuery();
 
-                sql = "UPDATE cmodb.entry SET status='Y' where id=:id;";
+                sql = "UPDATE cmodb.entry SET status='Y' where id=@id;";
                 cmd.CommandText = sql;
                 cmd.Parameters.Clear();
                 cmd.Parameters.AddWithValue("id", id); //берем id                                                     
@@ -1683,8 +1683,8 @@ namespace Mig
             {
                 int Contact_id = pref.CONTACTID;
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
-                cmd = new SqlCommand(sql, DB.conn);
-                sql = "UPDATE cmodb.entry SET status='N', deleted='Y' where id=:id;";
+                cmd = new SqlCommand(sql, DB.conn, transaction);
+                sql = "UPDATE cmodb.entry SET status='N', deleted='Y' where id=@id;";
                 cmd.CommandText = sql;
                 cmd.Parameters.Clear();
                 cmd.Parameters.AddWithValue("id", id);
@@ -1765,15 +1765,15 @@ namespace Mig
             {
                 int Contact_id = pref.CONTACTID;
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
-                cmd = new SqlCommand(sql, DB.conn);
+                cmd = new SqlCommand(sql, DB.conn, transaction);
                
-                sql = "UPDATE cmodb.agree SET status='N' where contact_id=:contact_id and status='Y';";
+                sql = "UPDATE cmodb.agree SET status='N' where contact_id=@contact_id and status='Y';";
                 cmd.CommandText = sql;
                 cmd.Parameters.Clear();
                 cmd.Parameters.AddWithValue("contact_id", Contact_id);
                 cmd.ExecuteNonQuery();
 
-                sql = "UPDATE cmodb.agree SET status='Y' where id=:id ;";
+                sql = "UPDATE cmodb.agree SET status='Y' where id=@id ;";
                 cmd.CommandText = sql;
                 cmd.Parameters.Clear();
                 cmd.Parameters.AddWithValue("id", id);
@@ -1808,9 +1808,9 @@ namespace Mig
             {
                 int Contact_id = pref.CONTACTID;
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
-                cmd = new SqlCommand(sql, DB.conn);
+                cmd = new SqlCommand(sql, DB.conn, transaction);
 
-                sql = "UPDATE cmodb.agree SET status='N',deleted='Y' where id=:id;";
+                sql = "UPDATE cmodb.agree SET status='N',deleted='Y' where id=@id;";
                 cmd.CommandText = sql;
                 cmd.Parameters.Clear();
                 cmd.Parameters.AddWithValue("id", id);
@@ -1842,11 +1842,14 @@ namespace Mig
 
         private void toolStripButton28_Click(object sender, EventArgs e)
         {
-            fExpelledEdit fExpelledEditForm = new fExpelledEdit("EDIT", Convert.ToInt32(dgExpellHist.CurrentRow.Cells["id"].Value));
-            if (fExpelledEditForm.ShowDialog(this) == DialogResult.OK)
+            if (dgExpellHist.SelectedRows.Count != 0)
             {
-                LoadExpell();
-                LoadTeach();
+                fExpelledEdit fExpelledEditForm = new fExpelledEdit("EDIT", Convert.ToInt32(dgExpellHist.CurrentRow.Cells["id"].Value));
+                if (fExpelledEditForm.ShowDialog(this) == DialogResult.OK)
+                {
+                    LoadExpell();
+                    LoadTeach();
+                }
             }
         }
 
@@ -1881,12 +1884,10 @@ namespace Mig
             string sql = "";
             try
             {
-
-                cmd = new SqlCommand(sql, DB.conn);
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
-                cmd.Transaction = transaction;
-
-                sql = "UPDATE cmodb.expell SET deleted='Y',status='N' where  id=:id;";
+                cmd = new SqlCommand(sql, DB.conn, transaction);               
+               // cmd.Transaction = transaction;
+                sql = "UPDATE cmodb.expell SET deleted='Y',status='N' where  id=@id;";
                 cmd.CommandText = sql;
                 cmd.Parameters.AddWithValue("id", id);
                 cmd.ExecuteNonQuery();
@@ -1931,13 +1932,13 @@ namespace Mig
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
                 sql = "UPDATE cmodb.contact " +
                    " SET updated=GETDATE(),updated_by=SYSTEM_USER, " +
-                   "delegate_last_name = :delegate_last_name, delegate_first_name = :delegate_first_name, " +
-                         " delegate_second_name = :delegate_second_name, delegate_ser = :delegate_ser, delegate_num = :delegate_num, delegate_dul_issue_dt = :delegate_dul_issue_dt, " +
-                         " delegate_country = :delegate_country_code, delegate_nationality = :delegate_nationality_code, delegate_dul_code = :delegate_dul_code " +                       
-                         " WHERE contact_id =:contact_id and status = 'Y';";
+                   "delegate_last_name = @delegate_last_name, delegate_first_name = @delegate_first_name, " +
+                         " delegate_second_name = @delegate_second_name, delegate_ser = @delegate_ser, delegate_num = @delegate_num, delegate_dul_issue_dt = @delegate_dul_issue_dt, " +
+                         " delegate_country = @delegate_country_code, delegate_nationality = @delegate_nationality_code, delegate_dul_code = @delegate_dul_code " +                       
+                         " WHERE contact_id =@contact_id and status = 'Y';";
 
-                cmd = new SqlCommand(sql, DB.conn);
-                cmd.Transaction = transaction;
+                cmd = new SqlCommand(sql, DB.conn, transaction);
+               // cmd.Transaction = transaction;
                 cmd.Parameters.Clear();
                 cmd.Parameters.AddWithValue("contact_id", Contact_id);               
                 cmd.Parameters.AddWithValue("delegate_last_name", tDelLast.Text);
@@ -1992,10 +1993,10 @@ namespace Mig
                    "delegate_last_name = null, delegate_first_name = null, " +
                          " delegate_second_name = null, delegate_ser = null, delegate_num = null, delegate_dul_issue_dt = null, " +
                          " delegate_country = null, delegate_nationality = null, delegate_dul_code = null " +
-                         " WHERE contact_id =:contact_id and status = 'Y';";
+                         " WHERE contact_id =@contact_id and status = 'Y';";
 
-                cmd = new SqlCommand(sql, DB.conn);
-                cmd.Transaction = transaction;
+                cmd = new SqlCommand(sql, DB.conn, transaction);
+               // cmd.Transaction = transaction;
                 cmd.Parameters.Clear();
                 cmd.Parameters.AddWithValue("contact_id", Contact_id);             
 
@@ -2086,30 +2087,7 @@ namespace Mig
             }
         }
 
-        private void dgDocSel_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
-        {
-            
-        }
-
-        private void dgMigrHist_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
-        {
-           
-        }
-
-        private void tRelatives_Validating(object sender, CancelEventArgs e)
-        {
-         
-        }
-
-        private void tRelatives_Validated(object sender, EventArgs e)
-        {
-            
-        }
-
-        private void tabDocMigr_Click(object sender, EventArgs e)
-        {
-
-        }
+        
 
         private void toolStripButton22_Click(object sender, EventArgs e)
         {
@@ -2136,10 +2114,10 @@ namespace Mig
             try
             {
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
-                cmd = new SqlCommand(sql, DB.conn);
+                cmd = new SqlCommand(sql, DB.conn, transaction);
                 sql = "UPDATE cmodb.contact SET " +
                    " status='N',updated=GETDATE(),updated_by=SYSTEM_USER " +
-                   "  WHERE contact_id = :contact_id; ";
+                   "  WHERE contact_id = @contact_id; ";
                 cmd.CommandText = sql;
                 cmd.Parameters.Clear();
                 cmd.Parameters.AddWithValue("contact_id", conid);
@@ -2190,9 +2168,9 @@ namespace Mig
             try
             {
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
-                cmd = new SqlCommand(sql, DB.conn);
+                cmd = new SqlCommand(sql, DB.conn, transaction);
                 sql = "DELETE FROM cmodb.pf "+
-                   "  WHERE id = :id; ";
+                   "  WHERE id = @id; ";
                 cmd.CommandText = sql;
                 cmd.Parameters.Clear();
                 cmd.Parameters.AddWithValue("id", pfid);

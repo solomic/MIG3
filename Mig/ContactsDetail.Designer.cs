@@ -503,8 +503,7 @@
             this.tRelatives.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.tRelatives.Size = new System.Drawing.Size(392, 57);
             this.tRelatives.TabIndex = 51;
-            this.tRelatives.Validating += new System.ComponentModel.CancelEventHandler(this.tRelatives_Validating);
-            this.tRelatives.Validated += new System.EventHandler(this.tRelatives_Validated);
+            
             // 
             // tInsurance
             // 
@@ -575,8 +574,7 @@
             this.tabDocMigr.Padding = new System.Windows.Forms.Padding(3);
             this.tabDocMigr.Size = new System.Drawing.Size(1020, 493);
             this.tabDocMigr.TabIndex = 1;
-            this.tabDocMigr.Text = "Регистрация/Виза";
-            this.tabDocMigr.Click += new System.EventHandler(this.tabDocMigr_Click);
+            this.tabDocMigr.Text = "Регистрация/Виза";         
             this.tabDocMigr.Enter += new System.EventHandler(this.tabDocMigr_Enter);
             // 
             // panel4
@@ -619,7 +617,7 @@
             this.dgMigrHist.ShowRowErrors = false;
             this.dgMigrHist.Size = new System.Drawing.Size(984, 202);
             this.dgMigrHist.TabIndex = 43;
-            this.dgMigrHist.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgMigrHist_CellDoubleClick);
+            
             // 
             // migrstatus
             // 
@@ -788,7 +786,7 @@
             this.dgDocSel.ShowRowErrors = false;
             this.dgDocSel.Size = new System.Drawing.Size(984, 172);
             this.dgDocSel.TabIndex = 43;
-            this.dgDocSel.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgDocSel_CellDoubleClick);
+           
             // 
             // docstatus
             // 

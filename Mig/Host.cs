@@ -65,7 +65,7 @@ namespace Mig
             try
             {                
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
-                cmd = new SqlCommand(sql, DB.conn);
+                cmd = new SqlCommand(sql, DB.conn, transaction);
                 cmd.Parameters.Clear();
                 sql = "UPDATE cmodb.host  SET status = 'N'; ";
                 cmd.CommandText = sql;
@@ -111,7 +111,7 @@ namespace Mig
             try
             {
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
-                cmd = new SqlCommand(sql, DB.conn);
+                cmd = new SqlCommand(sql, DB.conn, transaction);
                 cmd.Parameters.Clear();
                 sql = "DELETE FROM cmodb.host  WHERE id=@id; ";
                 cmd.CommandText = sql;

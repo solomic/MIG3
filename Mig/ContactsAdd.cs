@@ -376,7 +376,7 @@ namespace Mig
             {
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
                 sql = "select NEXT VALUE FOR [cmodb].[ConId]";
-                cmd = new SqlCommand(sql, DB.conn);                
+                cmd = new SqlCommand(sql, DB.conn, transaction);                
                 int Contact_id =  Convert.ToInt32(cmd.ExecuteScalar());
                 /*==========================================================*/
                 sql = "INSERT INTO cmodb.contact("+
