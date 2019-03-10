@@ -60,7 +60,11 @@ namespace Mig
                         res += ", кв. " + cmbFlat.Text;*/
                     return res;
                 }
-                catch { }
+                catch (Exception msg)
+                {
+                    Logger.Log.Error(msg.ToString());
+                    MessageBox.Show("Ошибка", msg.ToString(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
 
             return res;
@@ -95,9 +99,9 @@ namespace Mig
                     this.comboBox3.SelectedIndexChanged -= this.comboBox3_SelectedIndexChanged;
                     this.comboBox4.SelectedIndexChanged -= this.comboBox4_SelectedIndexChanged;
 
-                    string sql = "SELECT kl.name + ' ' + kl.socr + '., '||klrn.name as name, kl.code  , klrn.name as rn" +
+                    string sql = "SELECT kl.name + ' ' + kl.socr + '., '+klrn.name as name, kl.code  , klrn.name as rn" +
                     " FROM kladr.kladr kl " +
-                    " LEFT JOIN (SELECT name + ' ' + socr as name, code FROM kladr.kladr where code like (@param1+'___00000000')) klrn on rpad(substring(kl.code, 1, 5), 13, '0') = klrn.code " +
+                    " LEFT JOIN (SELECT name + ' ' + socr as name, code FROM kladr.kladr where code like (@param1+'___00000000')) klrn on substring(kl.code, 1, 5)+'00000000' = klrn.code " +
                     " where kl.code like (@param1+'_________00') and kl.code <> (@param1+'00000000000') and not(kl.code LIKE (@param1+'___00000000'))";
 
 
@@ -140,7 +144,10 @@ namespace Mig
                 }
 
             }
-            catch { }
+            catch(Exception msg) {
+                Logger.Log.Error(msg.ToString());
+                MessageBox.Show("Ошибка", msg.ToString(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
 
@@ -167,7 +174,11 @@ namespace Mig
                 this.comboBox4.SelectedIndexChanged += this.comboBox4_SelectedIndexChanged;
 
             }
-            catch { }
+            catch (Exception msg)
+            {
+                Logger.Log.Error(msg.ToString());
+                MessageBox.Show("Ошибка", msg.ToString(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void comboBox4_TextChanged(object sender, EventArgs e)
@@ -228,16 +239,23 @@ namespace Mig
             try
             {
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
-                string sql = "SELECT [cmodb].[AddressCalc](@kladr_code,@house,@corp,@stroenie,@flat,@fulladdress) ; ";
+                string sql = "EXEC @rc = [cmodb].[AddressCalc] @kladr_code,@dom,@korp,@stroenie,@flat,@fulladdr; SELECT @rc;";
+                //string sql = "[cmodb].[AddressCalc]";
                 cmd = new SqlCommand(sql, DB.conn, transaction);
                 //cmd.Transaction = transaction;
+               // cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.Clear();
                 cmd.Parameters.AddWithValue("kladr_code", textBox2.Text);
-                cmd.Parameters.AddWithValue("house", cmbHouse.Text);
-                cmd.Parameters.AddWithValue("corp", cmbCorp.Text);
+                cmd.Parameters.AddWithValue("dom", cmbHouse.Text);
+                cmd.Parameters.AddWithValue("korp", cmbCorp.Text);
                 cmd.Parameters.AddWithValue("stroenie", cmbStroenie.Text);
                 cmd.Parameters.AddWithValue("flat", cmbFlat.Text);
-                cmd.Parameters.AddWithValue("fulladdress", textBox1.Text);
+                cmd.Parameters.AddWithValue("fulladdr", textBox1.Text);
+
+                SqlParameter pr = new SqlParameter("@rc", SqlDbType.Int);
+                pr.Direction = ParameterDirection.Output;
+                cmd.Parameters.Add(pr);
+
                 _Address_code = Convert.ToInt32(cmd.ExecuteScalar());
 
                 transaction.Commit();
