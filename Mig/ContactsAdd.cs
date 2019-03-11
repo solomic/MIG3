@@ -466,7 +466,7 @@ namespace Mig
                 {
                     sql = "INSERT INTO cmodb.document( " +
                     " contact_id, ident, type, invite_num, ser, num, issue_dt,  " +
-                    " validity_from_dt, validity_to_dt, status,code) OUTPUT code " +
+                    " validity_from_dt, validity_to_dt, status,code) OUTPUT @code " +
                      " VALUES(@contact_id, @ident, @type, @invite_num, @ser, @num, @issue_dt, " +
                     " @validity_from_dt, @validity_to_dt, @status, NEXT VALUE FOR [cmodb].[DocCode]) ; ";/*RETURNING code*/
                     cmd.CommandText = sql;
@@ -515,7 +515,7 @@ namespace Mig
                     cmd.Parameters.AddWithValue("ser", tMigrSer.Text);
                     cmd.Parameters.AddWithValue("num", tMigrNum.Text);
                     cmd.Parameters.AddWithValue("kpp_code", cmbKPP.SelectedValue.ToString());
-                    cmd.Parameters.AddWithValue("status", "Y");
+                    //cmd.Parameters.AddWithValue("status", "Y");
                     cmd.Parameters.AddWithValue("purpose_entry", tMigrPurpose.Text);
                   //  cmd.Parameters.AddWithValue("document_id", pr.Value);
                     if (tMigEntryDt.SelectedDate == "")

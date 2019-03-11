@@ -230,6 +230,11 @@ namespace Mig
                 int filter_code = DB.GetTableValueInt("SELECT code FROM cmodb.filters where filtername=@param1;", new List<object> { cmbFilter.Text });
                 String sql_text = DB.GetTableValue("SELECT filter_expr FROM cmodb.user_filter where filter_id=@param1 AND user_name=@param2;", new List<object> { filter_code, pref.USER });
 
+                if(sql_text == "")
+                {
+                    throw new Exception("Фильтр не найден!");
+                }
+
                 bindingSource1.DataSource = DB.QueryTableMultipleParams(sql_text, null);
                 if (dataGridView1.DataSource == null)
                     dataGridView1.DataSource = bindingSource1;
@@ -265,7 +270,7 @@ namespace Mig
             catch (Exception err)
             {
                 Logger.Log.Error(ClassName + "Function:FilterChange\n Error:" + err);
-                throw new Exception("Ошибка фильтра:\n\n" + err.Message);
+                throw new Exception(err.Message);
             }
             finally
             {
