@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8" ?> 
+<head>
+<Connection>
+  <DBNAME>cmodb</DBNAME>
+  <HOST>MYPC\SQLEXPRESS</HOST>
+  <MIGDATA>C:\MIG DATA\</MIGDATA> 
+</Connection>
+</head>

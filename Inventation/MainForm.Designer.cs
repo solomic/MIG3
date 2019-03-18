@@ -31,8 +31,8 @@
             this.components = new System.ComponentModel.Container();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.авторизацияToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.подключитьсяToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.отключитьсяToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnConnect = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnDisconnect = new System.Windows.Forms.ToolStripMenuItem();
             this.настройкиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.общиеToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.сортировкаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -80,23 +80,24 @@
             // авторизацияToolStripMenuItem
             // 
             this.авторизацияToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.подключитьсяToolStripMenuItem,
-            this.отключитьсяToolStripMenuItem});
+            this.btnConnect,
+            this.btnDisconnect});
             this.авторизацияToolStripMenuItem.Name = "авторизацияToolStripMenuItem";
             this.авторизацияToolStripMenuItem.Size = new System.Drawing.Size(113, 24);
             this.авторизацияToolStripMenuItem.Text = "Авторизация";
             // 
-            // подключитьсяToolStripMenuItem
+            // btnConnect
             // 
-            this.подключитьсяToolStripMenuItem.Name = "подключитьсяToolStripMenuItem";
-            this.подключитьсяToolStripMenuItem.Size = new System.Drawing.Size(194, 26);
-            this.подключитьсяToolStripMenuItem.Text = "Подключиться...";
+            this.btnConnect.Name = "btnConnect";
+            this.btnConnect.Size = new System.Drawing.Size(216, 26);
+            this.btnConnect.Text = "Подключиться...";
+            this.btnConnect.Click += new System.EventHandler(this.btnConnect_Click);
             // 
-            // отключитьсяToolStripMenuItem
+            // btnDisconnect
             // 
-            this.отключитьсяToolStripMenuItem.Name = "отключитьсяToolStripMenuItem";
-            this.отключитьсяToolStripMenuItem.Size = new System.Drawing.Size(194, 26);
-            this.отключитьсяToolStripMenuItem.Text = "Отключиться";
+            this.btnDisconnect.Name = "btnDisconnect";
+            this.btnDisconnect.Size = new System.Drawing.Size(216, 26);
+            this.btnDisconnect.Text = "Отключиться";
             // 
             // настройкиToolStripMenuItem
             // 
@@ -337,8 +338,8 @@
 
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem авторизацияToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem подключитьсяToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem отключитьсяToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem btnConnect;
+        private System.Windows.Forms.ToolStripMenuItem btnDisconnect;
         private System.Windows.Forms.ToolStripMenuItem настройкиToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem общиеToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem сортировкаToolStripMenuItem;

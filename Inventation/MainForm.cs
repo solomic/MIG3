@@ -21,5 +21,25 @@ namespace Inventation
         {
 
         }
+
+        private void btnConnect_Click(object sender, EventArgs e)
+        {
+            fAuth fAuthForm = new fAuth();
+            try
+            {
+                if (fAuthForm.ShowDialog()==DialogResult.OK)
+                {
+                    this.Text += " (" + pref.Database + ")";
+                   // DirectMenu(true);                  
+                  //  FilterLoad();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+           
+        }
     }
 }
