@@ -66,7 +66,8 @@ namespace Pref
        " delegate_last_name, delegate_first_name, delegate_second_name, "+
        " cmodb.LookupValue('DUL',delegate_dul_code) as delegate_dul, delegate_ser, delegate_num, delegate_dul_issue_dt, " +
        " delegate_country, delegate_nationality  , "+
-        " (last_name +case when first_name is not null then ' '+first_name else '' end + case when second_name is not null then ' '+ second_name else '' end) confio"+
+        " (last_name +case when first_name is not null then ' '+first_name else '' end + case when second_name is not null then ' '+ second_name else '' end) confio,"+
+        " med_from,med_to" + 
         " FROM cmodb.contact where contact_id=@param1 and status='Y';";
         public static string GetDulIdSql = "SELECT cmodb.LookupValue('DUL',type) as type, ser, num, issue, validity FROM cmodb.dul where id=@param1;";
         public static string GetDulAllSql = "SELECT id, CASE WHEN status='Y' THEN 'true' else 'false' END as dulstatus,cmodb.LookupValue('DUL',type) as \"Тип\", ser as \"Серия\", num as \"Номер\", issue as \"Выдан\", " +

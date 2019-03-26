@@ -98,7 +98,7 @@ namespace Mig
             this.tBirthTown.Text = ContactTable.Rows[0]["birth_town"].ToString();
             // this.dBirthDate.Text = ContactTable.Rows[0]["birthday"] == DBNull.Value ? null : Convert.ToDateTime(ContactTable.Rows[0]["birthday"]).ToString("dd.MM.yyyy");
             dBirthDate.SelectedDate = ContactTable.Rows[0]["birthday"] == DBNull.Value ? null : Convert.ToDateTime(ContactTable.Rows[0]["birthday"]).ToString("dd.MM.yyyy");
-
+            
             if (ContactTable.Rows[0]["birthday"] != DBNull.Value)
             {
                 int curyear = DateTime.Now.Year;
@@ -159,8 +159,10 @@ namespace Mig
             this.tRelatives.Text = ContactTable.Rows[0]["relatives"].ToString();
             this.cmbPosition.Text = ContactTable.Rows[0]["position"].ToString();
             this.tInsurance.Text = ContactTable.Rows[0]["med"].ToString();
-            this.tPersAddress.Text = ContactTable.Rows[0]["address_home"].ToString();
+            med_fr.SelectedDate = ContactTable.Rows[0]["med_from"] == DBNull.Value ? null : Convert.ToDateTime(ContactTable.Rows[0]["med_from"]).ToString("dd.MM.yyyy");
+            med_to.SelectedDate = ContactTable.Rows[0]["med_to"] == DBNull.Value ? null : Convert.ToDateTime(ContactTable.Rows[0]["med_to"]).ToString("dd.MM.yyyy");
 
+            this.tPersAddress.Text = ContactTable.Rows[0]["address_home"].ToString();
             //  DataTable ContactTable = DB.QueryTableMultipleParams(pref.GetContactDetailSql, new List<object> { pref.CONTACTID });
             this.tComments.Text = ContactTable.Rows[0]["comments"].ToString();
             this.tInfo.Text = ContactTable.Rows[0]["phone"].ToString();
@@ -644,6 +646,7 @@ namespace Mig
                     "last_enu= @last_enu, first_enu= @first_enu, " +
                     " second_enu= @second_enu,  " +
                     " nationality=@nationality_code, birth_country = @birth_country_code, " +
+                    " med_from=@med_from,med_to=@med_to," +
                      " status = @status where contact_id =@contact_id;";
                 cmd = new SqlCommand(sql, DB.conn, transaction);
               //  cmd.Transaction = transaction;
@@ -658,7 +661,7 @@ namespace Mig
                     cmd.Parameters.AddWithValue("birthday", DBNull.Value);
                 else
                     cmd.Parameters.AddWithValue("birthday", Convert.ToDateTime(dBirthDate.SelectedDate));
-
+               
                 cmd.Parameters.AddWithValue("sex", cmbSex.Text);
                 cmd.Parameters.AddWithValue("first_name", tfirstname.Text);
                 cmd.Parameters.AddWithValue("last_enu", tlastnameenu.Text);
@@ -731,6 +734,7 @@ namespace Mig
                 tBirthTown.Enabled = can;
                 dBirthDate.Enabled = can;
                 cmbSex.Enabled = can;
+               
            
         }
 
@@ -759,6 +763,8 @@ namespace Mig
                 tRelatives.ReadOnly = !can;
                 tComments.ReadOnly = !can;
                 tInfo.ReadOnly = !can;
+                med_fr.Enabled = can;
+                med_to.Enabled = can;
         }
 
       
@@ -787,7 +793,8 @@ namespace Mig
                    " SET address_home =@address_home, position_code =@position_code, relatives =@relatives, med =@med,updated=GETDATE(),updated_by=SYSTEM_USER, " +
 
                         " comments= @comments, " +
-                         " phone= @phone  " +
+                         " phone= @phone, " +
+                         "med_from=@med_from,med_to=@med_to" +
                          " WHERE contact_id =@contact_id and status = 'Y';";
 
                 cmd = new SqlCommand(sql, DB.conn, transaction);
@@ -801,7 +808,14 @@ namespace Mig
                     cmd.Parameters.AddWithValue("position_code", cmbPosition.SelectedValue.ToString());
                 cmd.Parameters.AddWithValue("relatives", tRelatives.Text.Trim());
                 cmd.Parameters.AddWithValue("med", tInsurance.Text.Trim());
-
+                if (med_fr.SelectedDate == "")
+                    cmd.Parameters.AddWithValue("med_from", DBNull.Value);
+                else
+                    cmd.Parameters.AddWithValue("med_from", Convert.ToDateTime(med_fr.SelectedDate));
+                if (med_to.SelectedDate == "")
+                    cmd.Parameters.AddWithValue("med_to", DBNull.Value);
+                else
+                    cmd.Parameters.AddWithValue("med_to", Convert.ToDateTime(med_to.SelectedDate));
                 cmd.Parameters.AddWithValue("comments", tComments.Text.Trim());
                 cmd.Parameters.AddWithValue("phone", tInfo.Text.Trim());
 

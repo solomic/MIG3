@@ -902,6 +902,16 @@ namespace Mig
                                 dx += 18;
                             }
                         }
+                        //страховка менее 1 месяца
+                        if (dataGridView1.Columns.Contains("med_to_calc"))
+                        {
+                            if (Convert.ToInt32( dataGridView1.Rows[e.RowIndex].Cells["med_to_calc"].Value) <= 30)
+                            {
+                                e.Graphics.DrawImage(Mig.Properties.Resources.med, new Rectangle(e.CellBounds.X + dx, e.CellBounds.Y + 1, 16, 16));
+                                warn += "Страховка менее 1 месяца!";
+                                dx += 18;
+                            }
+                        }
                         //продление регистрации
                         try
                         {

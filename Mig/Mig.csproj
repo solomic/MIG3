@@ -461,6 +461,7 @@
     <None Include="Resources\w256h2561377930292cattied.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\med.png" />
     <None Include="Resources\password.png" />
     <None Include="Resources\arrow-upp1.png" />
     <None Include="Resources\arrow-upp.png" />
