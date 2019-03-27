@@ -265,6 +265,8 @@ namespace Mig
                 dataGridView1.Columns["rs_ent"].Visible = false;
                 if (dataGridView1.Columns.Contains("pass_expire"))
                     dataGridView1.Columns["pass_expire"].Visible = false;
+                if (dataGridView1.Columns.Contains("med_to_calc"))
+                    dataGridView1.Columns["med_to_calc"].Visible = false;
                 tsFilterLoad.Text = "Данные успешно загружены";
             }
             catch (Exception err)
