@@ -1,5 +1,4 @@
-﻿using Npgsql;
-using NpgsqlTypes;
+﻿
 using Pref;
 using System;
 using System.Collections.Generic;
@@ -109,14 +108,14 @@ namespace Mig
                 cmd = new SqlCommand(sql, DB.conn, transaction);
                 sql = "UPDATE cmodb.addr_inter "+
                     "SET  address_code =@newcode "+
-                  " WHERE contact_id = ANY(@contact_id) AND address_code =@oldcode; ";
+                  " WHERE contact_id in ("+String.Join(",",ids)+") AND address_code =@oldcode; ";
                 cmd.CommandText = sql;
                 cmd.Parameters.Clear();
-                NpgsqlParameter arpar = new NpgsqlParameter();
-                arpar.ParameterName = "contact_id";
-                arpar.NpgsqlDbType = NpgsqlDbType.Array | NpgsqlDbType.Integer;
-                arpar.Value = ids;
-                cmd.Parameters.Add(arpar);                           
+                //SqlParameter arpar = new SqlParameter();
+                //arpar.ParameterName = "contact_id";
+                //arpar.SqlDbType = SqlDbType.Int;
+                //arpar.Value = ids;
+                //cmd.Parameters.Add(arpar);                           
                 cmd.Parameters.AddWithValue("oldcode", oldcode);
                 cmd.Parameters.AddWithValue("newcode", newcode);
                 cmd.ExecuteNonQuery();

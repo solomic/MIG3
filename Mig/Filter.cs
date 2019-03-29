@@ -7,10 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Npgsql;
 using System.Reflection;
 using Pref;
-using NpgsqlTypes;
 using System.Configuration;
 using System.Diagnostics;
 using pk = DocumentFormat.OpenXml.Packaging;
@@ -394,14 +392,14 @@ namespace Mig
                 cmd = new SqlCommand(sql, DB.conn, transaction);
                 sql = "UPDATE cmodb.contact SET " +
                    " type=@type,updated=GETDATE(),updated_by=SYSTEM_USER " +
-                   "  WHERE contact_id = ANY(@contact_id); ";
+                   "  WHERE contact_id IN ("+String.Join(",", ids)+ "); ";
                 cmd.CommandText = sql;
                 cmd.Parameters.Clear();
-                NpgsqlParameter arpar = new NpgsqlParameter();
-                arpar.ParameterName = "contact_id";
-                arpar.NpgsqlDbType = NpgsqlDbType.Array | NpgsqlDbType.Integer;
-                arpar.Value = ids;
-                cmd.Parameters.Add(arpar);                            
+                //SqlParameter arpar = new SqlParameter();
+                //arpar.ParameterName = "contact_id";
+                //arpar.SqlDbType = SqlDbType.Int;
+                //arpar.Value = String.Join(",", ids);
+                //cmd.Parameters.Add(arpar);
                 cmd.Parameters.AddWithValue("type", type);
                 cmd.ExecuteNonQuery();
                 transaction.Commit();
@@ -425,14 +423,14 @@ namespace Mig
                 cmd = new SqlCommand(sql, DB.conn, transaction);
                 sql = "UPDATE cmodb.contact SET " +
                    " reg_extend=@reg_extend,updated=GETDATE(),updated_by=SYSTEM_USER " +
-                   "  WHERE contact_id = ANY(@contact_id); ";
+                   "  WHERE contact_id IN (" + String.Join(",", ids) + "); ";
                 cmd.CommandText = sql;
                 cmd.Parameters.Clear();
-                NpgsqlParameter arpar = new NpgsqlParameter();
-                arpar.ParameterName = "contact_id";
-                arpar.NpgsqlDbType = NpgsqlDbType.Array | NpgsqlDbType.Integer;
-                arpar.Value = ids;
-                cmd.Parameters.Add(arpar);                           
+                //SqlParameter arpar = new SqlParameter();
+                //arpar.ParameterName = "contact_id";
+                //arpar.SqlDbType = SqlDbType.VarChar;
+                //arpar.Value = String.Join(",", ids);
+                //cmd.Parameters.Add(arpar);                           
                 cmd.Parameters.AddWithValue("reg_extend", type);
                 cmd.ExecuteNonQuery();
                 transaction.Commit();
@@ -458,14 +456,14 @@ namespace Mig
                 cmd = new SqlCommand(sql, DB.conn, transaction);
                 sql = "UPDATE cmodb.contact SET " +
                    " deduct=@type,updated=GETDATE(),updated_by=SYSTEM_USER " +
-                   "  WHERE contact_id = ANY(@contact_id); ";
+                   "  WHERE contact_id IN (" + String.Join(",", ids) + "); ";
                 cmd.CommandText = sql;
                 cmd.Parameters.Clear();
-                NpgsqlParameter arpar = new NpgsqlParameter();
-                arpar.ParameterName = "contact_id";
-                arpar.NpgsqlDbType = NpgsqlDbType.Array | NpgsqlDbType.Integer;
-                arpar.Value = ids;
-                cmd.Parameters.Add(arpar);
+                //SqlParameter arpar = new SqlParameter();
+                //arpar.ParameterName = "contact_id";
+                //arpar.SqlDbType = SqlDbType.VarChar;
+                //arpar.Value = String.Join(",", ids);
+                //cmd.Parameters.Add(arpar);
                 cmd.Parameters.AddWithValue("type", type);
                 cmd.ExecuteNonQuery();
                 transaction.Commit();
@@ -490,14 +488,14 @@ namespace Mig
                 cmd = new SqlCommand(sql, DB.conn, transaction);
                 sql = "UPDATE cmodb.contact SET " +
                    " rf=@type,updated=GETDATE(),updated_by=SYSTEM_USER " +
-                   "  WHERE contact_id = ANY(@contact_id); ";
+                   "  WHERE contact_id IN (" + String.Join(",", ids) + "); ";
                 cmd.CommandText = sql;
                 cmd.Parameters.Clear();
-                NpgsqlParameter arpar = new NpgsqlParameter();
-                arpar.ParameterName = "contact_id";
-                arpar.NpgsqlDbType = NpgsqlDbType.Array | NpgsqlDbType.Integer;
-                arpar.Value = ids;
-                cmd.Parameters.Add(arpar);
+                //SqlParameter arpar = new SqlParameter();
+                //arpar.ParameterName = "contact_id";
+                //arpar.SqlDbType = SqlDbType.VarChar;
+                //arpar.Value = String.Join(",", ids);
+                //cmd.Parameters.Add(arpar);
                 cmd.Parameters.AddWithValue("type", type);
                 cmd.ExecuteNonQuery();
                 transaction.Commit();
@@ -523,14 +521,14 @@ namespace Mig
                 cmd = new SqlCommand(sql, DB.conn, transaction);
                 sql = "UPDATE cmodb.contact SET " +
                    " doc_state=@doc,date_entry_future=@date_entry_future,updated=GETDATE(),updated_by=SYSTEM_USER " +
-                   "  WHERE contact_id = ANY(@contact_id); ";
+                   "  WHERE contact_id IN (" + String.Join(",", ids) + "); ";
                 cmd.CommandText = sql;
                 cmd.Parameters.Clear();
-                NpgsqlParameter arpar = new NpgsqlParameter();
-                arpar.ParameterName = "contact_id";
-                arpar.NpgsqlDbType = NpgsqlDbType.Array | NpgsqlDbType.Integer;
-                arpar.Value = ids;
-                cmd.Parameters.Add(arpar);
+                //SqlParameter arpar = new SqlParameter();
+                //arpar.ParameterName = "contact_id";
+                //arpar.SqlDbType = SqlDbType.VarChar;
+                //arpar.Value = String.Join(",", ids);
+                //cmd.Parameters.Add(arpar);
                 cmd.Parameters.AddWithValue("doc", type);
                 if (dt == "")
                     cmd.Parameters.AddWithValue("date_entry_future", DBNull.Value);

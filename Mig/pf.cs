@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using System.IO;
 using Pref;
 using System.Data;
-using Npgsql;
 using System.Windows.Forms;
 using iTextSharp.text.pdf;
 using System.Text.RegularExpressions;

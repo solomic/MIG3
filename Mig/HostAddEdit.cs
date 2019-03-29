@@ -1,5 +1,4 @@
-﻿using Npgsql;
-using Pref;
+﻿using Pref;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

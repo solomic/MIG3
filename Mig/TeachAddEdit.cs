@@ -8,7 +8,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Pref;
-using Npgsql;
 using System.Data.SqlClient;
 
 namespace Mig

@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-//using Npgsql;
 using Pref;
 using System.Data;
 using System.Windows.Forms;
-using Npgsql.Logging;
 using System.Data.SqlClient;
 
 namespace Mig
