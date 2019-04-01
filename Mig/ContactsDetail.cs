@@ -136,7 +136,7 @@ namespace Mig
             if (DULTable.Rows.Count != 0)
             {
                 textBox1.Text = DULTable.Rows[0]["Тип"].ToString();
-                textBox2.Text = DULTable.Rows[0]["Серия"].ToString() + " " + DULTable.Rows[0]["Номер"].ToString();
+                textBox2.Text = (DULTable.Rows[0]["Серия"].ToString() + " " + DULTable.Rows[0]["Номер"].ToString()).Trim();
                 textBox3.Text = DULTable.Rows[0]["Выдан"].ToString();
                 textBox4.Text = DULTable.Rows[0]["Годен до"].ToString();
                 textBox5.Text = DULTable.Rows[0]["Действие с визой"].ToString();
