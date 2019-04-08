@@ -37,6 +37,8 @@
             this.общиеToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.сортировкаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.добавитьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.копироватьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.advancedDataGridView1 = new ADGV.AdvancedDataGridView();
             this.btnAdd = new System.Windows.Forms.Button();
             this.cmbFilter = new System.Windows.Forms.ComboBox();
@@ -49,8 +51,6 @@
             this.button5 = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
             this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.добавитьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.копироватьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.приглашениеОткрытьВWordToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.приглашениеСформироватьИПоказатьВПапкеToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.гарантийноеПисьмоОткрытьВWordToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -89,14 +89,14 @@
             // btnConnect
             // 
             this.btnConnect.Name = "btnConnect";
-            this.btnConnect.Size = new System.Drawing.Size(216, 26);
+            this.btnConnect.Size = new System.Drawing.Size(194, 26);
             this.btnConnect.Text = "Подключиться...";
             this.btnConnect.Click += new System.EventHandler(this.btnConnect_Click);
             // 
             // btnDisconnect
             // 
             this.btnDisconnect.Name = "btnDisconnect";
-            this.btnDisconnect.Size = new System.Drawing.Size(216, 26);
+            this.btnDisconnect.Size = new System.Drawing.Size(194, 26);
             this.btnDisconnect.Text = "Отключиться";
             // 
             // настройкиToolStripMenuItem
@@ -128,6 +128,18 @@
             this.копироватьToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.Size = new System.Drawing.Size(163, 52);
+            // 
+            // добавитьToolStripMenuItem
+            // 
+            this.добавитьToolStripMenuItem.Name = "добавитьToolStripMenuItem";
+            this.добавитьToolStripMenuItem.Size = new System.Drawing.Size(162, 24);
+            this.добавитьToolStripMenuItem.Text = "Добавить";
+            // 
+            // копироватьToolStripMenuItem
+            // 
+            this.копироватьToolStripMenuItem.Name = "копироватьToolStripMenuItem";
+            this.копироватьToolStripMenuItem.Size = new System.Drawing.Size(162, 24);
+            this.копироватьToolStripMenuItem.Text = "Копировать";
             // 
             // advancedDataGridView1
             // 
@@ -206,14 +218,14 @@
             // 
             this.button4.Location = new System.Drawing.Point(855, 46);
             this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(75, 28);
+            this.button4.Size = new System.Drawing.Size(93, 28);
             this.button4.TabIndex = 9;
             this.button4.Text = "Приехал";
             this.button4.UseVisualStyleBackColor = true;
             // 
             // button5
             // 
-            this.button5.Location = new System.Drawing.Point(936, 46);
+            this.button5.Location = new System.Drawing.Point(954, 47);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(145, 28);
             this.button5.TabIndex = 10;
@@ -222,7 +234,7 @@
             // 
             // button6
             // 
-            this.button6.Location = new System.Drawing.Point(1105, 47);
+            this.button6.Location = new System.Drawing.Point(1121, 48);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(92, 27);
             this.button6.TabIndex = 11;
@@ -244,18 +256,6 @@
             this.contextMenuStrip2.Name = "contextMenuStrip2";
             this.contextMenuStrip2.Size = new System.Drawing.Size(482, 178);
             this.contextMenuStrip2.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip2_Opening);
-            // 
-            // добавитьToolStripMenuItem
-            // 
-            this.добавитьToolStripMenuItem.Name = "добавитьToolStripMenuItem";
-            this.добавитьToolStripMenuItem.Size = new System.Drawing.Size(162, 24);
-            this.добавитьToolStripMenuItem.Text = "Добавить";
-            // 
-            // копироватьToolStripMenuItem
-            // 
-            this.копироватьToolStripMenuItem.Name = "копироватьToolStripMenuItem";
-            this.копироватьToolStripMenuItem.Size = new System.Drawing.Size(162, 24);
-            this.копироватьToolStripMenuItem.Text = "Копировать";
             // 
             // приглашениеОткрытьВWordToolStripMenuItem
             // 

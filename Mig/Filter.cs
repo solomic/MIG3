@@ -115,6 +115,7 @@ namespace Mig
             tpSync.Enabled = Key;
             miColumn.Enabled = Key;
             //  btnConnectDB.Enabled = !Key;
+            mInv.Enabled = Key;
 
         }
         private void SaveColumnOrder()
@@ -1110,6 +1111,12 @@ namespace Mig
         {
             fHolyForm fHoly = new fHolyForm();
             fHoly.ShowDialog();
+        }
+
+        private void mInv_Click(object sender, EventArgs e)
+        {
+            InvForm fInvForm = new InvForm();
+            fInvForm.Show();
         }
     }
 }
