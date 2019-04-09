@@ -29,6 +29,7 @@ namespace Pref
         public static string CONSTR = "";
         public static string DELEGATE = "N";
         public static int FLTCODE = 99;
+        public static string INVFLTNAME = "<>"; 
 
 
         /*СПРАВОЧНИКИ*/

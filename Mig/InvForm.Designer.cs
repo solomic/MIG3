@@ -46,11 +46,21 @@
             this.button1 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.cmbFilter = new System.Windows.Forms.ComboBox();
+            this.cmbInvFilter = new System.Windows.Forms.ComboBox();
             this.btnAdd = new System.Windows.Forms.Button();
-            this.advancedDataGridView1 = new ADGV.AdvancedDataGridView();
+            this.InvFilterGrid = new ADGV.AdvancedDataGridView();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.ssStatus = new System.Windows.Forms.ToolStripStatusLabel();
+            this.PopupMenu2 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.добавитьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.копироватьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.stCnt = new System.Windows.Forms.ToolStripStatusLabel();
+            this.bindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             this.contextMenuStrip2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.advancedDataGridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.InvFilterGrid)).BeginInit();
+            this.statusStrip1.SuspendLayout();
+            this.PopupMenu2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).BeginInit();
             this.SuspendLayout();
             // 
             // открытьОбщуюПапкуToolStripMenuItem
@@ -185,41 +195,101 @@
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(186, 24);
             this.comboBox1.TabIndex = 16;
+            this.comboBox1.TextChanged += new System.EventHandler(this.comboBox1_TextChanged);
             // 
-            // cmbFilter
+            // cmbInvFilter
             // 
-            this.cmbFilter.FormattingEnabled = true;
-            this.cmbFilter.Location = new System.Drawing.Point(101, 12);
-            this.cmbFilter.Name = "cmbFilter";
-            this.cmbFilter.Size = new System.Drawing.Size(234, 24);
-            this.cmbFilter.TabIndex = 15;
+            this.cmbInvFilter.DisplayMember = "Name";
+            this.cmbInvFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbInvFilter.FormattingEnabled = true;
+            this.cmbInvFilter.Location = new System.Drawing.Point(101, 12);
+            this.cmbInvFilter.Name = "cmbInvFilter";
+            this.cmbInvFilter.Size = new System.Drawing.Size(234, 24);
+            this.cmbInvFilter.TabIndex = 15;
+            this.cmbInvFilter.SelectedValueChanged += new System.EventHandler(this.cmbFilter_SelectedValueChanged);
             // 
             // btnAdd
             // 
+            this.btnAdd.ContextMenuStrip = this.PopupMenu2;
             this.btnAdd.Location = new System.Drawing.Point(7, 12);
             this.btnAdd.Name = "btnAdd";
             this.btnAdd.Size = new System.Drawing.Size(88, 28);
             this.btnAdd.TabIndex = 14;
             this.btnAdd.Text = "Добавить";
             this.btnAdd.UseVisualStyleBackColor = true;
+            this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
             // 
-            // advancedDataGridView1
+            // InvFilterGrid
             // 
-            this.advancedDataGridView1.AutoGenerateContextFilters = true;
-            this.advancedDataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.advancedDataGridView1.DateWithTime = false;
-            this.advancedDataGridView1.Location = new System.Drawing.Point(7, 83);
-            this.advancedDataGridView1.Name = "advancedDataGridView1";
-            this.advancedDataGridView1.RowTemplate.Height = 24;
-            this.advancedDataGridView1.Size = new System.Drawing.Size(1259, 571);
-            this.advancedDataGridView1.TabIndex = 13;
-            this.advancedDataGridView1.TimeFilter = false;
+            this.InvFilterGrid.AllowUserToAddRows = false;
+            this.InvFilterGrid.AllowUserToDeleteRows = false;
+            this.InvFilterGrid.AllowUserToResizeRows = false;
+            this.InvFilterGrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.InvFilterGrid.AutoGenerateContextFilters = true;
+            this.InvFilterGrid.ColumnHeadersHeight = 35;
+            this.InvFilterGrid.DateWithTime = false;
+            this.InvFilterGrid.EnableHeadersVisualStyles = false;
+            this.InvFilterGrid.Location = new System.Drawing.Point(7, 83);
+            this.InvFilterGrid.Name = "InvFilterGrid";
+            this.InvFilterGrid.ReadOnly = true;
+            this.InvFilterGrid.RowTemplate.Height = 24;
+            this.InvFilterGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
+            this.InvFilterGrid.Size = new System.Drawing.Size(1273, 558);
+            this.InvFilterGrid.TabIndex = 13;
+            this.InvFilterGrid.TimeFilter = false;
+            this.InvFilterGrid.VirtualMode = true;
+            // 
+            // statusStrip1
+            // 
+            this.statusStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ssStatus,
+            this.stCnt});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 644);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(1285, 22);
+            this.statusStrip1.TabIndex = 24;
+            this.statusStrip1.Text = "statusStrip1";
+            // 
+            // ssStatus
+            // 
+            this.ssStatus.Name = "ssStatus";
+            this.ssStatus.Size = new System.Drawing.Size(0, 17);
+            // 
+            // PopupMenu2
+            // 
+            this.PopupMenu2.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.PopupMenu2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.добавитьToolStripMenuItem,
+            this.копироватьToolStripMenuItem});
+            this.PopupMenu2.Name = "PopupMenu2";
+            this.PopupMenu2.Size = new System.Drawing.Size(163, 52);
+            // 
+            // добавитьToolStripMenuItem
+            // 
+            this.добавитьToolStripMenuItem.Name = "добавитьToolStripMenuItem";
+            this.добавитьToolStripMenuItem.Size = new System.Drawing.Size(162, 24);
+            this.добавитьToolStripMenuItem.Text = "Добавить";
+            // 
+            // копироватьToolStripMenuItem
+            // 
+            this.копироватьToolStripMenuItem.Name = "копироватьToolStripMenuItem";
+            this.копироватьToolStripMenuItem.Size = new System.Drawing.Size(162, 24);
+            this.копироватьToolStripMenuItem.Text = "Копировать";
+            // 
+            // stCnt
+            // 
+            this.stCnt.Name = "stCnt";
+            this.stCnt.Size = new System.Drawing.Size(0, 17);
             // 
             // InvForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1285, 666);
+            this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.button6);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.button4);
@@ -228,13 +298,20 @@
             this.Controls.Add(this.button1);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.comboBox1);
-            this.Controls.Add(this.cmbFilter);
+            this.Controls.Add(this.cmbInvFilter);
             this.Controls.Add(this.btnAdd);
-            this.Controls.Add(this.advancedDataGridView1);
+            this.Controls.Add(this.InvFilterGrid);
             this.Name = "InvForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Приглашения";
+            this.Load += new System.EventHandler(this.InvForm_Load);
+            this.Shown += new System.EventHandler(this.InvForm_Shown);
             this.contextMenuStrip2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.advancedDataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.InvFilterGrid)).EndInit();
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
+            this.PopupMenu2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -259,8 +336,15 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox comboBox1;
-        private System.Windows.Forms.ComboBox cmbFilter;
+        private System.Windows.Forms.ComboBox cmbInvFilter;
         private System.Windows.Forms.Button btnAdd;
-        private ADGV.AdvancedDataGridView advancedDataGridView1;
+        private ADGV.AdvancedDataGridView InvFilterGrid;
+        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.ToolStripStatusLabel ssStatus;
+        private System.Windows.Forms.ContextMenuStrip PopupMenu2;
+        private System.Windows.Forms.ToolStripMenuItem добавитьToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem копироватьToolStripMenuItem;
+        private System.Windows.Forms.ToolStripStatusLabel stCnt;
+        private System.Windows.Forms.BindingSource bindingSource1;
     }
 }
