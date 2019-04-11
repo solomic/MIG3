@@ -48,18 +48,18 @@
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.cmbInvFilter = new System.Windows.Forms.ComboBox();
             this.btnAdd = new System.Windows.Forms.Button();
-            this.InvFilterGrid = new ADGV.AdvancedDataGridView();
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.ssStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.PopupMenu2 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.добавитьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.копироватьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.InvFilterGrid = new ADGV.AdvancedDataGridView();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.ssStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.stCnt = new System.Windows.Forms.ToolStripStatusLabel();
             this.bindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             this.contextMenuStrip2.SuspendLayout();
+            this.PopupMenu2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.InvFilterGrid)).BeginInit();
             this.statusStrip1.SuspendLayout();
-            this.PopupMenu2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -133,6 +133,7 @@
             this.button6.TabIndex = 23;
             this.button6.Text = "Удалить...";
             this.button6.UseVisualStyleBackColor = true;
+            this.button6.Click += new System.EventHandler(this.button6_Click);
             // 
             // button5
             // 
@@ -142,6 +143,7 @@
             this.button5.TabIndex = 22;
             this.button5.Text = "Не приехал(отказ)";
             this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.setStatus);
             // 
             // button4
             // 
@@ -151,6 +153,7 @@
             this.button4.TabIndex = 21;
             this.button4.Text = "Приехал";
             this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.setStatus);
             // 
             // button3
             // 
@@ -160,6 +163,7 @@
             this.button3.TabIndex = 20;
             this.button3.Text = "Выдано/Отправлено";
             this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.setStatus);
             // 
             // button2
             // 
@@ -169,6 +173,7 @@
             this.button2.TabIndex = 19;
             this.button2.Text = "Получено из ФМС";
             this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.setStatus);
             // 
             // button1
             // 
@@ -178,6 +183,7 @@
             this.button1.TabIndex = 18;
             this.button1.Text = "Оформление в ФМС";
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.setStatus);
             // 
             // label1
             // 
@@ -190,6 +196,7 @@
             // 
             // comboBox1
             // 
+            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.Simple;
             this.comboBox1.FormattingEnabled = true;
             this.comboBox1.Location = new System.Drawing.Point(154, 53);
             this.comboBox1.Name = "comboBox1";
@@ -219,6 +226,28 @@
             this.btnAdd.UseVisualStyleBackColor = true;
             this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
             // 
+            // PopupMenu2
+            // 
+            this.PopupMenu2.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.PopupMenu2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.добавитьToolStripMenuItem,
+            this.копироватьToolStripMenuItem});
+            this.PopupMenu2.Name = "PopupMenu2";
+            this.PopupMenu2.Size = new System.Drawing.Size(163, 52);
+            this.PopupMenu2.Opening += new System.ComponentModel.CancelEventHandler(this.PopupMenu2_Opening);
+            // 
+            // добавитьToolStripMenuItem
+            // 
+            this.добавитьToolStripMenuItem.Name = "добавитьToolStripMenuItem";
+            this.добавитьToolStripMenuItem.Size = new System.Drawing.Size(162, 24);
+            this.добавитьToolStripMenuItem.Text = "Добавить";
+            // 
+            // копироватьToolStripMenuItem
+            // 
+            this.копироватьToolStripMenuItem.Name = "копироватьToolStripMenuItem";
+            this.копироватьToolStripMenuItem.Size = new System.Drawing.Size(162, 24);
+            this.копироватьToolStripMenuItem.Text = "Копировать";
+            // 
             // InvFilterGrid
             // 
             this.InvFilterGrid.AllowUserToAddRows = false;
@@ -229,6 +258,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.InvFilterGrid.AutoGenerateContextFilters = true;
             this.InvFilterGrid.ColumnHeadersHeight = 35;
+            this.InvFilterGrid.ContextMenuStrip = this.contextMenuStrip2;
             this.InvFilterGrid.DateWithTime = false;
             this.InvFilterGrid.EnableHeadersVisualStyles = false;
             this.InvFilterGrid.Location = new System.Drawing.Point(7, 83);
@@ -258,27 +288,6 @@
             this.ssStatus.Name = "ssStatus";
             this.ssStatus.Size = new System.Drawing.Size(0, 17);
             // 
-            // PopupMenu2
-            // 
-            this.PopupMenu2.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.PopupMenu2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.добавитьToolStripMenuItem,
-            this.копироватьToolStripMenuItem});
-            this.PopupMenu2.Name = "PopupMenu2";
-            this.PopupMenu2.Size = new System.Drawing.Size(163, 52);
-            // 
-            // добавитьToolStripMenuItem
-            // 
-            this.добавитьToolStripMenuItem.Name = "добавитьToolStripMenuItem";
-            this.добавитьToolStripMenuItem.Size = new System.Drawing.Size(162, 24);
-            this.добавитьToolStripMenuItem.Text = "Добавить";
-            // 
-            // копироватьToolStripMenuItem
-            // 
-            this.копироватьToolStripMenuItem.Name = "копироватьToolStripMenuItem";
-            this.копироватьToolStripMenuItem.Size = new System.Drawing.Size(162, 24);
-            this.копироватьToolStripMenuItem.Text = "Копировать";
-            // 
             // stCnt
             // 
             this.stCnt.Name = "stCnt";
@@ -307,10 +316,10 @@
             this.Load += new System.EventHandler(this.InvForm_Load);
             this.Shown += new System.EventHandler(this.InvForm_Shown);
             this.contextMenuStrip2.ResumeLayout(false);
+            this.PopupMenu2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.InvFilterGrid)).EndInit();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
-            this.PopupMenu2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

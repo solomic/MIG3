@@ -248,6 +248,12 @@
     <Compile Include="HostAddEdit.Designer.cs">
       <DependentUpon>HostAddEdit.cs</DependentUpon>
     </Compile>
+    <Compile Include="InvEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="InvEdit.Designer.cs">
+      <DependentUpon>InvEdit.cs</DependentUpon>
+    </Compile>
     <Compile Include="InvForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -370,6 +376,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="HostAddEdit.resx">
       <DependentUpon>HostAddEdit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="InvEdit.resx">
+      <DependentUpon>InvEdit.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="InvForm.resx">
       <DependentUpon>InvForm.cs</DependentUpon>

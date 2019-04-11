@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
@@ -165,6 +166,157 @@ namespace Mig
         private void btnAdd_Click(object sender, EventArgs e)
         {
             PopupMenu2.Show(btnAdd, new Point(0, 20));
+        }
+
+        public int[] getInvSelectedRowsId(DataGridView gv)
+        {
+            int[] iId = { 0 };
+            try
+            {
+
+                int[] AllCells = new int[gv.SelectedCells.Count];
+
+                for (int i = 0; i < gv.SelectedCells.Count; i++)
+                {
+                    AllCells[i] = gv.SelectedCells[i].RowIndex;
+                }
+                int[] DistRows = new int[AllCells.Distinct<int>().Count()];
+                int a = 0;
+                foreach (var m in AllCells.Distinct<int>())
+                {
+                    DistRows[a++] = m;
+                }
+                iId = new int[DistRows.Count()];
+                if (DistRows.Count() > 0)
+                {
+
+                    for (int i = 0; i < DistRows.Count(); i++)
+                    {
+                        iId[i] = Convert.ToInt32(gv.Rows[DistRows[i]].Cells["id"].Value);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ClassName + "Function:getInvSelectedRowsId\n Error:" + ex);
+                throw new Exception("Ошибка при получении id:\n\n" + ex.Message);
+            }
+
+            return iId;
+        }
+
+        private void SetInvContactType(string type, int[] ids)
+        {
+            SqlTransaction transaction = null;
+            SqlCommand cmd;
+            string sql = "";
+            try
+            {
+                transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
+                cmd = new SqlCommand(sql, DB.conn, transaction);
+                sql = "UPDATE [Inventation].[Inv] SET Status=@param1 " +
+                   "  WHERE [Id] IN (" + String.Join(",", ids) + "); ";
+                cmd.CommandText = sql;
+                cmd.Parameters.Clear();                
+                cmd.Parameters.AddWithValue("param1", type);
+                cmd.ExecuteNonQuery();
+                transaction.Commit();
+               
+            }
+            catch (Exception ex)
+            {
+                if (transaction != null) transaction.Rollback();
+                Logger.Log.Error(ClassName + "Function:SetInvContactType\n Error:" + ex);
+                throw new Exception("Ошибка:\n\n" + ex.Message);
+            }
+
+        }
+
+        private void setStatus(object sender, EventArgs e)
+        {
+            try
+            {
+                int[] SelRows = getInvSelectedRowsId(InvFilterGrid);
+
+                if (SelRows.Count() != 0)
+                {
+                    SetInvContactType((sender as Button).Text, SelRows);
+                    InvFilterChange();
+                    MessageBox.Show("Успешно обновлено", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                }
+            }
+
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ClassName + "Function:miGraduate_Click\n Error:" + ex);
+                MessageBox.Show("Ошибка :\n\n" + ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (InvFilterGrid.SelectedCells.Count != 1)
+                {
+                    return;
+                }
+                
+               // pref.CURROW = dataGridView1.CurrentRow.Index;
+                if (MessageBox.Show("Точно УДАЛИТЬ данную запись?", "Удаление", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    InvDelete(Convert.ToInt32(InvFilterGrid.CurrentRow.Cells["Id"].Value));
+                    InvFilterChange();
+                    MessageBox.Show("Успешно удалено", "Инфо", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                  
+                }
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ошибка при удалении: \n" + ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void InvDelete(int id)
+        {
+          
+            SqlTransaction transaction = null;
+
+            SqlCommand cmd;
+            string sql = "";
+            try
+            {
+                int cid = DB.GetTableValueInt("SELECT [Contact Id] FROM [Inventation].[Inv] WHERE [Id]=@param1", new List<object> { id });
+
+                transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
+                cmd = new SqlCommand(sql, DB.conn, transaction);               
+                sql = "DELETE FROM [Inventation].[Inv] where [Id]=@Id";
+                cmd.CommandText = sql;
+                cmd.Parameters.AddWithValue("id", id);
+                cmd.ExecuteNonQuery();
+
+                cmd = new SqlCommand(sql, DB.conn, transaction);
+                sql = "DELETE FROM [Inventation].[Contact] where [Id]=@Id";
+                cmd.CommandText = sql;
+                cmd.Parameters.AddWithValue("id", cid);
+                cmd.ExecuteNonQuery();
+
+                transaction.Commit();               
+
+            }
+            catch (Exception msg)
+            {
+                if (transaction != null) transaction.Rollback();
+                Console.WriteLine("Ошибка: \n" + msg.Message);
+                throw msg;
+            }
+        }
+
+        private void PopupMenu2_Opening(object sender, CancelEventArgs e)
+        {
+
         }
     }
 }
