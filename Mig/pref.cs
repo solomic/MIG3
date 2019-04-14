@@ -29,8 +29,11 @@ namespace Pref
         public static string CONSTR = "";
         public static string DELEGATE = "N";
         public static int FLTCODE = 99;
-        public static string INVFLTNAME = "<>"; 
-
+        public static string INVFLTNAME = "<>";
+        public static int INVWORKDAY = 20;
+        public static int INV_ID;
+        public static int INV_CONTACT_EDIT;
+        public static string ROWACTION;
 
         /*СПРАВОЧНИКИ*/
         public static string FO = "SELECT  code, value FROM cmodb.lov where type='FO'  ORDER BY ord;";

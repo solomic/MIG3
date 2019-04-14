@@ -49,8 +49,8 @@
             this.cmbInvFilter = new System.Windows.Forms.ComboBox();
             this.btnAdd = new System.Windows.Forms.Button();
             this.PopupMenu2 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.добавитьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.копироватьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pmAdd = new System.Windows.Forms.ToolStripMenuItem();
+            this.pmCopy = new System.Windows.Forms.ToolStripMenuItem();
             this.InvFilterGrid = new ADGV.AdvancedDataGridView();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.ssStatus = new System.Windows.Forms.ToolStripStatusLabel();
@@ -230,23 +230,25 @@
             // 
             this.PopupMenu2.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.PopupMenu2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.добавитьToolStripMenuItem,
-            this.копироватьToolStripMenuItem});
+            this.pmAdd,
+            this.pmCopy});
             this.PopupMenu2.Name = "PopupMenu2";
-            this.PopupMenu2.Size = new System.Drawing.Size(163, 52);
+            this.PopupMenu2.Size = new System.Drawing.Size(211, 80);
             this.PopupMenu2.Opening += new System.ComponentModel.CancelEventHandler(this.PopupMenu2_Opening);
             // 
-            // добавитьToolStripMenuItem
+            // pmAdd
             // 
-            this.добавитьToolStripMenuItem.Name = "добавитьToolStripMenuItem";
-            this.добавитьToolStripMenuItem.Size = new System.Drawing.Size(162, 24);
-            this.добавитьToolStripMenuItem.Text = "Добавить";
+            this.pmAdd.Name = "pmAdd";
+            this.pmAdd.Size = new System.Drawing.Size(210, 24);
+            this.pmAdd.Text = "Добавить";
+            this.pmAdd.Click += new System.EventHandler(this.pmAdd_Click);
             // 
-            // копироватьToolStripMenuItem
+            // pmCopy
             // 
-            this.копироватьToolStripMenuItem.Name = "копироватьToolStripMenuItem";
-            this.копироватьToolStripMenuItem.Size = new System.Drawing.Size(162, 24);
-            this.копироватьToolStripMenuItem.Text = "Копировать";
+            this.pmCopy.Name = "pmCopy";
+            this.pmCopy.Size = new System.Drawing.Size(210, 24);
+            this.pmCopy.Text = "Копировать";
+            this.pmCopy.Click += new System.EventHandler(this.pmCopy_Click);
             // 
             // InvFilterGrid
             // 
@@ -270,6 +272,7 @@
             this.InvFilterGrid.TabIndex = 13;
             this.InvFilterGrid.TimeFilter = false;
             this.InvFilterGrid.VirtualMode = true;
+            this.InvFilterGrid.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.InvFilterGrid_CellDoubleClick);
             // 
             // statusStrip1
             // 
@@ -351,8 +354,8 @@
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel ssStatus;
         private System.Windows.Forms.ContextMenuStrip PopupMenu2;
-        private System.Windows.Forms.ToolStripMenuItem добавитьToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem копироватьToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem pmAdd;
+        private System.Windows.Forms.ToolStripMenuItem pmCopy;
         private System.Windows.Forms.ToolStripStatusLabel stCnt;
         private System.Windows.Forms.BindingSource bindingSource1;
     }

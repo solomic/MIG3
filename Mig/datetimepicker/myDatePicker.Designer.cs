@@ -38,24 +38,24 @@
             this.maskedTextBox1.Margin = new System.Windows.Forms.Padding(0);
             this.maskedTextBox1.Mask = "00.00.0000";
             this.maskedTextBox1.Name = "maskedTextBox1";
-            this.maskedTextBox1.Size = new System.Drawing.Size(73, 20);
+            this.maskedTextBox1.Size = new System.Drawing.Size(96, 22);
             this.maskedTextBox1.TabIndex = 0;
-           
+            this.maskedTextBox1.TextChanged += new System.EventHandler(this.maskedTextBox1_TextChanged);
             // 
             // button1
             // 
             this.button1.Image = global::Mig.Properties.Resources.calendar_icon_34471;
-            this.button1.Location = new System.Drawing.Point(75, 0);
+            this.button1.Location = new System.Drawing.Point(100, 0);
             this.button1.Margin = new System.Windows.Forms.Padding(0);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(18, 18);
+            this.button1.Size = new System.Drawing.Size(24, 22);
             this.button1.TabIndex = 1;
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // myDatePicker
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
@@ -64,8 +64,7 @@
             this.Controls.Add(this.maskedTextBox1);
             this.Margin = new System.Windows.Forms.Padding(0);
             this.Name = "myDatePicker";
-            this.Size = new System.Drawing.Size(93, 20);
-          
+            this.Size = new System.Drawing.Size(124, 22);
             this.ResumeLayout(false);
             this.PerformLayout();
 

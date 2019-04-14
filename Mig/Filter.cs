@@ -1117,8 +1117,24 @@ namespace Mig
 
         private void mInv_Click(object sender, EventArgs e)
         {
-            InvForm fInvForm = new InvForm();
-            fInvForm.Show();
+            Form fsf = Application.OpenForms["InvForm"];
+
+            if (fsf != null)
+            {
+                fsf.WindowState = FormWindowState.Normal;
+                fsf.Show();
+               // fsf.TopMost = true;
+            }
+            else
+            {
+                InvForm fInvForm = new InvForm();
+                fInvForm.Show();
+               // fInvForm.TopMost = true;
+            }
+
+            
         }
+
+       
     }
 }

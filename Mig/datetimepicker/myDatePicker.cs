@@ -21,7 +21,7 @@ namespace Mig.datetimepicker
            // _wrongDateBox = new MessageForm();
 
             //_wrongDateBox.Message = "Дата введена неправильно! Введите правильную или пустую дату!";
-
+          
             _calendarForm.Calendar.DateSelected += new DateRangeEventHandler(Calendar_DateSelected);
            // _calendarButton.BackgroundImage = _arrowsImageList.Images["arrow-01-down.png"];
 
@@ -114,6 +114,21 @@ namespace Mig.datetimepicker
 
        
 
-      
+        private static object EventValueChanged = new object();
+
+        public event EventHandler ValueChanged
+        {
+            add { Events.AddHandler(EventValueChanged, value); }
+            remove { Events.RemoveHandler(EventValueChanged, value); }
+        }
+
+        private void maskedTextBox1_TextChanged(object sender, EventArgs e)
+        {
+            EventHandler handler = (EventHandler)Events[EventValueChanged];
+            if (handler != null)
+            {
+                handler(this, EventArgs.Empty);
+            }
+        }
     }
 }

@@ -318,5 +318,46 @@ namespace Mig
         {
 
         }
+
+        private void InvFilterGrid_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if(InvFilterGrid.CurrentRow.Index < 0)
+            {
+                return;
+            }
+            pref.ROWACTION = "EDIT";
+            pref.INV_ID = Convert.ToInt32(InvFilterGrid.CurrentRow.Cells["Id"].Value);
+            InvEdit fInvEdit = new InvEdit();
+            //fInvEdit.Text = "Редактировать";
+           
+
+            fInvEdit.ShowDialog();
+            this.Activate();
+           
+        }
+
+        
+
+        private void pmAdd_Click(object sender, EventArgs e)
+        {
+            pref.ROWACTION = "ADD";
+            InvEdit fInvEdit = new InvEdit();
+            //fInvEdit.Text = "Добавить";
+            fInvEdit.ShowDialog();
+            this.Activate();
+           
+        }
+
+        private void pmCopy_Click(object sender, EventArgs e)
+        {
+            pref.ROWACTION = "COPY";
+            InvEdit fInvEdit = new InvEdit();
+            //fInvEdit.Text = "Добавить";
+            pref.INV_ID = Convert.ToInt32(InvFilterGrid.CurrentRow.Cells["Id"].Value);
+            fInvEdit.ShowDialog();
+            this.Activate();
+
+           
+        }
     }
 }
