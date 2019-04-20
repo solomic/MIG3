@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -114,6 +115,8 @@ namespace Mig
 
                 }
             }
+            CheckDul();
+            LoadAllCombo();
         }
       
 
@@ -176,5 +179,315 @@ namespace Mig
 
             Memo1.Clear();
         }
+
+        public void LoadAllCombo()
+        {
+            try
+            {
+                LoadValueCombobox(ComboBox5, "[Inventation].[Contact]", "Nationality");
+                LoadValueCombobox(LabeledEdit9, "[Inventation].[Inv]", "Visit Points");
+                LoadValueCombobox(LabeledEdit5, "[Inventation].[Contact]", "Birth Country");
+                LoadValueCombobox(LabeledEdit6, "[Inventation].[Contact]", "Birth Country Real");
+                LoadValueCombobox(ComboBox6, "[Inventation].[Contact]", "Country Get Visa");
+                LoadValueCombobox(ComboBox7, "[Inventation].[Contact]", "Town Get Visa");
+                LoadValueCombobox(LabeledEdit4, "[Inventation].[Contact]", "Country Live");
+                LoadValueCombobox(LabeledEdit7, "[Inventation].[Contact]", "Country Region");
+                LoadValueCombobox(LabeledEdit15, "[Inventation].[Contact]", "Address Alleged");
+                LoadValueCombobox(ComboBox9, "[Inventation].[Contact]", "Spec");
+                LoadValueCombobox(ComboBox10, "[Inventation].[Inv]", "Host Name");
+                LoadValueCombobox(ComboBox11, "[Inventation].[Inv]", "Host Phone");
+            }
+            catch(Exception err)
+            {
+                MessageBox.Show("Ошибка: \n" + err.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+         }
+        private void BitBtn1_Click(object sender, EventArgs e)
+        {
+            string msg = "";
+            string d;
+            int l, i, con_id;
+            string resname;
+            ////проверка на 18 мес
+            //try
+            //{
+            //    if (!string.IsNullOrEmpty(DBDateTimeEditEh3.SelectedDate) )
+            //    {
+            //        lValid.Visible = Convert.ToDateTime( DBDateTimeEditEh7.SelectedDate).AddMonths(-18) < Convert.ToDateTime(DBDateTimeEditEh3.SelectedDate);
+            //        if (lValid.Visible)
+            //            MessageBox.Show("Срок действия паспорта меньше установленного срока!!!", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            //    }
+
+            //}
+            //catch (Exception err) { }   
+            CheckDul();
+            if (lValid.Visible)
+                 MessageBox.Show("Срок действия паспорта меньше установленного срока!!!", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+
+                if (string.IsNullOrEmpty(DBDateTimeEditEh1.SelectedDate ))
+                msg += ("  От" + Environment.NewLine);
+            if (string.IsNullOrEmpty(DBDateTimeEditEh2.SelectedDate))
+                msg+= ("  Желательно оформить до" + Environment.NewLine);
+            if (ComboBox9.Text == "" )
+                msg+= ("  Специальность" + Environment.NewLine);
+            if (ComboBox10.Text == "" )
+                msg+= ("  Приглашающая сторона" + Environment.NewLine);
+            if (ComboBox11.Text == "" )
+                msg+= ("  Телефон приглаш. стороны" + Environment.NewLine);
+
+            if (ComboBox1.Text == "")
+                msg+= ("  Цель" + Environment.NewLine);
+            if (LabeledEdit8.Text == "")
+                msg+= ("  Срок" + Environment.NewLine);
+            if (string.IsNullOrEmpty(DBDateTimeEditEh3.SelectedDate))
+                msg += ("  Въезд" + Environment.NewLine);
+            if (string.IsNullOrEmpty(DBDateTimeEditEh4.SelectedDate)) msg += ("  Пребывание до" + Environment.NewLine);
+            if (ComboBox2.Text == "") msg += ("  Кратность визы" + Environment.NewLine);
+            if (ComboBox3.Text == "") msg += ("  Вид визы" + Environment.NewLine);
+            if (LabeledEdit9.Text == "") msg += ("  Пункты посещения" + Environment.NewLine);
+
+            if (LabeledEdit1.Text == "") msg += ("  Фамилия" + Environment.NewLine);
+            if (LabeledEdit2.Text == "") msg += ("  Имя" + Environment.NewLine);
+            if (Edit1.Text == "") msg += ("  Фамилия enu" + Environment.NewLine);
+            if (Edit2.Text == "") msg += ("  Имя enu" + Environment.NewLine);
+            if (string.IsNullOrEmpty(DBDateTimeEditEh5.SelectedDate )) msg += ("  Дата рождения" + Environment.NewLine);
+            if (ComboBox4.Text == "") msg += ("  Пол" + Environment.NewLine);            
+            if (LabeledEdit14.Text == "") msg += ("  Номер" + Environment.NewLine);
+            if (string.IsNullOrEmpty(DBDateTimeEditEh6.SelectedDate)) msg += ("  дата выдачи" + Environment.NewLine);          
+            if (ComboBox5.Text == "") msg += ("  Гражданство" + Environment.NewLine);
+            if (LabeledEdit5.Text == "") msg += ("  Государство рождения" + Environment.NewLine);
+            if (LabeledEdit6.Text == "") msg += ("  место" + Environment.NewLine);
+            if (LabeledEdit4.Text == "") msg += ("  государство п.п." + Environment.NewLine);
+            if (LabeledEdit7.Text == "") msg += ("  регион" + Environment.NewLine);
+            if (ComboBox6.Text == "") msg += ("  Место получения визы:страна" + Environment.NewLine);
+            if (ComboBox7.Text == "") msg += ("  город" + Environment.NewLine);
+            if (LabeledEdit15.Text == "") msg += ("  Адрес предполагаемого места пребывания" + Environment.NewLine);
+            if (msg !="")
+            {
+                MessageBox.Show("Заполните поля:\n"+msg, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            int ContactId = DB.GetTableValueInt("SELECT NEXT VALUE FOR  [Inventation].InvConId", null);
+            int InventationId = DB.GetTableValueInt("SELECT NEXT VALUE FOR  [Inventation].InvId", null);
+
+            SqlTransaction transaction = null;
+            SqlCommand cmd;
+            string sql = "";
+            transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
+            cmd = new SqlCommand(sql, DB.conn, transaction);
+            try
+            {
+                    if (pref.ROWACTION == "ADD" || pref.ROWACTION == "COPY")
+                    {                
+                                   
+                        sql = "INSERT INTO [Inventation].[Contact]([Id], " +
+                            "[Last Name], [First Name], [Last Name Enu], [First Name Enu]," +
+                            "[Birthday], [Sex], [Nationality], [Birth Country], [Birth Country Real]," +
+                            "[Second Name], [Country Live], [Country Region], [Country Get Visa]," +
+                            "[Town Get Visa], [Work], [Work Address], [Work Pos], [Ser], [Num]," +
+                            "[Date Issue], [Tenure], [Address Alleged], [Form Study], [Spec])" +
+                            "VALUES (@Id, @LastName, @FirstName, @LastNameEnu, @FirstNameEnu," +
+                            "@Birthday, @Sex, @Nationality, @BirthCountry, @BirthCountryReal," +
+                            "@SecondName, @CountryLive, @CountryRegion, @CountryGetVisa, " +
+                            "@TownGetVisa, @Work, @WorkAddress, @WorkPos, @Ser, @Num, "+
+                            "@DateIssue, @Tenure, @AddressAlleged, @FormStudy, @Spec); ";
+                                               
+                        cmd.CommandText = sql;
+                        cmd.Parameters.Clear();
+                        cmd.Parameters.AddWithValue("Id", ContactId);
+                        cmd.Parameters.AddWithValue("LastName", LabeledEdit1.Text);
+                        cmd.Parameters.AddWithValue("FirstName", LabeledEdit2.Text);
+                        cmd.Parameters.AddWithValue("LastNameEnu", Edit1.Text);
+                        cmd.Parameters.AddWithValue("FirstNameEnu", Edit2.Text);
+                        cmd.Parameters.AddWithValue("Birthday", DBDateTimeEditEh5.SelectedDate);
+                        cmd.Parameters.AddWithValue("Sex", ComboBox4.Text);
+                        cmd.Parameters.AddWithValue("Nationality", ComboBox5.Text);
+                        cmd.Parameters.AddWithValue("BirthCountry", LabeledEdit5.Text);
+                        cmd.Parameters.AddWithValue("BirthCountryReal", LabeledEdit6.Text);
+                        cmd.Parameters.AddWithValue("SecondName", LabeledEdit3.Text);
+                        cmd.Parameters.AddWithValue("CountryLive", LabeledEdit4.Text);
+                        cmd.Parameters.AddWithValue("CountryRegion", LabeledEdit7.Text);
+                        cmd.Parameters.AddWithValue("CountryGetVisa", ComboBox6.Text);
+                        cmd.Parameters.AddWithValue("TownGetVisa", ComboBox7.Text);
+                        cmd.Parameters.AddWithValue("Work", LabeledEdit10.Text);
+                        cmd.Parameters.AddWithValue("WorkAddress", LabeledEdit11.Text);
+                        cmd.Parameters.AddWithValue("WorkPos", LabeledEdit12.Text);
+                        cmd.Parameters.AddWithValue("Ser", LabeledEdit13.Text);
+                        cmd.Parameters.AddWithValue("Num", LabeledEdit14.Text);
+                        cmd.Parameters.AddWithValue("DateIssue", DBDateTimeEditEh6.SelectedDate);
+                        cmd.Parameters.AddWithValue("Tenure", DBDateTimeEditEh7.SelectedDate);
+                        cmd.Parameters.AddWithValue("AddressAlleged", LabeledEdit15.Text);
+                        cmd.Parameters.AddWithValue("FormStudy", ComboBox8.Text);
+                        cmd.Parameters.AddWithValue("Spec", ComboBox9.Text);
+                        cmd.ExecuteNonQuery();
+
+                    
+                        sql = "INSERT INTO [Inventation].[Inv]([Id]," +
+                              "[Formalize Dt], [Entity], [Tenure], [Estimated Entry]," +
+                              "[Stay Dt], [Number Entries], [Visa Type], [Visit Points]," +
+                              "[Create Dt]," +
+                              "[Contact Id],[Status],[Host Name], [Host Phone], [Doc View],[Fact Entry],[Comment])" +
+                              "VALUES (@Id,@FormalizeDt, @Entity, @Tenure, @EstimatedEntry," +
+                              "@StayDt, @NumberEntries, @VisaType, @VisitPoints," +
+                              "@CreateDt," +
+                              "@ContactId, @Status, @HostName, @HostPhone, @DocView,@FactEntry,@Comment)";
+                        cmd.CommandText = sql;
+                        cmd.Parameters.Clear();
+                        cmd.Parameters.AddWithValue("Id", InventationId);
+                        cmd.Parameters.AddWithValue("FormalizeDt",DBDateTimeEditEh2.SelectedDate);
+                        cmd.Parameters.AddWithValue("Entity", ComboBox1.Text);
+                        cmd.Parameters.AddWithValue("Tenure", LabeledEdit8.Text);
+                        cmd.Parameters.AddWithValue("EstimatedEntry", DBDateTimeEditEh3.SelectedDate);
+                        cmd.Parameters.AddWithValue("FactEntry", Edit3.Text);
+                        cmd.Parameters.AddWithValue("StayDt", DBDateTimeEditEh4.SelectedDate);
+                        cmd.Parameters.AddWithValue("NumberEntries", ComboBox2.Text);
+                        cmd.Parameters.AddWithValue("VisaType", ComboBox3.Text);
+                        cmd.Parameters.AddWithValue("VisitPoints", LabeledEdit9.Text);
+                        cmd.Parameters.AddWithValue("CreateDt", DBDateTimeEditEh1.SelectedDate);
+                        cmd.Parameters.AddWithValue("ContactId", ContactId);
+                        cmd.Parameters.AddWithValue("Status", "Выполнение");
+                        cmd.Parameters.AddWithValue("HostName", ComboBox10.Text);
+                        cmd.Parameters.AddWithValue("HostPhone", ComboBox11.Text);
+                        cmd.Parameters.AddWithValue("DocView", ComboBox12.Text);
+                        cmd.Parameters.AddWithValue("Comment", Memo1.Text);
+
+                        pref.INV_ID = InventationId;
+                
+                    }
+                    else //редактировать
+                    {
+                   
+                        sql = "UPDATE [Inventation].[Contact] " +
+                          "set [Last Name]=@LastName, [First Name]=@FirstName, [Last Name Enu]=@LastNameEnu, [First Name Enu]=@FirstNameEnu," +
+                          "[Birthday]=@Birthday, [Sex]=@Sex, [Nationality]=@Nationality, [Birth Country]=@BirthCountry, [Birth Country Real]=@BirthCountryReal," +
+                          "[Second Name] =@SecondName, [Country Live]=@CountryLive, [Country Region]=@CountryRegion, [Country Get Visa]=@CountryGetVisa," +
+                          "[Town Get Visa] =@TownGetVisa, [Work]=@Work, [Work Address]=@WorkAddress, [Work Pos]=@WorkPos, [Ser]=@Ser, [Num]=:Num," +
+                          "[Date Issue] =@DateIssue, [Tenure]=@Tenure, [Address Alleged]=@AddressAlleged, [Form Study]=@FormStudy ," +
+                          " [Updated By] = suser_name(), [Updated] =getdate(), [Spec]=@Spec where [Id]=@Id;";
+                        cmd.CommandText = sql;
+                        cmd.Parameters.Clear();
+                        cmd.Parameters.AddWithValue("LastName", LabeledEdit1.Text);
+                        cmd.Parameters.AddWithValue("FirstName", LabeledEdit2.Text);
+                        cmd.Parameters.AddWithValue("LastNameEnu", Edit1.Text);
+                        cmd.Parameters.AddWithValue("FirstNameEnu", Edit2.Text);
+                        cmd.Parameters.AddWithValue("Birthday", DBDateTimeEditEh5.SelectedDate);
+                        cmd.Parameters.AddWithValue("Sex", ComboBox4.Text);
+                        cmd.Parameters.AddWithValue("Nationality", ComboBox5.Text);
+                        cmd.Parameters.AddWithValue("BirthCountry", LabeledEdit5.Text);
+                        cmd.Parameters.AddWithValue("BirthCountryReal", LabeledEdit6.Text);
+                        cmd.Parameters.AddWithValue("SecondName", LabeledEdit3.Text);
+                        cmd.Parameters.AddWithValue("CountryLive", LabeledEdit4.Text);
+                        cmd.Parameters.AddWithValue("CountryRegion", LabeledEdit7.Text);
+                        cmd.Parameters.AddWithValue("CountryGetVisa", ComboBox6.Text);
+                        cmd.Parameters.AddWithValue("TownGetVisa", ComboBox7.Text);
+                        cmd.Parameters.AddWithValue("Work", LabeledEdit10.Text);
+                        cmd.Parameters.AddWithValue("WorkAddress", LabeledEdit11.Text);
+                        cmd.Parameters.AddWithValue("WorkPos", LabeledEdit12.Text);
+                        cmd.Parameters.AddWithValue("Ser", LabeledEdit13.Text);
+                        cmd.Parameters.AddWithValue("Num", LabeledEdit14.Text);
+                        cmd.Parameters.AddWithValue("DateIssue", DBDateTimeEditEh6.SelectedDate);
+                        cmd.Parameters.AddWithValue("Tenure", DBDateTimeEditEh7.SelectedDate);
+                        cmd.Parameters.AddWithValue("AddressAlleged", LabeledEdit15.Text);
+                        cmd.Parameters.AddWithValue("FormStudy", ComboBox8.Text);
+                        cmd.Parameters.AddWithValue("Spec", ComboBox9.Text);
+                        cmd.Parameters.AddWithValue("Id",pref.INV_CONTACT_EDIT);
+                        cmd.ExecuteNonQuery();
+
+                        sql = "UPDATE [Inventation].[Inv] " +
+                          "set [Formalize Dt]=@FormalizeDt, [Entity]=@Entity, [Tenure]=@Tenure, [Estimated Entry]=@EstimatedEntry," +
+                          "[Stay Dt]=@StayDt, [Number Entries]=@NumberEntries, [Visa Type]=@VisaType, [Visit Points]=@VisitPoints," +
+                          "[Create Dt]=@CreateDt, [Updated By]=suser_name(), [Updated]=getdate(), [Host Name]=@HostName, [Host Phone]=@HostPhone, [Doc View]=@DocView, [Fact Entry]=@FactEntry, [Comment]=@Comment WHERE [Id]=@Id";
+                        cmd.CommandText = sql;
+                        cmd.Parameters.Clear();
+                        cmd.Parameters.AddWithValue("FormalizeDt", DBDateTimeEditEh2.SelectedDate);
+                        cmd.Parameters.AddWithValue("Entity", ComboBox1.Text);
+                        cmd.Parameters.AddWithValue("Tenure", LabeledEdit8.Text);
+                        cmd.Parameters.AddWithValue("EstimatedEntry", DBDateTimeEditEh3.SelectedDate);
+                        cmd.Parameters.AddWithValue("FactEntry", Edit3.Text);
+                        cmd.Parameters.AddWithValue("StayDt", DBDateTimeEditEh4.SelectedDate);
+                        cmd.Parameters.AddWithValue("NumberEntries", ComboBox2.Text);
+                        cmd.Parameters.AddWithValue("VisaType", ComboBox3.Text);
+                        cmd.Parameters.AddWithValue("VisitPoints", LabeledEdit9.Text);
+                        cmd.Parameters.AddWithValue("CreateDt", DBDateTimeEditEh1.SelectedDate);
+                        cmd.Parameters.AddWithValue("ContactId", ContactId);
+                        cmd.Parameters.AddWithValue("Status", "Выполнение");
+                        cmd.Parameters.AddWithValue("HostName", ComboBox10.Text);
+                        cmd.Parameters.AddWithValue("HostPhone", ComboBox11.Text);
+                        cmd.Parameters.AddWithValue("DocView", ComboBox12.Text);
+                        cmd.Parameters.AddWithValue("Comment", Memo1.Text);
+                        cmd.Parameters.AddWithValue("Id", pref.INV_ID);
+                        cmd.ExecuteNonQuery();
+                    }
+                    transaction.Commit();
+                    MessageBox.Show(pref.ROWACTION == "EDIT" ? "Обновлено успешно" : "Добавлено успешно", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    
+
+            }
+            catch (Exception msgerr)
+            {
+                if (transaction != null) transaction.Rollback();
+                MessageBox.Show("Ошибка: \n" + msgerr.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            pref.INV_CONTACT_EDIT = 0;
+            //LoadAllCombo();
+            this.DialogResult = DialogResult.OK;
+         
+        }
+
+        private void DBDateTimeEditEh3_ValueChanged(object sender, EventArgs e)
+        {
+            TermChange();
+
+            CheckDul();
+        }
+
+        private void TermChange()
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(DBDateTimeEditEh3.SelectedDate) && LabeledEdit8.Text != "")
+                    DBDateTimeEditEh4.SelectedDate = Convert.ToDateTime(DBDateTimeEditEh3.SelectedDate).AddDays(Convert.ToInt32(LabeledEdit8.Text) - 1).ToString();
+
+
+            }
+            catch (Exception err) { }
+        }
+
+        private void DBDateTimeEditEh7_ValueChanged(object sender, EventArgs e)
+        {
+            CheckDul();
+        }
+
+        private void CheckDul()
+        {
+            //проверка на 18 мес (pref.INVCHECKDUL)
+            try
+            {
+                if (!string.IsNullOrEmpty(DBDateTimeEditEh7.SelectedDate) && !string.IsNullOrEmpty(DBDateTimeEditEh3.SelectedDate))
+                    lValid.Visible = Convert.ToDateTime(DBDateTimeEditEh7.SelectedDate).AddMonths(-pref.INVCHECKDUL) < Convert.ToDateTime(DBDateTimeEditEh3.SelectedDate);
+                else
+                    lValid.Visible = false;
+            }
+            catch (Exception err) { }
+        }
+
+        private void LabeledEdit8_TextChanged(object sender, EventArgs e)
+        {
+            TermChange();
+        }
+        private void LoadValueCombobox(ComboBox cmb, string tbl, string  fldname)
+        {
+            try
+            {
+                cmb.DataSource = DB.QueryTableMultipleParams("SELECT DISTINCT [" + fldname + "] FROM " + tbl + " ORDER BY 1 ASC", null);
+                cmb.ValueMember = fldname;   
+            }
+            catch(Exception err)
+            {
+            }
+        }
+
     }
 }

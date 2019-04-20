@@ -43,11 +43,13 @@
             this.label13 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
+            this.DBDateTimeEditEh4 = new Mig.datetimepicker.myDatePicker();
             this.LabeledEdit15 = new System.Windows.Forms.ComboBox();
             this.LabeledEdit9 = new System.Windows.Forms.ComboBox();
             this.ComboBox2 = new System.Windows.Forms.ComboBox();
             this.LabeledEdit8 = new System.Windows.Forms.TextBox();
             this.Edit3 = new System.Windows.Forms.TextBox();
+            this.DBDateTimeEditEh3 = new Mig.datetimepicker.myDatePicker();
             this.ComboBox1 = new System.Windows.Forms.ComboBox();
             this.label10 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
@@ -67,6 +69,8 @@
             this.LabeledEdit13 = new System.Windows.Forms.TextBox();
             this.label35 = new System.Windows.Forms.Label();
             this.label34 = new System.Windows.Forms.Label();
+            this.DBDateTimeEditEh7 = new Mig.datetimepicker.myDatePicker();
+            this.DBDateTimeEditEh6 = new Mig.datetimepicker.myDatePicker();
             this.label33 = new System.Windows.Forms.Label();
             this.label32 = new System.Windows.Forms.Label();
             this.LabeledEdit12 = new System.Windows.Forms.TextBox();
@@ -87,6 +91,7 @@
             this.LabeledEdit4 = new System.Windows.Forms.ComboBox();
             this.LabeledEdit5 = new System.Windows.Forms.ComboBox();
             this.ComboBox5 = new System.Windows.Forms.ComboBox();
+            this.DBDateTimeEditEh5 = new Mig.datetimepicker.myDatePicker();
             this.LabeledEdit3 = new System.Windows.Forms.TextBox();
             this.LabeledEdit2 = new System.Windows.Forms.TextBox();
             this.LabeledEdit1 = new System.Windows.Forms.TextBox();
@@ -100,11 +105,6 @@
             this.label19 = new System.Windows.Forms.Label();
             this.label18 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
-            this.DBDateTimeEditEh7 = new Mig.datetimepicker.myDatePicker();
-            this.DBDateTimeEditEh6 = new Mig.datetimepicker.myDatePicker();
-            this.DBDateTimeEditEh5 = new Mig.datetimepicker.myDatePicker();
-            this.DBDateTimeEditEh4 = new Mig.datetimepicker.myDatePicker();
-            this.DBDateTimeEditEh3 = new Mig.datetimepicker.myDatePicker();
             this.DBDateTimeEditEh2 = new Mig.datetimepicker.myDatePicker();
             this.DBDateTimeEditEh1 = new Mig.datetimepicker.myDatePicker();
             this.groupBox1.SuspendLayout();
@@ -119,6 +119,7 @@
             this.BitBtn1.TabIndex = 0;
             this.BitBtn1.Text = "Редактировать";
             this.BitBtn1.UseVisualStyleBackColor = true;
+            this.BitBtn1.Click += new System.EventHandler(this.BitBtn1_Click);
             // 
             // BitBtn2
             // 
@@ -280,6 +281,18 @@
             this.label11.TabIndex = 13;
             this.label11.Text = "Срок:";
             // 
+            // DBDateTimeEditEh4
+            // 
+            this.DBDateTimeEditEh4.AutoSize = true;
+            this.DBDateTimeEditEh4.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.DBDateTimeEditEh4.BackColor = System.Drawing.Color.Transparent;
+            this.DBDateTimeEditEh4.Location = new System.Drawing.Point(534, 56);
+            this.DBDateTimeEditEh4.Margin = new System.Windows.Forms.Padding(0);
+            this.DBDateTimeEditEh4.Name = "DBDateTimeEditEh4";
+            this.DBDateTimeEditEh4.SelectedDate = "";
+            this.DBDateTimeEditEh4.Size = new System.Drawing.Size(124, 22);
+            this.DBDateTimeEditEh4.TabIndex = 12;
+            // 
             // LabeledEdit15
             // 
             this.LabeledEdit15.FormattingEnabled = true;
@@ -316,6 +329,7 @@
             this.LabeledEdit8.Size = new System.Drawing.Size(45, 22);
             this.LabeledEdit8.TabIndex = 8;
             this.LabeledEdit8.Text = "90";
+            this.LabeledEdit8.TextChanged += new System.EventHandler(this.LabeledEdit8_TextChanged);
             // 
             // Edit3
             // 
@@ -323,6 +337,19 @@
             this.Edit3.Name = "Edit3";
             this.Edit3.Size = new System.Drawing.Size(168, 22);
             this.Edit3.TabIndex = 8;
+            // 
+            // DBDateTimeEditEh3
+            // 
+            this.DBDateTimeEditEh3.AutoSize = true;
+            this.DBDateTimeEditEh3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.DBDateTimeEditEh3.BackColor = System.Drawing.Color.Transparent;
+            this.DBDateTimeEditEh3.Location = new System.Drawing.Point(204, 56);
+            this.DBDateTimeEditEh3.Margin = new System.Windows.Forms.Padding(0);
+            this.DBDateTimeEditEh3.Name = "DBDateTimeEditEh3";
+            this.DBDateTimeEditEh3.SelectedDate = "";
+            this.DBDateTimeEditEh3.Size = new System.Drawing.Size(124, 22);
+            this.DBDateTimeEditEh3.TabIndex = 7;
+            this.DBDateTimeEditEh3.ValueChanged += new System.EventHandler(this.DBDateTimeEditEh3_ValueChanged);
             // 
             // ComboBox1
             // 
@@ -537,6 +564,31 @@
             this.label34.TabIndex = 36;
             this.label34.Text = "дата выдачи";
             // 
+            // DBDateTimeEditEh7
+            // 
+            this.DBDateTimeEditEh7.AutoSize = true;
+            this.DBDateTimeEditEh7.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.DBDateTimeEditEh7.BackColor = System.Drawing.Color.Transparent;
+            this.DBDateTimeEditEh7.Location = new System.Drawing.Point(855, 93);
+            this.DBDateTimeEditEh7.Margin = new System.Windows.Forms.Padding(0);
+            this.DBDateTimeEditEh7.Name = "DBDateTimeEditEh7";
+            this.DBDateTimeEditEh7.SelectedDate = "";
+            this.DBDateTimeEditEh7.Size = new System.Drawing.Size(124, 22);
+            this.DBDateTimeEditEh7.TabIndex = 35;
+            this.DBDateTimeEditEh7.ValueChanged += new System.EventHandler(this.DBDateTimeEditEh7_ValueChanged);
+            // 
+            // DBDateTimeEditEh6
+            // 
+            this.DBDateTimeEditEh6.AutoSize = true;
+            this.DBDateTimeEditEh6.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.DBDateTimeEditEh6.BackColor = System.Drawing.Color.Transparent;
+            this.DBDateTimeEditEh6.Location = new System.Drawing.Point(855, 65);
+            this.DBDateTimeEditEh6.Margin = new System.Windows.Forms.Padding(0);
+            this.DBDateTimeEditEh6.Name = "DBDateTimeEditEh6";
+            this.DBDateTimeEditEh6.SelectedDate = "";
+            this.DBDateTimeEditEh6.Size = new System.Drawing.Size(124, 22);
+            this.DBDateTimeEditEh6.TabIndex = 34;
+            // 
             // label33
             // 
             this.label33.AutoSize = true;
@@ -708,6 +760,18 @@
             this.ComboBox5.Size = new System.Drawing.Size(548, 24);
             this.ComboBox5.TabIndex = 14;
             // 
+            // DBDateTimeEditEh5
+            // 
+            this.DBDateTimeEditEh5.AutoSize = true;
+            this.DBDateTimeEditEh5.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.DBDateTimeEditEh5.BackColor = System.Drawing.Color.Transparent;
+            this.DBDateTimeEditEh5.Location = new System.Drawing.Point(204, 118);
+            this.DBDateTimeEditEh5.Margin = new System.Windows.Forms.Padding(0);
+            this.DBDateTimeEditEh5.Name = "DBDateTimeEditEh5";
+            this.DBDateTimeEditEh5.SelectedDate = "";
+            this.DBDateTimeEditEh5.Size = new System.Drawing.Size(124, 22);
+            this.DBDateTimeEditEh5.TabIndex = 13;
+            // 
             // LabeledEdit3
             // 
             this.LabeledEdit3.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
@@ -822,66 +886,6 @@
             this.label14.TabIndex = 0;
             this.label14.Text = "Фамилия";
             // 
-            // DBDateTimeEditEh7
-            // 
-            this.DBDateTimeEditEh7.AutoSize = true;
-            this.DBDateTimeEditEh7.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.DBDateTimeEditEh7.BackColor = System.Drawing.Color.Transparent;
-            this.DBDateTimeEditEh7.Location = new System.Drawing.Point(855, 93);
-            this.DBDateTimeEditEh7.Margin = new System.Windows.Forms.Padding(0);
-            this.DBDateTimeEditEh7.Name = "DBDateTimeEditEh7";
-            this.DBDateTimeEditEh7.SelectedDate = "";
-            this.DBDateTimeEditEh7.Size = new System.Drawing.Size(124, 22);
-            this.DBDateTimeEditEh7.TabIndex = 35;
-            // 
-            // DBDateTimeEditEh6
-            // 
-            this.DBDateTimeEditEh6.AutoSize = true;
-            this.DBDateTimeEditEh6.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.DBDateTimeEditEh6.BackColor = System.Drawing.Color.Transparent;
-            this.DBDateTimeEditEh6.Location = new System.Drawing.Point(855, 65);
-            this.DBDateTimeEditEh6.Margin = new System.Windows.Forms.Padding(0);
-            this.DBDateTimeEditEh6.Name = "DBDateTimeEditEh6";
-            this.DBDateTimeEditEh6.SelectedDate = "";
-            this.DBDateTimeEditEh6.Size = new System.Drawing.Size(124, 22);
-            this.DBDateTimeEditEh6.TabIndex = 34;
-            // 
-            // DBDateTimeEditEh5
-            // 
-            this.DBDateTimeEditEh5.AutoSize = true;
-            this.DBDateTimeEditEh5.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.DBDateTimeEditEh5.BackColor = System.Drawing.Color.Transparent;
-            this.DBDateTimeEditEh5.Location = new System.Drawing.Point(204, 118);
-            this.DBDateTimeEditEh5.Margin = new System.Windows.Forms.Padding(0);
-            this.DBDateTimeEditEh5.Name = "DBDateTimeEditEh5";
-            this.DBDateTimeEditEh5.SelectedDate = "";
-            this.DBDateTimeEditEh5.Size = new System.Drawing.Size(124, 22);
-            this.DBDateTimeEditEh5.TabIndex = 13;
-            // 
-            // DBDateTimeEditEh4
-            // 
-            this.DBDateTimeEditEh4.AutoSize = true;
-            this.DBDateTimeEditEh4.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.DBDateTimeEditEh4.BackColor = System.Drawing.Color.Transparent;
-            this.DBDateTimeEditEh4.Location = new System.Drawing.Point(534, 56);
-            this.DBDateTimeEditEh4.Margin = new System.Windows.Forms.Padding(0);
-            this.DBDateTimeEditEh4.Name = "DBDateTimeEditEh4";
-            this.DBDateTimeEditEh4.SelectedDate = "";
-            this.DBDateTimeEditEh4.Size = new System.Drawing.Size(124, 22);
-            this.DBDateTimeEditEh4.TabIndex = 12;
-            // 
-            // DBDateTimeEditEh3
-            // 
-            this.DBDateTimeEditEh3.AutoSize = true;
-            this.DBDateTimeEditEh3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.DBDateTimeEditEh3.BackColor = System.Drawing.Color.Transparent;
-            this.DBDateTimeEditEh3.Location = new System.Drawing.Point(204, 56);
-            this.DBDateTimeEditEh3.Margin = new System.Windows.Forms.Padding(0);
-            this.DBDateTimeEditEh3.Name = "DBDateTimeEditEh3";
-            this.DBDateTimeEditEh3.SelectedDate = "";
-            this.DBDateTimeEditEh3.Size = new System.Drawing.Size(124, 22);
-            this.DBDateTimeEditEh3.TabIndex = 7;
-            // 
             // DBDateTimeEditEh2
             // 
             this.DBDateTimeEditEh2.AutoSize = true;
@@ -906,7 +910,6 @@
             this.DBDateTimeEditEh1.Size = new System.Drawing.Size(124, 22);
             this.DBDateTimeEditEh1.TabIndex = 3;
             this.DBDateTimeEditEh1.ValueChanged += new System.EventHandler(this.DBDateTimeEditEh1_ValueChanged);
-            
             // 
             // InvEdit
             // 

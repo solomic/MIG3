@@ -328,9 +328,7 @@ namespace Mig
             pref.ROWACTION = "EDIT";
             pref.INV_ID = Convert.ToInt32(InvFilterGrid.CurrentRow.Cells["Id"].Value);
             InvEdit fInvEdit = new InvEdit();
-            //fInvEdit.Text = "Редактировать";
-           
-
+            
             fInvEdit.ShowDialog();
             this.Activate();
            
@@ -342,10 +340,11 @@ namespace Mig
         {
             pref.ROWACTION = "ADD";
             InvEdit fInvEdit = new InvEdit();
-            //fInvEdit.Text = "Добавить";
+            
             fInvEdit.ShowDialog();
             this.Activate();
-           
+            InvFilterChange();
+
         }
 
         private void pmCopy_Click(object sender, EventArgs e)
@@ -356,8 +355,8 @@ namespace Mig
             pref.INV_ID = Convert.ToInt32(InvFilterGrid.CurrentRow.Cells["Id"].Value);
             fInvEdit.ShowDialog();
             this.Activate();
+            InvFilterChange();
 
-           
         }
     }
 }

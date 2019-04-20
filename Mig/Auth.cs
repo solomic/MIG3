@@ -38,6 +38,8 @@ namespace Mig
                 pref.REPORTFOLDER = nl[0].InnerText;
                 nl = doc.GetElementsByTagName("NOTIFYTEMPLATE");
                 pref.NOTIFYTEMPLATE = nl[0].InnerText;
+                nl = doc.GetElementsByTagName("INVCHECKDUL");
+                int.TryParse(nl[0].InnerText, out pref.INVCHECKDUL);
 
                 pref.FULLREPORTPATCH = pref.MIGDATA + pref.REPORTFOLDER;
             }
