@@ -217,11 +217,11 @@ namespace Mig
                 sql = "UPDATE [Inventation].[Inv] SET Status=@param1 " +
                    "  WHERE [Id] IN (" + String.Join(",", ids) + "); ";
                 cmd.CommandText = sql;
-                cmd.Parameters.Clear();                
+                cmd.Parameters.Clear();
                 cmd.Parameters.AddWithValue("param1", type);
                 cmd.ExecuteNonQuery();
                 transaction.Commit();
-               
+
             }
             catch (Exception ex)
             {
@@ -252,6 +252,10 @@ namespace Mig
                 Logger.Log.Error(ClassName + "Function:miGraduate_Click\n Error:" + ex);
                 MessageBox.Show("Ошибка :\n\n" + ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+        private void GridColor()
+        {
+            //InvFilterGrid.Rows[i].DefaultCellStyle.BackColor = Color.Red;
         }
 
         private void button6_Click(object sender, EventArgs e)
@@ -321,7 +325,8 @@ namespace Mig
 
         private void InvFilterGrid_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            if(InvFilterGrid.CurrentRow.Index < 0)
+            
+            if(e.RowIndex < 0 || cmbInvFilter.Text == "")
             {
                 return;
             }
@@ -339,8 +344,7 @@ namespace Mig
         private void pmAdd_Click(object sender, EventArgs e)
         {
             pref.ROWACTION = "ADD";
-            InvEdit fInvEdit = new InvEdit();
-            
+            InvEdit fInvEdit = new InvEdit();            
             fInvEdit.ShowDialog();
             this.Activate();
             InvFilterChange();
@@ -350,13 +354,41 @@ namespace Mig
         private void pmCopy_Click(object sender, EventArgs e)
         {
             pref.ROWACTION = "COPY";
-            InvEdit fInvEdit = new InvEdit();
-            //fInvEdit.Text = "Добавить";
+            InvEdit fInvEdit = new InvEdit();            
             pref.INV_ID = Convert.ToInt32(InvFilterGrid.CurrentRow.Cells["Id"].Value);
             fInvEdit.ShowDialog();
             this.Activate();
             InvFilterChange();
 
+        }
+
+        private void InvFilterGrid_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            
+            if (e.RowIndex < 0 || cmbInvFilter.Text == "")
+            {
+                return;
+            }
+            pref.INV_ID = Convert.ToInt32(InvFilterGrid.CurrentRow.Cells["Id"].Value);
+        }
+
+        private void InvFilterGrid_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
+        {
+            if (e.RowIndex < 0)
+                return;
+            string recstate = InvFilterGrid.Rows[e.RowIndex].Cells["Статус"].Value.ToString();
+            if (recstate == "Приехал")
+                InvFilterGrid.Rows[e.RowIndex].DefaultCellStyle.BackColor = System.Drawing.ColorTranslator.FromHtml("#64F556");
+            if (recstate == "Не приехал(отказ)")
+                InvFilterGrid.Rows[e.RowIndex].DefaultCellStyle.BackColor = System.Drawing.ColorTranslator.FromHtml("#F65C5A");
+            /*
+             //(тек дата + 30 дней)>(Пребывание в России по) - желтым
+                if ((Now+30)>=StrToDate(AdvStringGrid1.Cells[AdvStringGrid1.ColumnByHeader('Пребывание по'),k])) and ((recstate='Оформление в ФМС') or (recstate='Получено из ФМС') or (recstate='Выдано/Отправлено')) then
+                     begin
+                        for j := 0 to AdvStringGrid1.ColCount -1 do
+                          AdvStringGrid1.CellProperties[j,k].BrushColor:=HexToTColor('ECF830');
+                     end;
+             * */
         }
     }
 }

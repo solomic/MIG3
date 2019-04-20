@@ -363,7 +363,7 @@ namespace Mig
                           "set [Last Name]=@LastName, [First Name]=@FirstName, [Last Name Enu]=@LastNameEnu, [First Name Enu]=@FirstNameEnu," +
                           "[Birthday]=@Birthday, [Sex]=@Sex, [Nationality]=@Nationality, [Birth Country]=@BirthCountry, [Birth Country Real]=@BirthCountryReal," +
                           "[Second Name] =@SecondName, [Country Live]=@CountryLive, [Country Region]=@CountryRegion, [Country Get Visa]=@CountryGetVisa," +
-                          "[Town Get Visa] =@TownGetVisa, [Work]=@Work, [Work Address]=@WorkAddress, [Work Pos]=@WorkPos, [Ser]=@Ser, [Num]=:Num," +
+                          "[Town Get Visa] =@TownGetVisa, [Work]=@Work, [Work Address]=@WorkAddress, [Work Pos]=@WorkPos, [Ser]=@Ser, [Num]=@Num," +
                           "[Date Issue] =@DateIssue, [Tenure]=@Tenure, [Address Alleged]=@AddressAlleged, [Form Study]=@FormStudy ," +
                           " [Updated By] = suser_name(), [Updated] =getdate(), [Spec]=@Spec where [Id]=@Id;";
                         cmd.CommandText = sql;

@@ -56,6 +56,7 @@
             this.ssStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.stCnt = new System.Windows.Forms.ToolStripStatusLabel();
             this.bindingSource1 = new System.Windows.Forms.BindingSource(this.components);
+            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.contextMenuStrip2.SuspendLayout();
             this.PopupMenu2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.InvFilterGrid)).BeginInit();
@@ -188,7 +189,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 56);
+            this.label1.Location = new System.Drawing.Point(12, 53);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(136, 17);
             this.label1.TabIndex = 17;
@@ -198,7 +199,7 @@
             // 
             this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.Simple;
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(154, 53);
+            this.comboBox1.Location = new System.Drawing.Point(154, 50);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(186, 24);
             this.comboBox1.TabIndex = 16;
@@ -209,7 +210,7 @@
             this.cmbInvFilter.DisplayMember = "Name";
             this.cmbInvFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbInvFilter.FormattingEnabled = true;
-            this.cmbInvFilter.Location = new System.Drawing.Point(101, 12);
+            this.cmbInvFilter.Location = new System.Drawing.Point(101, 14);
             this.cmbInvFilter.Name = "cmbInvFilter";
             this.cmbInvFilter.Size = new System.Drawing.Size(234, 24);
             this.cmbInvFilter.TabIndex = 15;
@@ -233,20 +234,20 @@
             this.pmAdd,
             this.pmCopy});
             this.PopupMenu2.Name = "PopupMenu2";
-            this.PopupMenu2.Size = new System.Drawing.Size(211, 80);
+            this.PopupMenu2.Size = new System.Drawing.Size(163, 52);
             this.PopupMenu2.Opening += new System.ComponentModel.CancelEventHandler(this.PopupMenu2_Opening);
             // 
             // pmAdd
             // 
             this.pmAdd.Name = "pmAdd";
-            this.pmAdd.Size = new System.Drawing.Size(210, 24);
+            this.pmAdd.Size = new System.Drawing.Size(162, 24);
             this.pmAdd.Text = "Добавить";
             this.pmAdd.Click += new System.EventHandler(this.pmAdd_Click);
             // 
             // pmCopy
             // 
             this.pmCopy.Name = "pmCopy";
-            this.pmCopy.Size = new System.Drawing.Size(210, 24);
+            this.pmCopy.Size = new System.Drawing.Size(162, 24);
             this.pmCopy.Text = "Копировать";
             this.pmCopy.Click += new System.EventHandler(this.pmCopy_Click);
             // 
@@ -263,26 +264,29 @@
             this.InvFilterGrid.ContextMenuStrip = this.contextMenuStrip2;
             this.InvFilterGrid.DateWithTime = false;
             this.InvFilterGrid.EnableHeadersVisualStyles = false;
-            this.InvFilterGrid.Location = new System.Drawing.Point(7, 83);
+            this.InvFilterGrid.Location = new System.Drawing.Point(7, 90);
             this.InvFilterGrid.Name = "InvFilterGrid";
             this.InvFilterGrid.ReadOnly = true;
             this.InvFilterGrid.RowTemplate.Height = 24;
             this.InvFilterGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.InvFilterGrid.Size = new System.Drawing.Size(1273, 558);
+            this.InvFilterGrid.Size = new System.Drawing.Size(1273, 551);
             this.InvFilterGrid.TabIndex = 13;
             this.InvFilterGrid.TimeFilter = false;
             this.InvFilterGrid.VirtualMode = true;
+            this.InvFilterGrid.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.InvFilterGrid_CellClick);
             this.InvFilterGrid.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.InvFilterGrid_CellDoubleClick);
+            this.InvFilterGrid.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.InvFilterGrid_CellPainting);
             // 
             // statusStrip1
             // 
             this.statusStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ssStatus,
-            this.stCnt});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 644);
+            this.stCnt,
+            this.toolStripStatusLabel1});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 641);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(1285, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(1285, 25);
             this.statusStrip1.TabIndex = 24;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -295,6 +299,12 @@
             // 
             this.stCnt.Name = "stCnt";
             this.stCnt.Size = new System.Drawing.Size(0, 17);
+            // 
+            // toolStripStatusLabel1
+            // 
+            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(151, 20);
+            this.toolStripStatusLabel1.Text = "toolStripStatusLabel1";
             // 
             // InvForm
             // 
@@ -358,5 +368,6 @@
         private System.Windows.Forms.ToolStripMenuItem pmCopy;
         private System.Windows.Forms.ToolStripStatusLabel stCnt;
         private System.Windows.Forms.BindingSource bindingSource1;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
     }
 }
