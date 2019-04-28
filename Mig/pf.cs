@@ -180,6 +180,279 @@ namespace Mig
 
         }
 
+        public string DoWord(int invId)
+        {
+            /**/
+            string ret = "";
+            string TemplateName = "temp1.docx";
+            string TemplatePath = Directory.GetCurrentDirectory() + @"\template\INV\" + TemplateName;
+            string ReportName = GETNOW + "_Приглашение.docx";
+            Dictionary<string, string> param = new Dictionary<string, string>();
+
+            try
+            {
+                DataTable pfreq = DB.QueryTableMultipleParams("SELECT * FROM [Inventation].[Inv] WHERE [Id]=@param1", new List<object> { invId });
+                int con_id = Convert.ToInt32(pfreq.Rows[0]["Contact Id"]);
+                 DataTable pfreqcon = DB.QueryTableMultipleParams("SELECT * FROM [Inventation].[Contact] WHERE [Id]=@param1", new List<object> { con_id });
+                DateTime createdt = Convert.ToDateTime(pfreq.Rows[0]["Create Dt"]);
+                string path = pref.INVREPORTFOLDER + createdt.ToString("yyyy") + @"\" + createdt.ToString("yyyy_MM_dd");
+                Directory.CreateDirectory(path);
+                string NewPath = path+@"\" + pfreqcon.Rows[0]["Last Name"].ToString() + @"_" + pfreqcon.Rows[0]["First Name"].ToString() + ".docx";
+                File.Copy(TemplatePath, NewPath,true);
+
+                //вид документа
+                string docview = pfreq.Rows[0]["Doc View"].ToString();
+                if (docview == "Бумажное")
+                {
+                    param.Add("p1", "X");
+                    param.Add("p2", string.Empty);
+                }
+                if (docview == "Электронное")
+                {
+                    param.Add("p1", string.Empty);
+                    param.Add("p2", "X");
+                }
+                if (docview == "")
+                {
+                    param.Add("p1", string.Empty);
+                    param.Add("p2", string.Empty);
+                }
+                //желательно до                
+                string d = Convert.ToDateTime(pfreq.Rows[0]["Formalize Dt"]).ToString("dd.MM.yyyy");
+                    //заглушка
+                param.Add("a1", string.Empty);
+                param.Add("a2", string.Empty);
+                param.Add("a3", string.Empty);
+                param.Add("a4", string.Empty);
+                param.Add("a5", string.Empty);
+                param.Add("a6", string.Empty);
+
+                //цель
+                param.Add("C", pfreq.Rows[0]["Entity"].ToString());               
+                //срок
+                d =  pfreq.Rows[0]["Tenure"].ToString().PadLeft(4,'0');
+                param.Add("b1", d[0].ToString());
+                param.Add("b2", d[1].ToString());
+                param.Add("b3", d[2].ToString());
+                param.Add("b4", d[3].ToString());
+                //предпол въезд
+                d = Convert.ToDateTime(pfreq.Rows[0]["Estimated Entry"]).ToString("dd.MM.yyyy");
+                param.Add("c1", d[0].ToString());
+                param.Add("c2", d[1].ToString());
+                param.Add("c3", d[3].ToString());
+                param.Add("c4", d[4].ToString());
+                param.Add("c5", d[8].ToString());
+                param.Add("c6", d[9].ToString());
+
+                //предпол въезд
+                d = Convert.ToDateTime(pfreq.Rows[0]["Stay Dt"]).ToString("dd.MM.yyyy");
+                param.Add("f1", d[0].ToString());
+                param.Add("f2", d[1].ToString());
+                param.Add("f3", d[3].ToString());
+                param.Add("f4", d[4].ToString());
+                param.Add("f5", d[8].ToString());
+                param.Add("f6", d[9].ToString());
+                //кратность
+                string st = pfreq.Rows[0]["Number Entries"].ToString();
+                if (st == "Однократная")
+                {
+                    param.Add("h1", "v");
+                    param.Add("h2", string.Empty);
+                    param.Add("h3", string.Empty);
+                }
+                if (st == "Двукратная")
+                {
+                    param.Add("h1", string.Empty);
+                    param.Add("h2", "v");
+                    param.Add("h3", string.Empty);
+                }
+                if (st == "Многократная")
+                {
+                    param.Add("h1", string.Empty);
+                    param.Add("h2", string.Empty);
+                    param.Add("h3", "v");
+                }
+
+                //вид визы
+                st = pfreq.Rows[0]["Visa Type"].ToString();                
+                if (st == "Частная")
+                {
+                    param.Add("v1", "v");
+                    param.Add("v2", string.Empty);
+                    param.Add("v3", string.Empty);
+                    param.Add("v4", string.Empty);
+                    param.Add("v5", string.Empty);
+                }
+                if (st == "Деловая")
+                {
+                    param.Add("v1", string.Empty);
+                    param.Add("v2", "v");
+                    param.Add("v3", string.Empty);
+                    param.Add("v4", string.Empty);
+                    param.Add("v5", string.Empty);
+                }
+                if (st == "Учебная")
+                {
+                    param.Add("v1", string.Empty);
+                    param.Add("v2", string.Empty);
+                    param.Add("v3", "v");
+                    param.Add("v4", string.Empty);
+                    param.Add("v5", string.Empty);
+                }
+                if (st == "Рабочая")
+                {
+                    param.Add("v1", string.Empty);
+                    param.Add("v2", string.Empty);
+                    param.Add("v3", string.Empty);
+                    param.Add("v4", "v");
+                    param.Add("v5", string.Empty);
+                }
+                if (st == "Гуманитарная")
+                {
+                    param.Add("v1", string.Empty);
+                    param.Add("v2", string.Empty);
+                    param.Add("v3", string.Empty);
+                    param.Add("v4", string.Empty);
+                    param.Add("v5", "v");
+                }
+
+                //места посещения
+                param.Add("tr", pfreq.Rows[0]["Visit Points"].ToString());
+
+                //От
+                d = createdt.ToString("dd.MM.yyyy");
+                param.Add("d1", d[0].ToString());
+                param.Add("d2", d[1].ToString());
+                param.Add("d3", d[3].ToString());
+                param.Add("d4", d[4].ToString());
+                param.Add("d5", d[8].ToString());
+                param.Add("d6", d[9].ToString());
+                /*--------------------------------------------*/
+                param.Add("LAST", pfreqcon.Rows[0]["Last Name"].ToString());
+                param.Add("FST", pfreqcon.Rows[0]["First Name"].ToString());
+                param.Add("LASTENU", pfreqcon.Rows[0]["Last Name Enu"].ToString());
+                param.Add("FSTENU", pfreqcon.Rows[0]["First Name Enu"].ToString());
+                param.Add("SEC", pfreqcon.Rows[0]["Second Name"].ToString());
+                //дата рождения
+                d = Convert.ToDateTime(pfreqcon.Rows[0]["Birthday"]).ToString("dd.MM.yyyy");
+                param.Add("r1", d[0].ToString());
+                param.Add("r2", d[1].ToString());
+                param.Add("r3", d[3].ToString());
+                param.Add("r4", d[4].ToString());
+                param.Add("r5", d[6].ToString());
+                param.Add("r6", d[7].ToString());
+                param.Add("r7", d[8].ToString());
+                param.Add("r8", d[9].ToString());
+                //пол
+                param.Add("sex", pfreqcon.Rows[0]["Sex"].ToString());
+                //гражданство
+                param.Add("nat2", pfreqcon.Rows[0]["Nationality"].ToString());
+                //гос рождения
+                param.Add("country3", pfreqcon.Rows[0]["Birth Country"].ToString());
+                //место
+                param.Add("place4", pfreqcon.Rows[0]["Birth Country Real"].ToString());
+                //гос пост прожив
+                param.Add("countryplace5", pfreqcon.Rows[0]["Country Live"].ToString());
+                //регион
+                param.Add("region6", pfreqcon.Rows[0]["Country Region"].ToString());
+                //место получения визы
+                param.Add("countryvisa7", pfreqcon.Rows[0]["Country Get Visa"].ToString());
+                //город
+                param.Add("town8", pfreqcon.Rows[0]["Town Get Visa"].ToString());
+                //работа
+                string work = pfreqcon.Rows[0]["Work"].ToString().Trim();
+                if(work !="")
+                {
+                    param.Add("WORK", work);
+                }
+                else
+                {
+                    param.Add("WORK", string.Empty);
+                }
+
+                //место работы
+                string wa = pfreqcon.Rows[0]["Work Address"].ToString().Trim();
+                if (wa != "")
+                {
+                    param.Add("WORKADDR", wa);
+                }
+                else
+                {
+                    param.Add("WORKADDR", string.Empty);
+                }
+
+                //должность
+                string wp = pfreqcon.Rows[0]["Work Pos"].ToString().Trim();
+                if (wp != "")
+                {
+                    param.Add("POS", wp);
+                }
+                else
+                {
+                    param.Add("POS", string.Empty);
+                }
+
+                //номер
+                param.Add("N", pfreqcon.Rows[0]["Ser"].ToString().Trim()+" "+ pfreqcon.Rows[0]["Num"].ToString().Trim());
+                //серия
+                param.Add("S", string.Empty);
+                //адрес пред пребывания
+                param.Add("ADDR", pfreqcon.Rows[0]["Address Alleged"].ToString().Trim());
+                //дата выдачи
+                d = Convert.ToDateTime(pfreqcon.Rows[0]["Date Issue"]).ToString("dd.MM.yyyy");
+                param.Add("u1", d[0].ToString());
+                param.Add("u2", d[1].ToString());
+                param.Add("u3", d[3].ToString());
+                param.Add("u4", d[4].ToString());               
+                param.Add("u5", d[8].ToString());
+                param.Add("u6", d[9].ToString());
+
+                //дейст до
+                d = Convert.ToDateTime(pfreqcon.Rows[0]["Tenure"]).ToString("dd.MM.yyyy");
+                param.Add("m1", d[0].ToString());
+                param.Add("m2", d[1].ToString());
+                param.Add("m3", d[3].ToString());
+                param.Add("m4", d[4].ToString());
+                param.Add("m5", d[8].ToString());
+                param.Add("m6", d[9].ToString());
+
+                string frmstd = pfreqcon.Rows[0]["Form Study"].ToString();            
+                if (frmstd == "ПО" || frmstd == "КУРСЫ" || frmstd == "ВКЛЮЧЕННОЕ ОБРАЗОВАНИЕ")
+                {
+                    param.Add("qqq", char.ConvertFromUtf32(0x25A0));
+                    //WideChar($25A0)
+                }
+                else
+                {
+                    param.Add("qqq", string.Empty);
+                }
+           
+
+                //param.Add("gr", pfreq.Rows[0]["gr"].ToString());
+                //param.Add("nationality", Regex.Replace(pfreq.Rows[0]["con_nat"].ToString(), @"\w+", new MatchEvaluator(CapitalizeString)));
+                //param.Add("fio", FirstUpper(pfreq.Rows[0]["con_fio"].ToString()));
+                //param.Add("birthday", pfreq.Rows[0]["con_birthday"].ToString());
+                //param.Add("dul_type", pfreq.Rows[0]["dul_type"].ToString().ToLower());
+                //param.Add("dul_ser", pfreq.Rows[0]["dul_ser"].ToString());
+                //param.Add("dul_num", pfreq.Rows[0]["dul_num"].ToString());
+                //param.Add("dul_issue", pfreq.Rows[0]["dul_issue"].ToString());
+                //param.Add("card_tenure_to_dt", pfreq.Rows[0]["card_tenure_to_dt"].ToString());
+                //param.Add("full_address", pfreq.Rows[0]["ad_full_address"].ToString());
+
+                FillDoc(NewPath, param);
+
+                InsertPf(ReportName);
+                ret = NewPath;
+
+            }
+            catch (Exception e)
+            {
+                Logger.Log.Error(ClassName + "Function:GeneratePetitionStandart\n Error:" + e);
+                throw new Exception(e.Message);
+            }
+            return ret;
+
+        }
 
         public void GeneratePetitionStandart(string s1,string s2)
         {

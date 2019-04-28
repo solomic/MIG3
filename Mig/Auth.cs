@@ -40,7 +40,9 @@ namespace Mig
                 pref.NOTIFYTEMPLATE = nl[0].InnerText;
                 nl = doc.GetElementsByTagName("INVCHECKDUL");
                 int.TryParse(nl[0].InnerText, out pref.INVCHECKDUL);
-
+                nl = doc.GetElementsByTagName("INVREPORTFOLDER");
+                pref.INVREPORTFOLDER = nl[0].InnerText;
+                
                 pref.FULLREPORTPATCH = pref.MIGDATA + pref.REPORTFOLDER;
             }
             catch (Exception e)

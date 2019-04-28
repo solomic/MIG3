@@ -433,6 +433,9 @@
     <None Include="Template\DEP.OBR.docx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Template\INV\temp1.docx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Template\Notify Template.pdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

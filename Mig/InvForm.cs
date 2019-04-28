@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
@@ -381,14 +382,20 @@ namespace Mig
                 InvFilterGrid.Rows[e.RowIndex].DefaultCellStyle.BackColor = System.Drawing.ColorTranslator.FromHtml("#64F556");
             if (recstate == "Не приехал(отказ)")
                 InvFilterGrid.Rows[e.RowIndex].DefaultCellStyle.BackColor = System.Drawing.ColorTranslator.FromHtml("#F65C5A");
-            /*
-             //(тек дата + 30 дней)>(Пребывание в России по) - желтым
-                if ((Now+30)>=StrToDate(AdvStringGrid1.Cells[AdvStringGrid1.ColumnByHeader('Пребывание по'),k])) and ((recstate='Оформление в ФМС') or (recstate='Получено из ФМС') or (recstate='Выдано/Отправлено')) then
-                     begin
-                        for j := 0 to AdvStringGrid1.ColCount -1 do
-                          AdvStringGrid1.CellProperties[j,k].BrushColor:=HexToTColor('ECF830');
-                     end;
-             * */
+            if ((DateTime.Today.AddDays(30)>= Convert.ToDateTime(InvFilterGrid.Rows[e.RowIndex].Cells["Пребывание по"].Value)) && (recstate == "Оформление в ФМС" || recstate == "Получено из ФМС" || recstate == "Выдано/Отправлено"))
+            {
+                InvFilterGrid.Rows[e.RowIndex].DefaultCellStyle.BackColor = System.Drawing.ColorTranslator.FromHtml("#ECF830");
+            }
+            
+        }
+
+        private void InvDoWord_Click(object sender, EventArgs e)
+        {
+            string doc = (new pf()).DoWord(Convert.ToInt32(InvFilterGrid.CurrentRow.Cells["Id"].Value));
+            if (doc !="")
+            {
+                Process.Start(doc);
+            }
         }
     }
 }

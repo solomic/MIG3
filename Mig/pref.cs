@@ -35,6 +35,7 @@ namespace Pref
         public static int INV_CONTACT_EDIT;
         public static string ROWACTION;
         public static int INVCHECKDUL;
+        public static string INVREPORTFOLDER;
 
         /*СПРАВОЧНИКИ*/
         public static string FO = "SELECT  code, value FROM cmodb.lov where type='FO'  ORDER BY ord;";

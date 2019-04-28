@@ -35,7 +35,7 @@
             this.гарантийноеПисьмоСформироватьИПоказатьВПапкеToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.гарантийноеПисьмоОткрытьВWordToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.приглашениеСформироватьИПоказатьВПапкеToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.приглашениеОткрытьВWordToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.InvDoWord = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.button6 = new System.Windows.Forms.Button();
@@ -55,8 +55,8 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.ssStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.stCnt = new System.Windows.Forms.ToolStripStatusLabel();
-            this.bindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.bindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             this.contextMenuStrip2.SuspendLayout();
             this.PopupMenu2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.InvFilterGrid)).BeginInit();
@@ -100,17 +100,18 @@
             this.приглашениеСформироватьИПоказатьВПапкеToolStripMenuItem.Size = new System.Drawing.Size(481, 24);
             this.приглашениеСформироватьИПоказатьВПапкеToolStripMenuItem.Text = "Приглашение: сформировать и показать в папке...";
             // 
-            // приглашениеОткрытьВWordToolStripMenuItem
+            // InvDoWord
             // 
-            this.приглашениеОткрытьВWordToolStripMenuItem.Name = "приглашениеОткрытьВWordToolStripMenuItem";
-            this.приглашениеОткрытьВWordToolStripMenuItem.Size = new System.Drawing.Size(481, 24);
-            this.приглашениеОткрытьВWordToolStripMenuItem.Text = "Приглашение: открыть в Word...";
+            this.InvDoWord.Name = "InvDoWord";
+            this.InvDoWord.Size = new System.Drawing.Size(481, 24);
+            this.InvDoWord.Text = "Приглашение: открыть в Word...";
+            this.InvDoWord.Click += new System.EventHandler(this.InvDoWord_Click);
             // 
             // contextMenuStrip2
             // 
             this.contextMenuStrip2.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.contextMenuStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.приглашениеОткрытьВWordToolStripMenuItem,
+            this.InvDoWord,
             this.приглашениеСформироватьИПоказатьВПапкеToolStripMenuItem,
             this.гарантийноеПисьмоОткрытьВWordToolStripMenuItem,
             this.гарантийноеПисьмоСформироватьИПоказатьВПапкеToolStripMenuItem,
@@ -119,7 +120,7 @@
             this.toolStripSeparator1,
             this.открытьОбщуюПапкуToolStripMenuItem});
             this.contextMenuStrip2.Name = "contextMenuStrip2";
-            this.contextMenuStrip2.Size = new System.Drawing.Size(482, 178);
+            this.contextMenuStrip2.Size = new System.Drawing.Size(482, 206);
             // 
             // toolStripSeparator1
             // 
@@ -293,12 +294,12 @@
             // ssStatus
             // 
             this.ssStatus.Name = "ssStatus";
-            this.ssStatus.Size = new System.Drawing.Size(0, 17);
+            this.ssStatus.Size = new System.Drawing.Size(0, 20);
             // 
             // stCnt
             // 
             this.stCnt.Name = "stCnt";
-            this.stCnt.Size = new System.Drawing.Size(0, 17);
+            this.stCnt.Size = new System.Drawing.Size(0, 20);
             // 
             // toolStripStatusLabel1
             // 
@@ -347,7 +348,7 @@
         private System.Windows.Forms.ToolStripMenuItem гарантийноеПисьмоСформироватьИПоказатьВПапкеToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem гарантийноеПисьмоОткрытьВWordToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem приглашениеСформироватьИПоказатьВПапкеToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem приглашениеОткрытьВWordToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem InvDoWord;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip2;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.Button button6;
