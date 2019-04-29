@@ -345,6 +345,10 @@ namespace Mig
 
         private void pmAdd_Click(object sender, EventArgs e)
         {
+            //if (InvFilterGrid.SelectedRows.Count == 0)
+            //{
+            //    return;
+            //}
             pref.ROWACTION = "ADD";
             InvEdit fInvEdit = new InvEdit();            
             fInvEdit.ShowDialog();
@@ -355,6 +359,10 @@ namespace Mig
 
         private void pmCopy_Click(object sender, EventArgs e)
         {
+            if (InvFilterGrid.SelectedCells.Count == 0)
+            {
+                return;
+            }
             pref.ROWACTION = "COPY";
             InvEdit fInvEdit = new InvEdit();            
             pref.INV_ID = Convert.ToInt32(InvFilterGrid.CurrentRow.Cells["Id"].Value);

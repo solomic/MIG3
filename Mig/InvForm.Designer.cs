@@ -126,7 +126,7 @@
             this.toolStripSeparator1,
             this.SharedFld});
             this.contextMenuStrip2.Name = "contextMenuStrip2";
-            this.contextMenuStrip2.Size = new System.Drawing.Size(482, 206);
+            this.contextMenuStrip2.Size = new System.Drawing.Size(482, 178);
             // 
             // toolStripSeparator1
             // 
@@ -281,27 +281,26 @@
             this.ssStatus,
             this.stCnt,
             this.toolStripStatusLabel1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 641);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 642);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(1285, 25);
+            this.statusStrip1.Size = new System.Drawing.Size(1285, 24);
             this.statusStrip1.TabIndex = 24;
             this.statusStrip1.Text = "statusStrip1";
             // 
             // ssStatus
             // 
             this.ssStatus.Name = "ssStatus";
-            this.ssStatus.Size = new System.Drawing.Size(0, 20);
+            this.ssStatus.Size = new System.Drawing.Size(0, 19);
             // 
             // stCnt
             // 
             this.stCnt.Name = "stCnt";
-            this.stCnt.Size = new System.Drawing.Size(0, 20);
+            this.stCnt.Size = new System.Drawing.Size(0, 19);
             // 
             // toolStripStatusLabel1
             // 
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(151, 20);
-            this.toolStripStatusLabel1.Text = "toolStripStatusLabel1";
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(0, 19);
             // 
             // comboBox1
             // 

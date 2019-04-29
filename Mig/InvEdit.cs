@@ -197,6 +197,20 @@ namespace Mig
                 LoadValueCombobox(ComboBox9, "[Inventation].[Contact]", "Spec");
                 LoadValueCombobox(ComboBox10, "[Inventation].[Inv]", "Host Name");
                 LoadValueCombobox(ComboBox11, "[Inventation].[Inv]", "Host Phone");
+
+                ComboBox5.SelectedIndex = -1;
+                LabeledEdit9.SelectedIndex = -1;
+                LabeledEdit5.SelectedIndex = -1;
+                LabeledEdit6.SelectedIndex = -1;
+                ComboBox6.SelectedIndex = -1;
+                ComboBox7.SelectedIndex = -1;
+                LabeledEdit4.SelectedIndex = -1;
+                LabeledEdit7.SelectedIndex = -1;
+                LabeledEdit15.SelectedIndex = -1;
+                ComboBox9.SelectedIndex = -1;
+                ComboBox10.SelectedIndex = -1;
+                ComboBox11.SelectedIndex = -1;
+
             }
             catch(Exception err)
             {
