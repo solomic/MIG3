@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.открытьОбщуюПапкуToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.SharedFld = new System.Windows.Forms.ToolStripMenuItem();
             this.DoWordConfirmFld = new System.Windows.Forms.ToolStripMenuItem();
             this.DoWordConfirm = new System.Windows.Forms.ToolStripMenuItem();
             this.InvDoWordLetterFld = new System.Windows.Forms.ToolStripMenuItem();
@@ -64,11 +64,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).BeginInit();
             this.SuspendLayout();
             // 
-            // открытьОбщуюПапкуToolStripMenuItem
+            // SharedFld
             // 
-            this.открытьОбщуюПапкуToolStripMenuItem.Name = "открытьОбщуюПапкуToolStripMenuItem";
-            this.открытьОбщуюПапкуToolStripMenuItem.Size = new System.Drawing.Size(481, 24);
-            this.открытьОбщуюПапкуToolStripMenuItem.Text = "Открыть общую папку...";
+            this.SharedFld.Name = "SharedFld";
+            this.SharedFld.Size = new System.Drawing.Size(481, 24);
+            this.SharedFld.Text = "Открыть общую папку...";
+            this.SharedFld.Click += new System.EventHandler(this.SharedFld_Click);
             // 
             // DoWordConfirmFld
             // 
@@ -123,7 +124,7 @@
             this.DoWordConfirm,
             this.DoWordConfirmFld,
             this.toolStripSeparator1,
-            this.открытьОбщуюПапкуToolStripMenuItem});
+            this.SharedFld});
             this.contextMenuStrip2.Name = "contextMenuStrip2";
             this.contextMenuStrip2.Size = new System.Drawing.Size(482, 206);
             // 
@@ -346,7 +347,7 @@
 
         #endregion
 
-        private System.Windows.Forms.ToolStripMenuItem открытьОбщуюПапкуToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem SharedFld;
         private System.Windows.Forms.ToolStripMenuItem DoWordConfirmFld;
         private System.Windows.Forms.ToolStripMenuItem DoWordConfirm;
         private System.Windows.Forms.ToolStripMenuItem InvDoWordLetterFld;

@@ -484,5 +484,19 @@ namespace Mig
                 MessageBox.Show("Ошибка:" + ex.ToString(), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private void SharedFld_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                
+                 Process.Start(Path.GetDirectoryName(pref.INVREPORTFOLDER));
+               
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ошибка:" + ex.ToString(), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
     }
 }

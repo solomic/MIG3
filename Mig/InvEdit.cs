@@ -22,6 +22,7 @@ namespace Mig
 
         private void Init()
         {
+            LoadAllCombo();
             if (pref.ROWACTION == "EDIT")
             {
                 this.Text = "Редактировать";
@@ -116,7 +117,7 @@ namespace Mig
                 }
             }
             CheckDul();
-            LoadAllCombo();
+            
         }
       
 

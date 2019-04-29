@@ -184,6 +184,7 @@ namespace Mig
         {
             /**/
             string ret = "";
+            string NewPath="";
             string TemplateName = "temp1.docx";
             string TemplatePath = Directory.GetCurrentDirectory() + @"\template\INV\" + TemplateName;
             string ReportName = GETNOW + "_Приглашение.docx";
@@ -197,8 +198,7 @@ namespace Mig
                 DateTime createdt = Convert.ToDateTime(pfreq.Rows[0]["Create Dt"]);
                 string path = pref.INVREPORTFOLDER + createdt.ToString("yyyy") + @"\" + createdt.ToString("yyyy_MM_dd");
                 Directory.CreateDirectory(path);
-                string NewPath = path+@"\" + pfreqcon.Rows[0]["Last Name"].ToString() + @"_" + pfreqcon.Rows[0]["First Name"].ToString() + ".docx";
-                File.Copy(TemplatePath, NewPath,true);
+                NewPath = path+@"\" + pfreqcon.Rows[0]["Last Name"].ToString() + @"_" + pfreqcon.Rows[0]["First Name"].ToString() + ".docx";
 
                 //вид документа
                 string docview = pfreq.Rows[0]["Doc View"].ToString();
@@ -426,16 +426,19 @@ namespace Mig
                 {
                     param.Add("qqq", string.Empty);
                 }
-           
+
+                File.Copy(TemplatePath, NewPath, true);
                 FillDoc(NewPath, param);
 
-                InsertPf(ReportName);
+               // InsertPf(ReportName);
                 ret = NewPath;
 
             }
             catch (Exception e)
             {
                 Logger.Log.Error(ClassName + "Function:DoWord\n Error:" + e);
+                if (File.Exists(NewPath))
+                    File.Delete(NewPath);
                 throw new Exception(e.Message);
             }
             return ret;
@@ -445,6 +448,7 @@ namespace Mig
         {
             /**/
             string ret = "";
+            string NewPath = "";
             string TemplateName;
             string TemplatePath;
             string ReportName = GETNOW + "_Гарантия.docx";
@@ -458,7 +462,7 @@ namespace Mig
                 DateTime createdt = Convert.ToDateTime(pfreq.Rows[0]["Create Dt"]);
                 string path = pref.INVREPORTFOLDER + createdt.ToString("yyyy") + @"\" + createdt.ToString("yyyy_MM_dd");
                 Directory.CreateDirectory(path);
-                string NewPath = path + @"\" + pfreqcon.Rows[0]["Last Name"].ToString() + @"_" + pfreqcon.Rows[0]["First Name"].ToString() + ".docx";
+                NewPath = path + @"\" + pfreqcon.Rows[0]["Last Name"].ToString() + @"_" + pfreqcon.Rows[0]["First Name"].ToString() + ".docx";
 
                 if (pfreqcon.Rows[0]["Sex"].ToString() == "Муж")
                     TemplateName = "гарантия(муж).docx";
@@ -466,8 +470,6 @@ namespace Mig
                     TemplateName = "гарантия(жен).docx";
 
                 TemplatePath = Directory.GetCurrentDirectory() + @"\template\INV\" + TemplateName;
-
-                File.Copy(TemplatePath, NewPath, true);
 
                 param.Add("fam", pfreqcon.Rows[0]["Last Name"].ToString());
                 param.Add("im", pfreqcon.Rows[0]["First Name"].ToString());
@@ -491,17 +493,19 @@ namespace Mig
                 //дейст до
                 d = Convert.ToDateTime(pfreqcon.Rows[0]["Tenure"]).ToString("dd.MM.yyyy");
                 param.Add("to", d);
-           
 
+                File.Copy(TemplatePath, NewPath, true);
                 FillDoc(NewPath, param);
 
-                InsertPf(ReportName);
+                //InsertPf(ReportName);
                 ret = NewPath;
 
             }
             catch (Exception e)
             {
                 Logger.Log.Error(ClassName + "Function:DoWordLetter\n Error:" + e);
+                if (File.Exists(NewPath))
+                    File.Delete(NewPath);
                 throw new Exception(e.Message);
             }
             return ret;
@@ -512,6 +516,7 @@ namespace Mig
         {
             /**/
             string ret = "";
+            string NewPath = "";
             string TemplateName;
             string TemplatePath;
             string ReportName = GETNOW + "_Подтверждение.docx";
@@ -525,7 +530,7 @@ namespace Mig
                 DateTime createdt = Convert.ToDateTime(pfreq.Rows[0]["Create Dt"]);
                 string path = pref.INVREPORTFOLDER + createdt.ToString("yyyy") + @"\" + createdt.ToString("yyyy_MM_dd");
                 Directory.CreateDirectory(path);
-                string NewPath = path + @"\" + pfreqcon.Rows[0]["Last Name"].ToString() + @"_" + pfreqcon.Rows[0]["First Name"].ToString() + ".docx";
+                NewPath = path + @"\" + pfreqcon.Rows[0]["Last Name"].ToString() + @"_" + pfreqcon.Rows[0]["First Name"].ToString() + ".docx";
 
                 if (pfreqcon.Rows[0]["Sex"].ToString() == "Муж")
                     TemplateName = "CONFIRM(муж).docx";
@@ -533,8 +538,6 @@ namespace Mig
                     TemplateName = "CONFIRM(жен).docx";
 
                 TemplatePath = Directory.GetCurrentDirectory() + @"\template\INV\" + TemplateName;
-
-                File.Copy(TemplatePath, NewPath, true);
 
                 param.Add("fam", pfreqcon.Rows[0]["Last Name"].ToString());
                 param.Add("im", pfreqcon.Rows[0]["First Name"].ToString());
@@ -555,27 +558,31 @@ namespace Mig
                 param.Add("from", d);
 
                 string conf_town = pfreqcon.Rows[0]["Town Get Visa"].ToString();
-                DataTable pfreqtown = DB.QueryTableMultipleParams("SELECT * FROM [Inventation].[Confirm] WHERE UPPER('Town')=UPPER(@param1)", new List<object> { conf_town });
+                DataTable pfreqtown = DB.QueryTableMultipleParams("SELECT * FROM [Inventation].[Confirm] WHERE UPPER([Town])=UPPER(@param1)", new List<object> { conf_town });
                 if (pfreqtown.Rows.Count == 0)
                 {
                     MessageBox.Show("Отсутствует запись для данного города, зови на помощь!!!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 else
                 {
-                    param.Add("iminvite", pfreqcon.Rows[0]["Invite"].ToString());
-                    param.Add("towninvite", pfreqcon.Rows[0]["Town_desc"].ToString());
-                    param.Add("datinvite", pfreqcon.Rows[0]["Invite_dat"].ToString());                    
+                    param.Add("iminvite", pfreqtown.Rows[0]["Invite"].ToString());
+                    param.Add("towninvite", pfreqtown.Rows[0]["Town_desc"].ToString());
+                    param.Add("datinvite", pfreqtown.Rows[0]["Invite_dat"].ToString());
+                    param.Add("datinvite1", pfreqtown.Rows[0]["Invite_dat"].ToString());
                 }
 
+                File.Copy(TemplatePath, NewPath, true);
                 FillDoc(NewPath, param);
 
-                InsertPf(ReportName);
+                //InsertPf(ReportName);
                 ret = NewPath;
 
             }
             catch (Exception e)
             {
                 Logger.Log.Error(ClassName + "Function:DoWordConfirm\n Error:" + e);
+                if (File.Exists(NewPath))
+                    File.Delete(NewPath);
                 throw new Exception(e.Message);
             }
             return ret;
