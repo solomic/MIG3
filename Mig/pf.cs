@@ -427,17 +427,71 @@ namespace Mig
                     param.Add("qqq", string.Empty);
                 }
            
+                FillDoc(NewPath, param);
 
-                //param.Add("gr", pfreq.Rows[0]["gr"].ToString());
-                //param.Add("nationality", Regex.Replace(pfreq.Rows[0]["con_nat"].ToString(), @"\w+", new MatchEvaluator(CapitalizeString)));
-                //param.Add("fio", FirstUpper(pfreq.Rows[0]["con_fio"].ToString()));
-                //param.Add("birthday", pfreq.Rows[0]["con_birthday"].ToString());
-                //param.Add("dul_type", pfreq.Rows[0]["dul_type"].ToString().ToLower());
-                //param.Add("dul_ser", pfreq.Rows[0]["dul_ser"].ToString());
-                //param.Add("dul_num", pfreq.Rows[0]["dul_num"].ToString());
-                //param.Add("dul_issue", pfreq.Rows[0]["dul_issue"].ToString());
-                //param.Add("card_tenure_to_dt", pfreq.Rows[0]["card_tenure_to_dt"].ToString());
-                //param.Add("full_address", pfreq.Rows[0]["ad_full_address"].ToString());
+                InsertPf(ReportName);
+                ret = NewPath;
+
+            }
+            catch (Exception e)
+            {
+                Logger.Log.Error(ClassName + "Function:DoWord\n Error:" + e);
+                throw new Exception(e.Message);
+            }
+            return ret;
+
+        }
+        public string DoWordLetter(int invId)
+        {
+            /**/
+            string ret = "";
+            string TemplateName;
+            string TemplatePath;
+            string ReportName = GETNOW + "_Гарантия.docx";
+            Dictionary<string, string> param = new Dictionary<string, string>();
+
+            try
+            {
+                DataTable pfreq = DB.QueryTableMultipleParams("SELECT * FROM [Inventation].[Inv] WHERE [Id]=@param1", new List<object> { invId });
+                int con_id = Convert.ToInt32(pfreq.Rows[0]["Contact Id"]);
+                DataTable pfreqcon = DB.QueryTableMultipleParams("SELECT * FROM [Inventation].[Contact] WHERE [Id]=@param1", new List<object> { con_id });
+                DateTime createdt = Convert.ToDateTime(pfreq.Rows[0]["Create Dt"]);
+                string path = pref.INVREPORTFOLDER + createdt.ToString("yyyy") + @"\" + createdt.ToString("yyyy_MM_dd");
+                Directory.CreateDirectory(path);
+                string NewPath = path + @"\" + pfreqcon.Rows[0]["Last Name"].ToString() + @"_" + pfreqcon.Rows[0]["First Name"].ToString() + ".docx";
+
+                if (pfreqcon.Rows[0]["Sex"].ToString() == "Муж")
+                    TemplateName = "гарантия(муж).docx";
+                else
+                    TemplateName = "гарантия(жен).docx";
+
+                TemplatePath = Directory.GetCurrentDirectory() + @"\template\INV\" + TemplateName;
+
+                File.Copy(TemplatePath, NewPath, true);
+
+                param.Add("fam", pfreqcon.Rows[0]["Last Name"].ToString());
+                param.Add("im", pfreqcon.Rows[0]["First Name"].ToString());
+
+                //дата рождения
+                string d = Convert.ToDateTime(pfreqcon.Rows[0]["Birthday"]).ToString("dd.MM.yyyy");
+                param.Add("dr", d);
+
+                //гражданство
+                param.Add("nat", pfreqcon.Rows[0]["Nationality"].ToString());
+                //номер
+                param.Add("pass", pfreqcon.Rows[0]["Ser"].ToString()+" "+ pfreqcon.Rows[0]["Num"].ToString());
+
+                //адрес пред пребывания
+                param.Add("addr", pfreqcon.Rows[0]["Address Alleged"].ToString());
+
+                //дата выдачи
+                d = Convert.ToDateTime(pfreqcon.Rows[0]["Date Issue"]).ToString("dd.MM.yyyy");
+                param.Add("from", d);
+
+                //дейст до
+                d = Convert.ToDateTime(pfreqcon.Rows[0]["Tenure"]).ToString("dd.MM.yyyy");
+                param.Add("to", d);
+           
 
                 FillDoc(NewPath, param);
 
@@ -447,12 +501,87 @@ namespace Mig
             }
             catch (Exception e)
             {
-                Logger.Log.Error(ClassName + "Function:GeneratePetitionStandart\n Error:" + e);
+                Logger.Log.Error(ClassName + "Function:DoWordLetter\n Error:" + e);
                 throw new Exception(e.Message);
             }
             return ret;
 
         }
+
+        public string DoWordConfirm(int invId)
+        {
+            /**/
+            string ret = "";
+            string TemplateName;
+            string TemplatePath;
+            string ReportName = GETNOW + "_Подтверждение.docx";
+            Dictionary<string, string> param = new Dictionary<string, string>();
+
+            try
+            {
+                DataTable pfreq = DB.QueryTableMultipleParams("SELECT * FROM [Inventation].[Inv] WHERE [Id]=@param1", new List<object> { invId });
+                int con_id = Convert.ToInt32(pfreq.Rows[0]["Contact Id"]);
+                DataTable pfreqcon = DB.QueryTableMultipleParams("SELECT * FROM [Inventation].[Contact] WHERE [Id]=@param1", new List<object> { con_id });
+                DateTime createdt = Convert.ToDateTime(pfreq.Rows[0]["Create Dt"]);
+                string path = pref.INVREPORTFOLDER + createdt.ToString("yyyy") + @"\" + createdt.ToString("yyyy_MM_dd");
+                Directory.CreateDirectory(path);
+                string NewPath = path + @"\" + pfreqcon.Rows[0]["Last Name"].ToString() + @"_" + pfreqcon.Rows[0]["First Name"].ToString() + ".docx";
+
+                if (pfreqcon.Rows[0]["Sex"].ToString() == "Муж")
+                    TemplateName = "CONFIRM(муж).docx";
+                else
+                    TemplateName = "CONFIRM(жен).docx";
+
+                TemplatePath = Directory.GetCurrentDirectory() + @"\template\INV\" + TemplateName;
+
+                File.Copy(TemplatePath, NewPath, true);
+
+                param.Add("fam", pfreqcon.Rows[0]["Last Name"].ToString());
+                param.Add("im", pfreqcon.Rows[0]["First Name"].ToString());
+                param.Add("famenu", pfreqcon.Rows[0]["Last Name Enu"].ToString());
+                param.Add("imenu", pfreqcon.Rows[0]["First Name Enu"].ToString());
+
+                //дата рождения
+                string d = Convert.ToDateTime(pfreqcon.Rows[0]["Birthday"]).ToString("dd.MM.yyyy");
+                param.Add("dr", d);
+
+                //гражданство
+                param.Add("nat", pfreqcon.Rows[0]["Nationality"].ToString());
+                //номер
+                param.Add("pass", pfreqcon.Rows[0]["Ser"].ToString() + " " + pfreqcon.Rows[0]["Num"].ToString());
+
+                //дата выдачи
+                d = Convert.ToDateTime(pfreqcon.Rows[0]["Date Issue"]).ToString("dd.MM.yyyy");
+                param.Add("from", d);
+
+                string conf_town = pfreqcon.Rows[0]["Town Get Visa"].ToString();
+                DataTable pfreqtown = DB.QueryTableMultipleParams("SELECT * FROM [Inventation].[Confirm] WHERE UPPER('Town')=UPPER(@param1)", new List<object> { conf_town });
+                if (pfreqtown.Rows.Count == 0)
+                {
+                    MessageBox.Show("Отсутствует запись для данного города, зови на помощь!!!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    param.Add("iminvite", pfreqcon.Rows[0]["Invite"].ToString());
+                    param.Add("towninvite", pfreqcon.Rows[0]["Town_desc"].ToString());
+                    param.Add("datinvite", pfreqcon.Rows[0]["Invite_dat"].ToString());                    
+                }
+
+                FillDoc(NewPath, param);
+
+                InsertPf(ReportName);
+                ret = NewPath;
+
+            }
+            catch (Exception e)
+            {
+                Logger.Log.Error(ClassName + "Function:DoWordConfirm\n Error:" + e);
+                throw new Exception(e.Message);
+            }
+            return ret;
+
+        }
+
 
         public void GeneratePetitionStandart(string s1,string s2)
         {

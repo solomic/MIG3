@@ -6,6 +6,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -391,10 +392,96 @@ namespace Mig
 
         private void InvDoWord_Click(object sender, EventArgs e)
         {
-            string doc = (new pf()).DoWord(Convert.ToInt32(InvFilterGrid.CurrentRow.Cells["Id"].Value));
-            if (doc !="")
+            try
             {
-                Process.Start(doc);
+                string doc = (new pf()).DoWord(Convert.ToInt32(InvFilterGrid.CurrentRow.Cells["Id"].Value));
+                if (doc != "")
+                {
+                    Process.Start(doc);
+                }
+            }           
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ошибка:"+ex.ToString(), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void InvDocFld_Click(object sender, EventArgs e)
+        {
+            try { 
+                string doc = (new pf()).DoWord(Convert.ToInt32(InvFilterGrid.CurrentRow.Cells["Id"].Value));
+                if (doc != "")
+                {                
+                    Process.Start(Path.GetDirectoryName(doc));
+                }
+            }           
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ошибка:"+ex.ToString(), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void InvDoWordLetter_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string doc = (new pf()).DoWordLetter(Convert.ToInt32(InvFilterGrid.CurrentRow.Cells["Id"].Value));
+                if (doc != "")
+                {
+                    Process.Start(doc);
+                }
+            }                       
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ошибка:"+ex.ToString(), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void InvDoWordLetterFld_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string doc = (new pf()).DoWordLetter(Convert.ToInt32(InvFilterGrid.CurrentRow.Cells["Id"].Value));
+                if (doc != "")
+                {
+                    Process.Start(Path.GetDirectoryName(doc));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ошибка:" + ex.ToString(), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void DoWordConfirm_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string doc = (new pf()).DoWordConfirm(Convert.ToInt32(InvFilterGrid.CurrentRow.Cells["Id"].Value));
+                if (doc != "")
+                {
+                    Process.Start(doc);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ошибка:" + ex.ToString(), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void DoWordConfirmFld_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string doc = (new pf()).DoWordConfirm(Convert.ToInt32(InvFilterGrid.CurrentRow.Cells["Id"].Value));
+                if (doc != "")
+                {
+                    Process.Start(Path.GetDirectoryName(doc));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ошибка:" + ex.ToString(), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

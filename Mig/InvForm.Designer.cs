@@ -30,11 +30,11 @@
         {
             this.components = new System.ComponentModel.Container();
             this.открытьОбщуюПапкуToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.подтверждениеСформироватьИПоказатьВПапкеToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.подтверждениеОткрытьВWordToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.гарантийноеПисьмоСформироватьИПоказатьВПапкеToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.гарантийноеПисьмоОткрытьВWordToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.приглашениеСформироватьИПоказатьВПапкеToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.DoWordConfirmFld = new System.Windows.Forms.ToolStripMenuItem();
+            this.DoWordConfirm = new System.Windows.Forms.ToolStripMenuItem();
+            this.InvDoWordLetterFld = new System.Windows.Forms.ToolStripMenuItem();
+            this.InvDoWordLetter = new System.Windows.Forms.ToolStripMenuItem();
+            this.InvDocFld = new System.Windows.Forms.ToolStripMenuItem();
             this.InvDoWord = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -45,7 +45,6 @@
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.cmbInvFilter = new System.Windows.Forms.ComboBox();
             this.btnAdd = new System.Windows.Forms.Button();
             this.PopupMenu2 = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -57,6 +56,7 @@
             this.stCnt = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.bindingSource1 = new System.Windows.Forms.BindingSource(this.components);
+            this.comboBox1 = new System.Windows.Forms.TextBox();
             this.contextMenuStrip2.SuspendLayout();
             this.PopupMenu2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.InvFilterGrid)).BeginInit();
@@ -70,35 +70,40 @@
             this.открытьОбщуюПапкуToolStripMenuItem.Size = new System.Drawing.Size(481, 24);
             this.открытьОбщуюПапкуToolStripMenuItem.Text = "Открыть общую папку...";
             // 
-            // подтверждениеСформироватьИПоказатьВПапкеToolStripMenuItem
+            // DoWordConfirmFld
             // 
-            this.подтверждениеСформироватьИПоказатьВПапкеToolStripMenuItem.Name = "подтверждениеСформироватьИПоказатьВПапкеToolStripMenuItem";
-            this.подтверждениеСформироватьИПоказатьВПапкеToolStripMenuItem.Size = new System.Drawing.Size(481, 24);
-            this.подтверждениеСформироватьИПоказатьВПапкеToolStripMenuItem.Text = "Подтверждение: сформировать и показать в папке...";
+            this.DoWordConfirmFld.Name = "DoWordConfirmFld";
+            this.DoWordConfirmFld.Size = new System.Drawing.Size(481, 24);
+            this.DoWordConfirmFld.Text = "Подтверждение: сформировать и показать в папке...";
+            this.DoWordConfirmFld.Click += new System.EventHandler(this.DoWordConfirmFld_Click);
             // 
-            // подтверждениеОткрытьВWordToolStripMenuItem
+            // DoWordConfirm
             // 
-            this.подтверждениеОткрытьВWordToolStripMenuItem.Name = "подтверждениеОткрытьВWordToolStripMenuItem";
-            this.подтверждениеОткрытьВWordToolStripMenuItem.Size = new System.Drawing.Size(481, 24);
-            this.подтверждениеОткрытьВWordToolStripMenuItem.Text = "Подтверждение: открыть в word...";
+            this.DoWordConfirm.Name = "DoWordConfirm";
+            this.DoWordConfirm.Size = new System.Drawing.Size(481, 24);
+            this.DoWordConfirm.Text = "Подтверждение: открыть в word...";
+            this.DoWordConfirm.Click += new System.EventHandler(this.DoWordConfirm_Click);
             // 
-            // гарантийноеПисьмоСформироватьИПоказатьВПапкеToolStripMenuItem
+            // InvDoWordLetterFld
             // 
-            this.гарантийноеПисьмоСформироватьИПоказатьВПапкеToolStripMenuItem.Name = "гарантийноеПисьмоСформироватьИПоказатьВПапкеToolStripMenuItem";
-            this.гарантийноеПисьмоСформироватьИПоказатьВПапкеToolStripMenuItem.Size = new System.Drawing.Size(481, 24);
-            this.гарантийноеПисьмоСформироватьИПоказатьВПапкеToolStripMenuItem.Text = "Гарантийное письмо: сформировать и показать в папке...";
+            this.InvDoWordLetterFld.Name = "InvDoWordLetterFld";
+            this.InvDoWordLetterFld.Size = new System.Drawing.Size(481, 24);
+            this.InvDoWordLetterFld.Text = "Гарантийное письмо: сформировать и показать в папке...";
+            this.InvDoWordLetterFld.Click += new System.EventHandler(this.InvDoWordLetterFld_Click);
             // 
-            // гарантийноеПисьмоОткрытьВWordToolStripMenuItem
+            // InvDoWordLetter
             // 
-            this.гарантийноеПисьмоОткрытьВWordToolStripMenuItem.Name = "гарантийноеПисьмоОткрытьВWordToolStripMenuItem";
-            this.гарантийноеПисьмоОткрытьВWordToolStripMenuItem.Size = new System.Drawing.Size(481, 24);
-            this.гарантийноеПисьмоОткрытьВWordToolStripMenuItem.Text = "Гарантийное письмо: открыть в word...";
+            this.InvDoWordLetter.Name = "InvDoWordLetter";
+            this.InvDoWordLetter.Size = new System.Drawing.Size(481, 24);
+            this.InvDoWordLetter.Text = "Гарантийное письмо: открыть в word...";
+            this.InvDoWordLetter.Click += new System.EventHandler(this.InvDoWordLetter_Click);
             // 
-            // приглашениеСформироватьИПоказатьВПапкеToolStripMenuItem
+            // InvDocFld
             // 
-            this.приглашениеСформироватьИПоказатьВПапкеToolStripMenuItem.Name = "приглашениеСформироватьИПоказатьВПапкеToolStripMenuItem";
-            this.приглашениеСформироватьИПоказатьВПапкеToolStripMenuItem.Size = new System.Drawing.Size(481, 24);
-            this.приглашениеСформироватьИПоказатьВПапкеToolStripMenuItem.Text = "Приглашение: сформировать и показать в папке...";
+            this.InvDocFld.Name = "InvDocFld";
+            this.InvDocFld.Size = new System.Drawing.Size(481, 24);
+            this.InvDocFld.Text = "Приглашение: сформировать и показать в папке...";
+            this.InvDocFld.Click += new System.EventHandler(this.InvDocFld_Click);
             // 
             // InvDoWord
             // 
@@ -112,11 +117,11 @@
             this.contextMenuStrip2.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.contextMenuStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.InvDoWord,
-            this.приглашениеСформироватьИПоказатьВПапкеToolStripMenuItem,
-            this.гарантийноеПисьмоОткрытьВWordToolStripMenuItem,
-            this.гарантийноеПисьмоСформироватьИПоказатьВПапкеToolStripMenuItem,
-            this.подтверждениеОткрытьВWordToolStripMenuItem,
-            this.подтверждениеСформироватьИПоказатьВПапкеToolStripMenuItem,
+            this.InvDocFld,
+            this.InvDoWordLetter,
+            this.InvDoWordLetterFld,
+            this.DoWordConfirm,
+            this.DoWordConfirmFld,
             this.toolStripSeparator1,
             this.открытьОбщуюПапкуToolStripMenuItem});
             this.contextMenuStrip2.Name = "contextMenuStrip2";
@@ -195,16 +200,6 @@
             this.label1.Size = new System.Drawing.Size(136, 17);
             this.label1.TabIndex = 17;
             this.label1.Text = "Поиск по фамилии:";
-            // 
-            // comboBox1
-            // 
-            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.Simple;
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(154, 50);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(186, 24);
-            this.comboBox1.TabIndex = 16;
-            this.comboBox1.TextChanged += new System.EventHandler(this.comboBox1_TextChanged);
             // 
             // cmbInvFilter
             // 
@@ -307,11 +302,21 @@
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(151, 20);
             this.toolStripStatusLabel1.Text = "toolStripStatusLabel1";
             // 
+            // comboBox1
+            // 
+            this.comboBox1.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            this.comboBox1.Location = new System.Drawing.Point(154, 50);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(197, 22);
+            this.comboBox1.TabIndex = 25;
+            this.comboBox1.TextChanged += new System.EventHandler(this.comboBox1_TextChanged);
+            // 
             // InvForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1285, 666);
+            this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.button6);
             this.Controls.Add(this.button5);
@@ -320,7 +325,6 @@
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.cmbInvFilter);
             this.Controls.Add(this.btnAdd);
             this.Controls.Add(this.InvFilterGrid);
@@ -343,11 +347,11 @@
         #endregion
 
         private System.Windows.Forms.ToolStripMenuItem открытьОбщуюПапкуToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem подтверждениеСформироватьИПоказатьВПапкеToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem подтверждениеОткрытьВWordToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem гарантийноеПисьмоСформироватьИПоказатьВПапкеToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem гарантийноеПисьмоОткрытьВWordToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem приглашениеСформироватьИПоказатьВПапкеToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem DoWordConfirmFld;
+        private System.Windows.Forms.ToolStripMenuItem DoWordConfirm;
+        private System.Windows.Forms.ToolStripMenuItem InvDoWordLetterFld;
+        private System.Windows.Forms.ToolStripMenuItem InvDoWordLetter;
+        private System.Windows.Forms.ToolStripMenuItem InvDocFld;
         private System.Windows.Forms.ToolStripMenuItem InvDoWord;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip2;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
@@ -358,7 +362,6 @@
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.ComboBox cmbInvFilter;
         private System.Windows.Forms.Button btnAdd;
         private ADGV.AdvancedDataGridView InvFilterGrid;
@@ -370,5 +373,6 @@
         private System.Windows.Forms.ToolStripStatusLabel stCnt;
         private System.Windows.Forms.BindingSource bindingSource1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
+        private System.Windows.Forms.TextBox comboBox1;
     }
 }
