@@ -30,10 +30,10 @@ namespace Mig
                 pref.DBNAME = nl[0].InnerText;
                 nl = doc.GetElementsByTagName("HOST");
                 pref.HOST = nl[0].InnerText;
-                nl = doc.GetElementsByTagName("DBPORT");
-                pref.PORT = nl[0].InnerText;
-                nl = doc.GetElementsByTagName("MIGDATA");
-                pref.MIGDATA = nl[0].InnerText;
+               // nl = doc.GetElementsByTagName("DBPORT");
+               // pref.PORT = nl[0].InnerText;
+               // nl = doc.GetElementsByTagName("MIGDATA");
+               // pref.MIGDATA = nl[0].InnerText;
                 nl = doc.GetElementsByTagName("REPORTFOLDER");
                 pref.REPORTFOLDER = nl[0].InnerText;
                 nl = doc.GetElementsByTagName("NOTIFYTEMPLATE");
@@ -42,8 +42,16 @@ namespace Mig
                 int.TryParse(nl[0].InnerText, out pref.INVCHECKDUL);
                 nl = doc.GetElementsByTagName("INVREPORTFOLDER");
                 pref.INVREPORTFOLDER = nl[0].InnerText;
-                
-                pref.FULLREPORTPATCH = pref.MIGDATA + pref.REPORTFOLDER;
+                nl = doc.GetElementsByTagName("INVSTATUSARRIVED");
+                pref.INVSTATUSARRIVED = nl[0].InnerText;
+                nl = doc.GetElementsByTagName("INVSTATUSREJECTION");
+                pref.INVSTATUSREJECTION = nl[0].InnerText;
+                nl = doc.GetElementsByTagName("INVSTATUSSTAYBY");
+                pref.INVSTATUSSTAYBY = nl[0].InnerText;
+                nl = doc.GetElementsByTagName("INVSTATUSSTAYBYINT");
+                int.TryParse(nl[0].InnerText, out pref.INVSTATUSSTAYBYINT);
+               
+                //pref.FULLREPORTPATCH = pref.MIGDATA + pref.REPORTFOLDER;
             }
             catch (Exception e)
             {
@@ -58,9 +66,9 @@ namespace Mig
         public void Auth()
         {
             pref.AUTH = false;
-            // pref.CONSTR = String.Format("Server={0};Port={1};User Id={2};Password={3};Database={4};", pref.HOST, pref.PORT, pref.USER, pref.PASS, pref.DBNAME);
+            //pref.CONSTR = String.Format("Server={0};Port={1};User Id={2};Password={3};Database={4};", pref.HOST, pref.PORT, pref.USER, pref.PASS, pref.DBNAME);
             LoadXMLPreference();
-            DB.Open(pref.USER, pref.PASS, pref.HOST, pref.PORT, pref.DBNAME);              
+            DB.Open(pref.USER, pref.PASS, pref.HOST, pref.DBNAME);              
             pref.AUTH = true;
             Logger.Log.Info("Пользователь: " + pref.USER);    
             MessageBox.Show("Успешное подключение", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);

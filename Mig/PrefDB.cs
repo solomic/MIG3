@@ -31,12 +31,14 @@ namespace Mig
                 tDB.Text = nl[0].InnerText;
                 nl = doc.GetElementsByTagName("HOST");
                 tHost.Text = nl[0].InnerText;
-                nl = doc.GetElementsByTagName("DBPORT");
-                tPort.Text = nl[0].InnerText;
-                nl = doc.GetElementsByTagName("MIGDATA");
-                tMig.Text = nl[0].InnerText;
+                //nl = doc.GetElementsByTagName("DBPORT");
+                //tPort.Text = nl[0].InnerText;
+                //nl = doc.GetElementsByTagName("MIGDATA");
+                //tMig.Text = nl[0].InnerText;
                 nl = doc.GetElementsByTagName("REPORTFOLDER");
                 tRep.Text = nl[0].InnerText;
+                nl = doc.GetElementsByTagName("INVREPORTFOLDER");
+                tInvRep.Text = nl[0].InnerText;
             }
             catch (Exception err)
             {
@@ -58,10 +60,10 @@ namespace Mig
                 doc.Load(Application.StartupPath + @"\Pref\prefDB.xml");
                 doc.GetElementsByTagName("DBNAME")[0].InnerText = tDB.Text;
                 doc.GetElementsByTagName("HOST")[0].InnerText = tHost.Text;
-                doc.GetElementsByTagName("DBPORT")[0].InnerText = tPort.Text;
-                doc.GetElementsByTagName("MIGDATA")[0].InnerText = tMig.Text;
+                //doc.GetElementsByTagName("DBPORT")[0].InnerText = tPort.Text;
+                //doc.GetElementsByTagName("MIGDATA")[0].InnerText = tMig.Text;
                 doc.GetElementsByTagName("REPORTFOLDER")[0].InnerText = tRep.Text;
-
+                doc.GetElementsByTagName("INVREPORTFOLDER")[0].InnerText = tInvRep.Text;
                 doc.Save(Application.StartupPath + @"\Pref\prefDB.xml");
                 MessageBox.Show("Успешно сохранено", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
 

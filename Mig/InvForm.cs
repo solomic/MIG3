@@ -335,25 +335,19 @@ namespace Mig
             pref.ROWACTION = "EDIT";
             pref.INV_ID = Convert.ToInt32(InvFilterGrid.CurrentRow.Cells["Id"].Value);
             InvEdit fInvEdit = new InvEdit();
-            
-            fInvEdit.ShowDialog();
-            this.Activate();
-           
+
+            if (fInvEdit.ShowDialog() == DialogResult.OK)
+                InvFilterChange();
         }
 
         
 
         private void pmAdd_Click(object sender, EventArgs e)
-        {
-            //if (InvFilterGrid.SelectedRows.Count == 0)
-            //{
-            //    return;
-            //}
+        {          
             pref.ROWACTION = "ADD";
-            InvEdit fInvEdit = new InvEdit();            
-            fInvEdit.ShowDialog();
-            this.Activate();
-            InvFilterChange();
+            InvEdit fInvEdit = new InvEdit();
+            if (fInvEdit.ShowDialog() == DialogResult.OK)
+                InvFilterChange();
 
         }
 
@@ -366,9 +360,8 @@ namespace Mig
             pref.ROWACTION = "COPY";
             InvEdit fInvEdit = new InvEdit();            
             pref.INV_ID = Convert.ToInt32(InvFilterGrid.CurrentRow.Cells["Id"].Value);
-            fInvEdit.ShowDialog();
-            this.Activate();
-            InvFilterChange();
+            if (fInvEdit.ShowDialog() == DialogResult.OK)
+                InvFilterChange();
 
         }
 
@@ -388,12 +381,12 @@ namespace Mig
                 return;
             string recstate = InvFilterGrid.Rows[e.RowIndex].Cells["Статус"].Value.ToString();
             if (recstate == "Приехал")
-                InvFilterGrid.Rows[e.RowIndex].DefaultCellStyle.BackColor = System.Drawing.ColorTranslator.FromHtml("#64F556");
+                InvFilterGrid.Rows[e.RowIndex].DefaultCellStyle.BackColor = System.Drawing.ColorTranslator.FromHtml(pref.INVSTATUSARRIVED);
             if (recstate == "Не приехал(отказ)")
-                InvFilterGrid.Rows[e.RowIndex].DefaultCellStyle.BackColor = System.Drawing.ColorTranslator.FromHtml("#F65C5A");
-            if ((DateTime.Today.AddDays(30)>= Convert.ToDateTime(InvFilterGrid.Rows[e.RowIndex].Cells["Пребывание по"].Value)) && (recstate == "Оформление в ФМС" || recstate == "Получено из ФМС" || recstate == "Выдано/Отправлено"))
+                InvFilterGrid.Rows[e.RowIndex].DefaultCellStyle.BackColor = System.Drawing.ColorTranslator.FromHtml(pref.INVSTATUSREJECTION);
+            if ((DateTime.Today.AddDays(pref.INVSTATUSSTAYBYINT) >= Convert.ToDateTime(InvFilterGrid.Rows[e.RowIndex].Cells["Пребывание по"].Value)) && (recstate == "Оформление в ФМС" || recstate == "Получено из ФМС" || recstate == "Выдано/Отправлено"))
             {
-                InvFilterGrid.Rows[e.RowIndex].DefaultCellStyle.BackColor = System.Drawing.ColorTranslator.FromHtml("#ECF830");
+                InvFilterGrid.Rows[e.RowIndex].DefaultCellStyle.BackColor = System.Drawing.ColorTranslator.FromHtml(pref.INVSTATUSSTAYBY);
             }
             
         }

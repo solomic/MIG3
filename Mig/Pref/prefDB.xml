@@ -2,12 +2,14 @@
 <head>
 <Connection>
   <DBNAME>cmodb</DBNAME>
-  <DBPORT></DBPORT>
   <HOST>MYPC\SQLEXPRESS</HOST>
-  <MIGDATA>C:\MIG DATA\</MIGDATA>
-  <REPORTFOLDER>ДОКУМЕНТЫ\</REPORTFOLDER>
-  <INVREPORTFOLDER>C:\MIGDATA\ПРИГЛАШЕНИЯ\</INVREPORTFOLDER>
+  <REPORTFOLDER>C:\МИГ.Документы\Документы\</REPORTFOLDER>
+  <INVREPORTFOLDER>C:\МИГ.Документы\Приглашения\</INVREPORTFOLDER><!--путь до папки с отчетами --> 
   <NOTIFYTEMPLATE>xls</NOTIFYTEMPLATE>
   <INVCHECKDUL>18</INVCHECKDUL>
+  <INVSTATUSARRIVED>#64F556</INVSTATUSARRIVED><!--раскрасить:Приехал --> 
+  <INVSTATUSREJECTION>#F65C5A</INVSTATUSREJECTION><!-- раскрасить:Не приехал(отказ) --> 
+  <INVSTATUSSTAYBY>#ECF830</INVSTATUSSTAYBY><!-- раскрасить:Пребывание по -->
+  <INVSTATUSSTAYBYINT>30</INVSTATUSSTAYBYINT><!-- предупреждать за ... дней -->
 </Connection>
 </head>

@@ -604,8 +604,8 @@ namespace Mig
             try
             {
                 DataTable pfreq = DB.QueryTableMultipleParams(pref.PfRequest, new List<object> { pref.CONTACTID });
-                Directory.CreateDirectory(pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO);
-                string NewPath = pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO + ReportName;
+                Directory.CreateDirectory(pref.REPORTFOLDER + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO);
+                string NewPath = pref.REPORTFOLDER + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO + ReportName;
                 File.Copy(TemplatePath,NewPath );
                         
                 param.Add("change", s1);
@@ -645,8 +645,8 @@ namespace Mig
             {
                 
                 DataTable pfreq = DB.QueryTableMultipleParams(pref.PfRequest, new List<object> { pref.CONTACTID });
-                Directory.CreateDirectory(pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO);
-                string NewPath = pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO + ReportName;
+                Directory.CreateDirectory(pref.REPORTFOLDER + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO);
+                string NewPath = pref.REPORTFOLDER + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO + ReportName;
                 File.Copy(TemplatePath, NewPath);
 
                 param.Add("fio", FirstUpper( pfreq.Rows[0]["con_fio"].ToString()));
@@ -691,8 +691,8 @@ namespace Mig
             try
             {                
                 DataTable pfreq = DB.QueryTableMultipleParams(pref.PfRequest, new List<object> { pref.CONTACTID });
-                Directory.CreateDirectory(pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO);
-                string NewPath = pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO + ReportName;
+                Directory.CreateDirectory(pref.REPORTFOLDER + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO);
+                string NewPath = pref.REPORTFOLDER + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO + ReportName;
                 File.Copy(TemplatePath, NewPath);
 
                 param.Add("fio", FirstUpper(pfreq.Rows[0]["con_fio"].ToString()));                
@@ -747,10 +747,10 @@ namespace Mig
         //    DataTable pfreq = DB.QueryTableMultipleParams(pref.PfRequest, new List<object> { pref.CONTACTID });
             
 
-        //    string NewFile = pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO + ReportName;
+        //    string NewFile = pref.REPORTFOLDER + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO + ReportName;
 
 
-        //    Directory.CreateDirectory(pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO);
+        //    Directory.CreateDirectory(pref.REPORTFOLDER + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO);
         //    try
         //    {
         //        // BaseFont baseFont = BaseFont.CreateFont(pathFont, BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
@@ -1078,8 +1078,8 @@ namespace Mig
             try
             {                
                 DataTable pfreq = DB.QueryTableMultipleParams(pref.PfRequest, new List<object> { pref.CONTACTID });
-                Directory.CreateDirectory(pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO);
-                string NewPath = pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO + ReportName;
+                Directory.CreateDirectory(pref.REPORTFOLDER + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO);
+                string NewPath = pref.REPORTFOLDER + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO + ReportName;
                 File.Copy(TemplatePath, NewPath);
 
                 param.Add("fio", FirstUpper( pfreq.Rows[0]["con_fio"].ToString()));
@@ -1126,8 +1126,8 @@ namespace Mig
             try
             {
                 DataTable pfreq = DB.QueryTableMultipleParams(pref.PfRequest, new List<object> { pref.CONTACTID });
-                Directory.CreateDirectory(pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO);
-                string NewPath = pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO + ReportName;   //Путь к заполненному шаблону
+                Directory.CreateDirectory(pref.REPORTFOLDER + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO);
+                string NewPath = pref.REPORTFOLDER + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO + ReportName;   //Путь к заполненному шаблону
                 File.Copy(TemplatePath, NewPath);
 
                 param.Add("fio",FirstUpper(pfreq.Rows[0]["con_fio"].ToString()));
@@ -1162,8 +1162,8 @@ namespace Mig
             try
             {
                 DataTable pfreq = DB.QueryTableMultipleParams(pref.PfRequest, new List<object> { pref.CONTACTID });
-                Directory.CreateDirectory(pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO);
-                string NewPath = pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO + ReportName;   //Путь к заполненному шаблону
+                Directory.CreateDirectory(pref.REPORTFOLDER + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO);
+                string NewPath = pref.REPORTFOLDER + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO + ReportName;   //Путь к заполненному шаблону
                 File.Copy(TemplatePath, NewPath);
 
                 if (s1 == 0 )
@@ -1306,8 +1306,8 @@ namespace Mig
             try
             {
                 DataTable pfreq = DB.QueryTableMultipleParams(pref.PfRequest, new List<object> { pref.CONTACTID });
-                Directory.CreateDirectory(pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO);
-                string NewPath = pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO + ReportName;
+                Directory.CreateDirectory(pref.REPORTFOLDER + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO);
+                string NewPath = pref.REPORTFOLDER + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO + ReportName;
                 File.Copy(TemplatePath, NewPath);
                
                 param.Add("change",s1);
@@ -1351,8 +1351,8 @@ namespace Mig
             try
             {            
                 DataTable pfreq = DB.QueryTableMultipleParams(pref.PfRequest, new List<object> { pref.CONTACTID });
-                Directory.CreateDirectory(pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO);
-                string NewPath = pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO + ReportName;
+                Directory.CreateDirectory(pref.REPORTFOLDER + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO);
+                string NewPath = pref.REPORTFOLDER + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO + ReportName;
                 File.Copy(TemplatePath, NewPath);
 
                 if (pfreq.Rows[0]["con_sex"].ToString() == "МУЖСКОЙ")
@@ -1401,8 +1401,8 @@ namespace Mig
             try
             {                
                 DataTable pfreq = DB.QueryTableMultipleParams(pref.PfRequest, new List<object> { pref.CONTACTID });
-                Directory.CreateDirectory(pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO);
-                string NewPath = pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO + ReportName;
+                Directory.CreateDirectory(pref.REPORTFOLDER + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO);
+                string NewPath = pref.REPORTFOLDER + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO + ReportName;
 
                 TemplateName = "VISA.PETITION.docx";
                 //if (pfreq.Rows[0]["teach_fp"].ToString() == "НАПРАВЛЕНИЕ")
@@ -1561,8 +1561,8 @@ namespace Mig
             try
             {                
                 DataTable pfreq = DB.QueryTableMultipleParams(pref.PfRequest, new List<object> { pref.CONTACTID });
-                Directory.CreateDirectory(pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO);
-                string NewPath = pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO + ReportName;
+                Directory.CreateDirectory(pref.REPORTFOLDER + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO);
+                string NewPath = pref.REPORTFOLDER + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO + ReportName;
                 File.Copy(TemplatePath, NewPath);
 
                 param.Add("gr",pfreq.Rows[0]["gr"].ToString());
@@ -1607,8 +1607,8 @@ namespace Mig
             {
                 
                 DataTable pfreq = DB.QueryTableMultipleParams(pref.PfRequest, new List<object> { pref.CONTACTID });
-                Directory.CreateDirectory(pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO);
-                string NewPath = pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO + ReportName;
+                Directory.CreateDirectory(pref.REPORTFOLDER + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO);
+                string NewPath = pref.REPORTFOLDER + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO + ReportName;
                 File.Copy(TemplatePath, NewPath);
 
                 param.Add("gr", pfreq.Rows[0]["gr"].ToString());
@@ -1657,8 +1657,8 @@ namespace Mig
             try
             {
                 DataTable pfreq = DB.QueryTableMultipleParams(pref.PfRequest, new List<object> { pref.CONTACTID });
-                Directory.CreateDirectory(pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO);
-                string NewPath = pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO + ReportName;
+                Directory.CreateDirectory(pref.REPORTFOLDER + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO);
+                string NewPath = pref.REPORTFOLDER + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO + ReportName;
 
                 TemplateName = "Anketa.docx";
                 
@@ -2046,9 +2046,9 @@ namespace Mig
             }
             DataTable pfreq = DB.QueryTableMultipleParams(pref.PfRequest, new List<object> { pref.CONTACTID });
 
-            string NewFile = pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO + ReportName;
+            string NewFile = pref.REPORTFOLDER + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO + ReportName;
 
-            Directory.CreateDirectory(pref.FULLREPORTPATCH + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO);
+            Directory.CreateDirectory(pref.REPORTFOLDER + pfreq.Rows[0]["con_nat"].ToString().ToUpper() + @"\" + pref.CONFIO);
             File.Copy(TemplatePath, NewFile, true);
            
             XLWorkbook excelApp1XML = new ClosedXML.Excel.XLWorkbook(NewFile);

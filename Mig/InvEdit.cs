@@ -220,9 +220,9 @@ namespace Mig
         private void BitBtn1_Click(object sender, EventArgs e)
         {
             string msg = "";
-            string d;
-            int l, i, con_id;
-            string resname;
+            //string d;
+            //int l, i, con_id;
+            //string resname;
             ////проверка на 18 мес
             //try
             //{
@@ -240,9 +240,8 @@ namespace Mig
             if (lValid.Visible)
                  MessageBox.Show("Срок действия паспорта меньше установленного срока!!!", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-
-                if (string.IsNullOrEmpty(DBDateTimeEditEh1.SelectedDate ))
-                msg += ("  От" + Environment.NewLine);
+            if (string.IsNullOrEmpty(DBDateTimeEditEh1.SelectedDate ))
+            msg += ("  От" + Environment.NewLine);
             if (string.IsNullOrEmpty(DBDateTimeEditEh2.SelectedDate))
                 msg+= ("  Желательно оформить до" + Environment.NewLine);
             if (ComboBox9.Text == "" )

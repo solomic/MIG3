@@ -11,31 +11,39 @@ namespace Pref
     {
         public static string USER = "ERUDENKO";
         public static string PASS = "ERUDENKO";
-        public static string PORT = "5432";
+        //public static string PORT = "5432";
         public static string HOST = "localhost";
-        public static string DBNAME = "CMO 2017";
-        public static string DEFAULT_PROGRAM = "";
+        public static string DBNAME = "cmodb";
+        //public static string DEFAULT_PROGRAM = "";
         public static bool AUTH = false;
         public static int CONTACTID = 0;
         public static int CURROW = 0;
-        public static string MIGDATA = @"C:\MIG DATA\";
-        public static string REPORTFOLDER = @"REPORT\";
+        //public static string MIGDATA = @"C:\MIG DATA\";
+        public static string REPORTFOLDER = @"C:\MIG DATA\REPORT\";
         public static string CONFIO = "";
         public static string CONNAT = "";
-        public static string FULLREPORTPATCH = "";
-        public static string SUBPROGRAM = "";
+        //public static string FULLREPORTPATCH = "";
+        //public static string SUBPROGRAM = "";
         //public static string POSITION = "";
         public static string NOTIFYTEMPLATE = "";
         public static string CONSTR = "";
         public static string DELEGATE = "N";
         public static int FLTCODE = 99;
-        public static string INVFLTNAME = "<>";
-        public static int INVWORKDAY = 20;
-        public static int INV_ID;
-        public static int INV_CONTACT_EDIT;
+
+        //Приглашения
+        public static string INVFLTNAME = "<>"; //текущий выбранный фильтр
+        public static int INVWORKDAY = 20; //срок когда приглашение будет готово, из настроек
+        public static int INV_ID; // id записи приглашения
+        public static int INV_CONTACT_EDIT; //id контакта
         public static string ROWACTION;
         public static int INVCHECKDUL;
-        public static string INVREPORTFOLDER;
+        public static string INVREPORTFOLDER;//полный путь до папки с отчетами, из настроек
+
+        //Приглашения - раскраска грида
+        public static string INVSTATUSARRIVED = "#64F556";
+        public static string INVSTATUSREJECTION = "#F65C5A";
+        public static string INVSTATUSSTAYBY = "#ECF830";
+        public static int INVSTATUSSTAYBYINT = 30;  //предупреждать за ... дней
 
         /*СПРАВОЧНИКИ*/
         public static string FO = "SELECT  code, value FROM cmodb.lov where type='FO'  ORDER BY ord;";

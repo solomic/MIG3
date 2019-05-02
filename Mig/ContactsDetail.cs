@@ -11,6 +11,7 @@ using Pref;
 using System.Diagnostics;
 using System.IO;
 using System.Data.SqlClient;
+using System.Reflection;
 
 namespace Mig
 {
@@ -19,11 +20,29 @@ namespace Mig
         public string GETNOW = DateTime.Now.ToString("yyyyMMdd_HHmmss");
         public string ClassName = "Class: fContactDetail.cs\n";
         public string DULState = "";
-       
+
+        void SetDoubleBuffered(Control c, bool value)
+        {
+            PropertyInfo pi = typeof(Control).GetProperty("DoubleBuffered", BindingFlags.SetProperty | BindingFlags.Instance | BindingFlags.NonPublic);
+            if (pi != null)
+            {
+                pi.SetValue(c, value, null);
+            }
+        }
 
         public fContactDetail()
         {
             InitializeComponent();
+            SetDoubleBuffered(dgDocSel, true);
+            SetDoubleBuffered(dgMigrHist, true);
+            SetDoubleBuffered(DULdataGridView, true);
+            SetDoubleBuffered(dgTeach, true);
+            SetDoubleBuffered(dgAgreeHist, true);
+            SetDoubleBuffered(dgExpellHist, true);
+            SetDoubleBuffered(dgAddrHist, true);
+            SetDoubleBuffered(dgEntryHist, true);
+            SetDoubleBuffered(dgChild, true);
+            
         }
       
         //public void LoadDelegate()
@@ -534,7 +553,7 @@ namespace Mig
             {
                 if (dgPf.SelectedRows.Count != 0)
                 {
-                    Process.Start(pref.FULLREPORTPATCH + pref.CONNAT+"\\"+pref.CONFIO + dgPf.CurrentRow.Cells["name"].Value);
+                    Process.Start(pref.REPORTFOLDER + pref.CONNAT+"\\"+pref.CONFIO + dgPf.CurrentRow.Cells["name"].Value);
                 }
             }
             catch(Exception msg)
@@ -2160,7 +2179,7 @@ namespace Mig
                     try
                     {
                         //временно отключаю
-                        //File.Delete(pref.FULLREPORTPATCH + pref.CONNAT + "\\" + pref.CONFIO + dgPf.CurrentRow.Cells["name"].Value);
+                        //File.Delete(pref.REPORTFOLDER + pref.CONNAT + "\\" + pref.CONFIO + dgPf.CurrentRow.Cells["name"].Value);
                     }
                     catch (Exception ex) { }
                     LoadPf();

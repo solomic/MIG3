@@ -153,12 +153,12 @@ namespace Mig
 
         }
 
-        static public void Open(string pUser,string pPassword,string pDS, string pIC,string pDatabase)
+        static public void Open(string pUser,string pPassword,string pHost,string pDatabase)
         {
             try
             {
                 //string connstring = String.Format("Server={0};Port={1};User Id={2};Password={3};Database={4};", pHost, pPort, pUser, pPassword, pDatabase);
-                string connstring = String.Format("Server={0};Database={1};User ID={2};Password={3}", pDS, pDatabase, pUser, pPassword);
+                string connstring = String.Format("Server={0};Database={1};User ID={2};Password={3}", pHost, pDatabase, pUser, pPassword);
                 //Data Source=MYPC\SQLEXPRESS;Initial Catalog=cmodb;User ID=sa;Password=***********
                 conn = new SqlConnection (connstring);
                 conn.Open();
