@@ -251,16 +251,24 @@ namespace Mig
 
                 dataGridView1.Columns["warning"].HeaderText = "Предупреждения";
                 dataGridView1.Columns["warning"].DisplayIndex = 0;
-                dataGridView1.Columns["contact_id"].Visible = false;
-                dataGridView1.Columns["graduate"].Visible = false;
-                dataGridView1.Columns["deduct"].Visible = false;
-                dataGridView1.Columns["reg_extend"].Visible = false;
-                dataGridView1.Columns["doc"].Visible = false;
-
-                dataGridView1.Columns["dng"].Visible = false;
-                dataGridView1.Columns["dngmes"].Visible = false;
-                dataGridView1.Columns["rs_ten"].Visible = false;
-                dataGridView1.Columns["rs_ent"].Visible = false;
+                if (dataGridView1.Columns.Contains("contact_id"))
+                    dataGridView1.Columns["contact_id"].Visible = false;
+                if (dataGridView1.Columns.Contains("graduate"))
+                    dataGridView1.Columns["graduate"].Visible = false;
+                if (dataGridView1.Columns.Contains("deduct"))
+                    dataGridView1.Columns["deduct"].Visible = false;
+                if (dataGridView1.Columns.Contains("reg_extend"))
+                    dataGridView1.Columns["reg_extend"].Visible = false;
+                if (dataGridView1.Columns.Contains("doc"))
+                    dataGridView1.Columns["doc"].Visible = false;
+                if (dataGridView1.Columns.Contains("dng"))
+                    dataGridView1.Columns["dng"].Visible = false;
+                if (dataGridView1.Columns.Contains("dngmes"))
+                    dataGridView1.Columns["dngmes"].Visible = false;
+                if (dataGridView1.Columns.Contains("rs_ten"))
+                    dataGridView1.Columns["rs_ten"].Visible = false;
+                if (dataGridView1.Columns.Contains("rs_ent"))
+                    dataGridView1.Columns["rs_ent"].Visible = false;
                 if (dataGridView1.Columns.Contains("pass_expire"))
                     dataGridView1.Columns["pass_expire"].Visible = false;
                 if (dataGridView1.Columns.Contains("med_to_calc"))
@@ -394,12 +402,7 @@ namespace Mig
                    " type=@type,updated=GETDATE(),updated_by=SYSTEM_USER " +
                    "  WHERE contact_id IN ("+String.Join(",", ids)+ "); ";
                 cmd.CommandText = sql;
-                cmd.Parameters.Clear();
-                //SqlParameter arpar = new SqlParameter();
-                //arpar.ParameterName = "contact_id";
-                //arpar.SqlDbType = SqlDbType.Int;
-                //arpar.Value = String.Join(",", ids);
-                //cmd.Parameters.Add(arpar);
+                cmd.Parameters.Clear();               
                 cmd.Parameters.AddWithValue("type", type);
                 cmd.ExecuteNonQuery();
                 transaction.Commit();
@@ -425,12 +428,7 @@ namespace Mig
                    " reg_extend=@reg_extend,updated=GETDATE(),updated_by=SYSTEM_USER " +
                    "  WHERE contact_id IN (" + String.Join(",", ids) + "); ";
                 cmd.CommandText = sql;
-                cmd.Parameters.Clear();
-                //SqlParameter arpar = new SqlParameter();
-                //arpar.ParameterName = "contact_id";
-                //arpar.SqlDbType = SqlDbType.VarChar;
-                //arpar.Value = String.Join(",", ids);
-                //cmd.Parameters.Add(arpar);                           
+                cmd.Parameters.Clear();                                      
                 cmd.Parameters.AddWithValue("reg_extend", type);
                 cmd.ExecuteNonQuery();
                 transaction.Commit();
@@ -458,12 +456,7 @@ namespace Mig
                    " deduct=@type,updated=GETDATE(),updated_by=SYSTEM_USER " +
                    "  WHERE contact_id IN (" + String.Join(",", ids) + "); ";
                 cmd.CommandText = sql;
-                cmd.Parameters.Clear();
-                //SqlParameter arpar = new SqlParameter();
-                //arpar.ParameterName = "contact_id";
-                //arpar.SqlDbType = SqlDbType.VarChar;
-                //arpar.Value = String.Join(",", ids);
-                //cmd.Parameters.Add(arpar);
+                cmd.Parameters.Clear();                
                 cmd.Parameters.AddWithValue("type", type);
                 cmd.ExecuteNonQuery();
                 transaction.Commit();
@@ -490,12 +483,7 @@ namespace Mig
                    " rf=@type,updated=GETDATE(),updated_by=SYSTEM_USER " +
                    "  WHERE contact_id IN (" + String.Join(",", ids) + "); ";
                 cmd.CommandText = sql;
-                cmd.Parameters.Clear();
-                //SqlParameter arpar = new SqlParameter();
-                //arpar.ParameterName = "contact_id";
-                //arpar.SqlDbType = SqlDbType.VarChar;
-                //arpar.Value = String.Join(",", ids);
-                //cmd.Parameters.Add(arpar);
+                cmd.Parameters.Clear();               
                 cmd.Parameters.AddWithValue("type", type);
                 cmd.ExecuteNonQuery();
                 transaction.Commit();
@@ -523,12 +511,7 @@ namespace Mig
                    " doc_state=@doc,date_entry_future=@date_entry_future,updated=GETDATE(),updated_by=SYSTEM_USER " +
                    "  WHERE contact_id IN (" + String.Join(",", ids) + "); ";
                 cmd.CommandText = sql;
-                cmd.Parameters.Clear();
-                //SqlParameter arpar = new SqlParameter();
-                //arpar.ParameterName = "contact_id";
-                //arpar.SqlDbType = SqlDbType.VarChar;
-                //arpar.Value = String.Join(",", ids);
-                //cmd.Parameters.Add(arpar);
+                cmd.Parameters.Clear();                
                 cmd.Parameters.AddWithValue("doc", type);
                 if (dt == "")
                     cmd.Parameters.AddWithValue("date_entry_future", DBNull.Value);

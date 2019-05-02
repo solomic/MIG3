@@ -1757,15 +1757,7 @@ namespace Mig
             }
         }
 
-        private void toolStripButton20_Click(object sender, EventArgs e)
-        {
-           
-        }
-
-        private void toolStripButton21_Click(object sender, EventArgs e)
-        {
-           
-        }
+       
 
         private void toolStripButton30_Click_1(object sender, EventArgs e)
         {
