@@ -141,7 +141,7 @@ namespace Mig
             {
                 cmbInvFilter.Items.Clear();
                 this.cmbInvFilter.SelectedValueChanged -= new System.EventHandler(this.cmbFilter_SelectedValueChanged);
-                cmbInvFilter.DataSource = DB.QueryTableMultipleParams("select [Name] from [Inventation].[FILTER]", null);
+                cmbInvFilter.DataSource = DB.QueryTableMultipleParams("select [Name] from [Inventation].[FILTER] order by [Ord]", null);
                 cmbInvFilter.SelectedIndex = -1;
                 this.cmbInvFilter.SelectedValueChanged += new System.EventHandler(this.cmbFilter_SelectedValueChanged);
             }
