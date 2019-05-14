@@ -11,6 +11,7 @@ namespace Pref
     {
         public static string USER = "ERUDENKO";
         public static string PASS = "ERUDENKO";
+        public static string USERLIST = "";
         //public static string PORT = "5432";
         public static string HOST = "localhost";
         public static string DBNAME = "cmodb";

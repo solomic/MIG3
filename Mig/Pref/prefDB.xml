@@ -11,5 +11,6 @@
   <INVSTATUSREJECTION>#F65C5A</INVSTATUSREJECTION><!-- раскрасить:Не приехал(отказ) --> 
   <INVSTATUSSTAYBY>#ECF830</INVSTATUSSTAYBY><!-- раскрасить:Пребывание по -->
   <INVSTATUSSTAYBYINT>30</INVSTATUSSTAYBYINT><!-- предупреждать за ... дней -->
+  <USERLIST>ERUDENKO,OLYA,LENA</USERLIST>  
 </Connection>
 </head>

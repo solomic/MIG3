@@ -17,7 +17,7 @@ namespace Mig
         public string ClassName = "Class: Auth.cs\n";
         public fAuth()
         {
-            InitializeComponent();
+            InitializeComponent();            
         }
         public void LoadXMLPreference()
         {
@@ -50,7 +50,8 @@ namespace Mig
                 pref.INVSTATUSSTAYBY = nl[0].InnerText;
                 nl = doc.GetElementsByTagName("INVSTATUSSTAYBYINT");
                 int.TryParse(nl[0].InnerText, out pref.INVSTATUSSTAYBYINT);
-               
+                nl = doc.GetElementsByTagName("USERLIST");
+                pref.USERLIST = nl[0].InnerText;
                 //pref.FULLREPORTPATCH = pref.MIGDATA + pref.REPORTFOLDER;
             }
             catch (Exception e)
@@ -66,8 +67,7 @@ namespace Mig
         public void Auth()
         {
             pref.AUTH = false;
-            //pref.CONSTR = String.Format("Server={0};Port={1};User Id={2};Password={3};Database={4};", pref.HOST, pref.PORT, pref.USER, pref.PASS, pref.DBNAME);
-            LoadXMLPreference();
+           // LoadXMLPreference();
             DB.Open(pref.USER, pref.PASS, pref.HOST, pref.DBNAME);              
             pref.AUTH = true;
             Logger.Log.Info("Пользователь: " + pref.USER);    
@@ -91,8 +91,20 @@ namespace Mig
 
         }
 
-       
+        
 
-       
+        private void fAuth_Load(object sender, EventArgs e)
+        {
+            try
+            {
+                LoadXMLPreference();
+                comboBox1.Items.Clear();
+                comboBox1.Items.AddRange(pref.USERLIST.Split(','));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
     }
 }
