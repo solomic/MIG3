@@ -1,6 +1,7 @@
 ﻿using Pref;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,7 +23,53 @@ namespace Mig
     public static class XMLMeth
     {
         static string ClassName = "XMLMeth";
-        static public void SaveColumnOrderXml(Dictionary<string, List<ColumnOrderItem>> dct)
+        public static Dictionary<string, List<ColumnOrderItem>> LoadColumnOrderXml(string path,string name)
+        {
+            Dictionary<string, List<ColumnOrderItem>> d = new Dictionary<string, List<ColumnOrderItem>>();
+            XmlDocument xmlDoc = new XmlDocument();
+            try
+            {
+                //string filename = Application.StartupPath + @"\Pref\" + pref.USER + "_filters.xml";
+                string filename = path + @"\"+ name + "_filters.xml";
+                if (File.Exists(filename))
+                {
+                    xmlDoc.Load(filename);
+                    foreach (XmlNode childnode in xmlDoc.ChildNodes)
+                    {
+                        //Console.WriteLine(childnode.Name);
+                        if (childnode.Name == "pref")
+                        {
+                            //цикл по фильтрам <filter>
+                            foreach (XmlNode cn1 in childnode.ChildNodes)
+                            {
+                                //Console.WriteLine(cn1.Name);
+                                List<ColumnOrderItem> columnOrder = new List<ColumnOrderItem>();
+                                foreach (XmlNode colitems in cn1.ChildNodes)
+                                {
+                                    columnOrder.Add(new ColumnOrderItem
+                                    {
+                                        ColumnIndex = Convert.ToInt16(colitems.Attributes["ColumnIndex"].Value),
+                                        DisplayIndex = Convert.ToInt16(colitems.Attributes["DisplayIndex"].Value),
+                                        Visible = Convert.ToBoolean(colitems.Attributes["Visible"].Value),
+                                        Width = Convert.ToInt16(colitems.Attributes["Width"].Value),
+                                        ColumnName = colitems.Attributes["ColumnName"].Value
+
+                                    });
+                                }
+                                d.Add(cn1.Attributes["name"].Value, columnOrder);
+                            }
+
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log.Error(ClassName + "Function:LoadColumnOrderXml\n Error:" + ex.ToString());
+            }
+            return d;
+        }
+        static public void SaveColumnOrderXml(Dictionary<string, List<ColumnOrderItem>> dct, string path, string name)
         {
             XmlDocument xmlDoc = new XmlDocument();
             try
@@ -66,7 +113,7 @@ namespace Mig
                 XmlDeclaration dcl;
                 dcl = xmlDoc.CreateXmlDeclaration("1.0", "UTF-8", "yes");
                 xmlDoc.InsertBefore(dcl, rootNode);
-                xmlDoc.Save(Application.StartupPath + @"\Pref\" + pref.USER + "_filters.xml");
+                xmlDoc.Save(path + @"\" + name + "_filters.xml");
             }
             catch (Exception ex)
             {

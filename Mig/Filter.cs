@@ -22,65 +22,14 @@ namespace Mig
       
         public Dictionary<string, List<ColumnOrderItem>> ColumnOrderFlt;
 
-        
-        public Dictionary<string, List<ColumnOrderItem>> LoadColumnOrderXml()
-        {
-            Dictionary<string, List<ColumnOrderItem>> d = new Dictionary<string, List<ColumnOrderItem>>();
-            XmlDocument xmlDoc = new XmlDocument();
-            try
-            {
-                string filename = Application.StartupPath + @"\Pref\" + pref.USER + "_filters.xml";
-                if (File.Exists(filename))
-                { 
-                        xmlDoc.Load(filename);
-                        foreach (XmlNode childnode in xmlDoc.ChildNodes)
-                        {
-                            //Console.WriteLine(childnode.Name);
-                            if (childnode.Name == "pref")
-                            {
-                                //цикл по фильтрам <filter>
-                                foreach (XmlNode cn1 in childnode.ChildNodes)
-                                {
-                                    //Console.WriteLine(cn1.Name);
-                                    List<ColumnOrderItem> columnOrder = new List<ColumnOrderItem>();
-                                    foreach (XmlNode colitems in cn1.ChildNodes)
-                                    {
-                                        columnOrder.Add(new ColumnOrderItem
-                                        {
-                                            ColumnIndex = Convert.ToInt16(colitems.Attributes["ColumnIndex"].Value),
-                                            DisplayIndex = Convert.ToInt16(colitems.Attributes["DisplayIndex"].Value),
-                                            Visible = Convert.ToBoolean(colitems.Attributes["Visible"].Value),
-                                            Width = Convert.ToInt16(colitems.Attributes["Width"].Value),
-                                            ColumnName = colitems.Attributes["ColumnName"].Value
-                                            
-                                        });
-                                    }
-                                    d.Add(cn1.Attributes["name"].Value, columnOrder);
-                                }
-
-                            }
-                        }
-                }
-            }
-            catch(Exception ex)
-            {
-                Logger.Log.Error(ClassName + "Function:LoadColumnOrderXml\n Error:" + ex.ToString());
-            }
-            return d;
-        }
-
         private void SetColumnOrder()
         {
 
             try
-            {
-                //if (!gfDataGridViewSetting.Default.ColumnOrder.ContainsKey(pref.USER + " " + cmbFilter.Text))
-                //    return;
+            {               
                 if (!ColumnOrderFlt.ContainsKey(cmbFilter.Text))
                     return;
-
-                //List<ColumnOrderItem> columnOrder =
-                //    gfDataGridViewSetting.Default.ColumnOrder[pref.USER + " " + cmbFilter.Text];
+                
                 List<ColumnOrderItem> columnOrder =  ColumnOrderFlt[cmbFilter.Text];
 
                 if (columnOrder != null)
@@ -136,7 +85,7 @@ namespace Mig
                         });
                     }
                     ColumnOrderFlt[cmbFilter.Text] = columnOrder;
-                    XMLMeth.SaveColumnOrderXml(ColumnOrderFlt);
+                    XMLMeth.SaveColumnOrderXml(ColumnOrderFlt, Application.StartupPath + @"\Pref",pref.USER);
                   
                 }
             }
@@ -1019,7 +968,7 @@ namespace Mig
                 {
                     this.Text += " ("+pref.DBNAME+")";
                     DirectMenu(true);
-                    ColumnOrderFlt = LoadColumnOrderXml();
+                    ColumnOrderFlt = XMLMeth.LoadColumnOrderXml(Application.StartupPath + @"\Pref", pref.USER);
                     FilterLoad();
                 }
             }
@@ -1074,7 +1023,7 @@ namespace Mig
             fFilterColumnEditForm = null;
 
 
-            ColumnOrderFlt = LoadColumnOrderXml();
+            ColumnOrderFlt = XMLMeth.LoadColumnOrderXml(Application.StartupPath + @"\Pref", pref.USER);
             comboBox1_SelectedValueChanged(this, null);
             
         }
@@ -1085,7 +1034,7 @@ namespace Mig
             if (!ColumnOrderFlt.ContainsKey(cmbFilter.Text))
                 return;
             ColumnOrderFlt[cmbFilter.Text] = null;
-            XMLMeth.SaveColumnOrderXml(ColumnOrderFlt);
+            XMLMeth.SaveColumnOrderXml(ColumnOrderFlt, Application.StartupPath + @"\Pref", pref.USER);
             FilterRefresh();
         }
 

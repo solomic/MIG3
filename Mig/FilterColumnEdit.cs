@@ -229,7 +229,7 @@ namespace Mig
                         k++;
                     }
                     dct[cmbAllFilter.Text] = columnOrder;
-                    XMLMeth.SaveColumnOrderXml(dct);
+                    XMLMeth.SaveColumnOrderXml(dct, Application.StartupPath + @"\Pref", pref.USER);
 
                     //----------
                     string expr = "";
