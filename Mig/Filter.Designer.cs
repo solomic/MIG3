@@ -475,7 +475,7 @@
             this.tpBackup.Name = "tpBackup";
             this.tpBackup.Size = new System.Drawing.Size(226, 26);
             this.tpBackup.Text = "Резервная копия БД";
-            this.tpBackup.Click += new System.EventHandler(this.tpBackup_Click);
+            
             // 
             // tpSync
             // 
@@ -483,7 +483,7 @@
             this.tpSync.Size = new System.Drawing.Size(226, 26);
             this.tpSync.Text = "Синхронизация";
             this.tpSync.Visible = false;
-            this.tpSync.Click += new System.EventHandler(this.tpSync_Click);
+            
             // 
             // btnConnectPref
             // 
