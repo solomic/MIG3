@@ -108,40 +108,7 @@ namespace Mig
                 elem = nextElem;
             }
             
-            //while (elem != null && !(elem is BookmarkEnd))
-            //{
-            //    if(elem is Text)
-            //    {
-            //        break;
-            //    }
-            //    OpenXmlElement nextElem = elem.NextSibling();
-            //    elem.Remove();
-            //    elem = nextElem;
-            //}
-            //Run run = new Run();
-            //Text currLine = new Text(text);
-            //run.AppendChild<Text>(currLine);
-            //RunProperties runProp = new RunProperties();          
-            //FontSize size = new FontSize();
-            //RunFonts fnt = new RunFonts();
-            //fnt.Ascii = "Times New Roman";
-            //size.Val = new StringValue(sz);           
-            //runProp.Append(size);
-            //runProp.Append(fnt);
-            //run.PrependChild<RunProperties>(runProp);
-            //bookmarkStart.Parent.InsertAfter<Run> (run, bookmarkStart);
-
-            //Run run = new Run();
-            //RunProperties runProperties = new RunProperties();
-            //FontSize fontSize = new FontSize() { Val = "22" };
-            //RunFonts runFonts = new RunFonts() { Ascii = "Times New Roman" };
-            //runProperties.Append(fontSize);
-            //runProperties.Append(runFonts);
-            //Text text = new Text();
-            //text.Text = in_text;
-            //run.Append(runProperties);
-            //run.Append(text);
-            //bookmarkStart.InsertAfterSelf(run);
+           
         }
 
 
@@ -194,7 +161,7 @@ namespace Mig
             {
                 DataTable pfreq = DB.QueryTableMultipleParams("SELECT * FROM [Inventation].[Inv] WHERE [Id]=@param1", new List<object> { invId });
                 int con_id = Convert.ToInt32(pfreq.Rows[0]["Contact Id"]);
-                 DataTable pfreqcon = DB.QueryTableMultipleParams("SELECT * FROM [Inventation].[Contact] WHERE [Id]=@param1", new List<object> { con_id });
+                DataTable pfreqcon = DB.QueryTableMultipleParams("SELECT * FROM [Inventation].[Contact] WHERE [Id]=@param1", new List<object> { con_id });
                 DateTime createdt = Convert.ToDateTime(pfreq.Rows[0]["Create Dt"]);
                 string path = pref.INVREPORTFOLDER + createdt.ToString("yyyy") + @"\" + createdt.ToString("yyyy_MM_dd");
                 Directory.CreateDirectory(path);
