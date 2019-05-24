@@ -1007,8 +1007,8 @@ namespace Mig
         }
         public void LoadVisaExtDate()
         {
-            tdelivery_dt.Text = DB.GetTableValue("select CONVERT(varchar(10),a.delivery_dt,104) from \"cmodb\".\"contact\" a where a.contact_id=@param1", new List<object> {pref.CONTACTID });
-            tdate_entry_future.Text = DB.GetTableValue("select CONVERT(varchar(10),a.date_entry_future,104) from \"cmodb\".\"contact\" a where a.contact_id=@param1", new List<object> { pref.CONTACTID });
+            tdelivery_dt.Text = DB.GetTableValue("select CONVERT(varchar(10),a.delivery_dt,104) from [cmodb].[contact] a where a.contact_id=@param1", new List<object> {pref.CONTACTID });
+            tdate_entry_future.Text = DB.GetTableValue("select CONVERT(varchar(10),a.date_entry_future,104) from [cmodb].[contact] a where a.contact_id=@param1", new List<object> { pref.CONTACTID });
         }
 
         private void toolStripButton23_Click(object sender, EventArgs e)

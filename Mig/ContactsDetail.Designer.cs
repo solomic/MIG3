@@ -82,6 +82,10 @@
             this.btnSaveContactEx = new System.Windows.Forms.ToolStripButton();
             this.btnUndoContactEx = new System.Windows.Forms.ToolStripButton();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.label22 = new System.Windows.Forms.Label();
+            this.label21 = new System.Windows.Forms.Label();
+            this.med_to = new Mig.datetimepicker.myDatePicker();
+            this.med_fr = new Mig.datetimepicker.myDatePicker();
             this.cmbPosition = new System.Windows.Forms.ComboBox();
             this.label49 = new System.Windows.Forms.Label();
             this.label48 = new System.Windows.Forms.Label();
@@ -230,6 +234,7 @@
             this.toolStripSeparator15 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButton12 = new System.Windows.Forms.ToolStripButton();
             this.tDelLast = new System.Windows.Forms.TextBox();
+            this.tDelIssue = new Mig.datetimepicker.myDatePicker();
             this.label56 = new System.Windows.Forms.Label();
             this.label55 = new System.Windows.Forms.Label();
             this.cmbDelNat = new System.Windows.Forms.ComboBox();
@@ -289,16 +294,11 @@
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.lyear = new System.Windows.Forms.Label();
+            this.dBirthDate = new Mig.datetimepicker.myDatePicker();
             this.tBirthTown = new System.Windows.Forms.ComboBox();
             this.cmbBirthCountry = new System.Windows.Forms.ComboBox();
             this.cmbNat = new System.Windows.Forms.ComboBox();
             this.cmbSex = new System.Windows.Forms.ComboBox();
-            this.label21 = new System.Windows.Forms.Label();
-            this.label22 = new System.Windows.Forms.Label();
-            this.dBirthDate = new Mig.datetimepicker.myDatePicker();
-            this.med_to = new Mig.datetimepicker.myDatePicker();
-            this.med_fr = new Mig.datetimepicker.myDatePicker();
-            this.tDelIssue = new Mig.datetimepicker.myDatePicker();
             this.tabControl1.SuspendLayout();
             this.tabConInfo.SuspendLayout();
             this.toolStrip9.SuspendLayout();
@@ -362,7 +362,7 @@
             this.tabControl1.Controls.Add(this.tabDelChild);
             this.tabControl1.ItemSize = new System.Drawing.Size(98, 25);
             this.tabControl1.Location = new System.Drawing.Point(1, 281);
-            this.tabControl1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabControl1.Margin = new System.Windows.Forms.Padding(4);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(1371, 647);
@@ -374,9 +374,9 @@
             this.tabConInfo.Controls.Add(this.toolStrip9);
             this.tabConInfo.Controls.Add(this.groupBox3);
             this.tabConInfo.Location = new System.Drawing.Point(4, 29);
-            this.tabConInfo.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabConInfo.Margin = new System.Windows.Forms.Padding(4);
             this.tabConInfo.Name = "tabConInfo";
-            this.tabConInfo.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabConInfo.Padding = new System.Windows.Forms.Padding(4);
             this.tabConInfo.Size = new System.Drawing.Size(1363, 614);
             this.tabConInfo.TabIndex = 0;
             this.tabConInfo.Text = "Доп. информация";
@@ -448,12 +448,56 @@
             this.groupBox3.Controls.Add(this.tComments);
             this.groupBox3.Controls.Add(this.tInfo);
             this.groupBox3.Location = new System.Drawing.Point(8, 38);
-            this.groupBox3.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox3.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox3.Padding = new System.Windows.Forms.Padding(4);
             this.groupBox3.Size = new System.Drawing.Size(1344, 548);
             this.groupBox3.TabIndex = 16;
             this.groupBox3.TabStop = false;
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(418, 105);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(30, 17);
+            this.label22.TabIndex = 79;
+            this.label22.Text = "По:";
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(272, 105);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(21, 17);
+            this.label21.TabIndex = 78;
+            this.label21.Text = "С:";
+            // 
+            // med_to
+            // 
+            this.med_to.AutoSize = true;
+            this.med_to.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.med_to.BackColor = System.Drawing.Color.Transparent;
+            this.med_to.Enabled = false;
+            this.med_to.Location = new System.Drawing.Point(421, 129);
+            this.med_to.Margin = new System.Windows.Forms.Padding(0);
+            this.med_to.Name = "med_to";
+            this.med_to.SelectedDate = "";
+            this.med_to.Size = new System.Drawing.Size(124, 22);
+            this.med_to.TabIndex = 77;
+            // 
+            // med_fr
+            // 
+            this.med_fr.AutoSize = true;
+            this.med_fr.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.med_fr.BackColor = System.Drawing.Color.Transparent;
+            this.med_fr.Enabled = false;
+            this.med_fr.Location = new System.Drawing.Point(275, 129);
+            this.med_fr.Margin = new System.Windows.Forms.Padding(0);
+            this.med_fr.Name = "med_fr";
+            this.med_fr.SelectedDate = "";
+            this.med_fr.Size = new System.Drawing.Size(124, 22);
+            this.med_fr.TabIndex = 76;
             // 
             // cmbPosition
             // 
@@ -463,7 +507,7 @@
             this.cmbPosition.Enabled = false;
             this.cmbPosition.FormattingEnabled = true;
             this.cmbPosition.Location = new System.Drawing.Point(585, 399);
-            this.cmbPosition.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cmbPosition.Margin = new System.Windows.Forms.Padding(4);
             this.cmbPosition.Name = "cmbPosition";
             this.cmbPosition.Size = new System.Drawing.Size(236, 24);
             this.cmbPosition.TabIndex = 75;
@@ -515,7 +559,7 @@
             // 
             this.tRelatives.BackColor = System.Drawing.SystemColors.Window;
             this.tRelatives.Location = new System.Drawing.Point(24, 183);
-            this.tRelatives.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tRelatives.Margin = new System.Windows.Forms.Padding(4);
             this.tRelatives.Multiline = true;
             this.tRelatives.Name = "tRelatives";
             this.tRelatives.ReadOnly = true;
@@ -527,7 +571,7 @@
             // 
             this.tInsurance.BackColor = System.Drawing.SystemColors.Window;
             this.tInsurance.Location = new System.Drawing.Point(24, 129);
-            this.tInsurance.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tInsurance.Margin = new System.Windows.Forms.Padding(4);
             this.tInsurance.Name = "tInsurance";
             this.tInsurance.ReadOnly = true;
             this.tInsurance.Size = new System.Drawing.Size(236, 22);
@@ -537,7 +581,7 @@
             // 
             this.tPersAddress.BackColor = System.Drawing.SystemColors.Window;
             this.tPersAddress.Location = new System.Drawing.Point(24, 47);
-            this.tPersAddress.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tPersAddress.Margin = new System.Windows.Forms.Padding(4);
             this.tPersAddress.Multiline = true;
             this.tPersAddress.Name = "tPersAddress";
             this.tPersAddress.ReadOnly = true;
@@ -569,7 +613,7 @@
             // 
             this.tComments.BackColor = System.Drawing.SystemColors.Window;
             this.tComments.Location = new System.Drawing.Point(24, 277);
-            this.tComments.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tComments.Margin = new System.Windows.Forms.Padding(4);
             this.tComments.Multiline = true;
             this.tComments.Name = "tComments";
             this.tComments.ReadOnly = true;
@@ -581,7 +625,7 @@
             // 
             this.tInfo.BackColor = System.Drawing.SystemColors.Window;
             this.tInfo.Location = new System.Drawing.Point(24, 370);
-            this.tInfo.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tInfo.Margin = new System.Windows.Forms.Padding(4);
             this.tInfo.Multiline = true;
             this.tInfo.Name = "tInfo";
             this.tInfo.ReadOnly = true;
@@ -594,9 +638,9 @@
             this.tabDocMigr.Controls.Add(this.panel4);
             this.tabDocMigr.Controls.Add(this.panel3);
             this.tabDocMigr.Location = new System.Drawing.Point(4, 29);
-            this.tabDocMigr.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabDocMigr.Margin = new System.Windows.Forms.Padding(4);
             this.tabDocMigr.Name = "tabDocMigr";
-            this.tabDocMigr.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabDocMigr.Padding = new System.Windows.Forms.Padding(4);
             this.tabDocMigr.Size = new System.Drawing.Size(1363, 614);
             this.tabDocMigr.TabIndex = 1;
             this.tabDocMigr.Text = "Регистрация/Виза";
@@ -609,7 +653,7 @@
             this.panel4.Controls.Add(this.dgMigrHist);
             this.panel4.Controls.Add(this.toolStrip12);
             this.panel4.Location = new System.Drawing.Point(8, 289);
-            this.panel4.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.panel4.Margin = new System.Windows.Forms.Padding(4);
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(1344, 310);
             this.panel4.TabIndex = 43;
@@ -629,7 +673,7 @@
             this.dgMigrHist.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.migrstatus});
             this.dgMigrHist.Location = new System.Drawing.Point(11, 34);
-            this.dgMigrHist.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.dgMigrHist.Margin = new System.Windows.Forms.Padding(4);
             this.dgMigrHist.MultiSelect = false;
             this.dgMigrHist.Name = "dgMigrHist";
             this.dgMigrHist.ReadOnly = true;
@@ -744,7 +788,7 @@
             this.panel3.Controls.Add(this.dgDocSel);
             this.panel3.Controls.Add(this.toolStrip10);
             this.panel3.Location = new System.Drawing.Point(9, 7);
-            this.panel3.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.panel3.Margin = new System.Windows.Forms.Padding(4);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(1343, 278);
             this.panel3.TabIndex = 42;
@@ -753,7 +797,7 @@
             // 
             this.tdate_entry_future.BackColor = System.Drawing.Color.White;
             this.tdate_entry_future.Location = new System.Drawing.Point(471, 250);
-            this.tdate_entry_future.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tdate_entry_future.Margin = new System.Windows.Forms.Padding(4);
             this.tdate_entry_future.Name = "tdate_entry_future";
             this.tdate_entry_future.ReadOnly = true;
             this.tdate_entry_future.Size = new System.Drawing.Size(113, 22);
@@ -763,7 +807,7 @@
             // 
             this.tdelivery_dt.BackColor = System.Drawing.Color.White;
             this.tdelivery_dt.Location = new System.Drawing.Point(249, 250);
-            this.tdelivery_dt.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tdelivery_dt.Margin = new System.Windows.Forms.Padding(4);
             this.tdelivery_dt.Name = "tdelivery_dt";
             this.tdelivery_dt.ReadOnly = true;
             this.tdelivery_dt.Size = new System.Drawing.Size(108, 22);
@@ -804,7 +848,7 @@
             this.dgDocSel.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.docstatus});
             this.dgDocSel.Location = new System.Drawing.Point(9, 34);
-            this.dgDocSel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.dgDocSel.Margin = new System.Windows.Forms.Padding(4);
             this.dgDocSel.MultiSelect = false;
             this.dgDocSel.Name = "dgDocSel";
             this.dgDocSel.ReadOnly = true;
@@ -904,9 +948,9 @@
             this.tabDUL.Controls.Add(this.DULdataGridView);
             this.tabDUL.Controls.Add(this.toolStrip6);
             this.tabDUL.Location = new System.Drawing.Point(4, 29);
-            this.tabDUL.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabDUL.Margin = new System.Windows.Forms.Padding(4);
             this.tabDUL.Name = "tabDUL";
-            this.tabDUL.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabDUL.Padding = new System.Windows.Forms.Padding(4);
             this.tabDUL.Size = new System.Drawing.Size(1363, 614);
             this.tabDUL.TabIndex = 6;
             this.tabDUL.Text = "ДУЛ";
@@ -928,7 +972,7 @@
             this.DULdataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.dulstatus});
             this.DULdataGridView.Location = new System.Drawing.Point(8, 38);
-            this.DULdataGridView.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.DULdataGridView.Margin = new System.Windows.Forms.Padding(4);
             this.DULdataGridView.MultiSelect = false;
             this.DULdataGridView.Name = "DULdataGridView";
             this.DULdataGridView.ReadOnly = true;
@@ -1046,7 +1090,7 @@
             this.panel6.Controls.Add(this.toolStrip11);
             this.panel6.Controls.Add(this.dgExpellHist);
             this.panel6.Location = new System.Drawing.Point(0, 384);
-            this.panel6.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.panel6.Margin = new System.Windows.Forms.Padding(4);
             this.panel6.Name = "panel6";
             this.panel6.Size = new System.Drawing.Size(1352, 217);
             this.panel6.TabIndex = 46;
@@ -1123,7 +1167,7 @@
             dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.dgExpellHist.DefaultCellStyle = dataGridViewCellStyle4;
             this.dgExpellHist.Location = new System.Drawing.Point(11, 34);
-            this.dgExpellHist.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.dgExpellHist.Margin = new System.Windows.Forms.Padding(4);
             this.dgExpellHist.MultiSelect = false;
             this.dgExpellHist.Name = "dgExpellHist";
             this.dgExpellHist.ReadOnly = true;
@@ -1153,7 +1197,7 @@
             this.panel2.Controls.Add(this.dgAgreeHist);
             this.panel2.Controls.Add(this.toolStrip13);
             this.panel2.Location = new System.Drawing.Point(0, 197);
-            this.panel2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.panel2.Margin = new System.Windows.Forms.Padding(4);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(1352, 191);
             this.panel2.TabIndex = 45;
@@ -1181,7 +1225,7 @@
             dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.dgAgreeHist.DefaultCellStyle = dataGridViewCellStyle6;
             this.dgAgreeHist.Location = new System.Drawing.Point(11, 34);
-            this.dgAgreeHist.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.dgAgreeHist.Margin = new System.Windows.Forms.Padding(4);
             this.dgAgreeHist.MultiSelect = false;
             this.dgAgreeHist.Name = "dgAgreeHist";
             this.dgAgreeHist.ReadOnly = true;
@@ -1290,7 +1334,7 @@
             this.dgTeach.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.teachstatus});
             this.dgTeach.Location = new System.Drawing.Point(17, 37);
-            this.dgTeach.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.dgTeach.Margin = new System.Windows.Forms.Padding(4);
             this.dgTeach.MultiSelect = false;
             this.dgTeach.Name = "dgTeach";
             this.dgTeach.ReadOnly = true;
@@ -1392,9 +1436,9 @@
             this.tabAddr.Controls.Add(this.dgAddrHist);
             this.tabAddr.Controls.Add(this.toolStrip2);
             this.tabAddr.Location = new System.Drawing.Point(4, 29);
-            this.tabAddr.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabAddr.Margin = new System.Windows.Forms.Padding(4);
             this.tabAddr.Name = "tabAddr";
-            this.tabAddr.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabAddr.Padding = new System.Windows.Forms.Padding(4);
             this.tabAddr.Size = new System.Drawing.Size(1363, 614);
             this.tabAddr.TabIndex = 7;
             this.tabAddr.Text = "Адреса";
@@ -1424,7 +1468,7 @@
             this.dgAddrHist.DefaultCellStyle = dataGridViewCellStyle9;
             this.dgAddrHist.EnableHeadersVisualStyles = false;
             this.dgAddrHist.Location = new System.Drawing.Point(19, 38);
-            this.dgAddrHist.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.dgAddrHist.Margin = new System.Windows.Forms.Padding(4);
             this.dgAddrHist.MultiSelect = false;
             this.dgAddrHist.Name = "dgAddrHist";
             this.dgAddrHist.ReadOnly = true;
@@ -1616,9 +1660,9 @@
             this.tabParam3.Controls.Add(this.cmbPetVisa2);
             this.tabParam3.Controls.Add(this.cmbPetVisa1);
             this.tabParam3.Location = new System.Drawing.Point(4, 25);
-            this.tabParam3.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabParam3.Margin = new System.Windows.Forms.Padding(4);
             this.tabParam3.Name = "tabParam3";
-            this.tabParam3.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabParam3.Padding = new System.Windows.Forms.Padding(4);
             this.tabParam3.Size = new System.Drawing.Size(588, 213);
             this.tabParam3.TabIndex = 3;
             this.tabParam3.Text = "Ходатайство: смена визы";
@@ -1653,9 +1697,9 @@
             this.tabParam4.Controls.Add(this.cmbPetPass2);
             this.tabParam4.Controls.Add(this.cmbPetPass1);
             this.tabParam4.Location = new System.Drawing.Point(4, 25);
-            this.tabParam4.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabParam4.Margin = new System.Windows.Forms.Padding(4);
             this.tabParam4.Name = "tabParam4";
-            this.tabParam4.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabParam4.Padding = new System.Windows.Forms.Padding(4);
             this.tabParam4.Size = new System.Drawing.Size(588, 213);
             this.tabParam4.TabIndex = 4;
             this.tabParam4.Text = "Ходатайство: смена паспорта";
@@ -1698,9 +1742,9 @@
             this.tabParam5.Controls.Add(this.cmbVisaKrat);
             this.tabParam5.Controls.Add(this.cmbVisaAction);
             this.tabParam5.Location = new System.Drawing.Point(4, 25);
-            this.tabParam5.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabParam5.Margin = new System.Windows.Forms.Padding(4);
             this.tabParam5.Name = "tabParam5";
-            this.tabParam5.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabParam5.Padding = new System.Windows.Forms.Padding(4);
             this.tabParam5.Size = new System.Drawing.Size(588, 213);
             this.tabParam5.TabIndex = 5;
             this.tabParam5.Text = "Визовая анкета: анкета";
@@ -1761,7 +1805,7 @@
             this.cmbVisaPurpose.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbVisaPurpose.FormattingEnabled = true;
             this.cmbVisaPurpose.Location = new System.Drawing.Point(169, 162);
-            this.cmbVisaPurpose.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cmbVisaPurpose.Margin = new System.Windows.Forms.Padding(4);
             this.cmbVisaPurpose.Name = "cmbVisaPurpose";
             this.cmbVisaPurpose.Size = new System.Drawing.Size(344, 24);
             this.cmbVisaPurpose.TabIndex = 4;
@@ -1773,7 +1817,7 @@
             this.cmbVisaSubCat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbVisaSubCat.FormattingEnabled = true;
             this.cmbVisaSubCat.Location = new System.Drawing.Point(169, 129);
-            this.cmbVisaSubCat.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cmbVisaSubCat.Margin = new System.Windows.Forms.Padding(4);
             this.cmbVisaSubCat.Name = "cmbVisaSubCat";
             this.cmbVisaSubCat.Size = new System.Drawing.Size(344, 24);
             this.cmbVisaSubCat.TabIndex = 3;
@@ -1785,7 +1829,7 @@
             this.cmbVisaCat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbVisaCat.FormattingEnabled = true;
             this.cmbVisaCat.Location = new System.Drawing.Point(169, 96);
-            this.cmbVisaCat.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cmbVisaCat.Margin = new System.Windows.Forms.Padding(4);
             this.cmbVisaCat.Name = "cmbVisaCat";
             this.cmbVisaCat.Size = new System.Drawing.Size(344, 24);
             this.cmbVisaCat.TabIndex = 2;
@@ -1798,7 +1842,7 @@
             this.cmbVisaKrat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbVisaKrat.FormattingEnabled = true;
             this.cmbVisaKrat.Location = new System.Drawing.Point(169, 63);
-            this.cmbVisaKrat.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cmbVisaKrat.Margin = new System.Windows.Forms.Padding(4);
             this.cmbVisaKrat.Name = "cmbVisaKrat";
             this.cmbVisaKrat.Size = new System.Drawing.Size(160, 24);
             this.cmbVisaKrat.TabIndex = 1;
@@ -1810,7 +1854,7 @@
             this.cmbVisaAction.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbVisaAction.FormattingEnabled = true;
             this.cmbVisaAction.Location = new System.Drawing.Point(169, 30);
-            this.cmbVisaAction.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cmbVisaAction.Margin = new System.Windows.Forms.Padding(4);
             this.cmbVisaAction.Name = "cmbVisaAction";
             this.cmbVisaAction.Size = new System.Drawing.Size(160, 24);
             this.cmbVisaAction.TabIndex = 0;
@@ -1824,9 +1868,9 @@
             this.tabParam7.Controls.Add(this.cmbAnkHodReason);
             this.tabParam7.Controls.Add(this.cmbVisaPetition);
             this.tabParam7.Location = new System.Drawing.Point(4, 25);
-            this.tabParam7.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabParam7.Margin = new System.Windows.Forms.Padding(4);
             this.tabParam7.Name = "tabParam7";
-            this.tabParam7.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabParam7.Padding = new System.Windows.Forms.Padding(4);
             this.tabParam7.Size = new System.Drawing.Size(588, 213);
             this.tabParam7.TabIndex = 6;
             this.tabParam7.Text = "Ходатайство на визу";
@@ -1857,7 +1901,7 @@
             this.cmbAnkHodReason.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbAnkHodReason.FormattingEnabled = true;
             this.cmbAnkHodReason.Location = new System.Drawing.Point(165, 80);
-            this.cmbAnkHodReason.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cmbAnkHodReason.Margin = new System.Windows.Forms.Padding(4);
             this.cmbAnkHodReason.Name = "cmbAnkHodReason";
             this.cmbAnkHodReason.Size = new System.Drawing.Size(411, 24);
             this.cmbAnkHodReason.TabIndex = 1;
@@ -1872,7 +1916,7 @@
             "продлить визу",
             "восстановить визу"});
             this.cmbVisaPetition.Location = new System.Drawing.Point(165, 47);
-            this.cmbVisaPetition.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cmbVisaPetition.Margin = new System.Windows.Forms.Padding(4);
             this.cmbVisaPetition.Name = "cmbVisaPetition";
             this.cmbVisaPetition.Size = new System.Drawing.Size(229, 24);
             this.cmbVisaPetition.TabIndex = 0;
@@ -1882,9 +1926,9 @@
             this.tabParam8.BackColor = System.Drawing.SystemColors.Control;
             this.tabParam8.Controls.Add(this.cmbPetitionOut);
             this.tabParam8.Location = new System.Drawing.Point(4, 25);
-            this.tabParam8.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabParam8.Margin = new System.Windows.Forms.Padding(4);
             this.tabParam8.Name = "tabParam8";
-            this.tabParam8.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabParam8.Padding = new System.Windows.Forms.Padding(4);
             this.tabParam8.Size = new System.Drawing.Size(588, 213);
             this.tabParam8.TabIndex = 7;
             this.tabParam8.Text = "Уведомление об отчислении";
@@ -1897,7 +1941,7 @@
             "о прекращении  обучения (это когда отчислен)",
             "о завершении  обучения (а это когда выпускник)"});
             this.cmbPetitionOut.Location = new System.Drawing.Point(39, 34);
-            this.cmbPetitionOut.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cmbPetitionOut.Margin = new System.Windows.Forms.Padding(4);
             this.cmbPetitionOut.Name = "cmbPetitionOut";
             this.cmbPetitionOut.Size = new System.Drawing.Size(445, 24);
             this.cmbPetitionOut.TabIndex = 0;
@@ -2019,9 +2063,9 @@
             this.tabPage3.Controls.Add(this.dgEntryHist);
             this.tabPage3.Controls.Add(this.toolStrip7);
             this.tabPage3.Location = new System.Drawing.Point(4, 29);
-            this.tabPage3.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabPage3.Margin = new System.Windows.Forms.Padding(4);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(4);
             this.tabPage3.Size = new System.Drawing.Size(1363, 614);
             this.tabPage3.TabIndex = 8;
             this.tabPage3.Text = "Въезд/Выезд";
@@ -2050,7 +2094,7 @@
             dataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.dgEntryHist.DefaultCellStyle = dataGridViewCellStyle11;
             this.dgEntryHist.Location = new System.Drawing.Point(9, 38);
-            this.dgEntryHist.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.dgEntryHist.Margin = new System.Windows.Forms.Padding(4);
             this.dgEntryHist.MultiSelect = false;
             this.dgEntryHist.Name = "dgEntryHist";
             this.dgEntryHist.ReadOnly = true;
@@ -2137,9 +2181,9 @@
             this.tabDelChild.Controls.Add(this.dgChild);
             this.tabDelChild.Controls.Add(this.toolStrip4);
             this.tabDelChild.Location = new System.Drawing.Point(4, 29);
-            this.tabDelChild.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabDelChild.Margin = new System.Windows.Forms.Padding(4);
             this.tabDelChild.Name = "tabDelChild";
-            this.tabDelChild.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabDelChild.Padding = new System.Windows.Forms.Padding(4);
             this.tabDelChild.Size = new System.Drawing.Size(1363, 614);
             this.tabDelChild.TabIndex = 4;
             this.tabDelChild.Text = "Представители / Дети";
@@ -2169,7 +2213,7 @@
             this.panel5.Controls.Add(this.label60);
             this.panel5.Controls.Add(this.tDelSec);
             this.panel5.Location = new System.Drawing.Point(0, 255);
-            this.panel5.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.panel5.Margin = new System.Windows.Forms.Padding(4);
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(1360, 213);
             this.panel5.TabIndex = 59;
@@ -2182,7 +2226,7 @@
             this.cmbDelCountry.Enabled = false;
             this.cmbDelCountry.FormattingEnabled = true;
             this.cmbDelCountry.Location = new System.Drawing.Point(533, 175);
-            this.cmbDelCountry.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cmbDelCountry.Margin = new System.Windows.Forms.Padding(4);
             this.cmbDelCountry.Name = "cmbDelCountry";
             this.cmbDelCountry.Size = new System.Drawing.Size(180, 24);
             this.cmbDelCountry.TabIndex = 24;
@@ -2266,11 +2310,25 @@
             // 
             this.tDelLast.BackColor = System.Drawing.SystemColors.Window;
             this.tDelLast.Location = new System.Drawing.Point(136, 47);
-            this.tDelLast.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tDelLast.Margin = new System.Windows.Forms.Padding(4);
             this.tDelLast.Name = "tDelLast";
             this.tDelLast.ReadOnly = true;
             this.tDelLast.Size = new System.Drawing.Size(236, 22);
             this.tDelLast.TabIndex = 0;
+            // 
+            // tDelIssue
+            // 
+            this.tDelIssue.AutoSize = true;
+            this.tDelIssue.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.tDelIssue.BackColor = System.Drawing.Color.Transparent;
+            this.tDelIssue.Enabled = false;
+            this.tDelIssue.Location = new System.Drawing.Point(533, 143);
+            this.tDelIssue.Margin = new System.Windows.Forms.Padding(0);
+            this.tDelIssue.Name = "tDelIssue";
+            this.tDelIssue.SelectedDate = "";
+            this.tDelIssue.Size = new System.Drawing.Size(124, 22);
+            this.tDelIssue.TabIndex = 23;
+            this.tDelIssue.Visible = false;
             // 
             // label56
             // 
@@ -2301,7 +2359,7 @@
             this.cmbDelNat.Enabled = false;
             this.cmbDelNat.FormattingEnabled = true;
             this.cmbDelNat.Location = new System.Drawing.Point(136, 143);
-            this.cmbDelNat.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cmbDelNat.Margin = new System.Windows.Forms.Padding(4);
             this.cmbDelNat.Name = "cmbDelNat";
             this.cmbDelNat.Size = new System.Drawing.Size(236, 24);
             this.cmbDelNat.TabIndex = 21;
@@ -2338,7 +2396,7 @@
             this.cmbDelDul.Enabled = false;
             this.cmbDelDul.FormattingEnabled = true;
             this.cmbDelDul.Location = new System.Drawing.Point(533, 47);
-            this.cmbDelDul.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cmbDelDul.Margin = new System.Windows.Forms.Padding(4);
             this.cmbDelDul.Name = "cmbDelDul";
             this.cmbDelDul.Size = new System.Drawing.Size(180, 24);
             this.cmbDelDul.TabIndex = 20;
@@ -2360,7 +2418,7 @@
             // 
             this.tDelNum.BackColor = System.Drawing.SystemColors.Window;
             this.tDelNum.Location = new System.Drawing.Point(533, 111);
-            this.tDelNum.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tDelNum.Margin = new System.Windows.Forms.Padding(4);
             this.tDelNum.Name = "tDelNum";
             this.tDelNum.ReadOnly = true;
             this.tDelNum.Size = new System.Drawing.Size(180, 22);
@@ -2393,7 +2451,7 @@
             // 
             this.tDelFirst.BackColor = System.Drawing.SystemColors.Window;
             this.tDelFirst.Location = new System.Drawing.Point(136, 79);
-            this.tDelFirst.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tDelFirst.Margin = new System.Windows.Forms.Padding(4);
             this.tDelFirst.Name = "tDelFirst";
             this.tDelFirst.ReadOnly = true;
             this.tDelFirst.Size = new System.Drawing.Size(236, 22);
@@ -2403,7 +2461,7 @@
             // 
             this.tDelSer.BackColor = System.Drawing.SystemColors.Window;
             this.tDelSer.Location = new System.Drawing.Point(533, 81);
-            this.tDelSer.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tDelSer.Margin = new System.Windows.Forms.Padding(4);
             this.tDelSer.Name = "tDelSer";
             this.tDelSer.ReadOnly = true;
             this.tDelSer.Size = new System.Drawing.Size(132, 22);
@@ -2436,7 +2494,7 @@
             // 
             this.tDelSec.BackColor = System.Drawing.SystemColors.Window;
             this.tDelSec.Location = new System.Drawing.Point(136, 111);
-            this.tDelSec.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tDelSec.Margin = new System.Windows.Forms.Padding(4);
             this.tDelSec.Name = "tDelSec";
             this.tDelSec.ReadOnly = true;
             this.tDelSec.Size = new System.Drawing.Size(236, 22);
@@ -2463,7 +2521,7 @@
             dataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.dgChild.DefaultCellStyle = dataGridViewCellStyle12;
             this.dgChild.Location = new System.Drawing.Point(9, 38);
-            this.dgChild.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.dgChild.Margin = new System.Windows.Forms.Padding(4);
             this.dgChild.MultiSelect = false;
             this.dgChild.Name = "dgChild";
             this.dgChild.ReadOnly = true;
@@ -2531,7 +2589,7 @@
             // 
             this.tDays.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.tDays.Location = new System.Drawing.Point(1305, 12);
-            this.tDays.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tDays.Margin = new System.Windows.Forms.Padding(4);
             this.tDays.Name = "tDays";
             this.tDays.ReadOnly = true;
             this.tDays.Size = new System.Drawing.Size(57, 22);
@@ -2553,7 +2611,7 @@
             this.tmidnameenu.BackColor = System.Drawing.SystemColors.Window;
             this.tmidnameenu.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.tmidnameenu.Location = new System.Drawing.Point(135, 193);
-            this.tmidnameenu.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tmidnameenu.Margin = new System.Windows.Forms.Padding(4);
             this.tmidnameenu.Name = "tmidnameenu";
             this.tmidnameenu.ReadOnly = true;
             this.tmidnameenu.Size = new System.Drawing.Size(292, 22);
@@ -2564,7 +2622,7 @@
             this.tmidname.BackColor = System.Drawing.SystemColors.Window;
             this.tmidname.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.tmidname.Location = new System.Drawing.Point(135, 82);
-            this.tmidname.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tmidname.Margin = new System.Windows.Forms.Padding(4);
             this.tmidname.Name = "tmidname";
             this.tmidname.ReadOnly = true;
             this.tmidname.Size = new System.Drawing.Size(292, 22);
@@ -2575,7 +2633,7 @@
             this.tfirstnameenu.BackColor = System.Drawing.SystemColors.Window;
             this.tfirstnameenu.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.tfirstnameenu.Location = new System.Drawing.Point(135, 161);
-            this.tfirstnameenu.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tfirstnameenu.Margin = new System.Windows.Forms.Padding(4);
             this.tfirstnameenu.Name = "tfirstnameenu";
             this.tfirstnameenu.ReadOnly = true;
             this.tfirstnameenu.Size = new System.Drawing.Size(292, 22);
@@ -2616,7 +2674,7 @@
             this.tfirstname.BackColor = System.Drawing.SystemColors.Window;
             this.tfirstname.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.tfirstname.Location = new System.Drawing.Point(135, 50);
-            this.tfirstname.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tfirstname.Margin = new System.Windows.Forms.Padding(4);
             this.tfirstname.Name = "tfirstname";
             this.tfirstname.ReadOnly = true;
             this.tfirstname.Size = new System.Drawing.Size(292, 22);
@@ -2627,7 +2685,7 @@
             this.tlastnameenu.BackColor = System.Drawing.SystemColors.Window;
             this.tlastnameenu.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.tlastnameenu.Location = new System.Drawing.Point(135, 129);
-            this.tlastnameenu.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tlastnameenu.Margin = new System.Windows.Forms.Padding(4);
             this.tlastnameenu.Name = "tlastnameenu";
             this.tlastnameenu.ReadOnly = true;
             this.tlastnameenu.Size = new System.Drawing.Size(292, 22);
@@ -2638,7 +2696,7 @@
             this.tlastname.BackColor = System.Drawing.SystemColors.Window;
             this.tlastname.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.tlastname.Location = new System.Drawing.Point(135, 18);
-            this.tlastname.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tlastname.Margin = new System.Windows.Forms.Padding(4);
             this.tlastname.Name = "tlastname";
             this.tlastname.ReadOnly = true;
             this.tlastname.Size = new System.Drawing.Size(292, 22);
@@ -2829,7 +2887,7 @@
             this.panel1.Controls.Add(this.label4);
             this.panel1.Controls.Add(this.tmidname);
             this.panel1.Location = new System.Drawing.Point(7, 44);
-            this.panel1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.panel1.Margin = new System.Windows.Forms.Padding(4);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1357, 228);
             this.panel1.TabIndex = 3;
@@ -2896,7 +2954,7 @@
             this.textBox5.BackColor = System.Drawing.Color.White;
             this.textBox5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.textBox5.Location = new System.Drawing.Point(1196, 148);
-            this.textBox5.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.textBox5.Margin = new System.Windows.Forms.Padding(4);
             this.textBox5.Name = "textBox5";
             this.textBox5.ReadOnly = true;
             this.textBox5.Size = new System.Drawing.Size(151, 23);
@@ -2909,7 +2967,7 @@
             this.textBox4.BackColor = System.Drawing.Color.White;
             this.textBox4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.textBox4.Location = new System.Drawing.Point(1196, 114);
-            this.textBox4.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.textBox4.Margin = new System.Windows.Forms.Padding(4);
             this.textBox4.Name = "textBox4";
             this.textBox4.ReadOnly = true;
             this.textBox4.Size = new System.Drawing.Size(151, 23);
@@ -2921,7 +2979,7 @@
             this.textBox3.BackColor = System.Drawing.Color.White;
             this.textBox3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.textBox3.Location = new System.Drawing.Point(1196, 84);
-            this.textBox3.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.textBox3.Margin = new System.Windows.Forms.Padding(4);
             this.textBox3.Name = "textBox3";
             this.textBox3.ReadOnly = true;
             this.textBox3.Size = new System.Drawing.Size(151, 23);
@@ -2933,7 +2991,7 @@
             this.textBox2.BackColor = System.Drawing.Color.White;
             this.textBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.textBox2.Location = new System.Drawing.Point(1196, 50);
-            this.textBox2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.textBox2.Margin = new System.Windows.Forms.Padding(4);
             this.textBox2.Name = "textBox2";
             this.textBox2.ReadOnly = true;
             this.textBox2.Size = new System.Drawing.Size(151, 23);
@@ -2945,7 +3003,7 @@
             this.textBox1.BackColor = System.Drawing.Color.White;
             this.textBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.textBox1.Location = new System.Drawing.Point(1196, 18);
-            this.textBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.textBox1.Margin = new System.Windows.Forms.Padding(4);
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
             this.textBox1.Size = new System.Drawing.Size(151, 23);
@@ -2963,6 +3021,19 @@
             this.lyear.TabIndex = 71;
             this.lyear.Text = "year";
             // 
+            // dBirthDate
+            // 
+            this.dBirthDate.AutoSize = true;
+            this.dBirthDate.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.dBirthDate.BackColor = System.Drawing.Color.Transparent;
+            this.dBirthDate.Enabled = false;
+            this.dBirthDate.Location = new System.Drawing.Point(637, 129);
+            this.dBirthDate.Margin = new System.Windows.Forms.Padding(0);
+            this.dBirthDate.Name = "dBirthDate";
+            this.dBirthDate.SelectedDate = "";
+            this.dBirthDate.Size = new System.Drawing.Size(124, 22);
+            this.dBirthDate.TabIndex = 70;
+            // 
             // tBirthTown
             // 
             this.tBirthTown.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Append;
@@ -2971,7 +3042,7 @@
             this.tBirthTown.Enabled = false;
             this.tBirthTown.FormattingEnabled = true;
             this.tBirthTown.Location = new System.Drawing.Point(636, 81);
-            this.tBirthTown.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tBirthTown.Margin = new System.Windows.Forms.Padding(4);
             this.tBirthTown.Name = "tBirthTown";
             this.tBirthTown.Size = new System.Drawing.Size(289, 24);
             this.tBirthTown.TabIndex = 69;
@@ -2986,7 +3057,7 @@
             this.cmbBirthCountry.Enabled = false;
             this.cmbBirthCountry.FormattingEnabled = true;
             this.cmbBirthCountry.Location = new System.Drawing.Point(636, 50);
-            this.cmbBirthCountry.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cmbBirthCountry.Margin = new System.Windows.Forms.Padding(4);
             this.cmbBirthCountry.Name = "cmbBirthCountry";
             this.cmbBirthCountry.Size = new System.Drawing.Size(289, 24);
             this.cmbBirthCountry.TabIndex = 68;
@@ -3000,7 +3071,7 @@
             this.cmbNat.DisplayMember = "name";
             this.cmbNat.Enabled = false;
             this.cmbNat.Location = new System.Drawing.Point(637, 18);
-            this.cmbNat.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cmbNat.Margin = new System.Windows.Forms.Padding(4);
             this.cmbNat.Name = "cmbNat";
             this.cmbNat.Size = new System.Drawing.Size(288, 24);
             this.cmbNat.TabIndex = 67;
@@ -3016,94 +3087,23 @@
             this.cmbSex.Enabled = false;
             this.cmbSex.FormattingEnabled = true;
             this.cmbSex.Location = new System.Drawing.Point(637, 161);
-            this.cmbSex.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cmbSex.Margin = new System.Windows.Forms.Padding(4);
             this.cmbSex.Name = "cmbSex";
             this.cmbSex.Size = new System.Drawing.Size(160, 24);
             this.cmbSex.TabIndex = 66;
             this.cmbSex.ValueMember = "code";
             // 
-            // label21
-            // 
-            this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(272, 105);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(21, 17);
-            this.label21.TabIndex = 78;
-            this.label21.Text = "С:";
-            // 
-            // label22
-            // 
-            this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(418, 105);
-            this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(30, 17);
-            this.label22.TabIndex = 79;
-            this.label22.Text = "По:";
-            // 
-            // dBirthDate
-            // 
-            this.dBirthDate.AutoSize = true;
-            this.dBirthDate.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.dBirthDate.BackColor = System.Drawing.Color.Transparent;
-            this.dBirthDate.Enabled = false;
-            this.dBirthDate.Location = new System.Drawing.Point(637, 129);
-            this.dBirthDate.Margin = new System.Windows.Forms.Padding(0);
-            this.dBirthDate.Name = "dBirthDate";
-            this.dBirthDate.SelectedDate = "";
-            this.dBirthDate.Size = new System.Drawing.Size(124, 22);
-            this.dBirthDate.TabIndex = 70;
-            // 
-            // med_to
-            // 
-            this.med_to.AutoSize = true;
-            this.med_to.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.med_to.BackColor = System.Drawing.Color.Transparent;
-            this.med_to.Enabled = false;
-            this.med_to.Location = new System.Drawing.Point(421, 129);
-            this.med_to.Margin = new System.Windows.Forms.Padding(0);
-            this.med_to.Name = "med_to";
-            this.med_to.SelectedDate = "";
-            this.med_to.Size = new System.Drawing.Size(124, 22);
-            this.med_to.TabIndex = 77;
-            // 
-            // med_fr
-            // 
-            this.med_fr.AutoSize = true;
-            this.med_fr.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.med_fr.BackColor = System.Drawing.Color.Transparent;
-            this.med_fr.Enabled = false;
-            this.med_fr.Location = new System.Drawing.Point(275, 129);
-            this.med_fr.Margin = new System.Windows.Forms.Padding(0);
-            this.med_fr.Name = "med_fr";
-            this.med_fr.SelectedDate = "";
-            this.med_fr.Size = new System.Drawing.Size(124, 22);
-            this.med_fr.TabIndex = 76;
-            // 
-            // tDelIssue
-            // 
-            this.tDelIssue.AutoSize = true;
-            this.tDelIssue.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tDelIssue.BackColor = System.Drawing.Color.Transparent;
-            this.tDelIssue.Enabled = false;
-            this.tDelIssue.Location = new System.Drawing.Point(533, 143);
-            this.tDelIssue.Margin = new System.Windows.Forms.Padding(0);
-            this.tDelIssue.Name = "tDelIssue";
-            this.tDelIssue.SelectedDate = "";
-            this.tDelIssue.Size = new System.Drawing.Size(124, 22);
-            this.tDelIssue.TabIndex = 23;
-            this.tDelIssue.Visible = false;
-            // 
             // fContactDetail
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1372, 930);
+            this.ClientSize = new System.Drawing.Size(1372, 950);
             this.Controls.Add(this.tDays);
             this.Controls.Add(this.label74);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.tabControl1);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.MinimizeBox = false;
             this.Name = "fContactDetail";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
