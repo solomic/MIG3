@@ -12,20 +12,14 @@ namespace Pref
         public static string USER = "ERUDENKO";
         public static string PASS = "ERUDENKO";
         public static string USERLIST = "";
-        //public static string PORT = "5432";
         public static string HOST = "localhost";
         public static string DBNAME = "cmodb";
-        //public static string DEFAULT_PROGRAM = "";
         public static bool AUTH = false;
         public static int CONTACTID = 0;
         public static int CURROW = 0;
-        //public static string MIGDATA = @"C:\MIG DATA\";
         public static string REPORTFOLDER = @"C:\MIG DATA\REPORT\";
         public static string CONFIO = "";
         public static string CONNAT = "";
-        //public static string FULLREPORTPATCH = "";
-        //public static string SUBPROGRAM = "";
-        //public static string POSITION = "";
         public static string NOTIFYTEMPLATE = "";
         public static string CONSTR = "";
         public static string DELEGATE = "N";
@@ -55,7 +49,6 @@ namespace Pref
         public static string FAC = "SELECT code, name FROM cmodb.facultet where status = 'Y' ORDER BY name;";
         public static string SPECLOAD = "SELECT  spec_code, name FROM cmodb.speciality where status='Y' and par_code=@param1 AND prog_teach_code=@param2 ORDER BY name;";
         public static string SEX = "SELECT code, value FROM cmodb.lov where type=@param1 order by ord;";
-        //public static string NAT = "SELECT name, code  FROM cmodb.nationality order by name;";
         public static string BIRTHTOWN = "SELECT DISTINCT(birth_town) as name , 0 as code from cmodb.contact where birth_town<>'' order by name;";
         public static string NAT = "select DISTINCT(t.name) as name , 0 as code from ( " +
                 " SELECT name  FROM cmodb.nationality " +
