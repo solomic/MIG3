@@ -30,6 +30,7 @@ namespace Pref
         public static string CONSTR = "";
         public static string DELEGATE = "N";
         public static int FLTCODE = 99;
+        public static int VISADOCREADY = 20;//документы на визу будут готовы через Х рабочих дней
 
         //Приглашения
         public static string INVFLTNAME = "<>"; //текущий выбранный фильтр
@@ -237,26 +238,7 @@ namespace Pref
                                      " FROM cmodb.host where status='Y';";
 
 
-       // public static string Stat =
-       //" select ct.last_name + ' ' + ct.first_name fio, /*t.typ,*/ t.updated_by, t.action, t.contact_id from ( " +
-       //"  select 'Студент 'as typ,1 as ord, contact_id,'Изменение личных данных'  as action, updated_by " +
-       //"  from cmodb.contact con " +
-       //"  where con.status= 'Y' AND cast(con.updated as date)= CURRENT_DATE " +
-       //"   UNION ALL " +
-       //"   select DISTINCT 'Документ 'as typ,2 as ord,contact_id,'Изменение регистрационных документов' as action,  updated_by " +
-       //"   from cmodb.document " +
-       //"   where  cast(updated as date)= CURRENT_DATE " +
-       //"   UNION ALL " +
-       //"   select DISTINCT 'Миграционная карта 'as typ,3 as ord,contact_id,'Изменение миграционной карты' as action, updated_by " +
-       //"   from cmodb.migr_card " +
-       //"   where  cast(updated as date)= CURRENT_DATE " +
-       //"   UNION ALL " +
-       //"   select DISTINCT 'ДУЛ' as typ,4 as ord,contact_id,'Изменение паспортных данных' as action,  updated_by " +
-       //"   from cmodb.dul " +
-       //"   where  cast(updated as date)= CURRENT_DATE  " +
-       //"  ) t " +
-       //"  JOIN cmodb.contact ct on ct.contact_id=t.contact_id " +
-       //"  order by t.contact_id, t.ord ;";
+       
 
     }
 }

@@ -461,15 +461,18 @@ namespace Mig
                 transaction = DB.conn.BeginTransaction(IsolationLevel.ReadCommitted);
                 cmd = new SqlCommand(sql, DB.conn, transaction);
                 sql = "UPDATE cmodb.contact SET " +
-                   " doc_state=@doc,date_entry_future=@date_entry_future,updated=GETDATE(),updated_by=SYSTEM_USER " +
+                   " doc_state=@doc,delivery_dt =@dt,date_entry_future=[cmodb].[GetWorkDay](@dt,@visadocready),updated=GETDATE(),updated_by=SYSTEM_USER " +
                    "  WHERE contact_id IN (" + String.Join(",", ids) + "); ";
+               
                 cmd.CommandText = sql;
-                cmd.Parameters.Clear();                
+                cmd.Parameters.Clear();
+                
                 cmd.Parameters.AddWithValue("doc", type);
+                cmd.Parameters.AddWithValue("visadocready", pref.VISADOCREADY);
                 if (dt == "")
-                    cmd.Parameters.AddWithValue("date_entry_future", DBNull.Value);
+                    cmd.Parameters.AddWithValue("dt", DBNull.Value);
                 else
-                    cmd.Parameters.AddWithValue("date_entry_future", Convert.ToDateTime(dt));
+                    cmd.Parameters.AddWithValue("dt", Convert.ToDateTime(dt));
                 cmd.ExecuteNonQuery();
                 transaction.Commit();
             }
@@ -999,6 +1002,6 @@ namespace Mig
             this.Show();
         }
 
-
+        
     }
 }

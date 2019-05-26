@@ -242,7 +242,7 @@ namespace Mig
                             expr += " UNION SELECT @filter_id,@user_name," + row.Cells["column_id"].Value.ToString() + "," + i.ToString();
                         i++;
                     }
-                    sql = "INSERT INTO cmodb.user_filter_column(filter_id,user_name,column_id,column_ord) "+ expr+";";
+                    sql = "INSERT INTO [cmodb].[user_filter_column](filter_id,user_name,column_id,column_ord) "+ expr+";";
                     cmd.CommandText = sql;
                     cmd.Parameters.Clear();
                     cmd.Parameters.AddWithValue("filter_id", filter_code);
@@ -250,13 +250,14 @@ namespace Mig
                     cmd.ExecuteNonQuery();
 
 
-                    sql = "EXECUTE cmodb.\"GenerateUserFilter\" @user_name, @filter_id;";
+                    sql = "EXECUTE [cmodb].[GenerateUserFilter] @user_name, @filter_id;";
                     cmd.CommandText = sql;
                     cmd.Parameters.Clear();
                     cmd.Parameters.AddWithValue("filter_id", filter_code);
                     cmd.Parameters.AddWithValue("user_name", pref.USER);
-                    cmd.ExecuteNonQuery();
-
+                    int res = Convert.ToInt32(cmd.ExecuteScalar());// ExecuteNonQuery();
+                    if (res != 0)
+                        throw new Exception("Код ошибки SQL:" + res.ToString());
                     transaction.Commit();
                     MessageBox.Show("Изменения успешно сохранены", "Ура", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
@@ -303,6 +304,30 @@ namespace Mig
             dgMyColumn.Rows.Insert(currentIndex + offset, row);
             dgMyColumn.Rows[currentIndex + 1].Selected = true;
             
+        }
+
+        private void bAddAll_Click(object sender, EventArgs e)
+        {
+            if (cmbAllFilter.Text != "")
+            {
+                bool exists;
+                for (int i = 0; i < dgAllColumn.RowCount-1; i++)
+                {
+                    exists = false;
+                    foreach (DataGridViewRow row in dgMyColumn.Rows)
+                    {
+                        if (row.Cells["name"].Value.ToString().Equals(dgAllColumn[0, i].Value))
+                        {
+                            exists = true;
+                            break;
+                        }
+
+                    }
+                    if(!exists)
+                        dgMyColumn.Rows.Add(dgAllColumn[0, i].Value, dgAllColumn[1, i].Value);
+                }
+
+            }
         }
     }
 }

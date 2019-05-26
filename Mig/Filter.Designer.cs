@@ -186,8 +186,9 @@
             this.tpRegExendClear,
             this.toolStripMenuItem5});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(297, 322);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(297, 350);
             this.contextMenuStrip1.Text = "Выпускник";
+           
             // 
             // miGraduate
             // 
@@ -475,7 +476,6 @@
             this.tpBackup.Name = "tpBackup";
             this.tpBackup.Size = new System.Drawing.Size(226, 26);
             this.tpBackup.Text = "Резервная копия БД";
-            
             // 
             // tpSync
             // 
@@ -483,7 +483,6 @@
             this.tpSync.Size = new System.Drawing.Size(226, 26);
             this.tpSync.Text = "Синхронизация";
             this.tpSync.Visible = false;
-            
             // 
             // btnConnectPref
             // 

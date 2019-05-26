@@ -52,6 +52,8 @@ namespace Mig
                 int.TryParse(nl[0].InnerText, out pref.INVSTATUSSTAYBYINT);
                 nl = doc.GetElementsByTagName("USERLIST");
                 pref.USERLIST = nl[0].InnerText;
+                nl = doc.GetElementsByTagName("VISADOCREADY");
+                int.TryParse(nl[0].InnerText, out pref.VISADOCREADY);
                 //pref.FULLREPORTPATCH = pref.MIGDATA + pref.REPORTFOLDER;
             }
             catch (Exception e)

@@ -4,8 +4,9 @@
   <DBNAME>cmodb</DBNAME>
   <HOST>MYPC\SQLEXPRESS</HOST>
   <REPORTFOLDER>C:\МИГ.Документы\Документы\</REPORTFOLDER>
-  <INVREPORTFOLDER>C:\МИГ.Документы\Приглашения\</INVREPORTFOLDER><!--путь до папки с отчетами --> 
+  <VISADOCREADY>20</VISADOCREADY>  <!--документы на визу будут готовы через Х рабочих дней -->
   <NOTIFYTEMPLATE>xls</NOTIFYTEMPLATE>
+  <INVREPORTFOLDER>C:\МИГ.Документы\Приглашения\</INVREPORTFOLDER> <!--путь до папки с отчетами -->
   <INVCHECKDUL>18</INVCHECKDUL>
   <INVSTATUSARRIVED>#64F556</INVSTATUSARRIVED><!--раскрасить:Приехал --> 
   <INVSTATUSREJECTION>#F65C5A</INVSTATUSREJECTION><!-- раскрасить:Не приехал(отказ) --> 
