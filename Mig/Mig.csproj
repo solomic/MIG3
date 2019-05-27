@@ -230,6 +230,7 @@
     <Compile Include="FindAddress.Designer.cs">
       <DependentUpon>FindAddress.cs</DependentUpon>
     </Compile>
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Holy.cs">
       <SubType>Form</SubType>
     </Compile>

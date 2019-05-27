@@ -52,10 +52,7 @@ namespace Mig
 
         }
 
-        private void удалитьToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
+       
 
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
@@ -90,7 +87,9 @@ namespace Mig
                     }
                 }
             }
+#pragma warning disable CS0168 // The variable 'err' is declared but never used
             catch(Exception err)
+#pragma warning restore CS0168 // The variable 'err' is declared but never used
             {
 
             }
@@ -280,7 +279,9 @@ namespace Mig
             {
                 bindingSource1.Filter = "Адрес LIKE '%" + textBox1.Text + "%'";
             }
+#pragma warning disable CS0168 // The variable 'err' is declared but never used
             catch (Exception err)
+#pragma warning restore CS0168 // The variable 'err' is declared but never used
             {
                // Logger.Log.Error(ClassName + "Function:textBox1_TextChanged\n Error:" + err);
             }

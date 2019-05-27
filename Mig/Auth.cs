@@ -30,10 +30,6 @@ namespace Mig
                 pref.DBNAME = nl[0].InnerText;
                 nl = doc.GetElementsByTagName("HOST");
                 pref.HOST = nl[0].InnerText;
-               // nl = doc.GetElementsByTagName("DBPORT");
-               // pref.PORT = nl[0].InnerText;
-               // nl = doc.GetElementsByTagName("MIGDATA");
-               // pref.MIGDATA = nl[0].InnerText;
                 nl = doc.GetElementsByTagName("REPORTFOLDER");
                 pref.REPORTFOLDER = nl[0].InnerText;
                 nl = doc.GetElementsByTagName("NOTIFYTEMPLATE");

@@ -125,7 +125,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(505, 17);
+            this.label2.Location = new System.Drawing.Point(305, 17);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(72, 17);
@@ -136,7 +136,7 @@
             // 
             this.cmbFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbFilter.FormattingEnabled = true;
-            this.cmbFilter.Location = new System.Drawing.Point(605, 12);
+            this.cmbFilter.Location = new System.Drawing.Point(385, 14);
             this.cmbFilter.Margin = new System.Windows.Forms.Padding(4);
             this.cmbFilter.Name = "cmbFilter";
             this.cmbFilter.Size = new System.Drawing.Size(471, 24);
@@ -145,10 +145,10 @@
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(183, 14);
+            this.textBox1.Location = new System.Drawing.Point(122, 14);
             this.textBox1.Margin = new System.Windows.Forms.Padding(4);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(279, 22);
+            this.textBox1.Size = new System.Drawing.Size(159, 22);
             this.textBox1.TabIndex = 1;
             this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             this.textBox1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox1_KeyDown);
@@ -157,7 +157,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(89, 17);
+            this.label1.Location = new System.Drawing.Point(62, 17);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(61, 17);
@@ -186,9 +186,8 @@
             this.tpRegExendClear,
             this.toolStripMenuItem5});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(297, 350);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(297, 322);
             this.contextMenuStrip1.Text = "Выпускник";
-           
             // 
             // miGraduate
             // 
@@ -305,7 +304,7 @@
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.stCnt,
             this.tsFilterLoad});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 928);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 792);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Padding = new System.Windows.Forms.Padding(1, 0, 13, 0);
             this.statusStrip1.Size = new System.Drawing.Size(1436, 22);
@@ -329,7 +328,8 @@
             this.dataGridView1.AllowUserToDeleteRows = false;
             this.dataGridView1.AllowUserToOrderColumns = true;
             this.dataGridView1.AllowUserToResizeRows = false;
-            this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridView1.AutoGenerateContextFilters = true;
             this.dataGridView1.ColumnHeadersHeight = 35;
@@ -342,7 +342,7 @@
             this.dataGridView1.ReadOnly = true;
             this.dataGridView1.RowTemplate.Height = 25;
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.dataGridView1.Size = new System.Drawing.Size(1409, 805);
+            this.dataGridView1.Size = new System.Drawing.Size(1409, 671);
             this.dataGridView1.TabIndex = 6;
             this.dataGridView1.TimeFilter = false;
             this.dataGridView1.VirtualMode = true;
@@ -507,12 +507,13 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1436, 950);
+            this.ClientSize = new System.Drawing.Size(1436, 814);
             this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.panel1);
             this.Margin = new System.Windows.Forms.Padding(4);
+            this.MinimumSize = new System.Drawing.Size(930, 700);
             this.Name = "fFilter";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Миграционный учет";

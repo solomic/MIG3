@@ -2173,7 +2173,9 @@ namespace Mig
                         //временно отключаю
                         //File.Delete(pref.REPORTFOLDER + pref.CONNAT + "\\" + pref.CONFIO + dgPf.CurrentRow.Cells["name"].Value);
                     }
+#pragma warning disable CS0168 // The variable 'ex' is declared but never used
                     catch (Exception ex) { }
+#pragma warning restore CS0168 // The variable 'ex' is declared but never used
                     LoadPf();
                     MessageBox.Show("Успешно удалено", "Инфо", MessageBoxButtons.OK, MessageBoxIcon.Information);
                  }

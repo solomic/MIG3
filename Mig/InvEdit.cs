@@ -130,7 +130,9 @@ namespace Mig
                 else
                     DBDateTimeEditEh2.SelectedDate = "";
             }
+#pragma warning disable CS0168 // The variable 'msg' is declared but never used
             catch (Exception msg) { }
+#pragma warning restore CS0168 // The variable 'msg' is declared but never used
         }
 
         private void BitBtn2_Click(object sender, EventArgs e)
@@ -466,7 +468,9 @@ namespace Mig
 
 
             }
+#pragma warning disable CS0168 // The variable 'err' is declared but never used
             catch (Exception err) { }
+#pragma warning restore CS0168 // The variable 'err' is declared but never used
         }
 
         private void DBDateTimeEditEh7_ValueChanged(object sender, EventArgs e)
@@ -484,7 +488,9 @@ namespace Mig
                 else
                     lValid.Visible = false;
             }
+#pragma warning disable CS0168 // The variable 'err' is declared but never used
             catch (Exception err) { }
+#pragma warning restore CS0168 // The variable 'err' is declared but never used
         }
 
         private void LabeledEdit8_TextChanged(object sender, EventArgs e)
@@ -498,7 +504,9 @@ namespace Mig
                 cmb.DataSource = DB.QueryTableMultipleParams("SELECT DISTINCT [" + fldname + "] FROM " + tbl + " ORDER BY 1 ASC", null);
                 cmb.ValueMember = fldname;   
             }
+#pragma warning disable CS0168 // The variable 'err' is declared but never used
             catch(Exception err)
+#pragma warning restore CS0168 // The variable 'err' is declared but never used
             {
             }
         }

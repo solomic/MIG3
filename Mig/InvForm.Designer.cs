@@ -265,8 +265,8 @@
             this.InvFilterGrid.Name = "InvFilterGrid";
             this.InvFilterGrid.ReadOnly = true;
             this.InvFilterGrid.RowTemplate.Height = 24;
-            this.InvFilterGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.InvFilterGrid.Size = new System.Drawing.Size(1273, 551);
+            this.InvFilterGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.InvFilterGrid.Size = new System.Drawing.Size(1203, 540);
             this.InvFilterGrid.TabIndex = 13;
             this.InvFilterGrid.TimeFilter = false;
             this.InvFilterGrid.VirtualMode = true;
@@ -281,26 +281,26 @@
             this.ssStatus,
             this.stCnt,
             this.toolStripStatusLabel1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 642);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 644);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(1285, 24);
+            this.statusStrip1.Size = new System.Drawing.Size(1222, 22);
             this.statusStrip1.TabIndex = 24;
             this.statusStrip1.Text = "statusStrip1";
             // 
             // ssStatus
             // 
             this.ssStatus.Name = "ssStatus";
-            this.ssStatus.Size = new System.Drawing.Size(0, 19);
+            this.ssStatus.Size = new System.Drawing.Size(0, 17);
             // 
             // stCnt
             // 
             this.stCnt.Name = "stCnt";
-            this.stCnt.Size = new System.Drawing.Size(0, 19);
+            this.stCnt.Size = new System.Drawing.Size(0, 17);
             // 
             // toolStripStatusLabel1
             // 
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(0, 19);
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(0, 17);
             // 
             // comboBox1
             // 
@@ -315,7 +315,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1285, 666);
+            this.ClientSize = new System.Drawing.Size(1222, 666);
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.button6);
@@ -328,6 +328,7 @@
             this.Controls.Add(this.cmbInvFilter);
             this.Controls.Add(this.btnAdd);
             this.Controls.Add(this.InvFilterGrid);
+            this.MinimumSize = new System.Drawing.Size(1240, 700);
             this.Name = "InvForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Приглашения";

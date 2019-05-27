@@ -251,7 +251,7 @@ namespace Mig
 
             catch (Exception ex)
             {
-                Logger.Log.Error(ClassName + "Function:miGraduate_Click\n Error:" + ex);
+                Logger.Log.Error(ClassName + "Function:setStatus\n Error:" + ex);
                 MessageBox.Show("Ошибка :\n\n" + ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -264,7 +264,7 @@ namespace Mig
         {
             try
             {
-                if (InvFilterGrid.SelectedCells.Count != 1)
+                if (InvFilterGrid.SelectedRows.Count != 1)
                 {
                     return;
                 }
@@ -353,7 +353,7 @@ namespace Mig
 
         private void pmCopy_Click(object sender, EventArgs e)
         {
-            if (InvFilterGrid.SelectedCells.Count == 0)
+            if (InvFilterGrid.SelectedRows.Count == 0)
             {
                 return;
             }
