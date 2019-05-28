@@ -342,7 +342,7 @@ namespace Mig
 
                
                 /*Дней в РФ*/
-                tDays.Text = DB.GetTableValue("SELECT allday FROM cmodb.\"ResidentView\" where contact_id=@param1;", new List<object> { pref.CONTACTID });
+                tDays.Text = DB.GetTableValue("SELECT [i1] FROM [cmodb].[Resident] (@param1);", new List<object> { pref.CONTACTID });
 
                 /*ИНИЦИАЛИЗАЦИЯ ПАРАМЕТРОВ ОТЧЕТОВ*/
                 //ходатайство обычное
