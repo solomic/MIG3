@@ -361,11 +361,10 @@
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Controls.Add(this.tabDelChild);
             this.tabControl1.ItemSize = new System.Drawing.Size(98, 25);
-            this.tabControl1.Location = new System.Drawing.Point(1, 281);
-            this.tabControl1.Margin = new System.Windows.Forms.Padding(4);
+            this.tabControl1.Location = new System.Drawing.Point(1, 228);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1371, 647);
+            this.tabControl1.Size = new System.Drawing.Size(1028, 526);
             this.tabControl1.TabIndex = 1;
             this.tabControl1.Deselecting += new System.Windows.Forms.TabControlCancelEventHandler(this.tabControl1_Deselecting);
             // 
@@ -374,10 +373,9 @@
             this.tabConInfo.Controls.Add(this.toolStrip9);
             this.tabConInfo.Controls.Add(this.groupBox3);
             this.tabConInfo.Location = new System.Drawing.Point(4, 29);
-            this.tabConInfo.Margin = new System.Windows.Forms.Padding(4);
             this.tabConInfo.Name = "tabConInfo";
-            this.tabConInfo.Padding = new System.Windows.Forms.Padding(4);
-            this.tabConInfo.Size = new System.Drawing.Size(1363, 614);
+            this.tabConInfo.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabConInfo.Size = new System.Drawing.Size(1020, 493);
             this.tabConInfo.TabIndex = 0;
             this.tabConInfo.Text = "Доп. информация";
             // 
@@ -389,9 +387,9 @@
             this.toolStripSeparator2,
             this.btnSaveContactEx,
             this.btnUndoContactEx});
-            this.toolStrip9.Location = new System.Drawing.Point(4, 4);
+            this.toolStrip9.Location = new System.Drawing.Point(3, 3);
             this.toolStrip9.Name = "toolStrip9";
-            this.toolStrip9.Size = new System.Drawing.Size(1355, 27);
+            this.toolStrip9.Size = new System.Drawing.Size(1014, 27);
             this.toolStrip9.TabIndex = 41;
             this.toolStrip9.Text = "toolStrip9";
             // 
@@ -400,7 +398,7 @@
             this.toolStripButton24.Image = global::Mig.Properties.Resources.Pencil512_44200;
             this.toolStripButton24.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton24.Name = "toolStripButton24";
-            this.toolStripButton24.Size = new System.Drawing.Size(135, 24);
+            this.toolStripButton24.Size = new System.Drawing.Size(111, 24);
             this.toolStripButton24.Text = "Редактировать";
             this.toolStripButton24.Click += new System.EventHandler(this.toolStripButton24_Click);
             // 
@@ -415,7 +413,7 @@
             this.btnSaveContactEx.Image = ((System.Drawing.Image)(resources.GetObject("btnSaveContactEx.Image")));
             this.btnSaveContactEx.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnSaveContactEx.Name = "btnSaveContactEx";
-            this.btnSaveContactEx.Size = new System.Drawing.Size(107, 24);
+            this.btnSaveContactEx.Size = new System.Drawing.Size(89, 24);
             this.btnSaveContactEx.Text = "Сохранить";
             this.btnSaveContactEx.Click += new System.EventHandler(this.btnSaveContactEx_Click);
             // 
@@ -425,7 +423,7 @@
             this.btnUndoContactEx.Image = ((System.Drawing.Image)(resources.GetObject("btnUndoContactEx.Image")));
             this.btnUndoContactEx.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnUndoContactEx.Name = "btnUndoContactEx";
-            this.btnUndoContactEx.Size = new System.Drawing.Size(101, 24);
+            this.btnUndoContactEx.Size = new System.Drawing.Size(85, 24);
             this.btnUndoContactEx.Text = "Отменить";
             this.btnUndoContactEx.Click += new System.EventHandler(this.btnUndoContactEx_Click);
             // 
@@ -447,29 +445,29 @@
             this.groupBox3.Controls.Add(this.label17);
             this.groupBox3.Controls.Add(this.tComments);
             this.groupBox3.Controls.Add(this.tInfo);
-            this.groupBox3.Location = new System.Drawing.Point(8, 38);
-            this.groupBox3.Margin = new System.Windows.Forms.Padding(4);
+            this.groupBox3.Location = new System.Drawing.Point(6, 31);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Padding = new System.Windows.Forms.Padding(4);
-            this.groupBox3.Size = new System.Drawing.Size(1344, 548);
+            this.groupBox3.Size = new System.Drawing.Size(1008, 445);
             this.groupBox3.TabIndex = 16;
             this.groupBox3.TabStop = false;
             // 
             // label22
             // 
             this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(418, 105);
+            this.label22.Location = new System.Drawing.Point(314, 85);
+            this.label22.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(30, 17);
+            this.label22.Size = new System.Drawing.Size(24, 13);
             this.label22.TabIndex = 79;
             this.label22.Text = "По:";
             // 
             // label21
             // 
             this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(272, 105);
+            this.label21.Location = new System.Drawing.Point(204, 85);
+            this.label21.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(21, 17);
+            this.label21.Size = new System.Drawing.Size(17, 13);
             this.label21.TabIndex = 78;
             this.label21.Text = "С:";
             // 
@@ -479,11 +477,11 @@
             this.med_to.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.med_to.BackColor = System.Drawing.Color.Transparent;
             this.med_to.Enabled = false;
-            this.med_to.Location = new System.Drawing.Point(421, 129);
+            this.med_to.Location = new System.Drawing.Point(316, 105);
             this.med_to.Margin = new System.Windows.Forms.Padding(0);
             this.med_to.Name = "med_to";
             this.med_to.SelectedDate = "";
-            this.med_to.Size = new System.Drawing.Size(124, 22);
+            this.med_to.Size = new System.Drawing.Size(93, 20);
             this.med_to.TabIndex = 77;
             // 
             // med_fr
@@ -492,11 +490,11 @@
             this.med_fr.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.med_fr.BackColor = System.Drawing.Color.Transparent;
             this.med_fr.Enabled = false;
-            this.med_fr.Location = new System.Drawing.Point(275, 129);
+            this.med_fr.Location = new System.Drawing.Point(206, 105);
             this.med_fr.Margin = new System.Windows.Forms.Padding(0);
             this.med_fr.Name = "med_fr";
             this.med_fr.SelectedDate = "";
-            this.med_fr.Size = new System.Drawing.Size(124, 22);
+            this.med_fr.Size = new System.Drawing.Size(93, 20);
             this.med_fr.TabIndex = 76;
             // 
             // cmbPosition
@@ -506,10 +504,9 @@
             this.cmbPosition.DisplayMember = "value";
             this.cmbPosition.Enabled = false;
             this.cmbPosition.FormattingEnabled = true;
-            this.cmbPosition.Location = new System.Drawing.Point(585, 399);
-            this.cmbPosition.Margin = new System.Windows.Forms.Padding(4);
+            this.cmbPosition.Location = new System.Drawing.Point(439, 324);
             this.cmbPosition.Name = "cmbPosition";
-            this.cmbPosition.Size = new System.Drawing.Size(236, 24);
+            this.cmbPosition.Size = new System.Drawing.Size(178, 21);
             this.cmbPosition.TabIndex = 75;
             this.cmbPosition.ValueMember = "code";
             this.cmbPosition.Visible = false;
@@ -517,40 +514,36 @@
             // label49
             // 
             this.label49.AutoSize = true;
-            this.label49.Location = new System.Drawing.Point(20, 105);
-            this.label49.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label49.Location = new System.Drawing.Point(15, 85);
             this.label49.Name = "label49";
-            this.label49.Size = new System.Drawing.Size(80, 17);
+            this.label49.Size = new System.Drawing.Size(63, 13);
             this.label49.TabIndex = 55;
             this.label49.Text = "Страховка:";
             // 
             // label48
             // 
             this.label48.AutoSize = true;
-            this.label48.Location = new System.Drawing.Point(20, 161);
-            this.label48.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label48.Location = new System.Drawing.Point(15, 131);
             this.label48.Name = "label48";
-            this.label48.Size = new System.Drawing.Size(105, 17);
+            this.label48.Size = new System.Drawing.Size(82, 13);
             this.label48.TabIndex = 54;
             this.label48.Text = "Родственники:";
             // 
             // label47
             // 
             this.label47.AutoSize = true;
-            this.label47.Location = new System.Drawing.Point(20, 25);
-            this.label47.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label47.Location = new System.Drawing.Point(15, 20);
             this.label47.Name = "label47";
-            this.label47.Size = new System.Drawing.Size(197, 17);
+            this.label47.Size = new System.Drawing.Size(153, 13);
             this.label47.TabIndex = 53;
             this.label47.Text = "Адрес в стране проживания:";
             // 
             // label46
             // 
             this.label46.AutoSize = true;
-            this.label46.Location = new System.Drawing.Point(581, 374);
-            this.label46.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label46.Location = new System.Drawing.Point(436, 304);
             this.label46.Name = "label46";
-            this.label46.Size = new System.Drawing.Size(85, 17);
+            this.label46.Size = new System.Drawing.Size(68, 13);
             this.label46.TabIndex = 52;
             this.label46.Text = "Должность:";
             this.label46.Visible = false;
@@ -558,79 +551,72 @@
             // tRelatives
             // 
             this.tRelatives.BackColor = System.Drawing.SystemColors.Window;
-            this.tRelatives.Location = new System.Drawing.Point(24, 183);
-            this.tRelatives.Margin = new System.Windows.Forms.Padding(4);
+            this.tRelatives.Location = new System.Drawing.Point(18, 149);
             this.tRelatives.Multiline = true;
             this.tRelatives.Name = "tRelatives";
             this.tRelatives.ReadOnly = true;
             this.tRelatives.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.tRelatives.Size = new System.Drawing.Size(521, 69);
+            this.tRelatives.Size = new System.Drawing.Size(392, 57);
             this.tRelatives.TabIndex = 51;
             // 
             // tInsurance
             // 
             this.tInsurance.BackColor = System.Drawing.SystemColors.Window;
-            this.tInsurance.Location = new System.Drawing.Point(24, 129);
-            this.tInsurance.Margin = new System.Windows.Forms.Padding(4);
+            this.tInsurance.Location = new System.Drawing.Point(18, 105);
             this.tInsurance.Name = "tInsurance";
             this.tInsurance.ReadOnly = true;
-            this.tInsurance.Size = new System.Drawing.Size(236, 22);
+            this.tInsurance.Size = new System.Drawing.Size(178, 20);
             this.tInsurance.TabIndex = 50;
             // 
             // tPersAddress
             // 
             this.tPersAddress.BackColor = System.Drawing.SystemColors.Window;
-            this.tPersAddress.Location = new System.Drawing.Point(24, 47);
-            this.tPersAddress.Margin = new System.Windows.Forms.Padding(4);
+            this.tPersAddress.Location = new System.Drawing.Point(18, 38);
             this.tPersAddress.Multiline = true;
             this.tPersAddress.Name = "tPersAddress";
             this.tPersAddress.ReadOnly = true;
             this.tPersAddress.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.tPersAddress.Size = new System.Drawing.Size(521, 53);
+            this.tPersAddress.Size = new System.Drawing.Size(392, 44);
             this.tPersAddress.TabIndex = 49;
             // 
             // label18
             // 
             this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(20, 351);
-            this.label18.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label18.Location = new System.Drawing.Point(15, 285);
             this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(136, 17);
+            this.label18.Size = new System.Drawing.Size(104, 13);
             this.label18.TabIndex = 36;
             this.label18.Text = "Конт. информация:";
             // 
             // label17
             // 
             this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(20, 257);
-            this.label17.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label17.Location = new System.Drawing.Point(15, 209);
             this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(102, 17);
+            this.label17.Size = new System.Drawing.Size(80, 13);
             this.label17.TabIndex = 36;
             this.label17.Text = "Комментарий:";
             // 
             // tComments
             // 
             this.tComments.BackColor = System.Drawing.SystemColors.Window;
-            this.tComments.Location = new System.Drawing.Point(24, 277);
-            this.tComments.Margin = new System.Windows.Forms.Padding(4);
+            this.tComments.Location = new System.Drawing.Point(18, 225);
             this.tComments.Multiline = true;
             this.tComments.Name = "tComments";
             this.tComments.ReadOnly = true;
             this.tComments.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.tComments.Size = new System.Drawing.Size(521, 57);
+            this.tComments.Size = new System.Drawing.Size(392, 47);
             this.tComments.TabIndex = 35;
             // 
             // tInfo
             // 
             this.tInfo.BackColor = System.Drawing.SystemColors.Window;
-            this.tInfo.Location = new System.Drawing.Point(24, 370);
-            this.tInfo.Margin = new System.Windows.Forms.Padding(4);
+            this.tInfo.Location = new System.Drawing.Point(18, 301);
             this.tInfo.Multiline = true;
             this.tInfo.Name = "tInfo";
             this.tInfo.ReadOnly = true;
             this.tInfo.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.tInfo.Size = new System.Drawing.Size(521, 91);
+            this.tInfo.Size = new System.Drawing.Size(392, 75);
             this.tInfo.TabIndex = 34;
             // 
             // tabDocMigr
@@ -638,10 +624,9 @@
             this.tabDocMigr.Controls.Add(this.panel4);
             this.tabDocMigr.Controls.Add(this.panel3);
             this.tabDocMigr.Location = new System.Drawing.Point(4, 29);
-            this.tabDocMigr.Margin = new System.Windows.Forms.Padding(4);
             this.tabDocMigr.Name = "tabDocMigr";
-            this.tabDocMigr.Padding = new System.Windows.Forms.Padding(4);
-            this.tabDocMigr.Size = new System.Drawing.Size(1363, 614);
+            this.tabDocMigr.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabDocMigr.Size = new System.Drawing.Size(1020, 493);
             this.tabDocMigr.TabIndex = 1;
             this.tabDocMigr.Text = "Регистрация/Виза";
             this.tabDocMigr.Enter += new System.EventHandler(this.tabDocMigr_Enter);
@@ -652,10 +637,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel4.Controls.Add(this.dgMigrHist);
             this.panel4.Controls.Add(this.toolStrip12);
-            this.panel4.Location = new System.Drawing.Point(8, 289);
-            this.panel4.Margin = new System.Windows.Forms.Padding(4);
+            this.panel4.Location = new System.Drawing.Point(6, 235);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(1344, 310);
+            this.panel4.Size = new System.Drawing.Size(1008, 252);
             this.panel4.TabIndex = 43;
             // 
             // dgMigrHist
@@ -672,8 +656,7 @@
             this.dgMigrHist.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgMigrHist.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.migrstatus});
-            this.dgMigrHist.Location = new System.Drawing.Point(11, 34);
-            this.dgMigrHist.Margin = new System.Windows.Forms.Padding(4);
+            this.dgMigrHist.Location = new System.Drawing.Point(8, 28);
             this.dgMigrHist.MultiSelect = false;
             this.dgMigrHist.Name = "dgMigrHist";
             this.dgMigrHist.ReadOnly = true;
@@ -686,7 +669,7 @@
             this.dgMigrHist.ShowCellToolTips = false;
             this.dgMigrHist.ShowEditingIcon = false;
             this.dgMigrHist.ShowRowErrors = false;
-            this.dgMigrHist.Size = new System.Drawing.Size(1312, 249);
+            this.dgMigrHist.Size = new System.Drawing.Size(984, 202);
             this.dgMigrHist.TabIndex = 43;
             // 
             // migrstatus
@@ -694,7 +677,7 @@
             this.migrstatus.HeaderText = "Основной";
             this.migrstatus.Name = "migrstatus";
             this.migrstatus.ReadOnly = true;
-            this.migrstatus.Width = 79;
+            this.migrstatus.Width = 63;
             // 
             // toolStrip12
             // 
@@ -710,7 +693,7 @@
             this.toolStripButton36});
             this.toolStrip12.Location = new System.Drawing.Point(0, 0);
             this.toolStrip12.Name = "toolStrip12";
-            this.toolStrip12.Size = new System.Drawing.Size(1344, 27);
+            this.toolStrip12.Size = new System.Drawing.Size(1008, 27);
             this.toolStrip12.TabIndex = 42;
             this.toolStrip12.Text = "toolStrip12";
             // 
@@ -719,7 +702,7 @@
             this.toolStripLabel3.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.toolStripLabel3.Name = "toolStripLabel3";
             this.toolStripLabel3.Padding = new System.Windows.Forms.Padding(0, 0, 60, 0);
-            this.toolStripLabel3.Size = new System.Drawing.Size(222, 24);
+            this.toolStripLabel3.Size = new System.Drawing.Size(188, 24);
             this.toolStripLabel3.Text = "Миграционная карта";
             // 
             // toolStripButton34
@@ -727,7 +710,7 @@
             this.toolStripButton34.Image = global::Mig.Properties.Resources.Add_40971;
             this.toolStripButton34.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton34.Name = "toolStripButton34";
-            this.toolStripButton34.Size = new System.Drawing.Size(100, 24);
+            this.toolStripButton34.Size = new System.Drawing.Size(83, 24);
             this.toolStripButton34.Text = "Добавить";
             this.toolStripButton34.Click += new System.EventHandler(this.toolStripButton34_Click);
             // 
@@ -736,7 +719,7 @@
             this.toolStripButton15.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton15.Image")));
             this.toolStripButton15.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton15.Name = "toolStripButton15";
-            this.toolStripButton15.Size = new System.Drawing.Size(130, 24);
+            this.toolStripButton15.Size = new System.Drawing.Size(107, 24);
             this.toolStripButton15.Text = "Активировать";
             this.toolStripButton15.Click += new System.EventHandler(this.toolStripButton15_Click);
             // 
@@ -745,7 +728,7 @@
             this.toolStripButton14.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton14.Image")));
             this.toolStripButton14.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton14.Name = "toolStripButton14";
-            this.toolStripButton14.Size = new System.Drawing.Size(101, 24);
+            this.toolStripButton14.Size = new System.Drawing.Size(85, 24);
             this.toolStripButton14.Text = "Продлить";
             this.toolStripButton14.Click += new System.EventHandler(this.toolStripButton14_Click_1);
             // 
@@ -759,7 +742,7 @@
             this.toolStripButton35.Image = global::Mig.Properties.Resources.Pencil512_44200;
             this.toolStripButton35.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton35.Name = "toolStripButton35";
-            this.toolStripButton35.Size = new System.Drawing.Size(135, 24);
+            this.toolStripButton35.Size = new System.Drawing.Size(111, 24);
             this.toolStripButton35.Text = "Редактировать";
             this.toolStripButton35.Click += new System.EventHandler(this.toolStripButton35_Click);
             // 
@@ -773,7 +756,7 @@
             this.toolStripButton36.Image = global::Mig.Properties.Resources.Delete;
             this.toolStripButton36.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton36.Name = "toolStripButton36";
-            this.toolStripButton36.Size = new System.Drawing.Size(89, 24);
+            this.toolStripButton36.Size = new System.Drawing.Size(75, 24);
             this.toolStripButton36.Text = "Удалить";
             this.toolStripButton36.Click += new System.EventHandler(this.toolStripButton36_Click);
             // 
@@ -787,49 +770,44 @@
             this.panel3.Controls.Add(this.label19);
             this.panel3.Controls.Add(this.dgDocSel);
             this.panel3.Controls.Add(this.toolStrip10);
-            this.panel3.Location = new System.Drawing.Point(9, 7);
-            this.panel3.Margin = new System.Windows.Forms.Padding(4);
+            this.panel3.Location = new System.Drawing.Point(7, 6);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(1343, 278);
+            this.panel3.Size = new System.Drawing.Size(1007, 226);
             this.panel3.TabIndex = 42;
             // 
             // tdate_entry_future
             // 
             this.tdate_entry_future.BackColor = System.Drawing.Color.White;
-            this.tdate_entry_future.Location = new System.Drawing.Point(471, 250);
-            this.tdate_entry_future.Margin = new System.Windows.Forms.Padding(4);
+            this.tdate_entry_future.Location = new System.Drawing.Point(353, 203);
             this.tdate_entry_future.Name = "tdate_entry_future";
             this.tdate_entry_future.ReadOnly = true;
-            this.tdate_entry_future.Size = new System.Drawing.Size(113, 22);
+            this.tdate_entry_future.Size = new System.Drawing.Size(86, 20);
             this.tdate_entry_future.TabIndex = 47;
             // 
             // tdelivery_dt
             // 
             this.tdelivery_dt.BackColor = System.Drawing.Color.White;
-            this.tdelivery_dt.Location = new System.Drawing.Point(249, 250);
-            this.tdelivery_dt.Margin = new System.Windows.Forms.Padding(4);
+            this.tdelivery_dt.Location = new System.Drawing.Point(187, 203);
             this.tdelivery_dt.Name = "tdelivery_dt";
             this.tdelivery_dt.ReadOnly = true;
-            this.tdelivery_dt.Size = new System.Drawing.Size(108, 22);
+            this.tdelivery_dt.Size = new System.Drawing.Size(82, 20);
             this.tdelivery_dt.TabIndex = 46;
             // 
             // label20
             // 
             this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(367, 254);
-            this.label20.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label20.Location = new System.Drawing.Point(275, 206);
             this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(91, 17);
+            this.label20.Size = new System.Drawing.Size(72, 13);
             this.label20.TabIndex = 45;
             this.label20.Text = "Виза готова:";
             // 
             // label19
             // 
             this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(12, 254);
-            this.label19.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label19.Location = new System.Drawing.Point(9, 206);
             this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(223, 17);
+            this.label19.Size = new System.Drawing.Size(172, 13);
             this.label19.TabIndex = 44;
             this.label19.Text = "Дата сдачи документов на визу:";
             // 
@@ -847,8 +825,7 @@
             this.dgDocSel.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgDocSel.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.docstatus});
-            this.dgDocSel.Location = new System.Drawing.Point(9, 34);
-            this.dgDocSel.Margin = new System.Windows.Forms.Padding(4);
+            this.dgDocSel.Location = new System.Drawing.Point(7, 28);
             this.dgDocSel.MultiSelect = false;
             this.dgDocSel.Name = "dgDocSel";
             this.dgDocSel.ReadOnly = true;
@@ -861,7 +838,7 @@
             this.dgDocSel.ShowCellToolTips = false;
             this.dgDocSel.ShowEditingIcon = false;
             this.dgDocSel.ShowRowErrors = false;
-            this.dgDocSel.Size = new System.Drawing.Size(1312, 212);
+            this.dgDocSel.Size = new System.Drawing.Size(984, 172);
             this.dgDocSel.TabIndex = 43;
             // 
             // docstatus
@@ -869,7 +846,7 @@
             this.docstatus.HeaderText = "Основной";
             this.docstatus.Name = "docstatus";
             this.docstatus.ReadOnly = true;
-            this.docstatus.Width = 79;
+            this.docstatus.Width = 63;
             // 
             // toolStrip10
             // 
@@ -884,7 +861,7 @@
             this.toolStripButton26});
             this.toolStrip10.Location = new System.Drawing.Point(0, 0);
             this.toolStrip10.Name = "toolStrip10";
-            this.toolStrip10.Size = new System.Drawing.Size(1343, 27);
+            this.toolStrip10.Size = new System.Drawing.Size(1007, 27);
             this.toolStrip10.TabIndex = 42;
             this.toolStrip10.Text = "toolStrip10";
             // 
@@ -893,7 +870,7 @@
             this.toolStripLabel2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.toolStripLabel2.Name = "toolStripLabel2";
             this.toolStripLabel2.Padding = new System.Windows.Forms.Padding(0, 0, 60, 0);
-            this.toolStripLabel2.Size = new System.Drawing.Size(249, 24);
+            this.toolStripLabel2.Size = new System.Drawing.Size(212, 24);
             this.toolStripLabel2.Text = "Документы регистрации";
             // 
             // toolStripButton23
@@ -901,7 +878,7 @@
             this.toolStripButton23.Image = global::Mig.Properties.Resources.Add_40971;
             this.toolStripButton23.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton23.Name = "toolStripButton23";
-            this.toolStripButton23.Size = new System.Drawing.Size(100, 24);
+            this.toolStripButton23.Size = new System.Drawing.Size(83, 24);
             this.toolStripButton23.Text = "Добавить";
             this.toolStripButton23.Click += new System.EventHandler(this.toolStripButton23_Click);
             // 
@@ -910,7 +887,7 @@
             this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
             this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(130, 24);
+            this.toolStripButton1.Size = new System.Drawing.Size(107, 24);
             this.toolStripButton1.Text = "Активировать";
             this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
             // 
@@ -924,7 +901,7 @@
             this.toolStripButton25.Image = global::Mig.Properties.Resources.Pencil512_44200;
             this.toolStripButton25.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton25.Name = "toolStripButton25";
-            this.toolStripButton25.Size = new System.Drawing.Size(135, 24);
+            this.toolStripButton25.Size = new System.Drawing.Size(111, 24);
             this.toolStripButton25.Text = "Редактировать";
             this.toolStripButton25.Click += new System.EventHandler(this.toolStripButton25_Click);
             // 
@@ -938,7 +915,7 @@
             this.toolStripButton26.Image = global::Mig.Properties.Resources.Delete;
             this.toolStripButton26.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton26.Name = "toolStripButton26";
-            this.toolStripButton26.Size = new System.Drawing.Size(89, 24);
+            this.toolStripButton26.Size = new System.Drawing.Size(75, 24);
             this.toolStripButton26.Text = "Удалить";
             this.toolStripButton26.Click += new System.EventHandler(this.toolStripButton26_Click);
             // 
@@ -948,10 +925,9 @@
             this.tabDUL.Controls.Add(this.DULdataGridView);
             this.tabDUL.Controls.Add(this.toolStrip6);
             this.tabDUL.Location = new System.Drawing.Point(4, 29);
-            this.tabDUL.Margin = new System.Windows.Forms.Padding(4);
             this.tabDUL.Name = "tabDUL";
-            this.tabDUL.Padding = new System.Windows.Forms.Padding(4);
-            this.tabDUL.Size = new System.Drawing.Size(1363, 614);
+            this.tabDUL.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabDUL.Size = new System.Drawing.Size(1020, 493);
             this.tabDUL.TabIndex = 6;
             this.tabDUL.Text = "ДУЛ";
             this.tabDUL.Enter += new System.EventHandler(this.tabDUL_Enter);
@@ -971,8 +947,7 @@
             this.DULdataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.DULdataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.dulstatus});
-            this.DULdataGridView.Location = new System.Drawing.Point(8, 38);
-            this.DULdataGridView.Margin = new System.Windows.Forms.Padding(4);
+            this.DULdataGridView.Location = new System.Drawing.Point(6, 31);
             this.DULdataGridView.MultiSelect = false;
             this.DULdataGridView.Name = "DULdataGridView";
             this.DULdataGridView.ReadOnly = true;
@@ -980,7 +955,7 @@
             dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.Black;
             this.DULdataGridView.RowsDefaultCellStyle = dataGridViewCellStyle3;
             this.DULdataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.DULdataGridView.Size = new System.Drawing.Size(1327, 214);
+            this.DULdataGridView.Size = new System.Drawing.Size(995, 174);
             this.DULdataGridView.TabIndex = 42;
             // 
             // dulstatus
@@ -988,7 +963,7 @@
             this.dulstatus.HeaderText = "Основной";
             this.dulstatus.Name = "dulstatus";
             this.dulstatus.ReadOnly = true;
-            this.dulstatus.Width = 79;
+            this.dulstatus.Width = 63;
             // 
             // toolStrip6
             // 
@@ -1002,9 +977,9 @@
             this.btnDULEdit,
             this.toolStripSeparator4,
             this.btnDULDelete});
-            this.toolStrip6.Location = new System.Drawing.Point(4, 4);
+            this.toolStrip6.Location = new System.Drawing.Point(3, 3);
             this.toolStrip6.Name = "toolStrip6";
-            this.toolStrip6.Size = new System.Drawing.Size(1355, 27);
+            this.toolStrip6.Size = new System.Drawing.Size(1014, 27);
             this.toolStrip6.TabIndex = 41;
             this.toolStrip6.Text = "toolStrip6";
             // 
@@ -1013,7 +988,7 @@
             this.toolStripLabel4.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.toolStripLabel4.Name = "toolStripLabel4";
             this.toolStripLabel4.Padding = new System.Windows.Forms.Padding(0, 0, 60, 0);
-            this.toolStripLabel4.Size = new System.Drawing.Size(100, 24);
+            this.toolStripLabel4.Size = new System.Drawing.Size(91, 24);
             this.toolStripLabel4.Text = "ДУЛ";
             // 
             // btnDULAdd
@@ -1021,7 +996,7 @@
             this.btnDULAdd.Image = global::Mig.Properties.Resources.Add_40971;
             this.btnDULAdd.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnDULAdd.Name = "btnDULAdd";
-            this.btnDULAdd.Size = new System.Drawing.Size(100, 24);
+            this.btnDULAdd.Size = new System.Drawing.Size(83, 24);
             this.btnDULAdd.Text = "Добавить";
             this.btnDULAdd.Click += new System.EventHandler(this.toolStripButton14_Click);
             // 
@@ -1035,7 +1010,7 @@
             this.btnDULPrimary.Image = ((System.Drawing.Image)(resources.GetObject("btnDULPrimary.Image")));
             this.btnDULPrimary.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnDULPrimary.Name = "btnDULPrimary";
-            this.btnDULPrimary.Size = new System.Drawing.Size(130, 24);
+            this.btnDULPrimary.Size = new System.Drawing.Size(107, 24);
             this.btnDULPrimary.Text = "Активировать";
             this.btnDULPrimary.Click += new System.EventHandler(this.btnDULPrimary_Click);
             // 
@@ -1049,7 +1024,7 @@
             this.btnDULEdit.Image = global::Mig.Properties.Resources.Pencil512_44200;
             this.btnDULEdit.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnDULEdit.Name = "btnDULEdit";
-            this.btnDULEdit.Size = new System.Drawing.Size(135, 24);
+            this.btnDULEdit.Size = new System.Drawing.Size(111, 24);
             this.btnDULEdit.Text = "Редактировать";
             this.btnDULEdit.Click += new System.EventHandler(this.btnDULEdit_Click_1);
             // 
@@ -1063,7 +1038,7 @@
             this.btnDULDelete.Image = global::Mig.Properties.Resources.Delete;
             this.btnDULDelete.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnDULDelete.Name = "btnDULDelete";
-            this.btnDULDelete.Size = new System.Drawing.Size(89, 24);
+            this.btnDULDelete.Size = new System.Drawing.Size(75, 24);
             this.btnDULDelete.Text = "Удалить";
             this.btnDULDelete.Click += new System.EventHandler(this.btnDULDelete_Click);
             // 
@@ -1075,10 +1050,10 @@
             this.tabTeachAgree.Controls.Add(this.dgTeach);
             this.tabTeachAgree.Controls.Add(this.toolStrip3);
             this.tabTeachAgree.Location = new System.Drawing.Point(4, 29);
-            this.tabTeachAgree.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.tabTeachAgree.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.tabTeachAgree.Name = "tabTeachAgree";
-            this.tabTeachAgree.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tabTeachAgree.Size = new System.Drawing.Size(1363, 614);
+            this.tabTeachAgree.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabTeachAgree.Size = new System.Drawing.Size(1020, 493);
             this.tabTeachAgree.TabIndex = 3;
             this.tabTeachAgree.Text = "Договора/Обучение";
             this.tabTeachAgree.Enter += new System.EventHandler(this.tabTeachAgree_Enter);
@@ -1089,10 +1064,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel6.Controls.Add(this.toolStrip11);
             this.panel6.Controls.Add(this.dgExpellHist);
-            this.panel6.Location = new System.Drawing.Point(0, 384);
-            this.panel6.Margin = new System.Windows.Forms.Padding(4);
+            this.panel6.Location = new System.Drawing.Point(0, 312);
             this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(1352, 217);
+            this.panel6.Size = new System.Drawing.Size(1014, 176);
             this.panel6.TabIndex = 46;
             // 
             // toolStrip11
@@ -1105,7 +1079,7 @@
             this.toolStripButton29});
             this.toolStrip11.Location = new System.Drawing.Point(0, 0);
             this.toolStrip11.Name = "toolStrip11";
-            this.toolStrip11.Size = new System.Drawing.Size(1352, 27);
+            this.toolStrip11.Size = new System.Drawing.Size(1014, 27);
             this.toolStrip11.TabIndex = 45;
             this.toolStrip11.Text = "toolStrip11";
             // 
@@ -1114,7 +1088,7 @@
             this.toolStripLabel9.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.toolStripLabel9.Name = "toolStripLabel9";
             this.toolStripLabel9.Padding = new System.Windows.Forms.Padding(0, 0, 60, 0);
-            this.toolStripLabel9.Size = new System.Drawing.Size(221, 24);
+            this.toolStripLabel9.Size = new System.Drawing.Size(190, 24);
             this.toolStripLabel9.Text = "Приказ (отчисление)";
             // 
             // toolStripButton27
@@ -1122,7 +1096,7 @@
             this.toolStripButton27.Image = global::Mig.Properties.Resources.Add_40971;
             this.toolStripButton27.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton27.Name = "toolStripButton27";
-            this.toolStripButton27.Size = new System.Drawing.Size(100, 24);
+            this.toolStripButton27.Size = new System.Drawing.Size(83, 24);
             this.toolStripButton27.Text = "Добавить";
             this.toolStripButton27.Click += new System.EventHandler(this.toolStripButton27_Click);
             // 
@@ -1131,7 +1105,7 @@
             this.toolStripButton28.Image = global::Mig.Properties.Resources.Pencil512_44200;
             this.toolStripButton28.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton28.Name = "toolStripButton28";
-            this.toolStripButton28.Size = new System.Drawing.Size(135, 24);
+            this.toolStripButton28.Size = new System.Drawing.Size(111, 24);
             this.toolStripButton28.Text = "Редактировать";
             this.toolStripButton28.Click += new System.EventHandler(this.toolStripButton28_Click);
             // 
@@ -1140,7 +1114,7 @@
             this.toolStripButton29.Image = global::Mig.Properties.Resources.Delete;
             this.toolStripButton29.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton29.Name = "toolStripButton29";
-            this.toolStripButton29.Size = new System.Drawing.Size(89, 24);
+            this.toolStripButton29.Size = new System.Drawing.Size(75, 24);
             this.toolStripButton29.Text = "Удалить";
             this.toolStripButton29.Click += new System.EventHandler(this.toolStripButton29_Click);
             // 
@@ -1166,8 +1140,7 @@
             dataGridViewCellStyle4.SelectionForeColor = System.Drawing.Color.Black;
             dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.dgExpellHist.DefaultCellStyle = dataGridViewCellStyle4;
-            this.dgExpellHist.Location = new System.Drawing.Point(11, 34);
-            this.dgExpellHist.Margin = new System.Windows.Forms.Padding(4);
+            this.dgExpellHist.Location = new System.Drawing.Point(8, 28);
             this.dgExpellHist.MultiSelect = false;
             this.dgExpellHist.Name = "dgExpellHist";
             this.dgExpellHist.ReadOnly = true;
@@ -1180,7 +1153,7 @@
             this.dgExpellHist.ShowCellToolTips = false;
             this.dgExpellHist.ShowEditingIcon = false;
             this.dgExpellHist.ShowRowErrors = false;
-            this.dgExpellHist.Size = new System.Drawing.Size(1319, 178);
+            this.dgExpellHist.Size = new System.Drawing.Size(989, 145);
             this.dgExpellHist.TabIndex = 44;
             // 
             // status
@@ -1188,7 +1161,7 @@
             this.status.HeaderText = "Column1";
             this.status.Name = "status";
             this.status.ReadOnly = true;
-            this.status.Width = 69;
+            this.status.Width = 54;
             // 
             // panel2
             // 
@@ -1196,10 +1169,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel2.Controls.Add(this.dgAgreeHist);
             this.panel2.Controls.Add(this.toolStrip13);
-            this.panel2.Location = new System.Drawing.Point(0, 197);
-            this.panel2.Margin = new System.Windows.Forms.Padding(4);
+            this.panel2.Location = new System.Drawing.Point(0, 160);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(1352, 191);
+            this.panel2.Size = new System.Drawing.Size(1014, 155);
             this.panel2.TabIndex = 45;
             // 
             // dgAgreeHist
@@ -1224,8 +1196,7 @@
             dataGridViewCellStyle6.SelectionForeColor = System.Drawing.Color.Black;
             dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.dgAgreeHist.DefaultCellStyle = dataGridViewCellStyle6;
-            this.dgAgreeHist.Location = new System.Drawing.Point(11, 34);
-            this.dgAgreeHist.Margin = new System.Windows.Forms.Padding(4);
+            this.dgAgreeHist.Location = new System.Drawing.Point(8, 28);
             this.dgAgreeHist.MultiSelect = false;
             this.dgAgreeHist.Name = "dgAgreeHist";
             this.dgAgreeHist.ReadOnly = true;
@@ -1238,7 +1209,7 @@
             this.dgAgreeHist.ShowCellToolTips = false;
             this.dgAgreeHist.ShowEditingIcon = false;
             this.dgAgreeHist.ShowRowErrors = false;
-            this.dgAgreeHist.Size = new System.Drawing.Size(1319, 145);
+            this.dgAgreeHist.Size = new System.Drawing.Size(989, 118);
             this.dgAgreeHist.TabIndex = 3;
             // 
             // agreestatus
@@ -1246,7 +1217,7 @@
             this.agreestatus.HeaderText = "Основной";
             this.agreestatus.Name = "agreestatus";
             this.agreestatus.ReadOnly = true;
-            this.agreestatus.Width = 79;
+            this.agreestatus.Width = 63;
             // 
             // toolStrip13
             // 
@@ -1261,7 +1232,7 @@
             this.toolStripButton32});
             this.toolStrip13.Location = new System.Drawing.Point(0, 0);
             this.toolStrip13.Name = "toolStrip13";
-            this.toolStrip13.Size = new System.Drawing.Size(1352, 27);
+            this.toolStrip13.Size = new System.Drawing.Size(1014, 27);
             this.toolStrip13.TabIndex = 0;
             this.toolStrip13.Text = "toolStrip13";
             // 
@@ -1270,7 +1241,7 @@
             this.toolStripLabel5.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.toolStripLabel5.Name = "toolStripLabel5";
             this.toolStripLabel5.Padding = new System.Windows.Forms.Padding(0, 0, 60, 0);
-            this.toolStripLabel5.Size = new System.Drawing.Size(140, 24);
+            this.toolStripLabel5.Size = new System.Drawing.Size(122, 24);
             this.toolStripLabel5.Text = "Договора";
             // 
             // toolStripButton30
@@ -1278,7 +1249,7 @@
             this.toolStripButton30.Image = global::Mig.Properties.Resources.Add_40971;
             this.toolStripButton30.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton30.Name = "toolStripButton30";
-            this.toolStripButton30.Size = new System.Drawing.Size(100, 24);
+            this.toolStripButton30.Size = new System.Drawing.Size(83, 24);
             this.toolStripButton30.Text = "Добавить";
             this.toolStripButton30.Click += new System.EventHandler(this.toolStripButton30_Click_1);
             // 
@@ -1287,7 +1258,7 @@
             this.toolStripButton20.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton20.Image")));
             this.toolStripButton20.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton20.Name = "toolStripButton20";
-            this.toolStripButton20.Size = new System.Drawing.Size(130, 24);
+            this.toolStripButton20.Size = new System.Drawing.Size(107, 24);
             this.toolStripButton20.Text = "Активировать";
             this.toolStripButton20.Click += new System.EventHandler(this.toolStripButton20_Click_1);
             // 
@@ -1301,7 +1272,7 @@
             this.toolStripButton31.Image = global::Mig.Properties.Resources.Pencil512_44200;
             this.toolStripButton31.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton31.Name = "toolStripButton31";
-            this.toolStripButton31.Size = new System.Drawing.Size(135, 24);
+            this.toolStripButton31.Size = new System.Drawing.Size(111, 24);
             this.toolStripButton31.Text = "Редактировать";
             this.toolStripButton31.Click += new System.EventHandler(this.toolStripButton31_Click_1);
             // 
@@ -1315,7 +1286,7 @@
             this.toolStripButton32.Image = global::Mig.Properties.Resources.Delete;
             this.toolStripButton32.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton32.Name = "toolStripButton32";
-            this.toolStripButton32.Size = new System.Drawing.Size(89, 24);
+            this.toolStripButton32.Size = new System.Drawing.Size(75, 24);
             this.toolStripButton32.Text = "Удалить";
             this.toolStripButton32.Click += new System.EventHandler(this.toolStripButton32_Click);
             // 
@@ -1333,8 +1304,7 @@
             this.dgTeach.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgTeach.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.teachstatus});
-            this.dgTeach.Location = new System.Drawing.Point(17, 37);
-            this.dgTeach.Margin = new System.Windows.Forms.Padding(4);
+            this.dgTeach.Location = new System.Drawing.Point(13, 30);
             this.dgTeach.MultiSelect = false;
             this.dgTeach.Name = "dgTeach";
             this.dgTeach.ReadOnly = true;
@@ -1347,7 +1317,7 @@
             this.dgTeach.ShowCellToolTips = false;
             this.dgTeach.ShowEditingIcon = false;
             this.dgTeach.ShowRowErrors = false;
-            this.dgTeach.Size = new System.Drawing.Size(1312, 153);
+            this.dgTeach.Size = new System.Drawing.Size(984, 124);
             this.dgTeach.TabIndex = 44;
             // 
             // teachstatus
@@ -1357,7 +1327,7 @@
             this.teachstatus.ReadOnly = true;
             this.teachstatus.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.teachstatus.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.teachstatus.Width = 102;
+            this.teachstatus.Width = 82;
             // 
             // toolStrip3
             // 
@@ -1370,9 +1340,9 @@
             this.toolStripButton6,
             this.toolStripSeparator11,
             this.toolStripButton7});
-            this.toolStrip3.Location = new System.Drawing.Point(3, 2);
+            this.toolStrip3.Location = new System.Drawing.Point(2, 2);
             this.toolStrip3.Name = "toolStrip3";
-            this.toolStrip3.Size = new System.Drawing.Size(1357, 27);
+            this.toolStrip3.Size = new System.Drawing.Size(1016, 27);
             this.toolStrip3.TabIndex = 41;
             this.toolStrip3.Text = "toolStrip3";
             // 
@@ -1381,7 +1351,7 @@
             this.toolStripLabel6.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.toolStripLabel6.Name = "toolStripLabel6";
             this.toolStripLabel6.Padding = new System.Windows.Forms.Padding(0, 0, 60, 0);
-            this.toolStripLabel6.Size = new System.Drawing.Size(140, 24);
+            this.toolStripLabel6.Size = new System.Drawing.Size(125, 24);
             this.toolStripLabel6.Text = "Обучение";
             // 
             // toolStripButton5
@@ -1389,7 +1359,7 @@
             this.toolStripButton5.Image = global::Mig.Properties.Resources.Add_40971;
             this.toolStripButton5.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton5.Name = "toolStripButton5";
-            this.toolStripButton5.Size = new System.Drawing.Size(100, 24);
+            this.toolStripButton5.Size = new System.Drawing.Size(83, 24);
             this.toolStripButton5.Text = "Добавить";
             this.toolStripButton5.Click += new System.EventHandler(this.toolStripButton5_Click);
             // 
@@ -1398,7 +1368,7 @@
             this.toolStripButton16.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton16.Image")));
             this.toolStripButton16.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton16.Name = "toolStripButton16";
-            this.toolStripButton16.Size = new System.Drawing.Size(130, 24);
+            this.toolStripButton16.Size = new System.Drawing.Size(107, 24);
             this.toolStripButton16.Text = "Активировать";
             this.toolStripButton16.Click += new System.EventHandler(this.toolStripButton16_Click);
             // 
@@ -1412,7 +1382,7 @@
             this.toolStripButton6.Image = global::Mig.Properties.Resources.Pencil512_44200;
             this.toolStripButton6.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton6.Name = "toolStripButton6";
-            this.toolStripButton6.Size = new System.Drawing.Size(135, 24);
+            this.toolStripButton6.Size = new System.Drawing.Size(111, 24);
             this.toolStripButton6.Text = "Редактировать";
             this.toolStripButton6.Click += new System.EventHandler(this.toolStripButton6_Click);
             // 
@@ -1426,7 +1396,7 @@
             this.toolStripButton7.Image = global::Mig.Properties.Resources.Delete;
             this.toolStripButton7.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton7.Name = "toolStripButton7";
-            this.toolStripButton7.Size = new System.Drawing.Size(89, 24);
+            this.toolStripButton7.Size = new System.Drawing.Size(75, 24);
             this.toolStripButton7.Text = "Удалить";
             this.toolStripButton7.Click += new System.EventHandler(this.toolStripButton7_Click);
             // 
@@ -1436,10 +1406,9 @@
             this.tabAddr.Controls.Add(this.dgAddrHist);
             this.tabAddr.Controls.Add(this.toolStrip2);
             this.tabAddr.Location = new System.Drawing.Point(4, 29);
-            this.tabAddr.Margin = new System.Windows.Forms.Padding(4);
             this.tabAddr.Name = "tabAddr";
-            this.tabAddr.Padding = new System.Windows.Forms.Padding(4);
-            this.tabAddr.Size = new System.Drawing.Size(1363, 614);
+            this.tabAddr.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabAddr.Size = new System.Drawing.Size(1020, 493);
             this.tabAddr.TabIndex = 7;
             this.tabAddr.Text = "Адреса";
             this.tabAddr.Enter += new System.EventHandler(this.tabAddr_Enter);
@@ -1467,8 +1436,7 @@
             dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.dgAddrHist.DefaultCellStyle = dataGridViewCellStyle9;
             this.dgAddrHist.EnableHeadersVisualStyles = false;
-            this.dgAddrHist.Location = new System.Drawing.Point(19, 38);
-            this.dgAddrHist.Margin = new System.Windows.Forms.Padding(4);
+            this.dgAddrHist.Location = new System.Drawing.Point(14, 31);
             this.dgAddrHist.MultiSelect = false;
             this.dgAddrHist.Name = "dgAddrHist";
             this.dgAddrHist.ReadOnly = true;
@@ -1480,7 +1448,7 @@
             this.dgAddrHist.ShowCellToolTips = false;
             this.dgAddrHist.ShowEditingIcon = false;
             this.dgAddrHist.ShowRowErrors = false;
-            this.dgAddrHist.Size = new System.Drawing.Size(1333, 226);
+            this.dgAddrHist.Size = new System.Drawing.Size(1000, 184);
             this.dgAddrHist.TabIndex = 41;
             // 
             // addrstatus
@@ -1488,7 +1456,7 @@
             this.addrstatus.HeaderText = "Основной";
             this.addrstatus.Name = "addrstatus";
             this.addrstatus.ReadOnly = true;
-            this.addrstatus.Width = 79;
+            this.addrstatus.Width = 63;
             // 
             // toolStrip2
             // 
@@ -1497,9 +1465,9 @@
             this.toolStripLabel7,
             this.toolStripButton3,
             this.toolStripButton4});
-            this.toolStrip2.Location = new System.Drawing.Point(4, 4);
+            this.toolStrip2.Location = new System.Drawing.Point(3, 3);
             this.toolStrip2.Name = "toolStrip2";
-            this.toolStrip2.Size = new System.Drawing.Size(1355, 27);
+            this.toolStrip2.Size = new System.Drawing.Size(1014, 27);
             this.toolStrip2.TabIndex = 40;
             this.toolStrip2.Text = "toolStrip2";
             // 
@@ -1508,7 +1476,7 @@
             this.toolStripLabel7.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.toolStripLabel7.Name = "toolStripLabel7";
             this.toolStripLabel7.Padding = new System.Windows.Forms.Padding(0, 0, 60, 0);
-            this.toolStripLabel7.Size = new System.Drawing.Size(121, 24);
+            this.toolStripLabel7.Size = new System.Drawing.Size(108, 24);
             this.toolStripLabel7.Text = "Адреса";
             // 
             // toolStripButton3
@@ -1516,7 +1484,7 @@
             this.toolStripButton3.Image = global::Mig.Properties.Resources.Pencil512_44200;
             this.toolStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton3.Name = "toolStripButton3";
-            this.toolStripButton3.Size = new System.Drawing.Size(135, 24);
+            this.toolStripButton3.Size = new System.Drawing.Size(111, 24);
             this.toolStripButton3.Text = "Редактировать";
             this.toolStripButton3.Click += new System.EventHandler(this.toolStripButton3_Click);
             // 
@@ -1525,7 +1493,7 @@
             this.toolStripButton4.Image = global::Mig.Properties.Resources.Delete;
             this.toolStripButton4.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton4.Name = "toolStripButton4";
-            this.toolStripButton4.Size = new System.Drawing.Size(89, 24);
+            this.toolStripButton4.Size = new System.Drawing.Size(75, 24);
             this.toolStripButton4.Text = "Удалить";
             this.toolStripButton4.Click += new System.EventHandler(this.toolStripButton4_Click);
             // 
@@ -1536,10 +1504,10 @@
             this.tabMigrPf.Controls.Add(this.treeView1);
             this.tabMigrPf.Controls.Add(this.dgPf);
             this.tabMigrPf.Location = new System.Drawing.Point(4, 29);
-            this.tabMigrPf.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.tabMigrPf.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.tabMigrPf.Name = "tabMigrPf";
-            this.tabMigrPf.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tabMigrPf.Size = new System.Drawing.Size(1363, 614);
+            this.tabMigrPf.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabMigrPf.Size = new System.Drawing.Size(1020, 493);
             this.tabMigrPf.TabIndex = 2;
             this.tabMigrPf.Text = "Документы";
             // 
@@ -1548,11 +1516,11 @@
             this.groupBox7.Controls.Add(this.lRepName);
             this.groupBox7.Controls.Add(this.btnMakePF);
             this.groupBox7.Controls.Add(this.tabParam);
-            this.groupBox7.Location = new System.Drawing.Point(589, 30);
-            this.groupBox7.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.groupBox7.Location = new System.Drawing.Point(442, 24);
+            this.groupBox7.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.groupBox7.Size = new System.Drawing.Size(645, 389);
+            this.groupBox7.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox7.Size = new System.Drawing.Size(484, 316);
             this.groupBox7.TabIndex = 2;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "Параметры";
@@ -1560,19 +1528,18 @@
             // lRepName
             // 
             this.lRepName.AutoSize = true;
-            this.lRepName.Location = new System.Drawing.Point(157, 36);
-            this.lRepName.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lRepName.Location = new System.Drawing.Point(118, 29);
             this.lRepName.Name = "lRepName";
-            this.lRepName.Size = new System.Drawing.Size(0, 17);
+            this.lRepName.Size = new System.Drawing.Size(0, 13);
             this.lRepName.TabIndex = 2;
             // 
             // btnMakePF
             // 
             this.btnMakePF.Enabled = false;
-            this.btnMakePF.Location = new System.Drawing.Point(27, 27);
-            this.btnMakePF.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnMakePF.Location = new System.Drawing.Point(20, 22);
+            this.btnMakePF.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.btnMakePF.Name = "btnMakePF";
-            this.btnMakePF.Size = new System.Drawing.Size(124, 33);
+            this.btnMakePF.Size = new System.Drawing.Size(93, 27);
             this.btnMakePF.TabIndex = 1;
             this.btnMakePF.Text = "Сформировать";
             this.btnMakePF.UseVisualStyleBackColor = true;
@@ -1588,11 +1555,11 @@
             this.tabParam.Controls.Add(this.tabParam5);
             this.tabParam.Controls.Add(this.tabParam7);
             this.tabParam.Controls.Add(this.tabParam8);
-            this.tabParam.Location = new System.Drawing.Point(23, 66);
-            this.tabParam.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.tabParam.Location = new System.Drawing.Point(17, 54);
+            this.tabParam.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.tabParam.Name = "tabParam";
             this.tabParam.SelectedIndex = 0;
-            this.tabParam.Size = new System.Drawing.Size(596, 242);
+            this.tabParam.Size = new System.Drawing.Size(447, 197);
             this.tabParam.TabIndex = 0;
             // 
             // tabParam1
@@ -1600,11 +1567,11 @@
             this.tabParam1.BackColor = System.Drawing.SystemColors.Control;
             this.tabParam1.Controls.Add(this.cmbPetitionStandartParam2);
             this.tabParam1.Controls.Add(this.cmbPetitionStandartParam1);
-            this.tabParam1.Location = new System.Drawing.Point(4, 25);
-            this.tabParam1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.tabParam1.Location = new System.Drawing.Point(4, 22);
+            this.tabParam1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.tabParam1.Name = "tabParam1";
-            this.tabParam1.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tabParam1.Size = new System.Drawing.Size(588, 213);
+            this.tabParam1.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabParam1.Size = new System.Drawing.Size(439, 171);
             this.tabParam1.TabIndex = 0;
             this.tabParam1.Text = "Ходатайство: обычное";
             // 
@@ -1613,10 +1580,10 @@
             this.cmbPetitionStandartParam2.DisplayMember = "value";
             this.cmbPetitionStandartParam2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbPetitionStandartParam2.FormattingEnabled = true;
-            this.cmbPetitionStandartParam2.Location = new System.Drawing.Point(21, 62);
-            this.cmbPetitionStandartParam2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.cmbPetitionStandartParam2.Location = new System.Drawing.Point(16, 50);
+            this.cmbPetitionStandartParam2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.cmbPetitionStandartParam2.Name = "cmbPetitionStandartParam2";
-            this.cmbPetitionStandartParam2.Size = new System.Drawing.Size(513, 24);
+            this.cmbPetitionStandartParam2.Size = new System.Drawing.Size(386, 21);
             this.cmbPetitionStandartParam2.TabIndex = 1;
             this.cmbPetitionStandartParam2.ValueMember = "code";
             // 
@@ -1625,32 +1592,32 @@
             this.cmbPetitionStandartParam1.DisplayMember = "value";
             this.cmbPetitionStandartParam1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbPetitionStandartParam1.FormattingEnabled = true;
-            this.cmbPetitionStandartParam1.Location = new System.Drawing.Point(21, 32);
-            this.cmbPetitionStandartParam1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.cmbPetitionStandartParam1.Location = new System.Drawing.Point(16, 26);
+            this.cmbPetitionStandartParam1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.cmbPetitionStandartParam1.Name = "cmbPetitionStandartParam1";
-            this.cmbPetitionStandartParam1.Size = new System.Drawing.Size(232, 24);
+            this.cmbPetitionStandartParam1.Size = new System.Drawing.Size(175, 21);
             this.cmbPetitionStandartParam1.TabIndex = 0;
             this.cmbPetitionStandartParam1.ValueMember = "code";
             // 
             // tabParam2
             // 
             this.tabParam2.BackColor = System.Drawing.SystemColors.Control;
-            this.tabParam2.Location = new System.Drawing.Point(4, 25);
-            this.tabParam2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.tabParam2.Location = new System.Drawing.Point(4, 22);
+            this.tabParam2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.tabParam2.Name = "tabParam2";
-            this.tabParam2.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tabParam2.Size = new System.Drawing.Size(588, 213);
+            this.tabParam2.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabParam2.Size = new System.Drawing.Size(439, 171);
             this.tabParam2.TabIndex = 1;
             this.tabParam2.Text = "...";
             // 
             // tabParamNull
             // 
             this.tabParamNull.BackColor = System.Drawing.SystemColors.Control;
-            this.tabParamNull.Location = new System.Drawing.Point(4, 25);
-            this.tabParamNull.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.tabParamNull.Location = new System.Drawing.Point(4, 22);
+            this.tabParamNull.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.tabParamNull.Name = "tabParamNull";
-            this.tabParamNull.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tabParamNull.Size = new System.Drawing.Size(588, 213);
+            this.tabParamNull.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabParamNull.Size = new System.Drawing.Size(439, 171);
             this.tabParamNull.TabIndex = 2;
             this.tabParamNull.Text = "Без параметров";
             // 
@@ -1659,11 +1626,10 @@
             this.tabParam3.BackColor = System.Drawing.SystemColors.Control;
             this.tabParam3.Controls.Add(this.cmbPetVisa2);
             this.tabParam3.Controls.Add(this.cmbPetVisa1);
-            this.tabParam3.Location = new System.Drawing.Point(4, 25);
-            this.tabParam3.Margin = new System.Windows.Forms.Padding(4);
+            this.tabParam3.Location = new System.Drawing.Point(4, 22);
             this.tabParam3.Name = "tabParam3";
-            this.tabParam3.Padding = new System.Windows.Forms.Padding(4);
-            this.tabParam3.Size = new System.Drawing.Size(588, 213);
+            this.tabParam3.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabParam3.Size = new System.Drawing.Size(439, 171);
             this.tabParam3.TabIndex = 3;
             this.tabParam3.Text = "Ходатайство: смена визы";
             // 
@@ -1672,10 +1638,10 @@
             this.cmbPetVisa2.DisplayMember = "value";
             this.cmbPetVisa2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbPetVisa2.FormattingEnabled = true;
-            this.cmbPetVisa2.Location = new System.Drawing.Point(23, 58);
-            this.cmbPetVisa2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.cmbPetVisa2.Location = new System.Drawing.Point(17, 47);
+            this.cmbPetVisa2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.cmbPetVisa2.Name = "cmbPetVisa2";
-            this.cmbPetVisa2.Size = new System.Drawing.Size(513, 24);
+            this.cmbPetVisa2.Size = new System.Drawing.Size(386, 21);
             this.cmbPetVisa2.TabIndex = 3;
             this.cmbPetVisa2.ValueMember = "code";
             // 
@@ -1684,10 +1650,10 @@
             this.cmbPetVisa1.DisplayMember = "value";
             this.cmbPetVisa1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbPetVisa1.FormattingEnabled = true;
-            this.cmbPetVisa1.Location = new System.Drawing.Point(23, 28);
-            this.cmbPetVisa1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.cmbPetVisa1.Location = new System.Drawing.Point(17, 23);
+            this.cmbPetVisa1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.cmbPetVisa1.Name = "cmbPetVisa1";
-            this.cmbPetVisa1.Size = new System.Drawing.Size(232, 24);
+            this.cmbPetVisa1.Size = new System.Drawing.Size(175, 21);
             this.cmbPetVisa1.TabIndex = 2;
             this.cmbPetVisa1.ValueMember = "code";
             // 
@@ -1696,11 +1662,10 @@
             this.tabParam4.BackColor = System.Drawing.SystemColors.Control;
             this.tabParam4.Controls.Add(this.cmbPetPass2);
             this.tabParam4.Controls.Add(this.cmbPetPass1);
-            this.tabParam4.Location = new System.Drawing.Point(4, 25);
-            this.tabParam4.Margin = new System.Windows.Forms.Padding(4);
+            this.tabParam4.Location = new System.Drawing.Point(4, 22);
             this.tabParam4.Name = "tabParam4";
-            this.tabParam4.Padding = new System.Windows.Forms.Padding(4);
-            this.tabParam4.Size = new System.Drawing.Size(588, 213);
+            this.tabParam4.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabParam4.Size = new System.Drawing.Size(439, 171);
             this.tabParam4.TabIndex = 4;
             this.tabParam4.Text = "Ходатайство: смена паспорта";
             // 
@@ -1709,10 +1674,10 @@
             this.cmbPetPass2.DisplayMember = "value";
             this.cmbPetPass2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbPetPass2.FormattingEnabled = true;
-            this.cmbPetPass2.Location = new System.Drawing.Point(21, 58);
-            this.cmbPetPass2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.cmbPetPass2.Location = new System.Drawing.Point(16, 47);
+            this.cmbPetPass2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.cmbPetPass2.Name = "cmbPetPass2";
-            this.cmbPetPass2.Size = new System.Drawing.Size(513, 24);
+            this.cmbPetPass2.Size = new System.Drawing.Size(386, 21);
             this.cmbPetPass2.TabIndex = 5;
             this.cmbPetPass2.ValueMember = "code";
             // 
@@ -1721,10 +1686,10 @@
             this.cmbPetPass1.DisplayMember = "value";
             this.cmbPetPass1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbPetPass1.FormattingEnabled = true;
-            this.cmbPetPass1.Location = new System.Drawing.Point(21, 28);
-            this.cmbPetPass1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.cmbPetPass1.Location = new System.Drawing.Point(16, 23);
+            this.cmbPetPass1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.cmbPetPass1.Name = "cmbPetPass1";
-            this.cmbPetPass1.Size = new System.Drawing.Size(232, 24);
+            this.cmbPetPass1.Size = new System.Drawing.Size(175, 21);
             this.cmbPetPass1.TabIndex = 4;
             this.cmbPetPass1.ValueMember = "code";
             // 
@@ -1741,61 +1706,55 @@
             this.tabParam5.Controls.Add(this.cmbVisaCat);
             this.tabParam5.Controls.Add(this.cmbVisaKrat);
             this.tabParam5.Controls.Add(this.cmbVisaAction);
-            this.tabParam5.Location = new System.Drawing.Point(4, 25);
-            this.tabParam5.Margin = new System.Windows.Forms.Padding(4);
+            this.tabParam5.Location = new System.Drawing.Point(4, 22);
             this.tabParam5.Name = "tabParam5";
-            this.tabParam5.Padding = new System.Windows.Forms.Padding(4);
-            this.tabParam5.Size = new System.Drawing.Size(588, 213);
+            this.tabParam5.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabParam5.Size = new System.Drawing.Size(439, 171);
             this.tabParam5.TabIndex = 5;
             this.tabParam5.Text = "Визовая анкета: анкета";
             // 
             // label71
             // 
             this.label71.AutoSize = true;
-            this.label71.Location = new System.Drawing.Point(37, 166);
-            this.label71.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label71.Location = new System.Drawing.Point(28, 135);
             this.label71.Name = "label71";
-            this.label71.Size = new System.Drawing.Size(122, 17);
+            this.label71.Size = new System.Drawing.Size(93, 13);
             this.label71.TabIndex = 9;
             this.label71.Text = "Цель продления:";
             // 
             // label70
             // 
             this.label70.AutoSize = true;
-            this.label70.Location = new System.Drawing.Point(52, 133);
-            this.label70.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label70.Location = new System.Drawing.Point(39, 108);
             this.label70.Name = "label70";
-            this.label70.Size = new System.Drawing.Size(105, 17);
+            this.label70.Size = new System.Drawing.Size(82, 13);
             this.label70.TabIndex = 8;
             this.label70.Text = "Подкатегория:";
             // 
             // label69
             // 
             this.label69.AutoSize = true;
-            this.label69.Location = new System.Drawing.Point(39, 100);
-            this.label69.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label69.Location = new System.Drawing.Point(29, 81);
             this.label69.Name = "label69";
-            this.label69.Size = new System.Drawing.Size(117, 17);
+            this.label69.Size = new System.Drawing.Size(92, 13);
             this.label69.TabIndex = 7;
             this.label69.Text = "Категория визы:";
             // 
             // label68
             // 
             this.label68.AutoSize = true;
-            this.label68.Location = new System.Drawing.Point(39, 66);
-            this.label68.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label68.Location = new System.Drawing.Point(29, 54);
             this.label68.Name = "label68";
-            this.label68.Size = new System.Drawing.Size(117, 17);
+            this.label68.Size = new System.Drawing.Size(92, 13);
             this.label68.TabIndex = 6;
             this.label68.Text = "Кратность визы:";
             // 
             // label67
             // 
             this.label67.AutoSize = true;
-            this.label67.Location = new System.Drawing.Point(25, 33);
-            this.label67.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label67.Location = new System.Drawing.Point(19, 27);
             this.label67.Name = "label67";
-            this.label67.Size = new System.Drawing.Size(129, 17);
+            this.label67.Size = new System.Drawing.Size(102, 13);
             this.label67.TabIndex = 5;
             this.label67.Text = "Действие с визой:";
             // 
@@ -1804,10 +1763,9 @@
             this.cmbVisaPurpose.DisplayMember = "value";
             this.cmbVisaPurpose.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbVisaPurpose.FormattingEnabled = true;
-            this.cmbVisaPurpose.Location = new System.Drawing.Point(169, 162);
-            this.cmbVisaPurpose.Margin = new System.Windows.Forms.Padding(4);
+            this.cmbVisaPurpose.Location = new System.Drawing.Point(127, 132);
             this.cmbVisaPurpose.Name = "cmbVisaPurpose";
-            this.cmbVisaPurpose.Size = new System.Drawing.Size(344, 24);
+            this.cmbVisaPurpose.Size = new System.Drawing.Size(259, 21);
             this.cmbVisaPurpose.TabIndex = 4;
             this.cmbVisaPurpose.ValueMember = "code";
             // 
@@ -1816,10 +1774,9 @@
             this.cmbVisaSubCat.DisplayMember = "value";
             this.cmbVisaSubCat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbVisaSubCat.FormattingEnabled = true;
-            this.cmbVisaSubCat.Location = new System.Drawing.Point(169, 129);
-            this.cmbVisaSubCat.Margin = new System.Windows.Forms.Padding(4);
+            this.cmbVisaSubCat.Location = new System.Drawing.Point(127, 105);
             this.cmbVisaSubCat.Name = "cmbVisaSubCat";
-            this.cmbVisaSubCat.Size = new System.Drawing.Size(344, 24);
+            this.cmbVisaSubCat.Size = new System.Drawing.Size(259, 21);
             this.cmbVisaSubCat.TabIndex = 3;
             this.cmbVisaSubCat.ValueMember = "code";
             // 
@@ -1828,10 +1785,9 @@
             this.cmbVisaCat.DisplayMember = "value";
             this.cmbVisaCat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbVisaCat.FormattingEnabled = true;
-            this.cmbVisaCat.Location = new System.Drawing.Point(169, 96);
-            this.cmbVisaCat.Margin = new System.Windows.Forms.Padding(4);
+            this.cmbVisaCat.Location = new System.Drawing.Point(127, 78);
             this.cmbVisaCat.Name = "cmbVisaCat";
-            this.cmbVisaCat.Size = new System.Drawing.Size(344, 24);
+            this.cmbVisaCat.Size = new System.Drawing.Size(259, 21);
             this.cmbVisaCat.TabIndex = 2;
             this.cmbVisaCat.ValueMember = "code";
             this.cmbVisaCat.SelectedIndexChanged += new System.EventHandler(this.cmbVisaCat_SelectedIndexChanged);
@@ -1841,10 +1797,9 @@
             this.cmbVisaKrat.DisplayMember = "value";
             this.cmbVisaKrat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbVisaKrat.FormattingEnabled = true;
-            this.cmbVisaKrat.Location = new System.Drawing.Point(169, 63);
-            this.cmbVisaKrat.Margin = new System.Windows.Forms.Padding(4);
+            this.cmbVisaKrat.Location = new System.Drawing.Point(127, 51);
             this.cmbVisaKrat.Name = "cmbVisaKrat";
-            this.cmbVisaKrat.Size = new System.Drawing.Size(160, 24);
+            this.cmbVisaKrat.Size = new System.Drawing.Size(121, 21);
             this.cmbVisaKrat.TabIndex = 1;
             this.cmbVisaKrat.ValueMember = "code";
             // 
@@ -1853,10 +1808,9 @@
             this.cmbVisaAction.DisplayMember = "value";
             this.cmbVisaAction.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbVisaAction.FormattingEnabled = true;
-            this.cmbVisaAction.Location = new System.Drawing.Point(169, 30);
-            this.cmbVisaAction.Margin = new System.Windows.Forms.Padding(4);
+            this.cmbVisaAction.Location = new System.Drawing.Point(127, 24);
             this.cmbVisaAction.Name = "cmbVisaAction";
-            this.cmbVisaAction.Size = new System.Drawing.Size(160, 24);
+            this.cmbVisaAction.Size = new System.Drawing.Size(121, 21);
             this.cmbVisaAction.TabIndex = 0;
             this.cmbVisaAction.ValueMember = "code";
             // 
@@ -1867,31 +1821,28 @@
             this.tabParam7.Controls.Add(this.label72);
             this.tabParam7.Controls.Add(this.cmbAnkHodReason);
             this.tabParam7.Controls.Add(this.cmbVisaPetition);
-            this.tabParam7.Location = new System.Drawing.Point(4, 25);
-            this.tabParam7.Margin = new System.Windows.Forms.Padding(4);
+            this.tabParam7.Location = new System.Drawing.Point(4, 22);
             this.tabParam7.Name = "tabParam7";
-            this.tabParam7.Padding = new System.Windows.Forms.Padding(4);
-            this.tabParam7.Size = new System.Drawing.Size(588, 213);
+            this.tabParam7.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabParam7.Size = new System.Drawing.Size(439, 171);
             this.tabParam7.TabIndex = 6;
             this.tabParam7.Text = "Ходатайство на визу";
             // 
             // label73
             // 
             this.label73.AutoSize = true;
-            this.label73.Location = new System.Drawing.Point(33, 84);
-            this.label73.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label73.Location = new System.Drawing.Point(25, 68);
             this.label73.Name = "label73";
-            this.label73.Size = new System.Drawing.Size(122, 17);
+            this.label73.Size = new System.Drawing.Size(93, 13);
             this.label73.TabIndex = 3;
             this.label73.Text = "Цель продления:";
             // 
             // label72
             // 
             this.label72.AutoSize = true;
-            this.label72.Location = new System.Drawing.Point(21, 50);
-            this.label72.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label72.Location = new System.Drawing.Point(16, 41);
             this.label72.Name = "label72";
-            this.label72.Size = new System.Drawing.Size(129, 17);
+            this.label72.Size = new System.Drawing.Size(102, 13);
             this.label72.TabIndex = 2;
             this.label72.Text = "Действие с визой:";
             // 
@@ -1900,10 +1851,9 @@
             this.cmbAnkHodReason.DisplayMember = "value";
             this.cmbAnkHodReason.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbAnkHodReason.FormattingEnabled = true;
-            this.cmbAnkHodReason.Location = new System.Drawing.Point(165, 80);
-            this.cmbAnkHodReason.Margin = new System.Windows.Forms.Padding(4);
+            this.cmbAnkHodReason.Location = new System.Drawing.Point(124, 65);
             this.cmbAnkHodReason.Name = "cmbAnkHodReason";
-            this.cmbAnkHodReason.Size = new System.Drawing.Size(411, 24);
+            this.cmbAnkHodReason.Size = new System.Drawing.Size(309, 21);
             this.cmbAnkHodReason.TabIndex = 1;
             this.cmbAnkHodReason.ValueMember = "code";
             // 
@@ -1915,21 +1865,19 @@
             "оформить визу",
             "продлить визу",
             "восстановить визу"});
-            this.cmbVisaPetition.Location = new System.Drawing.Point(165, 47);
-            this.cmbVisaPetition.Margin = new System.Windows.Forms.Padding(4);
+            this.cmbVisaPetition.Location = new System.Drawing.Point(124, 38);
             this.cmbVisaPetition.Name = "cmbVisaPetition";
-            this.cmbVisaPetition.Size = new System.Drawing.Size(229, 24);
+            this.cmbVisaPetition.Size = new System.Drawing.Size(173, 21);
             this.cmbVisaPetition.TabIndex = 0;
             // 
             // tabParam8
             // 
             this.tabParam8.BackColor = System.Drawing.SystemColors.Control;
             this.tabParam8.Controls.Add(this.cmbPetitionOut);
-            this.tabParam8.Location = new System.Drawing.Point(4, 25);
-            this.tabParam8.Margin = new System.Windows.Forms.Padding(4);
+            this.tabParam8.Location = new System.Drawing.Point(4, 22);
             this.tabParam8.Name = "tabParam8";
-            this.tabParam8.Padding = new System.Windows.Forms.Padding(4);
-            this.tabParam8.Size = new System.Drawing.Size(588, 213);
+            this.tabParam8.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabParam8.Size = new System.Drawing.Size(439, 171);
             this.tabParam8.TabIndex = 7;
             this.tabParam8.Text = "Уведомление об отчислении";
             // 
@@ -1940,18 +1888,17 @@
             this.cmbPetitionOut.Items.AddRange(new object[] {
             "о прекращении  обучения (это когда отчислен)",
             "о завершении  обучения (а это когда выпускник)"});
-            this.cmbPetitionOut.Location = new System.Drawing.Point(39, 34);
-            this.cmbPetitionOut.Margin = new System.Windows.Forms.Padding(4);
+            this.cmbPetitionOut.Location = new System.Drawing.Point(29, 28);
             this.cmbPetitionOut.Name = "cmbPetitionOut";
-            this.cmbPetitionOut.Size = new System.Drawing.Size(445, 24);
+            this.cmbPetitionOut.Size = new System.Drawing.Size(335, 21);
             this.cmbPetitionOut.TabIndex = 0;
             // 
             // treeView1
             // 
             this.treeView1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.treeView1.LabelEdit = true;
-            this.treeView1.Location = new System.Drawing.Point(17, 30);
-            this.treeView1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.treeView1.Location = new System.Drawing.Point(13, 24);
+            this.treeView1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.treeView1.Name = "treeView1";
             treeNode1.Name = "NodeNotify";
             treeNode1.Tag = "1";
@@ -2017,7 +1964,7 @@
             treeNode11,
             treeNode16,
             treeNode18});
-            this.treeView1.Size = new System.Drawing.Size(547, 400);
+            this.treeView1.Size = new System.Drawing.Size(411, 326);
             this.treeView1.TabIndex = 1;
             this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
             // 
@@ -2029,14 +1976,14 @@
             this.dgPf.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.dgPf.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgPf.ContextMenuStrip = this.cPfDelete;
-            this.dgPf.Location = new System.Drawing.Point(19, 436);
-            this.dgPf.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.dgPf.Location = new System.Drawing.Point(14, 354);
+            this.dgPf.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.dgPf.MultiSelect = false;
             this.dgPf.Name = "dgPf";
             this.dgPf.ReadOnly = true;
             this.dgPf.RowTemplate.Height = 24;
             this.dgPf.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgPf.Size = new System.Drawing.Size(1217, 165);
+            this.dgPf.Size = new System.Drawing.Size(913, 134);
             this.dgPf.TabIndex = 0;
             this.dgPf.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgPf_CellDoubleClick);
             // 
@@ -2046,14 +1993,14 @@
             this.cPfDelete.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.miDelete});
             this.cPfDelete.Name = "cPfDelete";
-            this.cPfDelete.Size = new System.Drawing.Size(135, 28);
+            this.cPfDelete.Size = new System.Drawing.Size(119, 26);
             this.cPfDelete.Text = "Удаление";
             this.cPfDelete.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // miDelete
             // 
             this.miDelete.Name = "miDelete";
-            this.miDelete.Size = new System.Drawing.Size(134, 24);
+            this.miDelete.Size = new System.Drawing.Size(118, 22);
             this.miDelete.Text = "Удалить";
             this.miDelete.Click += new System.EventHandler(this.miDelete_Click);
             // 
@@ -2063,10 +2010,9 @@
             this.tabPage3.Controls.Add(this.dgEntryHist);
             this.tabPage3.Controls.Add(this.toolStrip7);
             this.tabPage3.Location = new System.Drawing.Point(4, 29);
-            this.tabPage3.Margin = new System.Windows.Forms.Padding(4);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Padding = new System.Windows.Forms.Padding(4);
-            this.tabPage3.Size = new System.Drawing.Size(1363, 614);
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabPage3.Size = new System.Drawing.Size(1020, 493);
             this.tabPage3.TabIndex = 8;
             this.tabPage3.Text = "Въезд/Выезд";
             this.tabPage3.Enter += new System.EventHandler(this.tabPage3_Enter);
@@ -2093,8 +2039,7 @@
             dataGridViewCellStyle11.SelectionForeColor = System.Drawing.Color.Black;
             dataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.dgEntryHist.DefaultCellStyle = dataGridViewCellStyle11;
-            this.dgEntryHist.Location = new System.Drawing.Point(9, 38);
-            this.dgEntryHist.Margin = new System.Windows.Forms.Padding(4);
+            this.dgEntryHist.Location = new System.Drawing.Point(7, 31);
             this.dgEntryHist.MultiSelect = false;
             this.dgEntryHist.Name = "dgEntryHist";
             this.dgEntryHist.ReadOnly = true;
@@ -2104,7 +2049,7 @@
             this.dgEntryHist.ShowCellToolTips = false;
             this.dgEntryHist.ShowEditingIcon = false;
             this.dgEntryHist.ShowRowErrors = false;
-            this.dgEntryHist.Size = new System.Drawing.Size(1343, 225);
+            this.dgEntryHist.Size = new System.Drawing.Size(1007, 183);
             this.dgEntryHist.TabIndex = 48;
             // 
             // entrystatus
@@ -2112,7 +2057,7 @@
             this.entrystatus.HeaderText = "Основной";
             this.entrystatus.Name = "entrystatus";
             this.entrystatus.ReadOnly = true;
-            this.entrystatus.Width = 79;
+            this.entrystatus.Width = 63;
             // 
             // toolStrip7
             // 
@@ -2123,9 +2068,9 @@
             this.toolStripButton2,
             this.toolStripButton18,
             this.toolStripButton19});
-            this.toolStrip7.Location = new System.Drawing.Point(4, 4);
+            this.toolStrip7.Location = new System.Drawing.Point(3, 3);
             this.toolStrip7.Name = "toolStrip7";
-            this.toolStrip7.Size = new System.Drawing.Size(1355, 27);
+            this.toolStrip7.Size = new System.Drawing.Size(1014, 27);
             this.toolStrip7.TabIndex = 47;
             this.toolStrip7.Text = "toolStrip7";
             // 
@@ -2134,7 +2079,7 @@
             this.toolStripLabel8.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.toolStripLabel8.Name = "toolStripLabel8";
             this.toolStripLabel8.Padding = new System.Windows.Forms.Padding(0, 0, 60, 0);
-            this.toolStripLabel8.Size = new System.Drawing.Size(166, 24);
+            this.toolStripLabel8.Size = new System.Drawing.Size(146, 24);
             this.toolStripLabel8.Text = "Въезд/Выезд";
             // 
             // toolStripButton17
@@ -2142,7 +2087,7 @@
             this.toolStripButton17.Image = global::Mig.Properties.Resources.Add_40971;
             this.toolStripButton17.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton17.Name = "toolStripButton17";
-            this.toolStripButton17.Size = new System.Drawing.Size(100, 24);
+            this.toolStripButton17.Size = new System.Drawing.Size(83, 24);
             this.toolStripButton17.Text = "Добавить";
             this.toolStripButton17.Click += new System.EventHandler(this.toolStripButton17_Click);
             // 
@@ -2151,7 +2096,7 @@
             this.toolStripButton2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton2.Image")));
             this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton2.Name = "toolStripButton2";
-            this.toolStripButton2.Size = new System.Drawing.Size(130, 24);
+            this.toolStripButton2.Size = new System.Drawing.Size(107, 24);
             this.toolStripButton2.Text = "Активировать";
             this.toolStripButton2.Visible = false;
             this.toolStripButton2.Click += new System.EventHandler(this.toolStripButton2_Click_1);
@@ -2161,7 +2106,7 @@
             this.toolStripButton18.Image = global::Mig.Properties.Resources.Pencil512_44200;
             this.toolStripButton18.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton18.Name = "toolStripButton18";
-            this.toolStripButton18.Size = new System.Drawing.Size(135, 24);
+            this.toolStripButton18.Size = new System.Drawing.Size(111, 24);
             this.toolStripButton18.Text = "Редактировать";
             this.toolStripButton18.Click += new System.EventHandler(this.toolStripButton18_Click);
             // 
@@ -2170,7 +2115,7 @@
             this.toolStripButton19.Image = global::Mig.Properties.Resources.Delete;
             this.toolStripButton19.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton19.Name = "toolStripButton19";
-            this.toolStripButton19.Size = new System.Drawing.Size(89, 24);
+            this.toolStripButton19.Size = new System.Drawing.Size(75, 24);
             this.toolStripButton19.Text = "Удалить";
             this.toolStripButton19.Click += new System.EventHandler(this.toolStripButton19_Click);
             // 
@@ -2181,10 +2126,9 @@
             this.tabDelChild.Controls.Add(this.dgChild);
             this.tabDelChild.Controls.Add(this.toolStrip4);
             this.tabDelChild.Location = new System.Drawing.Point(4, 29);
-            this.tabDelChild.Margin = new System.Windows.Forms.Padding(4);
             this.tabDelChild.Name = "tabDelChild";
-            this.tabDelChild.Padding = new System.Windows.Forms.Padding(4);
-            this.tabDelChild.Size = new System.Drawing.Size(1363, 614);
+            this.tabDelChild.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabDelChild.Size = new System.Drawing.Size(1020, 493);
             this.tabDelChild.TabIndex = 4;
             this.tabDelChild.Text = "Представители / Дети";
             this.tabDelChild.Enter += new System.EventHandler(this.tabDelChild_Enter);
@@ -2212,10 +2156,9 @@
             this.panel5.Controls.Add(this.label61);
             this.panel5.Controls.Add(this.label60);
             this.panel5.Controls.Add(this.tDelSec);
-            this.panel5.Location = new System.Drawing.Point(0, 255);
-            this.panel5.Margin = new System.Windows.Forms.Padding(4);
+            this.panel5.Location = new System.Drawing.Point(0, 207);
             this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(1360, 213);
+            this.panel5.Size = new System.Drawing.Size(1020, 173);
             this.panel5.TabIndex = 59;
             // 
             // cmbDelCountry
@@ -2225,10 +2168,9 @@
             this.cmbDelCountry.DisplayMember = "name";
             this.cmbDelCountry.Enabled = false;
             this.cmbDelCountry.FormattingEnabled = true;
-            this.cmbDelCountry.Location = new System.Drawing.Point(533, 175);
-            this.cmbDelCountry.Margin = new System.Windows.Forms.Padding(4);
+            this.cmbDelCountry.Location = new System.Drawing.Point(400, 142);
             this.cmbDelCountry.Name = "cmbDelCountry";
-            this.cmbDelCountry.Size = new System.Drawing.Size(180, 24);
+            this.cmbDelCountry.Size = new System.Drawing.Size(136, 21);
             this.cmbDelCountry.TabIndex = 24;
             this.cmbDelCountry.ValueMember = "code";
             this.cmbDelCountry.Visible = false;
@@ -2246,7 +2188,7 @@
             this.toolStripButton12});
             this.toolStrip5.Location = new System.Drawing.Point(0, 0);
             this.toolStrip5.Name = "toolStrip5";
-            this.toolStrip5.Size = new System.Drawing.Size(1360, 27);
+            this.toolStrip5.Size = new System.Drawing.Size(1020, 27);
             this.toolStrip5.TabIndex = 0;
             this.toolStrip5.Text = "toolStrip5";
             // 
@@ -2255,7 +2197,7 @@
             this.toolStripLabel10.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.toolStripLabel10.Name = "toolStripLabel10";
             this.toolStripLabel10.Padding = new System.Windows.Forms.Padding(0, 0, 60, 0);
-            this.toolStripLabel10.Size = new System.Drawing.Size(178, 24);
+            this.toolStripLabel10.Size = new System.Drawing.Size(155, 24);
             this.toolStripLabel10.Text = "Представитель";
             // 
             // toolStripButton11
@@ -2263,7 +2205,7 @@
             this.toolStripButton11.Image = global::Mig.Properties.Resources.Pencil512_44200;
             this.toolStripButton11.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton11.Name = "toolStripButton11";
-            this.toolStripButton11.Size = new System.Drawing.Size(135, 24);
+            this.toolStripButton11.Size = new System.Drawing.Size(111, 24);
             this.toolStripButton11.Text = "Редактировать";
             this.toolStripButton11.Click += new System.EventHandler(this.toolStripButton11_Click);
             // 
@@ -2278,7 +2220,7 @@
             this.toolStripButton13.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton13.Image")));
             this.toolStripButton13.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton13.Name = "toolStripButton13";
-            this.toolStripButton13.Size = new System.Drawing.Size(107, 24);
+            this.toolStripButton13.Size = new System.Drawing.Size(89, 24);
             this.toolStripButton13.Text = "Сохранить";
             this.toolStripButton13.Click += new System.EventHandler(this.toolStripButton13_Click);
             // 
@@ -2288,7 +2230,7 @@
             this.toolStripButton21.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton21.Image")));
             this.toolStripButton21.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton21.Name = "toolStripButton21";
-            this.toolStripButton21.Size = new System.Drawing.Size(101, 24);
+            this.toolStripButton21.Size = new System.Drawing.Size(85, 24);
             this.toolStripButton21.Text = "Отменить";
             this.toolStripButton21.Click += new System.EventHandler(this.toolStripButton21_Click_1);
             // 
@@ -2302,18 +2244,17 @@
             this.toolStripButton12.Image = global::Mig.Properties.Resources.Delete;
             this.toolStripButton12.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton12.Name = "toolStripButton12";
-            this.toolStripButton12.Size = new System.Drawing.Size(97, 24);
+            this.toolStripButton12.Size = new System.Drawing.Size(83, 24);
             this.toolStripButton12.Text = "Очистить";
             this.toolStripButton12.Click += new System.EventHandler(this.toolStripButton12_Click);
             // 
             // tDelLast
             // 
             this.tDelLast.BackColor = System.Drawing.SystemColors.Window;
-            this.tDelLast.Location = new System.Drawing.Point(136, 47);
-            this.tDelLast.Margin = new System.Windows.Forms.Padding(4);
+            this.tDelLast.Location = new System.Drawing.Point(102, 38);
             this.tDelLast.Name = "tDelLast";
             this.tDelLast.ReadOnly = true;
-            this.tDelLast.Size = new System.Drawing.Size(236, 22);
+            this.tDelLast.Size = new System.Drawing.Size(178, 20);
             this.tDelLast.TabIndex = 0;
             // 
             // tDelIssue
@@ -2322,31 +2263,29 @@
             this.tDelIssue.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.tDelIssue.BackColor = System.Drawing.Color.Transparent;
             this.tDelIssue.Enabled = false;
-            this.tDelIssue.Location = new System.Drawing.Point(533, 143);
+            this.tDelIssue.Location = new System.Drawing.Point(400, 116);
             this.tDelIssue.Margin = new System.Windows.Forms.Padding(0);
             this.tDelIssue.Name = "tDelIssue";
             this.tDelIssue.SelectedDate = "";
-            this.tDelIssue.Size = new System.Drawing.Size(124, 22);
+            this.tDelIssue.Size = new System.Drawing.Size(93, 20);
             this.tDelIssue.TabIndex = 23;
             this.tDelIssue.Visible = false;
             // 
             // label56
             // 
             this.label56.AutoSize = true;
-            this.label56.Location = new System.Drawing.Point(53, 114);
-            this.label56.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label56.Location = new System.Drawing.Point(40, 93);
             this.label56.Name = "label56";
-            this.label56.Size = new System.Drawing.Size(75, 17);
+            this.label56.Size = new System.Drawing.Size(57, 13);
             this.label56.TabIndex = 11;
             this.label56.Text = "Отчество:";
             // 
             // label55
             // 
             this.label55.AutoSize = true;
-            this.label55.Location = new System.Drawing.Point(85, 81);
-            this.label55.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label55.Location = new System.Drawing.Point(64, 66);
             this.label55.Name = "label55";
-            this.label55.Size = new System.Drawing.Size(39, 17);
+            this.label55.Size = new System.Drawing.Size(32, 13);
             this.label55.TabIndex = 10;
             this.label55.Text = "Имя:";
             // 
@@ -2358,10 +2297,9 @@
             this.cmbDelNat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbDelNat.Enabled = false;
             this.cmbDelNat.FormattingEnabled = true;
-            this.cmbDelNat.Location = new System.Drawing.Point(136, 143);
-            this.cmbDelNat.Margin = new System.Windows.Forms.Padding(4);
+            this.cmbDelNat.Location = new System.Drawing.Point(102, 116);
             this.cmbDelNat.Name = "cmbDelNat";
-            this.cmbDelNat.Size = new System.Drawing.Size(236, 24);
+            this.cmbDelNat.Size = new System.Drawing.Size(178, 21);
             this.cmbDelNat.TabIndex = 21;
             this.cmbDelNat.ValueMember = "code";
             this.cmbDelNat.Visible = false;
@@ -2369,10 +2307,9 @@
             // label57
             // 
             this.label57.AutoSize = true;
-            this.label57.Location = new System.Drawing.Point(27, 146);
-            this.label57.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label57.Location = new System.Drawing.Point(20, 119);
             this.label57.Name = "label57";
-            this.label57.Size = new System.Drawing.Size(98, 17);
+            this.label57.Size = new System.Drawing.Size(77, 13);
             this.label57.TabIndex = 12;
             this.label57.Text = "Гражданство:";
             this.label57.Visible = false;
@@ -2380,10 +2317,9 @@
             // label54
             // 
             this.label54.AutoSize = true;
-            this.label54.Location = new System.Drawing.Point(49, 53);
-            this.label54.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label54.Location = new System.Drawing.Point(37, 43);
             this.label54.Name = "label54";
-            this.label54.Size = new System.Drawing.Size(74, 17);
+            this.label54.Size = new System.Drawing.Size(59, 13);
             this.label54.TabIndex = 9;
             this.label54.Text = "Фамилия:";
             // 
@@ -2395,10 +2331,9 @@
             this.cmbDelDul.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbDelDul.Enabled = false;
             this.cmbDelDul.FormattingEnabled = true;
-            this.cmbDelDul.Location = new System.Drawing.Point(533, 47);
-            this.cmbDelDul.Margin = new System.Windows.Forms.Padding(4);
+            this.cmbDelDul.Location = new System.Drawing.Point(400, 38);
             this.cmbDelDul.Name = "cmbDelDul";
-            this.cmbDelDul.Size = new System.Drawing.Size(180, 24);
+            this.cmbDelDul.Size = new System.Drawing.Size(136, 21);
             this.cmbDelDul.TabIndex = 20;
             this.cmbDelDul.ValueMember = "code";
             this.cmbDelDul.Visible = false;
@@ -2406,10 +2341,9 @@
             // label58
             // 
             this.label58.AutoSize = true;
-            this.label58.Location = new System.Drawing.Point(444, 53);
-            this.label58.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label58.Location = new System.Drawing.Point(333, 43);
             this.label58.Name = "label58";
-            this.label58.Size = new System.Drawing.Size(77, 17);
+            this.label58.Size = new System.Drawing.Size(61, 13);
             this.label58.TabIndex = 13;
             this.label58.Text = "Документ:";
             this.label58.Visible = false;
@@ -2417,21 +2351,19 @@
             // tDelNum
             // 
             this.tDelNum.BackColor = System.Drawing.SystemColors.Window;
-            this.tDelNum.Location = new System.Drawing.Point(533, 111);
-            this.tDelNum.Margin = new System.Windows.Forms.Padding(4);
+            this.tDelNum.Location = new System.Drawing.Point(400, 90);
             this.tDelNum.Name = "tDelNum";
             this.tDelNum.ReadOnly = true;
-            this.tDelNum.Size = new System.Drawing.Size(180, 22);
+            this.tDelNum.Size = new System.Drawing.Size(136, 20);
             this.tDelNum.TabIndex = 6;
             this.tDelNum.Visible = false;
             // 
             // label62
             // 
             this.label62.AutoSize = true;
-            this.label62.Location = new System.Drawing.Point(411, 178);
-            this.label62.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label62.Location = new System.Drawing.Point(308, 145);
             this.label62.Name = "label62";
-            this.label62.Size = new System.Drawing.Size(113, 17);
+            this.label62.Size = new System.Drawing.Size(86, 13);
             this.label62.TabIndex = 17;
             this.label62.Text = "Страна выдачи:";
             this.label62.Visible = false;
@@ -2439,10 +2371,9 @@
             // label59
             // 
             this.label59.AutoSize = true;
-            this.label59.Location = new System.Drawing.Point(471, 85);
-            this.label59.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label59.Location = new System.Drawing.Point(353, 69);
             this.label59.Name = "label59";
-            this.label59.Size = new System.Drawing.Size(53, 17);
+            this.label59.Size = new System.Drawing.Size(41, 13);
             this.label59.TabIndex = 14;
             this.label59.Text = "Серия:";
             this.label59.Visible = false;
@@ -2450,31 +2381,28 @@
             // tDelFirst
             // 
             this.tDelFirst.BackColor = System.Drawing.SystemColors.Window;
-            this.tDelFirst.Location = new System.Drawing.Point(136, 79);
-            this.tDelFirst.Margin = new System.Windows.Forms.Padding(4);
+            this.tDelFirst.Location = new System.Drawing.Point(102, 64);
             this.tDelFirst.Name = "tDelFirst";
             this.tDelFirst.ReadOnly = true;
-            this.tDelFirst.Size = new System.Drawing.Size(236, 22);
+            this.tDelFirst.Size = new System.Drawing.Size(178, 20);
             this.tDelFirst.TabIndex = 1;
             // 
             // tDelSer
             // 
             this.tDelSer.BackColor = System.Drawing.SystemColors.Window;
-            this.tDelSer.Location = new System.Drawing.Point(533, 81);
-            this.tDelSer.Margin = new System.Windows.Forms.Padding(4);
+            this.tDelSer.Location = new System.Drawing.Point(400, 66);
             this.tDelSer.Name = "tDelSer";
             this.tDelSer.ReadOnly = true;
-            this.tDelSer.Size = new System.Drawing.Size(132, 22);
+            this.tDelSer.Size = new System.Drawing.Size(100, 20);
             this.tDelSer.TabIndex = 5;
             this.tDelSer.Visible = false;
             // 
             // label61
             // 
             this.label61.AutoSize = true;
-            this.label61.Location = new System.Drawing.Point(424, 146);
-            this.label61.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label61.Location = new System.Drawing.Point(318, 119);
             this.label61.Name = "label61";
-            this.label61.Size = new System.Drawing.Size(99, 17);
+            this.label61.Size = new System.Drawing.Size(76, 13);
             this.label61.TabIndex = 16;
             this.label61.Text = "Дата выдачи:";
             this.label61.Visible = false;
@@ -2482,10 +2410,9 @@
             // label60
             // 
             this.label60.AutoSize = true;
-            this.label60.Location = new System.Drawing.Point(467, 114);
-            this.label60.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label60.Location = new System.Drawing.Point(350, 93);
             this.label60.Name = "label60";
-            this.label60.Size = new System.Drawing.Size(55, 17);
+            this.label60.Size = new System.Drawing.Size(44, 13);
             this.label60.TabIndex = 15;
             this.label60.Text = "Номер:";
             this.label60.Visible = false;
@@ -2493,11 +2420,10 @@
             // tDelSec
             // 
             this.tDelSec.BackColor = System.Drawing.SystemColors.Window;
-            this.tDelSec.Location = new System.Drawing.Point(136, 111);
-            this.tDelSec.Margin = new System.Windows.Forms.Padding(4);
+            this.tDelSec.Location = new System.Drawing.Point(102, 90);
             this.tDelSec.Name = "tDelSec";
             this.tDelSec.ReadOnly = true;
-            this.tDelSec.Size = new System.Drawing.Size(236, 22);
+            this.tDelSec.Size = new System.Drawing.Size(178, 20);
             this.tDelSec.TabIndex = 2;
             // 
             // dgChild
@@ -2520,8 +2446,7 @@
             dataGridViewCellStyle12.SelectionForeColor = System.Drawing.Color.Black;
             dataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.dgChild.DefaultCellStyle = dataGridViewCellStyle12;
-            this.dgChild.Location = new System.Drawing.Point(9, 38);
-            this.dgChild.Margin = new System.Windows.Forms.Padding(4);
+            this.dgChild.Location = new System.Drawing.Point(7, 31);
             this.dgChild.MultiSelect = false;
             this.dgChild.Name = "dgChild";
             this.dgChild.ReadOnly = true;
@@ -2531,7 +2456,7 @@
             this.dgChild.ShowCellToolTips = false;
             this.dgChild.ShowEditingIcon = false;
             this.dgChild.ShowRowErrors = false;
-            this.dgChild.Size = new System.Drawing.Size(1343, 182);
+            this.dgChild.Size = new System.Drawing.Size(1007, 148);
             this.dgChild.TabIndex = 4;
             // 
             // toolStrip4
@@ -2542,9 +2467,9 @@
             this.toolStripButton8,
             this.toolStripButton9,
             this.toolStripButton10});
-            this.toolStrip4.Location = new System.Drawing.Point(4, 4);
+            this.toolStrip4.Location = new System.Drawing.Point(3, 3);
             this.toolStrip4.Name = "toolStrip4";
-            this.toolStrip4.Size = new System.Drawing.Size(1355, 27);
+            this.toolStrip4.Size = new System.Drawing.Size(1014, 27);
             this.toolStrip4.TabIndex = 43;
             this.toolStrip4.Text = "toolStrip4";
             // 
@@ -2554,7 +2479,7 @@
             this.toolStripLabel1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.toolStripLabel1.Name = "toolStripLabel1";
             this.toolStripLabel1.Padding = new System.Windows.Forms.Padding(0, 0, 60, 0);
-            this.toolStripLabel1.Size = new System.Drawing.Size(105, 24);
+            this.toolStripLabel1.Size = new System.Drawing.Size(96, 24);
             this.toolStripLabel1.Text = "Дети";
             this.toolStripLabel1.Click += new System.EventHandler(this.toolStripLabel1_Click);
             // 
@@ -2563,7 +2488,7 @@
             this.toolStripButton8.Image = global::Mig.Properties.Resources.Add_40971;
             this.toolStripButton8.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton8.Name = "toolStripButton8";
-            this.toolStripButton8.Size = new System.Drawing.Size(100, 24);
+            this.toolStripButton8.Size = new System.Drawing.Size(83, 24);
             this.toolStripButton8.Text = "Добавить";
             this.toolStripButton8.Click += new System.EventHandler(this.toolStripButton8_Click);
             // 
@@ -2572,7 +2497,7 @@
             this.toolStripButton9.Image = global::Mig.Properties.Resources.Pencil512_44200;
             this.toolStripButton9.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton9.Name = "toolStripButton9";
-            this.toolStripButton9.Size = new System.Drawing.Size(135, 24);
+            this.toolStripButton9.Size = new System.Drawing.Size(111, 24);
             this.toolStripButton9.Text = "Редактировать";
             this.toolStripButton9.Click += new System.EventHandler(this.toolStripButton9_Click);
             // 
@@ -2581,28 +2506,26 @@
             this.toolStripButton10.Image = global::Mig.Properties.Resources.Delete;
             this.toolStripButton10.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton10.Name = "toolStripButton10";
-            this.toolStripButton10.Size = new System.Drawing.Size(89, 24);
+            this.toolStripButton10.Size = new System.Drawing.Size(75, 24);
             this.toolStripButton10.Text = "Удалить";
             this.toolStripButton10.Click += new System.EventHandler(this.toolStripButton10_Click);
             // 
             // tDays
             // 
             this.tDays.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.tDays.Location = new System.Drawing.Point(1305, 12);
-            this.tDays.Margin = new System.Windows.Forms.Padding(4);
+            this.tDays.Location = new System.Drawing.Point(979, 10);
             this.tDays.Name = "tDays";
             this.tDays.ReadOnly = true;
-            this.tDays.Size = new System.Drawing.Size(57, 22);
+            this.tDays.Size = new System.Drawing.Size(44, 20);
             this.tDays.TabIndex = 38;
             // 
             // label74
             // 
             this.label74.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label74.AutoSize = true;
-            this.label74.Location = new System.Drawing.Point(1183, 16);
-            this.label74.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label74.Location = new System.Drawing.Point(887, 13);
             this.label74.Name = "label74";
-            this.label74.Size = new System.Drawing.Size(109, 17);
+            this.label74.Size = new System.Drawing.Size(86, 13);
             this.label74.TabIndex = 37;
             this.label74.Text = "Дней в России:";
             // 
@@ -2610,62 +2533,56 @@
             // 
             this.tmidnameenu.BackColor = System.Drawing.SystemColors.Window;
             this.tmidnameenu.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this.tmidnameenu.Location = new System.Drawing.Point(135, 193);
-            this.tmidnameenu.Margin = new System.Windows.Forms.Padding(4);
+            this.tmidnameenu.Location = new System.Drawing.Point(101, 157);
             this.tmidnameenu.Name = "tmidnameenu";
             this.tmidnameenu.ReadOnly = true;
-            this.tmidnameenu.Size = new System.Drawing.Size(292, 22);
+            this.tmidnameenu.Size = new System.Drawing.Size(220, 20);
             this.tmidnameenu.TabIndex = 30;
             // 
             // tmidname
             // 
             this.tmidname.BackColor = System.Drawing.SystemColors.Window;
             this.tmidname.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this.tmidname.Location = new System.Drawing.Point(135, 82);
-            this.tmidname.Margin = new System.Windows.Forms.Padding(4);
+            this.tmidname.Location = new System.Drawing.Point(101, 67);
             this.tmidname.Name = "tmidname";
             this.tmidname.ReadOnly = true;
-            this.tmidname.Size = new System.Drawing.Size(292, 22);
+            this.tmidname.Size = new System.Drawing.Size(220, 20);
             this.tmidname.TabIndex = 29;
             // 
             // tfirstnameenu
             // 
             this.tfirstnameenu.BackColor = System.Drawing.SystemColors.Window;
             this.tfirstnameenu.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this.tfirstnameenu.Location = new System.Drawing.Point(135, 161);
-            this.tfirstnameenu.Margin = new System.Windows.Forms.Padding(4);
+            this.tfirstnameenu.Location = new System.Drawing.Point(101, 131);
             this.tfirstnameenu.Name = "tfirstnameenu";
             this.tfirstnameenu.ReadOnly = true;
-            this.tfirstnameenu.Size = new System.Drawing.Size(292, 22);
+            this.tfirstnameenu.Size = new System.Drawing.Size(220, 20);
             this.tfirstnameenu.TabIndex = 28;
             // 
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(509, 135);
-            this.label8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label8.Location = new System.Drawing.Point(382, 110);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(115, 17);
+            this.label8.Size = new System.Drawing.Size(89, 13);
             this.label8.TabIndex = 2;
             this.label8.Text = "Дата рождения:";
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(497, 85);
-            this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label7.Location = new System.Drawing.Point(373, 69);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(132, 17);
+            this.label7.Size = new System.Drawing.Size(100, 13);
             this.label7.TabIndex = 1;
             this.label7.Text = "Город или др. н.п.:";
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(451, 54);
-            this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label6.Location = new System.Drawing.Point(338, 44);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(176, 17);
+            this.label6.Size = new System.Drawing.Size(136, 13);
             this.label6.TabIndex = 0;
             this.label6.Text = "Место рождения (гос-во):";
             // 
@@ -2673,112 +2590,101 @@
             // 
             this.tfirstname.BackColor = System.Drawing.SystemColors.Window;
             this.tfirstname.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this.tfirstname.Location = new System.Drawing.Point(135, 50);
-            this.tfirstname.Margin = new System.Windows.Forms.Padding(4);
+            this.tfirstname.Location = new System.Drawing.Point(101, 41);
             this.tfirstname.Name = "tfirstname";
             this.tfirstname.ReadOnly = true;
-            this.tfirstname.Size = new System.Drawing.Size(292, 22);
+            this.tfirstname.Size = new System.Drawing.Size(220, 20);
             this.tfirstname.TabIndex = 27;
             // 
             // tlastnameenu
             // 
             this.tlastnameenu.BackColor = System.Drawing.SystemColors.Window;
             this.tlastnameenu.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this.tlastnameenu.Location = new System.Drawing.Point(135, 129);
-            this.tlastnameenu.Margin = new System.Windows.Forms.Padding(4);
+            this.tlastnameenu.Location = new System.Drawing.Point(101, 105);
             this.tlastnameenu.Name = "tlastnameenu";
             this.tlastnameenu.ReadOnly = true;
-            this.tlastnameenu.Size = new System.Drawing.Size(292, 22);
+            this.tlastnameenu.Size = new System.Drawing.Size(220, 20);
             this.tlastnameenu.TabIndex = 26;
             // 
             // tlastname
             // 
             this.tlastname.BackColor = System.Drawing.SystemColors.Window;
             this.tlastname.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this.tlastname.Location = new System.Drawing.Point(135, 18);
-            this.tlastname.Margin = new System.Windows.Forms.Padding(4);
+            this.tlastname.Location = new System.Drawing.Point(101, 15);
             this.tlastname.Name = "tlastname";
             this.tlastname.ReadOnly = true;
-            this.tlastname.Size = new System.Drawing.Size(292, 22);
+            this.tlastname.Size = new System.Drawing.Size(220, 20);
             this.tlastname.TabIndex = 25;
             // 
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(12, 133);
-            this.label14.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label14.Location = new System.Drawing.Point(9, 108);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(112, 17);
+            this.label14.Size = new System.Drawing.Size(86, 13);
             this.label14.TabIndex = 24;
             this.label14.Text = "Фамилия (enu):";
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(525, 22);
-            this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label5.Location = new System.Drawing.Point(394, 18);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(98, 17);
+            this.label5.Size = new System.Drawing.Size(77, 13);
             this.label5.TabIndex = 22;
             this.label5.Text = "Гражданство:";
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(588, 165);
-            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label4.Location = new System.Drawing.Point(441, 134);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(38, 17);
+            this.label4.Size = new System.Drawing.Size(30, 13);
             this.label4.TabIndex = 21;
             this.label4.Text = "Пол:";
             // 
             // label16
             // 
             this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(13, 197);
-            this.label16.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label16.Location = new System.Drawing.Point(10, 160);
             this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(113, 17);
+            this.label16.Size = new System.Drawing.Size(84, 13);
             this.label16.TabIndex = 20;
             this.label16.Text = "Отчество (enu):";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(51, 86);
-            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label3.Location = new System.Drawing.Point(38, 70);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(75, 17);
+            this.label3.Size = new System.Drawing.Size(57, 13);
             this.label3.TabIndex = 19;
             this.label3.Text = "Отчество:";
             // 
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(48, 165);
-            this.label15.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label15.Location = new System.Drawing.Point(36, 134);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(77, 17);
+            this.label15.Size = new System.Drawing.Size(59, 13);
             this.label15.TabIndex = 17;
             this.label15.Text = "Имя (enu):";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(84, 54);
-            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label2.Location = new System.Drawing.Point(63, 44);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(39, 17);
+            this.label2.Size = new System.Drawing.Size(32, 13);
             this.label2.TabIndex = 18;
             this.label2.Text = "Имя:";
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(48, 22);
-            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label1.Location = new System.Drawing.Point(36, 18);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(74, 17);
+            this.label1.Size = new System.Drawing.Size(59, 13);
             this.label1.TabIndex = 16;
             this.label1.Text = "Фамилия:";
             // 
@@ -2794,8 +2700,8 @@
             this.toolStripButton22});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Padding = new System.Windows.Forms.Padding(0, 6, 1, 6);
-            this.toolStrip1.Size = new System.Drawing.Size(1372, 39);
+            this.toolStrip1.Padding = new System.Windows.Forms.Padding(0, 5, 1, 5);
+            this.toolStrip1.Size = new System.Drawing.Size(1029, 37);
             this.toolStrip1.TabIndex = 2;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -2804,7 +2710,7 @@
             this.toolContactEdit.Image = global::Mig.Properties.Resources.Pencil512_44200;
             this.toolContactEdit.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolContactEdit.Name = "toolContactEdit";
-            this.toolContactEdit.Size = new System.Drawing.Size(135, 24);
+            this.toolContactEdit.Size = new System.Drawing.Size(111, 24);
             this.toolContactEdit.Text = "Редактировать";
             this.toolContactEdit.Click += new System.EventHandler(this.toolContactEdit_Click);
             // 
@@ -2819,7 +2725,7 @@
             this.btnSaveContact.Image = ((System.Drawing.Image)(resources.GetObject("btnSaveContact.Image")));
             this.btnSaveContact.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnSaveContact.Name = "btnSaveContact";
-            this.btnSaveContact.Size = new System.Drawing.Size(107, 24);
+            this.btnSaveContact.Size = new System.Drawing.Size(89, 24);
             this.btnSaveContact.Text = "Сохранить";
             this.btnSaveContact.Click += new System.EventHandler(this.toolStripButton30_Click);
             // 
@@ -2829,7 +2735,7 @@
             this.btnUndoContact.Image = ((System.Drawing.Image)(resources.GetObject("btnUndoContact.Image")));
             this.btnUndoContact.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnUndoContact.Name = "btnUndoContact";
-            this.btnUndoContact.Size = new System.Drawing.Size(101, 24);
+            this.btnUndoContact.Size = new System.Drawing.Size(85, 24);
             this.btnUndoContact.Text = "Отменить";
             this.btnUndoContact.Click += new System.EventHandler(this.toolStripButton31_Click);
             // 
@@ -2844,7 +2750,7 @@
             this.toolStripButton22.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton22.Image")));
             this.toolStripButton22.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton22.Name = "toolStripButton22";
-            this.toolStripButton22.Size = new System.Drawing.Size(78, 24);
+            this.toolStripButton22.Size = new System.Drawing.Size(64, 24);
             this.toolStripButton22.Text = "Удалить...";
             this.toolStripButton22.Click += new System.EventHandler(this.toolStripButton22_Click);
             // 
@@ -2886,20 +2792,18 @@
             this.panel1.Controls.Add(this.tmidnameenu);
             this.panel1.Controls.Add(this.label4);
             this.panel1.Controls.Add(this.tmidname);
-            this.panel1.Location = new System.Drawing.Point(7, 44);
-            this.panel1.Margin = new System.Windows.Forms.Padding(4);
+            this.panel1.Location = new System.Drawing.Point(5, 36);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1357, 228);
+            this.panel1.Size = new System.Drawing.Size(1018, 186);
             this.panel1.TabIndex = 3;
             // 
             // label13
             // 
             this.label13.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(1052, 151);
-            this.label13.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label13.Location = new System.Drawing.Point(789, 123);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(129, 17);
+            this.label13.Size = new System.Drawing.Size(102, 13);
             this.label13.TabIndex = 83;
             this.label13.Text = "Действия с визой:";
             this.label13.Visible = false;
@@ -2908,10 +2812,9 @@
             // 
             this.label12.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(1075, 118);
-            this.label12.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label12.Location = new System.Drawing.Point(806, 96);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(109, 17);
+            this.label12.Size = new System.Drawing.Size(85, 13);
             this.label12.TabIndex = 82;
             this.label12.Text = "Срок действия:";
             // 
@@ -2919,10 +2822,9 @@
             // 
             this.label11.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(1131, 87);
-            this.label11.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label11.Location = new System.Drawing.Point(848, 71);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(55, 17);
+            this.label11.Size = new System.Drawing.Size(43, 13);
             this.label11.TabIndex = 81;
             this.label11.Text = "Выдан:";
             // 
@@ -2930,10 +2832,9 @@
             // 
             this.label10.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(1081, 54);
-            this.label10.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label10.Location = new System.Drawing.Point(811, 44);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(100, 17);
+            this.label10.Size = new System.Drawing.Size(80, 13);
             this.label10.TabIndex = 80;
             this.label10.Text = "Серия/Номер:";
             // 
@@ -2941,10 +2842,9 @@
             // 
             this.label9.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(1149, 22);
-            this.label9.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label9.Location = new System.Drawing.Point(862, 18);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(37, 17);
+            this.label9.Size = new System.Drawing.Size(29, 13);
             this.label9.TabIndex = 79;
             this.label9.Text = "Тип:";
             // 
@@ -2953,11 +2853,10 @@
             this.textBox5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.textBox5.BackColor = System.Drawing.Color.White;
             this.textBox5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.textBox5.Location = new System.Drawing.Point(1196, 148);
-            this.textBox5.Margin = new System.Windows.Forms.Padding(4);
+            this.textBox5.Location = new System.Drawing.Point(897, 120);
             this.textBox5.Name = "textBox5";
             this.textBox5.ReadOnly = true;
-            this.textBox5.Size = new System.Drawing.Size(151, 23);
+            this.textBox5.Size = new System.Drawing.Size(114, 20);
             this.textBox5.TabIndex = 78;
             this.textBox5.Visible = false;
             // 
@@ -2966,11 +2865,10 @@
             this.textBox4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.textBox4.BackColor = System.Drawing.Color.White;
             this.textBox4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.textBox4.Location = new System.Drawing.Point(1196, 114);
-            this.textBox4.Margin = new System.Windows.Forms.Padding(4);
+            this.textBox4.Location = new System.Drawing.Point(897, 93);
             this.textBox4.Name = "textBox4";
             this.textBox4.ReadOnly = true;
-            this.textBox4.Size = new System.Drawing.Size(151, 23);
+            this.textBox4.Size = new System.Drawing.Size(114, 20);
             this.textBox4.TabIndex = 77;
             // 
             // textBox3
@@ -2978,11 +2876,10 @@
             this.textBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.textBox3.BackColor = System.Drawing.Color.White;
             this.textBox3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.textBox3.Location = new System.Drawing.Point(1196, 84);
-            this.textBox3.Margin = new System.Windows.Forms.Padding(4);
+            this.textBox3.Location = new System.Drawing.Point(897, 68);
             this.textBox3.Name = "textBox3";
             this.textBox3.ReadOnly = true;
-            this.textBox3.Size = new System.Drawing.Size(151, 23);
+            this.textBox3.Size = new System.Drawing.Size(114, 20);
             this.textBox3.TabIndex = 76;
             // 
             // textBox2
@@ -2990,11 +2887,10 @@
             this.textBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.textBox2.BackColor = System.Drawing.Color.White;
             this.textBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.textBox2.Location = new System.Drawing.Point(1196, 50);
-            this.textBox2.Margin = new System.Windows.Forms.Padding(4);
+            this.textBox2.Location = new System.Drawing.Point(897, 41);
             this.textBox2.Name = "textBox2";
             this.textBox2.ReadOnly = true;
-            this.textBox2.Size = new System.Drawing.Size(151, 23);
+            this.textBox2.Size = new System.Drawing.Size(114, 20);
             this.textBox2.TabIndex = 75;
             // 
             // textBox1
@@ -3002,11 +2898,10 @@
             this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.textBox1.BackColor = System.Drawing.Color.White;
             this.textBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.textBox1.Location = new System.Drawing.Point(1196, 18);
-            this.textBox1.Margin = new System.Windows.Forms.Padding(4);
+            this.textBox1.Location = new System.Drawing.Point(897, 15);
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
-            this.textBox1.Size = new System.Drawing.Size(151, 23);
+            this.textBox1.Size = new System.Drawing.Size(114, 20);
             this.textBox1.TabIndex = 74;
             // 
             // lyear
@@ -3014,10 +2909,9 @@
             this.lyear.AutoSize = true;
             this.lyear.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.lyear.ForeColor = System.Drawing.Color.Red;
-            this.lyear.Location = new System.Drawing.Point(780, 132);
-            this.lyear.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lyear.Location = new System.Drawing.Point(585, 107);
             this.lyear.Name = "lyear";
-            this.lyear.Size = new System.Drawing.Size(45, 20);
+            this.lyear.Size = new System.Drawing.Size(39, 16);
             this.lyear.TabIndex = 71;
             this.lyear.Text = "year";
             // 
@@ -3027,11 +2921,11 @@
             this.dBirthDate.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.dBirthDate.BackColor = System.Drawing.Color.Transparent;
             this.dBirthDate.Enabled = false;
-            this.dBirthDate.Location = new System.Drawing.Point(637, 129);
+            this.dBirthDate.Location = new System.Drawing.Point(478, 105);
             this.dBirthDate.Margin = new System.Windows.Forms.Padding(0);
             this.dBirthDate.Name = "dBirthDate";
             this.dBirthDate.SelectedDate = "";
-            this.dBirthDate.Size = new System.Drawing.Size(124, 22);
+            this.dBirthDate.Size = new System.Drawing.Size(93, 20);
             this.dBirthDate.TabIndex = 70;
             // 
             // tBirthTown
@@ -3041,10 +2935,9 @@
             this.tBirthTown.DisplayMember = "name";
             this.tBirthTown.Enabled = false;
             this.tBirthTown.FormattingEnabled = true;
-            this.tBirthTown.Location = new System.Drawing.Point(636, 81);
-            this.tBirthTown.Margin = new System.Windows.Forms.Padding(4);
+            this.tBirthTown.Location = new System.Drawing.Point(477, 66);
             this.tBirthTown.Name = "tBirthTown";
-            this.tBirthTown.Size = new System.Drawing.Size(289, 24);
+            this.tBirthTown.Size = new System.Drawing.Size(218, 21);
             this.tBirthTown.TabIndex = 69;
             this.tBirthTown.ValueMember = "code";
             this.tBirthTown.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tBirthTown_KeyPress);
@@ -3056,10 +2949,9 @@
             this.cmbBirthCountry.DisplayMember = "name";
             this.cmbBirthCountry.Enabled = false;
             this.cmbBirthCountry.FormattingEnabled = true;
-            this.cmbBirthCountry.Location = new System.Drawing.Point(636, 50);
-            this.cmbBirthCountry.Margin = new System.Windows.Forms.Padding(4);
+            this.cmbBirthCountry.Location = new System.Drawing.Point(477, 41);
             this.cmbBirthCountry.Name = "cmbBirthCountry";
-            this.cmbBirthCountry.Size = new System.Drawing.Size(289, 24);
+            this.cmbBirthCountry.Size = new System.Drawing.Size(218, 21);
             this.cmbBirthCountry.TabIndex = 68;
             this.cmbBirthCountry.ValueMember = "code";
             this.cmbBirthCountry.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.cmbBirthCountry_KeyPress);
@@ -3070,10 +2962,9 @@
             this.cmbNat.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.cmbNat.DisplayMember = "name";
             this.cmbNat.Enabled = false;
-            this.cmbNat.Location = new System.Drawing.Point(637, 18);
-            this.cmbNat.Margin = new System.Windows.Forms.Padding(4);
+            this.cmbNat.Location = new System.Drawing.Point(478, 15);
             this.cmbNat.Name = "cmbNat";
-            this.cmbNat.Size = new System.Drawing.Size(288, 24);
+            this.cmbNat.Size = new System.Drawing.Size(217, 21);
             this.cmbNat.TabIndex = 67;
             this.cmbNat.ValueMember = "code";
             this.cmbNat.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.cmbNat_KeyPress);
@@ -3086,24 +2977,22 @@
             this.cmbSex.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbSex.Enabled = false;
             this.cmbSex.FormattingEnabled = true;
-            this.cmbSex.Location = new System.Drawing.Point(637, 161);
-            this.cmbSex.Margin = new System.Windows.Forms.Padding(4);
+            this.cmbSex.Location = new System.Drawing.Point(478, 131);
             this.cmbSex.Name = "cmbSex";
-            this.cmbSex.Size = new System.Drawing.Size(160, 24);
+            this.cmbSex.Size = new System.Drawing.Size(121, 21);
             this.cmbSex.TabIndex = 66;
             this.cmbSex.ValueMember = "code";
             // 
             // fContactDetail
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1372, 950);
+            this.ClientSize = new System.Drawing.Size(1029, 772);
             this.Controls.Add(this.tDays);
             this.Controls.Add(this.label74);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.tabControl1);
-            this.Margin = new System.Windows.Forms.Padding(4);
             this.MinimizeBox = false;
             this.Name = "fContactDetail";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
