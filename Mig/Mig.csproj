@@ -194,6 +194,7 @@
     <Compile Include="DocMigrHistPopup.Designer.cs">
       <DependentUpon>DocMigrHistPopup.cs</DependentUpon>
     </Compile>
+    <Compile Include="Entity\EContact.cs" />
     <Compile Include="EntryAdd.cs">
       <SubType>Form</SubType>
     </Compile>
